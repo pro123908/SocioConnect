@@ -6,7 +6,7 @@
     include "header.php";
   ?>
 <h1>Welcome to SocioConnect</h1>
-
+  
 <h1>Sign Up</h1>
 <form action="signUp.php" method='POST'>
   <input type="text" name='username' placeholder='Username'><br><br>
