@@ -1,0 +1,160 @@
+.hidden{
+  display: none;
+}
+.show{
+  display: visible;
+}
+
+
+#header{
+  background-color:#000;
+  color: #fff;
+  
+}
+
+#header h1{
+  display: inline-block;
+  padding-left: 20px;
+  color: #def720;
+}
+
+#header a{
+  text-decoration: none;
+  color: #fff;
+  float: right;
+  padding: 25px;
+}
+
+.firstSection{
+  text-align: center;
+}
+
+.firstSection h1 {
+  color: brown;
+  text-transform: uppercase;
+}
+
+
+#postArea{
+  text-align: center;
+}
+
+#postArea h3{
+  text-transform: uppercase;
+  letter-spacing: 5px;
+}
+
+.post{
+  box-shadow: 0 2px 3px black;
+  padding: 20px;
+  width: 500px;
+  
+  display: inline-block;
+  text-align: left;
+  margin-bottom: 30px;
+}
+
+.post p {
+  letter-spacing: 2px;
+  
+}
+
+
+.post a,#commentBtn{
+  text-decoration: none;
+  display: inline-block;
+  color:white;
+  width: 20%;
+  border-radius: 5px;
+  background-color: #0ed15c;
+  padding: 10px;
+  text-align: center;
+  border: none;
+}
+
+
+
+.post .user{
+  background-color:#78e892;
+  display: inline-block;
+  width: 100%;
+  padding: 10px;
+  
+  font-weight: bold;
+}
+
+#addPost{
+  text-align: center;
+  margin-bottom: 80px;
+}
+
+#addPost h2{
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+#addPost textarea{
+  border: none;
+  padding: 10px;
+  width: 500px;
+  box-shadow: 0 2px 5px black;
+}
+
+#addPost textarea::placeholder{
+  color: #0ed15c;
+  font-weight: bold;
+  font-size: 20px;
+}
+
+#addPost .postBtn{
+  border: none;
+  display: inline-block;
+  color:white;
+  width: 200px;
+  border-radius: 5px;
+  background-color: #0ed15c;
+  padding: 10px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.post .comment{
+  background-color: #f2f7ef;
+  color: black;
+  margin-top: 20px;
+  padding: 10px;
+}
+
+.post .commentUser{
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.post .commentText{
+  font-size: 16px;
+}
+
+.post .commentForm{
+  margin-top: 20px;
+  
+}
+
+.post .commentForm input[type='text']{
+  border: none;
+  box-shadow: 0 1px 1px black;
+  padding: 10px;
+  width: 70%;
+}
+
+.post .commentForm input[type='submit']{
+  display: inline-block;
+  color:white;
+  width: 20%;
+  border-radius: 5px;
+  background-color: #0ed15c;
+  padding: 10px;
+  text-align: center;
+  border: none;
+  margin-left: 5px;
+}
+
