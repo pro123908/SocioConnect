@@ -1,5 +1,6 @@
 <?php 
-include("header.php");
+
+require('header.php');
 
 
 if(isset($_GET['like'])){
@@ -20,7 +21,7 @@ if(isset($_GET['like'])){
   $likesResult = queryFunc("SELECT count(*) as count from likes where post_id='$postID'");
   $likes = isRecord($likesResult);
 
-  echo $likes['count'];
+  redirection('likesCount.php?likeCount='.$likes['count']);
 
   }
   

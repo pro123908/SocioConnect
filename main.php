@@ -36,8 +36,6 @@
 
 </html>
 
-<script >
-  function showCommentField(id){
-  document.getElementById("post_id_"+id).classList.toggle('hidden');
-}
+<script src="script.js" >
+
 </script>

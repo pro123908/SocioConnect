@@ -86,21 +86,20 @@ function show_posts(){
             <div class='post'>
                 <span class='user'>{$row['username']}</span>
                 <p>{$row['post']}</p>
-                <p>{$likes['count']}</p>
+                <p class='likeCount-{$postID}'>{$likes['count']}</p>
                 <a href='javascript:like({$postID})'>Like</a>
-                <a href='like.php?like={$postID}'>Like</a>
                 <a  href="javascript:showCommentField({$postID})" >Comment</a>
             
 POST;
             //Checks for the latest comments on posts
-            if (!(isset($_SESSION['post_for_comments'])) || $_SESSION['post_for_comments'] ==$postID) {
+            if (!(isset($_SESSION['post_for_comments'])) || $_SESSION['post_for_comments'] != $postID) {
                 $post .= <<<POST
-                <div id="post_id_{$postID}" class='show'>
+                <div id="post_id_{$postID}" class='hidden'>
 POST;
                         
             } else {
                 $post .= <<<POST
-                <div id="post_id_{$postID}" class='hidden'>
+                <div id="post_id_{$postID}" class='show'>
 POST;
             }
             
@@ -116,9 +115,9 @@ POST;
             }
             $post .= <<<POST
             <div class='commentForm'>
-                <form action="comment.php" method="post">
+                <form action="comment.php" method="post" id='commentForm'>
                     <input name = "comment" type='text'>
-                    <input type="text" value={$postID} style="display:none"name="post_id">
+                    <input type="text" value={$postID} style="display:none" name="post_id">
                     <input type='submit' id="{$postID}" value="Comment"> 
                 </form>
             </div>
