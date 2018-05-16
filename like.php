@@ -16,9 +16,14 @@ if(isset($_GET['like'])){
    
    $likeResult = queryFunc("INSERT INTO likes (post_id,user_id) VALUES('$postID','$userID')");
   }
+
+  $likesResult = queryFunc("SELECT count(*) as count from likes where post_id='$postID'");
+  $likes = isRecord($likesResult);
+
+  echo $likes['count'];
+
   }
   
-  redirection("main.php");
-
+  
 
 ?>

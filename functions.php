@@ -87,12 +87,13 @@ function show_posts(){
                 <span class='user'>{$row['username']}</span>
                 <p>{$row['post']}</p>
                 <p>{$likes['count']}</p>
+                <a href='javascript:like({$postID})'>Like</a>
                 <a href='like.php?like={$postID}'>Like</a>
                 <a  href="javascript:showCommentField({$postID})" >Comment</a>
             
 POST;
             //Checks for the latest comments on posts
-            if (!(isset($_SESSION['post_for_comments'])) || $_SESSION['post_for_comments'] == $postID) {
+            if (!(isset($_SESSION['post_for_comments'])) || $_SESSION['post_for_comments'] ==$postID) {
                 $post .= <<<POST
                 <div id="post_id_{$postID}" class='show'>
 POST;
@@ -134,10 +135,9 @@ POST;
 
 function logout()
 {
-    
     session_start();
     session_destroy();
-    redirection('main.php');
+    redirection('index.php');
 }
 
 
