@@ -134,10 +134,9 @@ POST;
 
 function logout()
 {
-    
     session_start();
     session_destroy();
-    redirection('main.php');
+    redirection('index.php');
 }
 
 
