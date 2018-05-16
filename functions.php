@@ -91,24 +91,13 @@ function show_posts(){
                 <a  href="javascript:showCommentField({$postID})" >Comment</a>
             
 POST;
-<<<<<<< HEAD
 
             $post .= <<<POST
             <div id="post_id_{$postID}" class='hidden'>
                 <div class='commentArea_{$postID}'>
-=======
-            //Checks for the latest comments on posts
-            if (!(isset($_SESSION['post_for_comments'])) || $_SESSION['post_for_comments'] != $postID) {
-                $post .= <<<POST
-                <div id="post_id_{$postID}" class='hidden'>
+
 POST;
-                        
-            } else {
-                $post .= <<<POST
-                <div id="post_id_{$postID}" class='show'>
->>>>>>> master
-POST;
-            
+
             $commentResult = queryFunc("SELECT comment,users.username,createdAt from comments inner join users on users.user_id = comments.user_id where comments.post_id ='$postID' order by createdAt");
             while ($comments = isRecord($commentResult)) {
                 $post .= <<<POST
