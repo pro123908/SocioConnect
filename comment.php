@@ -7,5 +7,5 @@
 	$stmt->execute();
   $stmt->close();
   $_SESSION['post_for_comments'] = $_POST['post_id'];
-	redirection('main.php');
+	
 ?>

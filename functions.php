@@ -91,17 +91,11 @@ function show_posts(){
                 <a  href="javascript:showCommentField({$postID})" >Comment</a>
             
 POST;
-            //Checks for the latest comments on posts
-            if (!(isset($_SESSION['post_for_comments'])) || $_SESSION['post_for_comments'] != $postID) {
-                $post .= <<<POST
-                <div id="post_id_{$postID}" class='hidden'>
+
+            $post .= <<<POST
+            <div id="post_id_{$postID}" class='hidden'>
+                <div class='commentArea_{$postID}'>
 POST;
-                        
-            } else {
-                $post .= <<<POST
-                <div id="post_id_{$postID}" class='show'>
-POST;
-            }
             
             $commentResult = queryFunc("SELECT comment,users.username,createdAt from comments inner join users on users.user_id = comments.user_id where comments.post_id ='$postID' order by createdAt");
             while ($comments = isRecord($commentResult)) {
@@ -110,14 +104,17 @@ POST;
                     <span class='commentUser'>{$comments['username']} : </span>
                     <span class='commentText'>{$comments['comment']}</span>
                 </div>
+            
 POST;
                 
             }
             $post .= <<<POST
+            </div>
             <div class='commentForm'>
-                <form action="comment.php" method="post" id='commentForm'>
+                <form action="#" method="post" id='commentForm'>
                     <input name = "comment" type='text'>
                     <input type="text" value={$postID} style="display:none" name="post_id">
+                    <input type="text" value={$row['username']} style="display:none" name="post_user">
                     <input type='submit' id="{$postID}" value="Comment"> 
                 </form>
             </div>
