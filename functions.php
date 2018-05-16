@@ -111,9 +111,9 @@ POST;
             $post .= <<<POST
             </div>
             <div class='commentForm'>
-                <form action="#" method="post" id='commentForm'>
-                    <input name = "comment" type='text'>
-                    <input type="text" value={$postID} style="display:none" name="post_id">
+                <form onsubmit="return comment({$postID})" method="post" id='commentForm'>
+                    <input name = "comment_{$postID}" type='text'>
+                    <input type="text" value={$postID} style="display:none" name="post_id_{$postID}">
                     <input type="text" value={$row['username']} style="display:none" name="post_user">
                     <input type='submit' id="{$postID}" value="Comment"> 
                 </form>
