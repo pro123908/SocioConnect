@@ -92,14 +92,14 @@ function show_posts(){
             
 POST;
             //Checks for the latest comments on posts
-            if (!(isset($_SESSION['post_for_comments'])) || $_SESSION['post_for_comments'] == $postID) {
+            if (!(isset($_SESSION['post_for_comments'])) || $_SESSION['post_for_comments'] != $postID) {
                 $post .= <<<POST
-                <div id="post_id_{$postID}" class='show'>
+                <div id="post_id_{$postID}" class='hidden'>
 POST;
                         
             } else {
                 $post .= <<<POST
-                <div id="post_id_{$postID}" class='hidden'>
+                <div id="post_id_{$postID}" class='show'>
 POST;
             }
             
