@@ -6,12 +6,12 @@
 
   if($_POST['submit']){
     
-    $username = mysqli_real_escape_string($connection,$_POST['username']);
+    $email = mysqli_real_escape_string($connection,$_POST['email']);
     //Hash of password is returned
     $password = hashString(mysqli_real_escape_string($connection,$_POST['password']));
     
 
-    $queryResult = queryFunc("SELECT * FROM users WHERE username = '$username'");
+    $queryResult = queryFunc("SELECT * FROM users WHERE email = '$email'");
 
   
     if(!isData($queryResult)){
@@ -22,7 +22,7 @@
       // Hash from database is compared with the hash created now.
       if($row['password'] === $password){
         $_SESSION['user_id'] = $row['user_id'];
-        $_SESSION['user'] = $username;
+        $_SESSION['user'] = $row['first_name'].$row['last_name'];
          redirection('main.php');
         
       }else{

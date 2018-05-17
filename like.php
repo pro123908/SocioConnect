@@ -1,3 +1,7 @@
+
+<script>
+  console.log('Here');
+</script>
 <?php 
 
 require('header.php');
@@ -21,10 +25,13 @@ if(isset($_GET['like'])){
   $likesResult = queryFunc("SELECT count(*) as count from likes where post_id='$postID'");
   $likes = isRecord($likesResult);
 
+  
+
   redirection('likesCount.php?likeCount='.$likes['count']);
 
   }
-  
-  
+
 
 ?>
+
+
