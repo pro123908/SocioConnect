@@ -1,30 +1,30 @@
-.hidden{
+.hidden {
   display: none;
 }
-.show{
+
+.show {
   display: visible;
 }
 
-#header{
-  background-color:#000;
+#header {
+  background-color: #000;
   color: #fff;
-  
 }
 
-#header h1{
+#header h1 {
   display: inline-block;
   padding-left: 20px;
   color: #def720;
 }
 
-#header a{
+#header a {
   text-decoration: none;
   color: #fff;
   float: right;
   padding: 25px;
 }
 
-.firstSection{
+.firstSection {
   text-align: center;
 }
 
@@ -33,21 +33,19 @@
   text-transform: uppercase;
 }
 
-
-#postArea{
+#postArea {
   text-align: center;
 }
 
-#postArea h3{
+#postArea h3 {
   text-transform: uppercase;
   letter-spacing: 5px;
 }
 
-.post{
+.post {
   box-shadow: 0 2px 3px black;
   padding: 20px;
   width: 500px;
-  
   display: inline-block;
   text-align: left;
   margin-bottom: 30px;
@@ -55,14 +53,12 @@
 
 .post p {
   letter-spacing: 2px;
-  
 }
 
-
-.post a,#commentBtn{
+.post a, #commentBtn {
   text-decoration: none;
   display: inline-block;
-  color:white;
+  color: white;
   width: 20%;
   border-radius: 5px;
   background-color: #0ed15c;
@@ -71,44 +67,50 @@
   border: none;
 }
 
-
-
-.post .user{
-  background-color:#78e892;
+.post .user {
+  background-color: #78e892;
   display: inline-block;
   width: 100%;
   padding: 10px;
-  
   font-weight: bold;
 }
 
-#addPost{
+.post .postTime {
+  color: #888989;
+  display: inline-block;
+  font-size: 13px;
+  padding-left: 10px;
+  padding-top: 5px;
+  letter-spacing: 1px;
+}
+
+#addPost {
   text-align: center;
   margin-bottom: 80px;
 }
 
-#addPost h2{
+#addPost h2 {
   text-transform: uppercase;
   letter-spacing: 2px;
 }
 
-#addPost textarea{
+#addPost textarea {
   border: none;
   padding: 10px;
   width: 500px;
   box-shadow: 0 2px 5px black;
 }
 
-#addPost textarea::placeholder{
+#addPost textarea::placeholder {
   color: #0ed15c;
   font-weight: bold;
   font-size: 20px;
 }
 
-#addPost .postBtn{
+#addPost .postBtn {
   border: none;
   display: inline-block;
-  color:white;
+  color: white;
   width: 200px;
   border-radius: 5px;
   background-color: #0ed15c;
@@ -117,37 +119,60 @@
   cursor: pointer;
 }
 
-.post .comment{
+.post .postContent{
+  margin-left: 20px;
+  font-size: 16px;
+  
+}
+
+.post .likeCount{
+  display: inline-block;
+  width: 100%;
+  padding-left: 10px;
+  font-size: 14px;
+  color: #888989;
+  margin-bottom: 5px;
+}
+
+.post .comment {
   background-color: #f2f7ef;
   color: black;
   margin-top: 20px;
   padding: 10px;
 }
 
-.post .commentUser{
+.post .commentUser {
   font-weight: bold;
   font-size: 18px;
 }
 
-.post .commentText{
+.post .commentText {
   font-size: 16px;
 }
 
-.post .commentForm{
-  margin-top: 20px;
-  
+.post .commentTime {
+  display: inline-block;
+  font-size: 13px;
+  color: #54aa38;
+  width: 100%;
+  padding-left: 5px;
+  letter-spacing: 1px;
 }
 
-.post .commentForm input[type='text']{
+.post .commentForm {
+  margin-top: 20px;
+}
+
+.post .commentForm input[type='text'] {
   border: none;
   box-shadow: 0 1px 1px black;
   padding: 10px;
   width: 70%;
 }
 
-.post .commentForm input[type='submit']{
+.post .commentForm input[type='submit'] {
   display: inline-block;
-  color:white;
+  color: white;
   width: 20%;
   border-radius: 5px;
   background-color: #0ed15c;
@@ -156,4 +181,3 @@
   border: none;
   margin-left: 5px;
 }
-

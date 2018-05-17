@@ -105,9 +105,9 @@ function show_posts($flag){
             $post = <<<POST
             <div class='post'>
                 <span class='user'>{$row['name']}</span>
-                <span class='post_time'>$timeToShow</span>
-                <p>{$row['post']}</p>
-                <p class='likeCount-{$postID}'>{$likes['count']}</p>
+                <span class='postTime'>$timeToShow</span>
+                <p class='postContent'>{$row['post']}</p>
+                <span class='likeCount likeCount-{$postID}'>{$likes['count']}</span>
                 <a href='javascript:like({$postID})'>Like</a>
                 <a  href="javascript:showCommentField({$postID})" >Comment</a>
             
@@ -123,6 +123,7 @@ POST;
             while ($comments = isRecord($commentResult)) {
                 $diffTime = find_difference_of_time($comments['createdAt']);
                 $timeToShow = create_time_string($diffTime);
+                $_SESSION['ctime'] = $timeToShow;
                 
                 $post .= <<<POST
                 <div class='comment'>
@@ -141,6 +142,7 @@ POST;
                     <input name = "comment_{$postID}" type='text'>
                     <input type="text" value="{$postID}" style="display:none" name="post_id_{$postID}">
                     <input type="text" value="{$_SESSION['user']}" style="display:none" name="post_user">
+                    <input type="text" value="{$_SESSION['ctime']}" style="display:none" name="time">
                     <input type='submit' id="{$postID}" value="Comment"> 
                 </form>
             </div>
@@ -169,31 +171,40 @@ function find_difference_of_time($createdAt){
 }
 
 function create_time_string($timeDate){
+
+    // Time in seconds
     if($timeDate < 60){
+        // if it is just one second
         if($timeDate == 1)
             return $timeDate ." Second Ago";
         else
             return $timeDate ." Seconds Ago";
         
     }
+    // Time in minutes
     else if($timeDate > 59 && $timeDate < 3600){
+        // if it is just one minute
         if(($timeDate / 60) < 2)
-            return round($timeDate / 60) . " Minute Ago";
+            return floor($timeDate / 60) . " Minute Ago";
         else
-            return round($timeDate / 60) . " Minutes Ago"; 
+            return floor($timeDate / 60) . " Minutes Ago"; 
     }
+    // Time in hours
     else if($timeDate > 3599 && $timeDate < 86400){
-        // Shouldn't it be 3600?e
-        if(($timeDate / 3660) < 2)
-            return round($timeDate / 3600) . " Hour Ago";    
+        // Shouldn't it be 3600?
+        // if it is just one hour
+        if(($timeDate / 3600) < 2)
+            return floor($timeDate / 3600) . " Hour Ago";    
         else
-            return round($timeDate / 3600) . " Hours Ago";         
+            return floor($timeDate / 3600) . " Hours Ago";         
         }
+        // Time in days
     else if($timeDate > 86399){
+        // if it is just one day
         if(($timeDate / 86400) < 2)
-             return round($timeDate / 86400) . " Day Ago";    
+             return floor($timeDate / 86400) . " Day Ago";    
         else
-            return round($timeDate / 86400) . " Days Ago";         
+            return floor($timeDate / 86400) . " Days Ago";         
     }
 }
 

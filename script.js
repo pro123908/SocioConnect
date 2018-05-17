@@ -27,11 +27,11 @@ function like(postID){
 }
   
   function comment(postID){
-    
-    
+  
     var post = document.querySelector(`input[name='post_id_${postID}']`);
     var comment = document.querySelector(`input[name='comment_${post.value}']`);
     var user = document.querySelector('input[name="post_user"]');
+    var time = document.querySelector('input[name="time"]');
     // console.log(post.value);
     // console.log(comment.value);
      console.log(user.value);
@@ -44,11 +44,13 @@ function like(postID){
     
     
     xhr2.onload = () => {
-      console.log(document.querySelector(`.commentArea_${post.value}`));
+      // console.log(document.querySelector(`.commentArea_${post.value}`));
+      console.log(time.value);
       document.querySelector(`.commentArea_${post.value}`).innerHTML += `
       <div class='comment'>
       <span class='commentUser'>${user.value} : </span>
       <span class='commentText'>${comment.value}</span>
+      <span class='commentTime'>1 Second Ago</span>
       </div>
       `
       

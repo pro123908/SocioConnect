@@ -13,6 +13,7 @@
 <div id='header'>
 <h1>SocioConnect</h1>
 <?php
+  // if user is logged In
   if (isset($_SESSION['user_id'])) { ?>
     <a href="logout.php">Logout</a>
     <a href="timeline.php">Profile</a>
