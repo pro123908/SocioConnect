@@ -72,11 +72,13 @@ function redirection($path)
 
 function show_posts(){
     //Selecting all the posts in a manner where user_id matches post_id
-    $queryResult = queryFunc("SELECT post,post_id,posts.user_id,username from posts inner join users on users.user_id = posts.user_id order by post_id desc");
+    $queryResult = queryFunc("SELECT post,post_id,posts.user_id,username,createdAt from posts inner join users on users.user_id = posts.user_id order by post_id desc");
    
     if (isData($queryResult)) {
         while ($row = isRecord($queryResult)) {
             $postID = $row['post_id'];
+            $diffTime = find_difference_of_time($row['createdAt']);
+            $timeToShow = create_time_string($diffTime);
             
             //Getting likes count for the current post
             $likesResult = queryFunc("SELECT count(*) as count from likes where post_id='$postID'");
@@ -85,6 +87,7 @@ function show_posts(){
             $post = <<<POST
             <div class='post'>
                 <span class='user'>{$row['username']}</span>
+                <span class='post_time'>$timeToShow</span>
                 <p>{$row['post']}</p>
                 <p class='likeCount-{$postID}'>{$likes['count']}</p>
                 <a href='javascript:like({$postID})'>Like</a>
@@ -100,10 +103,14 @@ POST;
 
             $commentResult = queryFunc("SELECT comment,users.username,createdAt from comments inner join users on users.user_id = comments.user_id where comments.post_id ='$postID' order by createdAt");
             while ($comments = isRecord($commentResult)) {
+                $diffTime = find_difference_of_time($comments['createdAt']);
+                $timeToShow = create_time_string($diffTime);
+                
                 $post .= <<<POST
                 <div class='comment'>
                     <span class='commentUser'>{$comments['username']} : </span>
                     <span class='commentText'>{$comments['comment']}</span>
+                    <span class='commentTime'>$timeToShow</span>
                 </div>
             
 POST;
@@ -125,6 +132,7 @@ POST;
    <br>
 POST;
             echo $post;
+            echo $_SESSION['hm'];
         }
     }
 }
@@ -137,6 +145,39 @@ function logout()
     redirection('index.php');
 }
 
+function find_difference_of_time($createdAt){
+    $currentTime = queryFunc("SELECT TIMESTAMPDIFF(SECOND, '".$createdAt."', now()) as 'time' ");
+    $currentTime = isRecord($currentTime);
+    return $currentTime['time'];
+}
+
+function create_time_string($timeDate){
+    if($timeDate < 60){
+        if($timeDate == 1)
+            return $timeDate ." Second Ago";
+        else
+            return $timeDate ." Seconds Ago";
+        
+    }
+    else if($timeDate > 59 && $timeDate < 3599){
+        if(($timeDate / 60) < 2)
+            return round($timeDate / 60) . " Minute Ago";
+        else
+            return round($timeDate / 60) . " Minutes Ago"; 
+    }
+    else if($timeDate > 3599){
+        if(($timeDate / 3660) < 2)
+            return round($timeDate / 3600) . " Hour Ago";    
+        else
+            return round($timeDate / 3600) . " Hours Ago";         
+        }
+    else if($timeDate > 86399){
+        if(($timeDate / 86400) < 2)
+            return round($timeDate / 3600) . " Day Ago";    
+        else
+            return round($timeDate / 3600) . " Days Ago";         
+    }
+}
 
 
 
