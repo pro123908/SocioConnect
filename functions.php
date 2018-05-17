@@ -70,13 +70,31 @@ function redirection($path)
     header('Location: '.$path);
 }
 
-function show_posts(){
+function add_post(){
+    $addPost = <<<DELIMETER
+         <div id='addPost'>
+            <h2>Add a post</h2>
+            <form action="post.php" method='POST'>
+                <textarea name="post" id="" cols="50" rows="10" placeholder='Start Writing'></textarea><br><br>
+                <input type="file"><br><br>
+                <input type="submit" name='submit' value='Post' class='postBtn'>
+            </form>
+        </div>
+DELIMETER;
+echo $addPost; 
+}
+
+function show_posts($flag){
     //Selecting all the posts in a manner where user_id matches post_id
-    $queryResult = queryFunc("SELECT post,post_id,posts.user_id,CONCAT(first_name,last_name) as 'name' from posts inner join users on users.user_id = posts.user_id order by post_id desc");
-   
+    if($flag)
+        $queryResult = queryFunc("SELECT post,post_id,posts.user_id,username,createdAt from posts inner join users on users.user_id = posts.user_id order by post_id desc");
+    else
+        $queryResult = queryFunc("SELECT post,post_id,posts.user_id,username,createdAt from posts inner join users on users.user_id = posts.user_id where users.user_id = {$_SESSION['user_id']} order by post_id desc"); 
     if (isData($queryResult)) {
         while ($row = isRecord($queryResult)) {
             $postID = $row['post_id'];
+            $diffTime = find_difference_of_time($row['createdAt']);
+            $timeToShow = create_time_string($diffTime);
             
             //Getting likes count for the current post
             $likesResult = queryFunc("SELECT count(*) as count from likes where post_id='$postID'");
@@ -84,7 +102,8 @@ function show_posts(){
             
             $post = <<<POST
             <div class='post'>
-                <span class='user'>{$row['name']}</span>
+                <span class='user'>{$row['username']}</span>
+                <span class='post_time'>$timeToShow</span>
                 <p>{$row['post']}</p>
                 <p class='likeCount-{$postID}'>{$likes['count']}</p>
                 <a href='javascript:like({$postID})'>Like</a>
@@ -100,10 +119,14 @@ POST;
 
             $commentResult = queryFunc("SELECT comment,CONCAT(first_name,last_name) as 'name',createdAt from comments inner join users on users.user_id = comments.user_id where comments.post_id ='$postID' order by createdAt");
             while ($comments = isRecord($commentResult)) {
+                $diffTime = find_difference_of_time($comments['createdAt']);
+                $timeToShow = create_time_string($diffTime);
+                
                 $post .= <<<POST
                 <div class='comment'>
                     <span class='commentUser'>{$comments['name']} : </span>
                     <span class='commentText'>{$comments['comment']}</span>
+                    <span class='commentTime'>$timeToShow</span>
                 </div>
             
 POST;
@@ -137,6 +160,39 @@ function logout()
     redirection('index.php');
 }
 
+function find_difference_of_time($createdAt){
+    $currentTime = queryFunc("SELECT TIMESTAMPDIFF(SECOND, '".$createdAt."', now()) as 'time' ");
+    $currentTime = isRecord($currentTime);
+    return $currentTime['time'];
+}
+
+function create_time_string($timeDate){
+    if($timeDate < 60){
+        if($timeDate == 1)
+            return $timeDate ." Second Ago";
+        else
+            return $timeDate ." Seconds Ago";
+        
+    }
+    else if($timeDate > 59 && $timeDate < 3599){
+        if(($timeDate / 60) < 2)
+            return round($timeDate / 60) . " Minute Ago";
+        else
+            return round($timeDate / 60) . " Minutes Ago"; 
+    }
+    else if($timeDate > 3599){
+        if(($timeDate / 3660) < 2)
+            return round($timeDate / 3600) . " Hour Ago";    
+        else
+            return round($timeDate / 3600) . " Hours Ago";         
+        }
+    else if($timeDate > 86399){
+        if(($timeDate / 86400) < 2)
+            return round($timeDate / 3600) . " Day Ago";    
+        else
+            return round($timeDate / 3600) . " Days Ago";         
+    }
+}
 
 
 
