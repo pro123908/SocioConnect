@@ -91,6 +91,7 @@ function show_posts($flag){
         $queryResult = queryFunc("SELECT post,post_id,posts.user_id,CONCAT(first_name,' ',last_name) as 'name',createdAt from posts inner join users on users.user_id = posts.user_id order by post_id desc");
     else
         $queryResult = queryFunc("SELECT post,post_id,posts.user_id,CONCAT(first_name,' ',last_name) as 'name',createdAt from posts inner join users on users.user_id = posts.user_id where users.user_id = {$_SESSION['user_id']} order by post_id desc"); 
+
     if (isData($queryResult)) {
         while ($row = isRecord($queryResult)) {
             $postID = $row['post_id'];
@@ -182,6 +183,7 @@ function create_time_string($timeDate){
             return round($timeDate / 60) . " Minutes Ago"; 
     }
     else if($timeDate > 3599 && $timeDate < 86400){
+        // Shouldn't it be 3600?e
         if(($timeDate / 3660) < 2)
             return round($timeDate / 3600) . " Hour Ago";    
         else
