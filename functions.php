@@ -87,9 +87,9 @@ echo $addPost;
 function show_posts($flag){
     //Selecting all the posts in a manner where user_id matches post_id
     if($flag)
-        $queryResult = queryFunc("SELECT post,post_id,posts.user_id,username,createdAt from posts inner join users on users.user_id = posts.user_id order by post_id desc");
+        $queryResult = queryFunc("SELECT post,post_id,posts.user_id,CONCAT(first_name,last_name) as 'name',createdAt from posts inner join users on users.user_id = posts.user_id order by post_id desc");
     else
-        $queryResult = queryFunc("SELECT post,post_id,posts.user_id,username,createdAt from posts inner join users on users.user_id = posts.user_id where users.user_id = {$_SESSION['user_id']} order by post_id desc"); 
+        $queryResult = queryFunc("SELECT post,post_id,posts.user_id,CONCAT(first_name,last_name) as 'name',createdAt from posts inner join users on users.user_id = posts.user_id where users.user_id = {$_SESSION['user_id']} order by post_id desc"); 
     if (isData($queryResult)) {
         while ($row = isRecord($queryResult)) {
             $postID = $row['post_id'];
@@ -102,7 +102,7 @@ function show_posts($flag){
             
             $post = <<<POST
             <div class='post'>
-                <span class='user'>{$row['username']}</span>
+                <span class='user'>{$row['name']}</span>
                 <span class='post_time'>$timeToShow</span>
                 <p>{$row['post']}</p>
                 <p class='likeCount-{$postID}'>{$likes['count']}</p>
