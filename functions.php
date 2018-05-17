@@ -86,10 +86,11 @@ echo $addPost;
 
 function show_posts($flag){
     //Selecting all the posts in a manner where user_id matches post_id
+    // if flag is true then it is newsfeed else it is your timeline xD
     if($flag)
-        $queryResult = queryFunc("SELECT post,post_id,posts.user_id,CONCAT(CONCAT(first_name,' '),last_name) as 'name',createdAt from posts inner join users on users.user_id = posts.user_id order by post_id desc");
+        $queryResult = queryFunc("SELECT post,post_id,posts.user_id,CONCAT(first_name,' ',last_name) as 'name',createdAt from posts inner join users on users.user_id = posts.user_id order by post_id desc");
     else
-        $queryResult = queryFunc("SELECT post,post_id,posts.user_id,CONCAT(CONCAT(first_name,' '),last_name) as 'name',createdAt from posts inner join users on users.user_id = posts.user_id where users.user_id = {$_SESSION['user_id']} order by post_id desc"); 
+        $queryResult = queryFunc("SELECT post,post_id,posts.user_id,CONCAT(first_name,' ',last_name) as 'name',createdAt from posts inner join users on users.user_id = posts.user_id where users.user_id = {$_SESSION['user_id']} order by post_id desc"); 
     if (isData($queryResult)) {
         while ($row = isRecord($queryResult)) {
             $postID = $row['post_id'];
@@ -117,7 +118,7 @@ POST;
 
 POST;
 
-            $commentResult = queryFunc("SELECT comment,CONCAT(first_name,last_name) as 'name',createdAt from comments inner join users on users.user_id = comments.user_id where comments.post_id ='$postID' order by createdAt");
+            $commentResult = queryFunc("SELECT comment,CONCAT(first_name,' ',last_name) as 'name',createdAt from comments inner join users on users.user_id = comments.user_id where comments.post_id ='$postID' order by createdAt");
             while ($comments = isRecord($commentResult)) {
                 $diffTime = find_difference_of_time($comments['createdAt']);
                 $timeToShow = create_time_string($diffTime);
@@ -137,8 +138,8 @@ POST;
             <div class='commentForm'>
                 <form onsubmit="return comment({$postID})" method="post" id='commentForm'>
                     <input name = "comment_{$postID}" type='text'>
-                    <input type="text" value={$postID} style="display:none" name="post_id_{$postID}">
-                    <input type="text" value={$_SESSION['user']} style="display:none" name="post_user">
+                    <input type="text" value="{$postID}" style="display:none" name="post_id_{$postID}">
+                    <input type="text" value="{$_SESSION['user']}" style="display:none" name="post_user">
                     <input type='submit' id="{$postID}" value="Comment"> 
                 </form>
             </div>

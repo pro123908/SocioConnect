@@ -32,9 +32,9 @@ function like(postID){
     var post = document.querySelector(`input[name='post_id_${postID}']`);
     var comment = document.querySelector(`input[name='comment_${post.value}']`);
     var user = document.querySelector('input[name="post_user"]');
-    console.log(post.value);
-    console.log(comment.value);
-    console.log(user.value);
+    // console.log(post.value);
+    // console.log(comment.value);
+     console.log(user.value);
     var param = `comment=${comment.value}&post_id=${post.value}`;
     
     var xhr2 = new XMLHttpRequest();
