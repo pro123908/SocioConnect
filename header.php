@@ -15,9 +15,13 @@
 <?php
   if (isset($_SESSION['user_id'])) { ?>
     <a href="logout.php">Logout</a>
+    <a href="timeline.php">Profile</a>
+    <a href="main.php">Newsfeed</a>
   <?php 
 }
 ?>
 </div>
+
+
 
 </html>

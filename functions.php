@@ -70,10 +70,26 @@ function redirection($path)
     header('Location: '.$path);
 }
 
-function show_posts(){
+function add_post(){
+    $addPost = <<<DELIMETER
+         <div id='addPost'>
+            <h2>Add a post</h2>
+            <form action="post.php" method='POST'>
+                <textarea name="post" id="" cols="50" rows="10" placeholder='Start Writing'></textarea><br><br>
+                <input type="file"><br><br>
+                <input type="submit" name='submit' value='Post' class='postBtn'>
+            </form>
+        </div>
+DELIMETER;
+echo $addPost; 
+}
+
+function show_posts($flag){
     //Selecting all the posts in a manner where user_id matches post_id
-    $queryResult = queryFunc("SELECT post,post_id,posts.user_id,username,createdAt from posts inner join users on users.user_id = posts.user_id order by post_id desc");
-   
+    if($flag)
+        $queryResult = queryFunc("SELECT post,post_id,posts.user_id,username,createdAt from posts inner join users on users.user_id = posts.user_id order by post_id desc");
+    else
+        $queryResult = queryFunc("SELECT post,post_id,posts.user_id,username,createdAt from posts inner join users on users.user_id = posts.user_id where users.user_id = {$_SESSION['user_id']} order by post_id desc"); 
     if (isData($queryResult)) {
         while ($row = isRecord($queryResult)) {
             $postID = $row['post_id'];
@@ -132,7 +148,6 @@ POST;
    <br>
 POST;
             echo $post;
-            echo $_SESSION['hm'];
         }
     }
 }
