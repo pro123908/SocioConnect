@@ -3,23 +3,26 @@ function showCommentField(id){
 }
 
 function like(postID){
-  var xhr = new XMLHttpRequest();
 
-  xhr.open('GET',`like.php?like=${postID}`,true);
+  var xmlhttp = new XMLHttpRequest();
 
-  xhr.onerror = () => {
-    console.log('Error');
-  }
+    xmlhttp.onreadystatechange = function() {
+        if (xmlhttp.readyState == XMLHttpRequest.DONE) {   // XMLHttpRequest.DONE == 4
+           if (xmlhttp.status == 200) {
+            document.querySelector(`.likeCount-${postID}`).textContent = this.responseText.trim();
+           }
+           else if (xmlhttp.status == 400) {
+              alert('There was an error 400');
+           }
+           else {
+               alert('something else other than 200 was returned');
+           }
+        }
+    };
 
-  xhr.onload = () => {
-    console.log(this.response);
-    if(this.status == 200){
-      
-      document.querySelector(`.likeCount-${postID}`).textContent = this.responseText;
-    }
-  }
-  
-  xhr.send();
+    xmlhttp.open("GET", `like.php?like=${postID}`, true);
+    xmlhttp.send();
+
   
 }
   

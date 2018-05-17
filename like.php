@@ -1,7 +1,3 @@
-
-<script>
-  console.log('Here');
-</script>
 <?php 
 
 require('header.php');
