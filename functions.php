@@ -87,9 +87,9 @@ echo $addPost;
 function show_posts($flag){
     //Selecting all the posts in a manner where user_id matches post_id
     if($flag)
-        $queryResult = queryFunc("SELECT post,post_id,posts.user_id,CONCAT(first_name,last_name) as 'name',createdAt from posts inner join users on users.user_id = posts.user_id order by post_id desc");
+        $queryResult = queryFunc("SELECT post,post_id,posts.user_id,CONCAT(CONCAT(first_name,' '),last_name) as 'name',createdAt from posts inner join users on users.user_id = posts.user_id order by post_id desc");
     else
-        $queryResult = queryFunc("SELECT post,post_id,posts.user_id,CONCAT(first_name,last_name) as 'name',createdAt from posts inner join users on users.user_id = posts.user_id where users.user_id = {$_SESSION['user_id']} order by post_id desc"); 
+        $queryResult = queryFunc("SELECT post,post_id,posts.user_id,CONCAT(CONCAT(first_name,' '),last_name) as 'name',createdAt from posts inner join users on users.user_id = posts.user_id where users.user_id = {$_SESSION['user_id']} order by post_id desc"); 
     if (isData($queryResult)) {
         while ($row = isRecord($queryResult)) {
             $postID = $row['post_id'];
@@ -174,13 +174,13 @@ function create_time_string($timeDate){
             return $timeDate ." Seconds Ago";
         
     }
-    else if($timeDate > 59 && $timeDate < 3599){
+    else if($timeDate > 59 && $timeDate < 3600){
         if(($timeDate / 60) < 2)
             return round($timeDate / 60) . " Minute Ago";
         else
             return round($timeDate / 60) . " Minutes Ago"; 
     }
-    else if($timeDate > 3599){
+    else if($timeDate > 3599 && $timeDate < 86400){
         if(($timeDate / 3660) < 2)
             return round($timeDate / 3600) . " Hour Ago";    
         else
@@ -188,9 +188,9 @@ function create_time_string($timeDate){
         }
     else if($timeDate > 86399){
         if(($timeDate / 86400) < 2)
-            return round($timeDate / 3600) . " Day Ago";    
+             return round($timeDate / 86400) . " Day Ago";    
         else
-            return round($timeDate / 3600) . " Days Ago";         
+            return round($timeDate / 86400) . " Days Ago";         
     }
 }
 

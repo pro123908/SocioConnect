@@ -14,7 +14,7 @@
   <input type="password" name='password' placeholder='Password'><br><br>
   <input type="submit" name='submit'><br><br>
 </form>
-<a href="signUp.php">Hasn't registered?</a>
+<a href="signUp.php">Haven't registered?</a>
 
 
 </body>

@@ -22,7 +22,7 @@
       // Hash from database is compared with the hash created now.
       if($row['password'] === $password){
         $_SESSION['user_id'] = $row['user_id'];
-        $_SESSION['user'] = $row['first_name'].$row['last_name'];
+        $_SESSION['user'] = $row['first_name']." ".$row['last_name'];
          redirection('main.php');
         
       }else{
