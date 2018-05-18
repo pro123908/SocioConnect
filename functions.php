@@ -147,7 +147,7 @@ PosDel;
                 <a class='likeBtn' href='javascript:like({$postID})'>Like</a>
                 <a  class='commentBtn' href="javascript:showCommentField({$postID})" >Comment</a>
                 {$PostDeleteButton}
-                
+
             
 POST;
 
@@ -157,11 +157,14 @@ POST;
 
 POST;
 
+
             $commentResult = queryFunc("SELECT comments.user_id,comment_id,comment,CONCAT(first_name,' ',last_name) as 'name',createdAt from comments inner join users on users.user_id = comments.user_id where comments.post_id ='$postID' order by createdAt");
+
             while ($comments = isRecord($commentResult)) {
                 $diffTime = find_difference_of_time($comments['createdAt']);
                 $timeToShow = create_time_string($diffTime);
                 $commentID = $comments['comment_id'];
+
                 if($comments['user_id'] == $_SESSION['user_id']){
                     $commentDeleteButton = <<<ComDel
                     <a class='commentDelete' href='javascript:deleteComment({$commentID})'>X</a>
@@ -170,7 +173,6 @@ ComDel;
                 else{
                     $commentDeleteButton = '';
                 }
-                
                 
                 $post .= <<<POST
                 <div class='comment comment_{$commentID}'>
