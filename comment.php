@@ -1,8 +1,17 @@
-<?php require('./header.php');?>
+
 
 <?php 
-	$stmt = $connection->prepare("INSERT INTO comments (user_id, post_id, comment,createdAt) VALUES (?, ?, ?,now())");
-	$stmt->bind_param("iis",$_SESSION['user_id'], $_POST['post_id'], $_POST['comment']);
-	$stmt->execute();
-	$stmt->close();
+
+require('functions.php');
+
+
+	$userID = $_SESSION['user_id'];
+	$postID = $_POST['post_id'];
+	$comment = $_POST['comment'];
+
+	$commentID = addComment($userID,$postID,$comment);
+
+	echo $commentID;
+	
+
 ?>
