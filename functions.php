@@ -1,4 +1,7 @@
 <?php
+require('db.php');
+session_start();
+
 
 function set_message($msg){
   if(!empty($msg)){
@@ -84,6 +87,30 @@ DELIMETER;
 echo $addPost; 
 }
 
+function deletePost($postID){
+    $deleteQuery = queryFunc("DELETE from posts WHERE post_id ='$postID'");
+    return $deleteQuery;
+}
+
+function deleteComment($commentID){
+    $deleteQuery = queryFunc("DELETE from comments WHERE comment_id ='$commentID'");
+    return $deleteQuery;
+}
+
+function addComment($userID,$postID,$comment){
+    global $connection;
+    $stmt = $connection->prepare("INSERT INTO comments (user_id, post_id, comment,createdAt) VALUES (?, ?, ?,now())");
+	$stmt->bind_param("iis",$userID,$postID ,$comment );
+	$stmt->execute();
+    $stmt->close();
+    
+    $queryResult = queryFunc("SELECT comment_id from comments ORDER BY comment_id DESC LIMIT 1");
+    $row = isRecord($queryResult);
+
+    return $row['comment_id'];
+	
+}
+
 function show_posts($flag){
     //Selecting all the posts in a manner where user_id matches post_id
     // if flag is true then it is newsfeed else it is your timeline xD
@@ -101,15 +128,26 @@ function show_posts($flag){
             //Getting likes count for the current post
             $likesResult = queryFunc("SELECT count(*) as count from likes where post_id='$postID'");
             $likes = isRecord($likesResult);
+
+            if($row['user_id'] == $_SESSION['user_id']){
+                $PostDeleteButton = <<<PosDel
+                <a  class='deleteBtn' href="javascript:deletePost({$postID})" >Delete</a>
+PosDel;
+            }
+            else{
+                $PostDeleteButton = '';
+            }
             
             $post = <<<POST
-            <div class='post'>
+            <div class='post post_{$postID}'>
                 <span class='user'>{$row['name']}</span>
                 <span class='postTime'>$timeToShow</span>
                 <p class='postContent'>{$row['post']}</p>
                 <span class='likeCount likeCount-{$postID}'>{$likes['count']}</span>
-                <a href='javascript:like({$postID})'>Like</a>
-                <a  href="javascript:showCommentField({$postID})" >Comment</a>
+                <a class='likeBtn' href='javascript:like({$postID})'>Like</a>
+                <a  class='commentBtn' href="javascript:showCommentField({$postID})" >Comment</a>
+                {$PostDeleteButton}
+                
             
 POST;
 
@@ -119,14 +157,24 @@ POST;
 
 POST;
 
-            $commentResult = queryFunc("SELECT comment,CONCAT(first_name,' ',last_name) as 'name',createdAt from comments inner join users on users.user_id = comments.user_id where comments.post_id ='$postID' order by createdAt");
+            $commentResult = queryFunc("SELECT comments.user_id,comment_id,comment,CONCAT(first_name,' ',last_name) as 'name',createdAt from comments inner join users on users.user_id = comments.user_id where comments.post_id ='$postID' order by createdAt");
             while ($comments = isRecord($commentResult)) {
                 $diffTime = find_difference_of_time($comments['createdAt']);
                 $timeToShow = create_time_string($diffTime);
-                $_SESSION['ctime'] = $timeToShow;
+                $commentID = $comments['comment_id'];
+                if($comments['user_id'] == $_SESSION['user_id']){
+                    $commentDeleteButton = <<<ComDel
+                    <a class='commentDelete' href='javascript:deleteComment({$commentID})'>X</a>
+ComDel;
+                }
+                else{
+                    $commentDeleteButton = '';
+                }
+                
                 
                 $post .= <<<POST
-                <div class='comment'>
+                <div class='comment comment_{$commentID}'>
+                    {$commentDeleteButton}
                     <span class='commentUser'>{$comments['name']} : </span>
                     <span class='commentText'>{$comments['comment']}</span>
                     <span class='commentTime'>$timeToShow</span>
@@ -142,7 +190,6 @@ POST;
                     <input name = "comment_{$postID}" type='text'>
                     <input type="text" value="{$postID}" style="display:none" name="post_id_{$postID}">
                     <input type="text" value="{$_SESSION['user']}" style="display:none" name="post_user">
-                    <input type="text" value="{$_SESSION['ctime']}" style="display:none" name="time">
                     <input type='submit' id="{$postID}" value="Comment"> 
                 </form>
             </div>
