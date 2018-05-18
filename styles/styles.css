@@ -55,7 +55,9 @@
   letter-spacing: 2px;
 }
 
-.post a, #commentBtn {
+.post .commentBtn,
+.post .likeBtn, 
+#commentBtn {
   text-decoration: none;
   display: inline-block;
   color: white;
@@ -65,6 +67,16 @@
   padding: 10px;
   text-align: center;
   border: none;
+}
+
+.post .deleteBtn{
+  text-decoration: none;
+    color: white;
+    background-color: #0ed15c;
+    padding: 8px;
+    border-radius: 5px;
+    float: right;
+    margin-top: 2px;
 }
 
 .post .user {
@@ -148,6 +160,15 @@
 
 .post .commentText {
   font-size: 16px;
+}
+
+.post .commentDelete{
+    float: right;
+    text-decoration: none;
+    color: #0ed15c;
+    font-size: 12px;
+    padding: 3px;
+
 }
 
 .post .commentTime {

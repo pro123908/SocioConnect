@@ -25,41 +25,105 @@ function like(postID){
 
   
 }
-  
-  function comment(postID){
-  
+
+
+function comment(postID){
+
+  var xmlhttp = new XMLHttpRequest();
+
     var post = document.querySelector(`input[name='post_id_${postID}']`);
     var comment = document.querySelector(`input[name='comment_${post.value}']`);
     var user = document.querySelector('input[name="post_user"]');
-    var time = document.querySelector('input[name="time"]');
-    // console.log(post.value);
-    // console.log(comment.value);
-     console.log(user.value);
+    
+     
     var param = `comment=${comment.value}&post_id=${post.value}`;
+
+    xmlhttp.onreadystatechange = function() {
+        if (xmlhttp.readyState == XMLHttpRequest.DONE) {   // XMLHttpRequest.DONE == 4
+           if (xmlhttp.status == 200) {
+            commentID = this.responseText.trim();
+            document.querySelector(`.commentArea_${post.value}`).innerHTML += `
+            <div class='comment comment_${commentID}'>
+            <a class='commentDelete' href="javascript:deleteComment(${commentID})">X</a>
+              <span class='commentUser'>${user.value} : </span>
+              <span class='commentText'>${comment.value}</span>
+              <span class='commentTime'>1 Second Ago</span>
+            </div>
+       `
+       comment.value = '';
+           }
+           else if (xmlhttp.status == 400) {
+              alert('There was an error 400');
+           }
+           else {
+               alert('something else other than 200 was returned');
+           }
+        }
+    };
+
+    xmlhttp.open('POST','comment.php',true);
+    xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xmlhttp.send(param);
     
-    var xhr2 = new XMLHttpRequest();
     
-    xhr2.open('POST','comment.php',true);
-    xhr2.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    
-    
-    xhr2.onload = () => {
-      // console.log(document.querySelector(`.commentArea_${post.value}`));
-      console.log(time.value);
-      document.querySelector(`.commentArea_${post.value}`).innerHTML += `
-      <div class='comment'>
-      <span class='commentUser'>${user.value} : </span>
-      <span class='commentText'>${comment.value}</span>
-      <span class='commentTime'>1 Second Ago</span>
-      </div>
-      `
-      
-      comment.value = '';
-      
-      console.log(this.responseText);
-      
+  return false;
+
+
+  
+}
+
+
+function deletePost(postID){
+  console.log('Done');
+
+  var xmlhttp = new XMLHttpRequest();
+
+    xmlhttp.onreadystatechange = function() {
+        if (xmlhttp.readyState == XMLHttpRequest.DONE) {   // XMLHttpRequest.DONE == 4
+           if (xmlhttp.status == 200) {
+            console.log('Response : ' + this.responseText);
+            document.querySelector(`.post_${postID}`).style.display = 'none';
+           }
+           else if (xmlhttp.status == 400) {
+              alert('There was an error 400');
+           }
+           else {
+               alert('something else other than 200 was returned');
+           }
+        }
+    };
+
+    xmlhttp.open("GET", `delete.php?id=${postID}`, true);
+    xmlhttp.send();
+
+}
+
+
+function deleteComment(commentID){
+console.log(commentID);
+
+
+var xmlhttp = new XMLHttpRequest();
+
+xmlhttp.onreadystatechange = function() {
+    if (xmlhttp.readyState == XMLHttpRequest.DONE) {   // XMLHttpRequest.DONE == 4
+       if (xmlhttp.status == 200) {
+        console.log('Response : ' + this.responseText);
+        document.querySelector(`.comment_${commentID}`).style.display = 'none';
+        
+       }
+       else if (xmlhttp.status == 400) {
+          alert('There was an error 400');
+       }
+       else {
+           alert('something else other than 200 was returned');
+       }
     }
-    xhr2.send(param);
-    
-    return false;
-  } 
+};
+
+xmlhttp.open("GET", `commentDelete.php?id=${commentID}`, true);
+xmlhttp.send();
+
+
+}
+
