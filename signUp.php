@@ -20,7 +20,7 @@
 
     if($queryResult && $queryResult2){
       $row = isRecord($queryResult2);
-      $_SESSION['user'] = $fname.$lname;
+      $_SESSION['user'] = $fname.' '.$lname;
       $_SESSION['user_id'] = $row['user_id'];
       redirection('main.php');
     }
