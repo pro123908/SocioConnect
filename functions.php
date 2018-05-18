@@ -89,6 +89,8 @@ echo $addPost;
 
 function deletePost($postID){
     $deleteQuery = queryFunc("DELETE from posts WHERE post_id ='$postID'");
+    $deletePostComments = queryFunc("DELETE from comments WHERE post_id ='$postID'");
+    $deletePostLikes = queryFunc("DELETE from likes WHERE post_id ='$postID'");
     return $deleteQuery;
 }
 
