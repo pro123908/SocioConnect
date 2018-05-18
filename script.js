@@ -62,7 +62,4 @@ function like(postID){
     xhr2.send(param);
     
     return false;
-    
-    
-  }
-  
+  } 
