@@ -286,7 +286,11 @@ function show_personal_info(){
     $row = isRecord($queryResult);    
 
     $info = <<<DELIMETER
-     <img class='dp' src='http://localhost/SocioConnect/{$row['profile_pic']}'alt='hello'>
+    <div id="modal" class="modal">
+        <span class="close" id="modal-close" onclick="onClosedImagModal()">&times;</span>
+        <img class="modal-content" id="modal-img" src='http://localhost/SocioConnect/{$row['profile_pic']}'>
+    </div>
+     <img class='dp' src='http://localhost/SocioConnect/{$row['profile_pic']}'alt='hello' onclick='showImage()'>
      <p>First Name: {$row['first_name']} </p>
      <p>Last Name: {$row['last_name']}</p>
      <p>Email: {$row['email']}</p>

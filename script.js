@@ -123,7 +123,17 @@ xmlhttp.onreadystatechange = function() {
 
 xmlhttp.open("GET", `commentDelete.php?id=${commentID}`, true);
 xmlhttp.send();
+}
 
-
+//DP Animation Functions
+function onClosedImagModal(){
+    modal.classList.remove('modal-open');
+    modal.classList.add('modal-close');
+    setTimeout(()=>{ modal.style.display = "none"; }, 550);
+}
+function showImage(pic){
+    modal.classList.add('modal-open');         
+    modal.classList.remove('modal-close');
+    modal.style.display = "block";
 }
 
