@@ -205,29 +205,28 @@
 
 .personal_info{
   border: solid 1px black;
-  padding-left: 18px;
-  width: 300;
-  display: inline-grid;
+  display: inline-block;
+  width: 300px;
+  text-align: center;
   margin:50px 0 0 15px;
 }
 
 .add_post_timeline{
-  display: inline-grid;
+  display: inline-block;
   margin: 50 0 0 155px;
 }
 
 .dp{
-  height: 200px; 
+  height: 250px; 
   width: 200px;
-  padding-left: 10px;
-  border: inherit;
-  margin: 10 0 10 25;
+  margin: 10px 0 10px 0;
 }
 .dp:hover{
   cursor: pointer;
 }
 
 /* For Picture Animation */
+/* Where does it applies bhai? */
 .format {
 
     width: 250px;
@@ -258,8 +257,7 @@
 .modal-content {
     margin: auto;
     display: block;
-    width: 80%;
-    max-width: 700px;
+    height: 80%;
 }
 
 /* Add Animation - Zoom in the Modal */
@@ -310,3 +308,7 @@
     cursor: pointer;
 }
 /* Animation Ended*/
+
+.formPic input[type='file'] {
+  display: block;
+}

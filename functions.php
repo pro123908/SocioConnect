@@ -284,13 +284,21 @@ function validate_form($email,$pass,$re_pass){
 function show_personal_info(){
     $queryResult = queryFunc("SELECT * from users where user_id={$_SESSION['user_id']}");
     $row = isRecord($queryResult);    
+    $pic = $row['profile_pic'];
+    if(isset($pic)){
+        $picForm = 'hidden';
+    }
+    else{
+        $picForm = 'show';
+    }
 
     $info = <<<DELIMETER
     <div id="modal" class="modal">
         <span class="close" id="modal-close" onclick="onClosedImagModal()">&times;</span>
-        <img class="modal-content" id="modal-img" src='http://localhost/SocioConnect/{$row['profile_pic']}'>
+        <img class="modal-content" id="modal-img" src='http://localhost/SocioConnect/{$pic}'>
     </div>
-     <img class='dp' src='http://localhost/SocioConnect/{$row['profile_pic']}'alt='hello' onclick='showImage()'>
+     <img class='dp' src='http://localhost/SocioConnect/{$pic}'alt='hello' onclick='showImage()'>
+     <button onclick="javascript:changePic()">Change Profile Pic</button>
      <p>First Name: {$row['first_name']} </p>
      <p>Last Name: {$row['last_name']}</p>
      <p>Email: {$row['email']}</p>
@@ -299,8 +307,9 @@ function show_personal_info(){
 DELIMETER;
 
     $info .= <<<DELIMETER
-     <form action="uploadpic.php" method="post" enctype="multipart/form-data" class='show'>
-        <input type="file" name="file"><br>
+     <form action="uploadpic.php" method="post" enctype="multipart/form-data" class='formPic {$picForm}'>
+        <label for='file'>Select a pic</label>
+        <input type="file" name="file" style='margin-left:110px;'><br>
         <input type="submit" name="submit" value="Upload Photo">
      </form>
 DELIMETER;

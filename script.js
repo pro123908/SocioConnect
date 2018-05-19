@@ -34,6 +34,8 @@ function comment(postID){
     var post = document.querySelector(`input[name='post_id_${postID}']`);
     var comment = document.querySelector(`input[name='comment_${post.value}']`);
     var user = document.querySelector('input[name="post_user"]');
+    console.log(post);
+    console.log(comment);
     
      
     var param = `comment=${comment.value}&post_id=${post.value}`;
@@ -127,13 +129,21 @@ xmlhttp.send();
 
 //DP Animation Functions
 function onClosedImagModal(){
+    var modal = document.getElementById("modal")
     modal.classList.remove('modal-open');
     modal.classList.add('modal-close');
     setTimeout(()=>{ modal.style.display = "none"; }, 550);
 }
 function showImage(pic){
+    
+    var modal = document.getElementById("modal");
     modal.classList.add('modal-open');         
     modal.classList.remove('modal-close');
     modal.style.display = "block";
 }
 
+function changePic(){
+    var formPic = document.querySelector('.formPic');
+    formPic.classList.toggle('show');
+    formPic.classList.toggle('hidden');
+}
