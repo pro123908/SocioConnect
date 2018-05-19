@@ -15,23 +15,9 @@
     $_SESSION['s_last_name'] = $lname;
     $_SESSION['s_email'] = $email;
     $_SESSION['s_age'] = $age;
-    
-    $queryResult2 = queryFunc("SELECT user_id from users where email='$email'");
-    $row = isRecord($queryResult2);
 
-    if($_POST['password'] != $_POST['repeatPassword'] || $row['user_id'] > 0 || preg_match("/[0-9]+/", $_POST['password']) == 0 || preg_match("/[A-Za-z]+/", $_POST['password']) == 0){
-        if($row['user_id'] > 0)
-            $_SESSION['s_email_error'] = "Email Already in Use"; 
-        else
-            $_SESSION['s_email_error'] = "";     
-        if($_POST['password'] != $_POST['repeatPassword'])  
-            $_SESSION['s_pass_error'] = "Passwords Don't Match";
-        else if(preg_match("/[0-9]+/", $_POST['password']) == 0 ||  preg_match("/[A-Za-z]+/", $_POST['password']) == 0)
-            $_SESSION['s_pass_error'] = "Password Must Contain Alphanumeric Characters";    
-        else
-            $_SESSION['s_pass_error'] = "";     
+    if(!(validate_form($email,$_POST['password'],$_POST['repeatPassword'])))
       redirection('signUp.php');
-    }
     else{
     $queryResult = queryFunc("INSERT INTO users(first_name,last_name,email,password,age,gender) VALUES('$fname','$lname','$email','$password','$age','$gender')");
     $queryResult2 = queryFunc("SELECT user_id from users where email='$email'");
@@ -68,22 +54,3 @@
 
  </body>
 </html>
-
-<script>
-  function validateSignUpForm(){
-    <?php   session_start(); $_SESSION['error_signup'] = true;?>
-    var hasNumber = /\d/;
-    var hasAlphabet = /[a-zA-Z]/;
-    var password = document.getElementById("pass").value;
-    var rPass = document.getElementById("rPass").value;
-    if(password != rPass){ 
-      <?php   session_start(); $_SESSION['error_signup'] = false; ?>
-      alert("Passwords Don't Match");   
-    }
-    if(!hasNumber.test(password) || !hasAlphabet.test(password)){
-      <?php session_start(); $_SESSION['error_signup'] = false; ?>
-      alert("Password Must Be An Alphanumeric Combination");
-    }
-        
-  }
-</script>

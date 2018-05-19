@@ -259,6 +259,26 @@ function create_time_string($timeDate){
     }
 }
 
+function validate_form($email,$pass,$re_pass){
+    $queryResult = queryFunc("SELECT user_id from users where email='$email'");
+    $row = isRecord($queryResult);
+
+    if($pass != $re_pass || $row['user_id'] > 0 || preg_match("/[0-9]+/", $pass) == 0 || preg_match("/[A-Za-z]+/", $pass) == 0){
+        if($row['user_id'] > 0)
+            $_SESSION['s_email_error'] = "Email Already in Use"; 
+        else
+            $_SESSION['s_email_error'] = "";     
+        if($pass != $re_pass)  
+            $_SESSION['s_pass_error'] = "Passwords Don't Match";
+        else if(preg_match("/[0-9]+/", $pass) == 0 ||  preg_match("/[A-Za-z]+/", $pass) == 0)
+            $_SESSION['s_pass_error'] = "Password Must Contain Alphanumeric Characters";    
+        else
+            $_SESSION['s_pass_error'] = "";     
+        return false;
+    }
+    else
+        return true;
+}
 
 
 
