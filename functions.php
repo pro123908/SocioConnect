@@ -281,5 +281,35 @@ function validate_form($email,$pass,$re_pass){
 }
 
 
+function show_personal_info(){
+    $queryResult = queryFunc("SELECT * from users where user_id={$_SESSION['user_id']}");
+    $row = isRecord($queryResult);    
+
+    $info = <<<DELIMETER
+     <img class='dp' src='http://localhost/SocioConnect/{$row['profile_pic']}'alt='hello'>
+     <p>First Name: {$row['first_name']} </p>
+     <p>Last Name: {$row['last_name']}</p>
+     <p>Email: {$row['email']}</p>
+     <p>Age: {$row['age']}</p>
+     <p>Gender: {$row['gender']}</p>
+DELIMETER;
+
+    $info .= <<<DELIMETER
+     <form action="uploadpic.php" method="post" enctype="multipart/form-data" class='show'>
+        <input type="file" name="file"><br>
+        <input type="submit" name="submit" value="Upload Photo">
+     </form>
+DELIMETER;
+
+echo $info;
+
+if(isset($_SESSION['dp_upload_message'])){
+    echo $_SESSION['dp_upload_message'];
+    unset($_SESSION['dp_upload_message']);
+}
+}
+
+
 
 ?>
+<link rel="stylesheet" href="styles/styles.css">

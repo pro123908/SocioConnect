@@ -202,3 +202,24 @@
   border: none;
   margin-left: 5px;
 }
+
+.personal_info{
+  border: solid 1px black;
+  padding-left: 18px;
+  width: 300;
+  display: inline-grid;
+  margin:50px 0 0 15px;
+}
+
+.add_post_timeline{
+  display: inline-grid;
+  margin: 50 0 0 155px;
+}
+
+.dp{
+  height: 200px; 
+  width: 200px;
+  padding-left: 10px;
+  border: inherit;
+  margin: 10 0 10 25;
+}
