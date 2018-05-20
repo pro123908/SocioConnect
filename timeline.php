@@ -10,7 +10,7 @@
 
 <div id='postArea'>
 <h3>Your Posts</h3>
-<?php show_posts(false); ?>
+<?php show_posts(2); ?>
 </div>
 
 <script src="script.js" >

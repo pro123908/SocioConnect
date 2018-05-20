@@ -33,6 +33,20 @@
   text-transform: uppercase;
 }
 
+.notificationArea {
+  text-align: center;
+  
+  padding: 10px;
+  
+}
+
+.notificationArea .notifications{
+  display: inline-block;
+  
+  padding: 20px;
+  box-shadow: 0 1px 2px black
+}
+
 #postArea {
   text-align: center;
 }
@@ -55,9 +69,7 @@
   letter-spacing: 2px;
 }
 
-.post .commentBtn,
-.post .likeBtn, 
-#commentBtn {
+.post .commentBtn, .post .likeBtn, #commentBtn {
   text-decoration: none;
   display: inline-block;
   color: white;
@@ -69,14 +81,14 @@
   border: none;
 }
 
-.post .deleteBtn{
+.post .deleteBtn {
   text-decoration: none;
-    color: white;
-    background-color: #0ed15c;
-    padding: 8px;
-    border-radius: 5px;
-    float: right;
-    margin-top: 2px;
+  color: white;
+  background-color: #0ed15c;
+  padding: 8px;
+  border-radius: 5px;
+  float: right;
+  margin-top: 2px;
 }
 
 .post .user {
@@ -131,13 +143,12 @@
   cursor: pointer;
 }
 
-.post .postContent{
+.post .postContent {
   margin-left: 20px;
   font-size: 16px;
-  
 }
 
-.post .likeCount{
+.post .likeCount {
   display: inline-block;
   width: 100%;
   padding-left: 10px;
@@ -162,13 +173,12 @@
   font-size: 16px;
 }
 
-.post .commentDelete{
-    float: right;
-    text-decoration: none;
-    color: #0ed15c;
-    font-size: 12px;
-    padding: 3px;
-
+.post .commentDelete {
+  float: right;
+  text-decoration: none;
+  color: #0ed15c;
+  font-size: 12px;
+  padding: 3px;
 }
 
 .post .commentTime {
@@ -203,110 +213,111 @@
   margin-left: 5px;
 }
 
-.personal_info{
+.personal_info {
   border: solid 1px black;
   display: inline-block;
   width: 300px;
   text-align: center;
-  margin:50px 0 0 15px;
+  margin: 50px 0 0 15px;
 }
 
-.add_post_timeline{
+.add_post_timeline {
   display: inline-block;
   margin: 50 0 0 155px;
 }
 
-.dp{
-  height: 250px; 
+.dp {
+  height: 250px;
   width: 200px;
   margin: 10px 0 10px 0;
 }
-.dp:hover{
+
+.dp:hover {
   cursor: pointer;
 }
 
 /* For Picture Animation */
+
 /* Where does it applies bhai? */
+
 .format {
-
-    width: 250px;
-    height: 230px;
-
+  width: 250px;
+  height: 230px;
 }
-
 
 /* Modal starts */
 
 /* The Modal (background) */
 
 .modal {
-    display: none;
-    position: fixed;
-    z-index: 500;
-    padding-top: 100px;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0, 0, 0, 0.3);
+  display: none;
+  position: fixed;
+  z-index: 500;
+  padding-top: 100px;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.3);
 }
 
 /* Modal Content (image) */
 
 .modal-content {
-    margin: auto;
-    display: block;
-    height: 80%;
+  margin: auto;
+  display: block;
+  height: 80%;
 }
 
 /* Add Animation - Zoom in the Modal */
 
 .modal-open {
-    animation-name: zoomIn;
-    animation-duration: 0.6s;
+  animation-name: zoomIn;
+  animation-duration: 0.6s;
 }
 
 @keyframes zoomIn {
-    from {
-        transform: scale(0)
-    }
-    to {
-        transform: scale(1)
-    }
+  from {
+    transform: scale(0)
+  }
+  to {
+    transform: scale(1)
+  }
 }
 
 .modal-close {
-    animation-name: zoomOut;
-    animation-duration: 0.6s;
+  animation-name: zoomOut;
+  animation-duration: 0.6s;
 }
 
 @keyframes zoomOut {
-    from {
-        transform: scale(1)
-    }
-    to {
-        transform: scale(0)
-    }
+  from {
+    transform: scale(1)
+  }
+  to {
+    transform: scale(0)
+  }
 }
+
 /* The Close Button */
 
 .close {
-    position: absolute;
-    top: 50px;
-    right: 10%;
-    color: #f1f1f1;
-    font-size: 40px;
-    font-weight: normal;
-    transition: 0.3s;
+  position: absolute;
+  top: 50px;
+  right: 10%;
+  color: #f1f1f1;
+  font-size: 40px;
+  font-weight: normal;
+  transition: 0.3s;
 }
 
-.close:hover,
-.close:focus {
-    color: #bbb;
-    text-decoration: none;
-    cursor: pointer;
+.close:hover, .close:focus {
+  color: #bbb;
+  text-decoration: none;
+  cursor: pointer;
 }
+
 /* Animation Ended*/
 
 .formPic input[type='file'] {

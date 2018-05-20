@@ -10,6 +10,7 @@ function like(postID){
         if (xmlhttp.readyState == XMLHttpRequest.DONE) {   // XMLHttpRequest.DONE == 4
            if (xmlhttp.status == 200) {
             document.querySelector(`.likeCount-${postID}`).textContent = this.responseText.trim();
+            
            }
            else if (xmlhttp.status == 400) {
               alert('There was an error 400');
