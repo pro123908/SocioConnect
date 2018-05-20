@@ -24,7 +24,7 @@
 
 <h3 id="postHeading">Posts</h3>
 <div id='postArea'>
-  <h3>Posts</h3>
+  
 <?php show_posts(1) ?>
 </div>
 

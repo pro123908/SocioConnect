@@ -89,59 +89,19 @@ DELIMETER;
     echo $addPost;
 }
 
-function show_new_post($posted){
+function new_post($postContent){
     global $connection;
-    $post = mysqli_real_escape_string($connection,$posted);
+
+    $post = mysqli_real_escape_string($connection,$postContent);
     $user_id = $_SESSION['user_id'];
-  
+
     $queryResult =  queryFunc("INSERT INTO posts(post,user_id,createdAt) VALUES('$post','$user_id',now())");
-  
-    if($queryResult){   
-      $queryResult2 =  queryFunc("select post_id from posts order by post_id desc limit 1");
-      $postID = isRecord($queryResult2);
-      $postID = $postID['post_id'];
-      $PostDeleteButton = <<<PosDel
-          <a  class='deleteBtn' href="javascript:deletePost({$postID})" >Delete</a>
-PosDel;
-      
-      $post = <<<POST
-      <div class='post post_{$postID}'>
-          <span class='user'>{$_SESSION['user']}</span>
-          <span class='postTime'>"1 Second Ago"</span>
-          <p class='postContent'>{$post}</p>
-          <span class='likeCount likeCount-{$postID}'>0</span>
-          <a class='likeBtn' href='javascript:like({$postID})'>Like</a>
-          <a  class='commentBtn' href="javascript:showCommentField({$postID})" >Comment</a>
-          {$PostDeleteButton}
-  
-      
-POST;
-  
-      $post .= <<<POST
-      <div id="post_id_{$postID}" class='hidden'>
-          <div class='commentArea_{$postID}'>
-  
-POST;
-      
-      $post .= <<<POST
-      </div>
-      <div class='commentForm'>
-          <form onsubmit="return comment({$postID})" method="post" id='commentForm'>
-              <input name = "comment_{$postID}" type='text'>
-              <input type="text" value="{$postID}" style="display:none" name="post_id_{$postID}">
-              <input type="text" value="{$_SESSION['user']}" style="display:none" name="post_user">
-              <input type='submit' id="{$postID}" value="Comment"> 
-          </form>
-      </div>
-  
-    </div>
-    </div>
-    <br>
-POST;
-  
-    echo $post;
-  }
+
+    show_posts(4);
+
+
 }
+
 
 function deletePost($postID){
     $deleteQuery = queryFunc("DELETE from posts WHERE post_id ='$postID'");
@@ -188,6 +148,10 @@ function show_posts($flag)
         $postID = $_SESSION['notiPostID'];
         $queryResult = queryFunc("SELECT post,post_id,posts.user_id,CONCAT(first_name,' ',last_name) as 'name',createdAt from posts inner join users on users.user_id = posts.user_id WHERE post_id='$postID'");
         
+    }
+    else if($flag == 4){
+        $userID = $_SESSION["user_id"];
+        $queryResult = queryFunc("SELECT post,post_id,posts.user_id,CONCAT(first_name,' ',last_name) as 'name',createdAt from posts inner join users on users.user_id = posts.user_id WHERE posts.user_id='$userID' order by post_id desc LIMIT 1");
     }
 
     if (isData($queryResult)) {
