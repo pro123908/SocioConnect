@@ -1,10 +1,11 @@
-<?php   include "functions.php"; ?>
+<?php   require_once("functions.php"); ?>
 
 <?php 
     $name = $_FILES['file']['name'];
     $tmp_name = $_FILES['file']['tmp_name'];
     $type = $_FILES['file']['type'];
     $extension = strtolower(pathinfo($name,PATHINFO_EXTENSION));
+    
     if(isset($name)){
 	    if(!empty($name)){
             if(($extension == "jpg" || $extension == "jpeg" || $extension == "png") && ($type == "image/png" || $type == "image/jpeg")){
