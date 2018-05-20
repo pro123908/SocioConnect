@@ -98,6 +98,31 @@ function deletePost(postID){
 
 }
 
+function addPost(user_id){
+    var post = document.querySelector("textarea[name='post']");
+    var param = `post=${post.value}&user_id=${user_id}`;
+    var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState == XMLHttpRequest.DONE) {   // XMLHttpRequest.DONE == 4
+           if (xhr.status == 200) {      
+                document.querySelector("#postArea").innerHTML = this.responseText + document.querySelector("#postArea").innerHTML;
+        }
+           else if (xhr.status == 400) {
+              alert('There was an error 400');
+           }
+           else {
+               alert('something else other than 200 was returned');
+           }
+        }
+    };
+        
+
+    xhr.open("POST","post.php",true);
+    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");    
+    xhr.send(param);
+
+}
+
 
 function deleteComment(commentID){
 console.log(commentID);
@@ -127,13 +152,48 @@ xmlhttp.send();
 
 //DP Animation Functions
 function onClosedImagModal(){
+    var modal = document.getElementById("modal");
     modal.classList.remove('modal-open');
     modal.classList.add('modal-close');
     setTimeout(()=>{ modal.style.display = "none"; }, 550);
 }
-function showImage(pic){
+function showImage(){
+    
+    var modal = document.getElementById("modal");
     modal.classList.add('modal-open');         
     modal.classList.remove('modal-close');
     modal.style.display = "block";
+}
+
+//Search Function
+
+function getUsers(value,user_id){
+    var xhr = new XMLHttpRequest();
+    
+    var param = `query=${value}&user_id=${user_id}`;
+    
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState == XMLHttpRequest.DONE) {   // XMLHttpRequest.DONE == 4
+            if (xhr.status == 200) { 
+                        
+            document.querySelector(".search_results").innerHTML = this.responseText;
+        }
+           else if (xhr.status == 400) {
+
+              alert('There was an error 400');
+           }
+           else {
+               alert('something else other than 200 was returned');
+           }
+        }
+    };
+
+    xhr.open('POST',"search.php",true);
+    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");  
+    xhr.send(param);
+     
+  return false;
+
+    
 }
 

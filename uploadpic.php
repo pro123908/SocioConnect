@@ -5,7 +5,6 @@
     $tmp_name = $_FILES['file']['tmp_name'];
     $type = $_FILES['file']['type'];
     $extension = strtolower(pathinfo($name,PATHINFO_EXTENSION));
-    $extension;
     if(isset($name)){
 	    if(!empty($name)){
             if(($extension == "jpg" || $extension == "jpeg" || $extension == "png") && ($type == "image/png" || $type == "image/jpeg")){

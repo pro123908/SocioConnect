@@ -80,11 +80,65 @@ function add_post(){
             <form action="post.php" method='POST'>
                 <textarea name="post" id="" cols="50" rows="10" placeholder='Start Writing'></textarea><br><br>
                 <input type="file"><br><br>
-                <input type="submit" name='submit' value='Post' class='postBtn'>
+                <a class='postBtn' href="javascript:addPost({$_SESSION['user_id']})" >Post</a>
             </form>
         </div>
 DELIMETER;
 echo $addPost; 
+}
+
+function show_new_post($posted){
+    global $connection;
+    $post = mysqli_real_escape_string($connection,$posted);
+    $user_id = $_SESSION['user_id'];
+  
+    $queryResult =  queryFunc("INSERT INTO posts(post,user_id,createdAt) VALUES('$post','$user_id',now())");
+  
+    if($queryResult){   
+      $queryResult2 =  queryFunc("select post_id from posts order by post_id desc limit 1");
+      $postID = isRecord($queryResult2);
+      $postID = $postID['post_id'];
+      $PostDeleteButton = <<<PosDel
+          <a  class='deleteBtn' href="javascript:deletePost({$postID})" >Delete</a>
+PosDel;
+      
+      $post = <<<POST
+      <div class='post post_{$postID}'>
+          <span class='user'>{$_SESSION['user']}</span>
+          <span class='postTime'>"1 Second Ago"</span>
+          <p class='postContent'>{$post}</p>
+          <span class='likeCount likeCount-{$postID}'>0</span>
+          <a class='likeBtn' href='javascript:like({$postID})'>Like</a>
+          <a  class='commentBtn' href="javascript:showCommentField({$postID})" >Comment</a>
+          {$PostDeleteButton}
+  
+      
+POST;
+  
+      $post .= <<<POST
+      <div id="post_id_{$postID}" class='hidden'>
+          <div class='commentArea_{$postID}'>
+  
+POST;
+      
+      $post .= <<<POST
+      </div>
+      <div class='commentForm'>
+          <form onsubmit="return comment({$postID})" method="post" id='commentForm'>
+              <input name = "comment_{$postID}" type='text'>
+              <input type="text" value="{$postID}" style="display:none" name="post_id_{$postID}">
+              <input type="text" value="{$_SESSION['user']}" style="display:none" name="post_user">
+              <input type='submit' id="{$postID}" value="Comment"> 
+          </form>
+      </div>
+  
+    </div>
+    </div>
+    <br>
+POST;
+  
+    echo $post;
+  }
 }
 
 function deletePost($postID){
@@ -111,6 +165,11 @@ function addComment($userID,$postID,$comment){
 
     return $row['comment_id'];
 	
+}
+
+function search($query,$user_id){
+    echo $query;
+    echo $user_id;
 }
 
 function show_posts($flag){

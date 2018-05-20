@@ -11,13 +11,25 @@
 </head>
 
 <div id='header'>
-<h1>SocioConnect</h1>
+<h1 >SocioConnect</h1>
+ 
 <?php
   // if user is logged In
+  
   if (isset($_SESSION['user_id'])) { ?>
+    
     <a href="logout.php">Logout</a>
     <a href="timeline.php">Profile</a>
-    <a href="main.php">Newsfeed</a>
+    <a href="main.php">Newsfeed</a>  
+    <div class="search">
+      <form action="search.php" method="get" name="search_form">
+        <input type="text"  onkeyup="getUsers(this.value,'<?php echo $_SESSION['user_id']?>')" name="q" placeholder="Search..." autocomplete = "off" id="search_text_input">
+      </form>
+      <div class="search_results">
+      </div>
+      <div class="search_results_footer_empty">
+      </div>
+    </div>
   <?php 
 }
 ?>

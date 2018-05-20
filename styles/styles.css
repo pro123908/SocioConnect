@@ -37,8 +37,9 @@
   text-align: center;
 }
 
-#postArea h3 {
+#postHeading {
   text-transform: uppercase;
+  text-align: center;
   letter-spacing: 5px;
 }
 
@@ -129,6 +130,7 @@
   padding: 10px;
   text-align: center;
   cursor: pointer;
+  text-decoration: none;
 }
 
 .post .postContent{
@@ -310,3 +312,11 @@
     cursor: pointer;
 }
 /* Animation Ended*/
+
+.result_display{
+  background-color: purple;
+  height: 20px;
+  width: 100;
+  color: white;
+  
+}
