@@ -16,7 +16,7 @@
     $_SESSION['s_email'] = $email;
     $_SESSION['s_age'] = $age;
 
-    if(!(validate_form($email,$_POST['password'],$_POST['repeatPassword'])))
+    if(!(formValidation($email,$_POST['password'],$_POST['repeatPassword'])))
       redirection('signUp.php');
     else{
     $queryResult = queryFunc("INSERT INTO users(first_name,last_name,email,password,age,gender) VALUES('$fname','$lname','$email','$password','$age','$gender')");
