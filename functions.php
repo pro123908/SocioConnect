@@ -91,11 +91,11 @@ function redirection($path)
     header('Location: '.$path);
 }
 
-function addPost($flag)
+function addPost($flag,$visitorID)
 {
     // Adding post form
     $userID = $_SESSION['user_id'];
-    if($flag)
+    if($flag || $visitorID == $userID)
         $addPost = "<div id='addPost' class='show'>";
     else
         $addPost = "<div id='addPost' class='hidden'>"; 
