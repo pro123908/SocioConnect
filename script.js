@@ -224,7 +224,7 @@ function getUsers(value, user_id) {
     if (xhr.readyState == XMLHttpRequest.DONE) {
       // XMLHttpRequest.DONE == 4
       if (xhr.status == 200) {
-          // Displaying search results 
+        // Displaying search results
         document.querySelector(".search_results").innerHTML = this.responseText;
       } else if (xhr.status == 400) {
         alert("There was an error 400");
@@ -236,7 +236,7 @@ function getUsers(value, user_id) {
 
   //Preparing the request
   xhr.open("POST", "search.php", true);
-  
+
   // Setting up headers
   xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 
@@ -247,21 +247,34 @@ function getUsers(value, user_id) {
   return false;
 }
 
+setInterval(commentsRefresh, 1000);
 
-setInterval(pageRefresh,2000);
-
-function pageRefresh(){
+function commentsRefresh() {
   // Creating XHR object for AJAX Call
   var xhr = new XMLHttpRequest();
-
 
   // When response has arrived
   xhr.onreadystatechange = function() {
     if (xhr.readyState == XMLHttpRequest.DONE) {
       // XMLHttpRequest.DONE == 4
       if (xhr.status == 200) {
-          // Displaying search results 
-        
+        // Displaying search results
+        var data = JSON.parse(this.responseText);
+        for (i = 0; i < data.length; i++) {
+          var obj = data[i];
+          
+
+          var comment = `
+           <div class='comment comment_${obj.postID}'>
+           <span class='commentUser'>${obj.name} : </span>
+           <span class='commentText'>${obj.comment}</span>
+           <span class='commentTime'>Just now</span>
+       </div>
+           `;
+
+            document.querySelector(`.commentArea_${obj.postID}`).innerHTML += comment; 
+           
+        }
       } else if (xhr.status == 400) {
         alert("There was an error 400");
       } else {
@@ -271,7 +284,46 @@ function pageRefresh(){
   };
 
   //Preparing the request
-  xhr.open("GET", "main.php", true);
+  xhr.open("GET", "commentsAjax.php", true);
+
+  // Sending paramters with request
+  xhr.send();
+}
+
+setInterval(notificationRefresh,1000);
+
+function notificationRefresh(){
+  // Creating XHR object for AJAX Call
+  var xhr = new XMLHttpRequest();
+
+  // When response has arrived
+  xhr.onreadystatechange = function() {
+    if (xhr.readyState == XMLHttpRequest.DONE) {
+      // XMLHttpRequest.DONE == 4
+      if (xhr.status == 200) {
+        // Displaying search results
+        var data = JSON.parse(this.responseText);
+        for (i = 0; i < data.length; i++) {
+          var obj = data[i];
+          
+
+          var notification = `
+          <a href='notification.php?postID=${obj.postID}&type=${obj.type}&notiID=${obj.notiID}'>${obj.name} has ${obj.type} your post<br><br></a>
+           `;
+
+            document.querySelector(`.notifications`).innerHTML += notification; 
+           
+        }
+      } else if (xhr.status == 400) {
+        alert("There was an error 400");
+      } else {
+        alert("something else other than 200 was returned");
+      }
+    }
+  };
+
+  //Preparing the request
+  xhr.open("GET", "notificationsAjax.php", true);
 
   // Sending paramters with request
   xhr.send();
