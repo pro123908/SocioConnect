@@ -246,3 +246,33 @@ function getUsers(value, user_id) {
   // Pain in the ass
   return false;
 }
+
+
+setInterval(pageRefresh,2000);
+
+function pageRefresh(){
+  // Creating XHR object for AJAX Call
+  var xhr = new XMLHttpRequest();
+
+
+  // When response has arrived
+  xhr.onreadystatechange = function() {
+    if (xhr.readyState == XMLHttpRequest.DONE) {
+      // XMLHttpRequest.DONE == 4
+      if (xhr.status == 200) {
+          // Displaying search results 
+        
+      } else if (xhr.status == 400) {
+        alert("There was an error 400");
+      } else {
+        alert("something else other than 200 was returned");
+      }
+    }
+  };
+
+  //Preparing the request
+  xhr.open("GET", "main.php", true);
+
+  // Sending paramters with request
+  xhr.send();
+}

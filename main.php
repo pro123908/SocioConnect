@@ -6,7 +6,6 @@
 ?>
 
 
-<html>
 
 
 <div class='firstSection'>
@@ -28,7 +27,9 @@
 <?php showPosts('a') ?>
 </div>
 
+</div>
 
+</body>
 </html>
 
 <script src="script.js" >

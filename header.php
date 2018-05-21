@@ -9,6 +9,8 @@
 <head>
  <link rel="stylesheet" href="styles/styles.css">
 </head>
+<body>
+<div class='contentArea'>
 
 <div id='header'>
 <h1 >SocioConnect</h1>
