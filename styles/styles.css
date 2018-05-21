@@ -166,6 +166,10 @@
   padding: 10px;
 }
 
+.post .notiComment{
+  background-color: #ecff81;
+}
+
 .post .commentUser {
   font-weight: bold;
   font-size: 18px;
