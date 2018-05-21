@@ -19,7 +19,7 @@
 </div>
 
 <div class='add_post_timeline'>
-<?php  $flag ? addPost(true,$_GET['visiting']) : addPost(false,$_GET['visiting']) ?>
+<?php  $flag ? addPost(true,"") : addPost(false,$_GET['visiting']) ?>
 </div>
 
 <div id='postArea'>
