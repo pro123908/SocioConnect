@@ -158,6 +158,7 @@ function addComment($userID, $postID, $comment)
     $queryInsert->execute();
     $queryInsert->close();
 
+    
     //Generating Notification
     $whosePostQuery = queryFunc("SELECT user_id from posts where post_id='$postID'");
     $whosePost = isRecord($whosePostQuery);
@@ -234,8 +235,10 @@ PosDel;
 POST;
             // Opening comment section if it is a comment notification else not
             if($flag == 3 && $_SESSION['notiType'] != 'liked'){
+                
                 $commentShow = 'show';
             }else{
+                
                 $commentShow = 'hidden';
             }
 
@@ -447,13 +450,12 @@ DELIMETER;
 
 function notification($sUser, $dUser, $post, $type)
 {
-    // Checking if notification already added
-    $notiAlready = queryFunc("SELECT noti_id from notifications WHERE s_user_id='$sUser' AND  d_user_id='$dUser' AND post_id='$post' AND typeC='$type'");
 
-    // If added already then do nothing, else add it
-    if (isData($notiAlready)) {
-    } else {
-        $notiQuery = queryFunc("INSERT INTO notifications(s_user_id,d_user_id,post_id,typeC) VALUES('$s_user', '$d_user','$post','$type')");
+      //Checking if the src and dest user are not same  
+     if ($sUser != $dUser) {
+        $notiQuery = queryFunc("INSERT INTO notifications(s_user_id,d_user_id,post_id,typeC) VALUES('$sUser', '$dUser','$post','$type')");
+     } else {
+
     }
 }
 
@@ -474,11 +476,12 @@ function showNotifications(){
                if yes then not printing the notification else printing it
             */
             
-            if($user != $row['s_user_id']){
+            if($user != $row['s_user_id'] && $row['seen'] != 1 ){
                 $isAny = true;
                 $person = $row['s_user_id'];
                 $post = $row['post_id'];
                 $type = $row['typeC'];
+                $notiID = $row['noti_id'];
 
             // Selecting name of the user who generated the notification
             $personQuery = queryFunc("SELECT CONCAT(first_name,' ',last_name) as name FROM users WHERE user_id='$person'");
@@ -486,7 +489,7 @@ function showNotifications(){
     
                 // Rendering notification
                 $noti = <<<NOTI
-                <a href='notification.php?postID={$post}&type={$type}'>{$sPerson['name']} has {$type} your post</a>
+                <a href='notification.php?postID={$post}&type={$type}&notiID={$notiID}'>{$sPerson['name']} has {$type} your post<br><br></a>
 NOTI;
             // You know the drill xD
             echo $noti;
@@ -494,7 +497,7 @@ NOTI;
         }
         // Deleting notifications after they have been checked
         if($isAny){
-            queryFunc("DELETE from notifications WHERE d_user_id='$user'");
+           // queryFunc("DELETE from notifications WHERE d_user_id='$user'");
         }else{
             // Flag will be false, if no notifications were there to show
             echo '<p>No new notifications</p>';
