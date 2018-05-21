@@ -19,7 +19,7 @@
   
 </div>
 
-<?php addPost(true);?>
+<?php addPost(true,"");?>
 
 <h3 id="postHeading">Posts</h3>
 <div id='postArea'>
