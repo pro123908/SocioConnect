@@ -15,17 +15,17 @@
 
 <div class='notificationArea'>
   <div class='notifications'>
-  <?php show_notifications();?>
+  <?php showNotifications();?>
   </div>
   
 </div>
 
-<?php add_post();?>
+<?php addPost(true);?>
 
 <h3 id="postHeading">Posts</h3>
 <div id='postArea'>
-  <h3>Posts</h3>
-<?php show_posts(1) ?>
+  
+<?php showPosts('a') ?>
 </div>
 
 

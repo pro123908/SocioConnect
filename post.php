@@ -1,9 +1,9 @@
 <?php 
 
-include("header.php");
+require_once('functions.php');
 
 if(isset($_POST['post'])){
-    show_new_post($_POST['post']);
+  newPost($_POST['post']);
   }
 
 ?>
