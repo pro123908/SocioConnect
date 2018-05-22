@@ -4,12 +4,15 @@
     <?php
         if(isset($_SESSION['user_id'])){
             if(isset($_POST['accept'])){
+                // If request is accepted
                 acceptReq($_POST['id']);
             }
             else if(isset($_POST['ignore'])){
+                // If request is rejected
                 ignoreReq($_POST['id']);
             }
 
+            // Getting all your requests from database which you have received
             $reqArray = queryFunc("Select * from friend_requests where to_id = ".$_SESSION['user_id']);
             if (isData($reqArray)) { 
                 while ($row = isRecord($reqArray)) {

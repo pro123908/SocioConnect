@@ -18,7 +18,8 @@
 <?php
   // if user is logged In
   
-  if (isset($_SESSION['user_id'])) { ?>
+  if (isset($_SESSION['user_id'])) {
+      ?>
     
     <a class="header_links" href="logout.php">Logout</a>
     <a class="header_links" href="timeline.php">Profile</a>
@@ -26,15 +27,13 @@
     <a class="header_links" href="requests.php">Friend Requests</a>  
     <div class="search">
       <form action="search.php" method="get" name="search_form">
-        <input type="text"  onkeyup="getUsers(this.value,'<?php echo $_SESSION['user_id']?>')" name="q" placeholder="Search..." autocomplete = "off" id="search_text_input">
+        <input type="text"  onkeyup="getUsers(this.value)" name="q" placeholder="Search..." autocomplete = "off" id="search_text_input">
       </form>
-      <div class="search_results">
-      </div>
-      <div class="search_results_footer_empty">
-      </div>
+      <div class="search_results"></div>
+      <div class="search_results_footer_empty"></div>
     </div>
-  <?php 
-}
+  <?php
+  }
 ?>
 </div>
 

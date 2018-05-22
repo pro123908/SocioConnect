@@ -212,12 +212,12 @@ function changePic() {
 
 //Search Function
 
-function getUsers(value, user_id) {
+function getUsers(value) {
   // Creating XHR object for AJAX Call
   var xhr = new XMLHttpRequest();
 
   // Setting paramters for POST request
-  var param = `query=${value}&user_id=${user_id}`;
+  var param = `query=${value}`;
 
   // When response has arrived
   xhr.onreadystatechange = function() {
