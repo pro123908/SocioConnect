@@ -531,6 +531,95 @@ NOTI;
     
 }
 
+//Friend Functions
+
+function isFriend($id){
+    $userLoggedIn = $_SESSION['user_id'];
+    $friend = queryFunc("SELECT friends_array  FROM users WHERE user_id='$userLoggedIn,'");
+    $friend = isRecord($friend);
+    if(strstr($friend['friends_array'],$id.",")){
+        return true;
+    }
+    else
+        return false;
+}
+
+function reqSent($id){
+    $request = queryFunc("SELECT id from friend_requests where to_id ='".$id."' and from_id='" . $_SESSION['user_id'] ."'");
+    if(isRecord($request)){
+        return true;
+    }
+    else
+        return false;
+}
+
+function reqRecieved($id){
+    $request = queryFunc("SELECT id from friend_requests where to_id ='".$_SESSION['user_id']."' and from_id='". $id ."'");
+    if(isRecord($request))
+        return true;
+    else
+        return false;
+}
+
+function showFriendButton($id){
+    if($id > 0 && $id != $_SESSION['user_id']){
+        $button = "<form action = 'timeline.php?visiting=$id' method='POST'>";
+        if(isFriend($id)){
+            $button .= "<input type = 'Submit' name='remove_friend' value='Remove Friend'>";
+        }
+        else if(reqSent($id)){
+            $button .= "<input type = 'Submit' name='cancel_req' value='Friend Request Sent'>";  
+        }
+        else if(reqRecieved($id)){
+            $button .= "<input type = 'Submit' name='respond_to_request' value='Respond to Friend Request'>";
+        }
+        else{
+            $button .= "<input type = 'Submit' name='add_friend' value='Add Friend'>";
+        }
+        $button .= "</form>";
+        echo $button;
+
+    }
+}
+
+
+//friend operations
+function addFriend($id){
+    $friend = queryFunc("insert into friend_requests (to_id, from_id) values(".$id.",".$_SESSION['user_id'].")");
+    redirection("timeline.php?visiting=".$id);
+}
+
+function cancelReq($id){
+    $friend = queryFunc("delete from friend_requests where to_id =".$id." and from_id =".$_SESSION['user_id']);
+    redirection("timeline.php?visiting=".$id);
+}
+
+function removeFriend($id){
+    updateFriendList($id,$_SESSION['user_id']);
+    updateFriendList($_SESSION['user_id'],$id);
+    redirection("timeline.php?visiting=".$id); 
+}
+
+function updateFriendList($user,$friend){
+    $friendArray = queryFunc("select friends_array from users where user_id =".$user);
+    $friendArray = isRecord($friendArray);
+    $friendArray = $friendArray['friends_array'];
+    $newFriendsArray = str_replace($friend.",","",$friendArray);
+    queryFunc("update users set friends_array ='". $newFriendsArray ."' where user_id =".$user);
+}
+
+function acceptReq($id){
+    $friend = queryFunc("update users set friends_array = concat (friends_array,".$id ." ,',') where user_id = ".$_SESSION['user_id']);
+    $friend = queryFunc("update users set friends_array = concat (friends_array,".$_SESSION['user_id'] ." ,',') where user_id = ".$id);
+    ignoreReq($id);
+}
+
+function ignoreReq($id){
+    $friend = queryFunc("delete from friend_requests where to_id =".$_SESSION['user_id']." and from_id = ".$id);
+    
+}
+
+
 
 
 ?>
