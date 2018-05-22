@@ -240,7 +240,7 @@ PosDel;
             
 POST;
             // Opening comment section if it is a comment notification else not
-            if($flag == 3 && $_SESSION['notiType'] != 'liked'){
+            if($flag == 'c' && $_SESSION['notiType'] != 'liked'){
                 
                 $commentShow = 'show';
             }else{
