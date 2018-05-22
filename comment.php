@@ -2,7 +2,7 @@
 
 <?php 
 
-require('functions.php');
+require('functions.php'); 
 
 
 	$userID = $_SESSION['user_id'];

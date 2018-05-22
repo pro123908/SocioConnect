@@ -34,3 +34,4 @@ echo $friend_req;
         }
     ?>
 </div>
+<script src="script.js"></script>

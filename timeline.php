@@ -39,7 +39,7 @@
 </div>
 
 <div id='postArea'>
-<h3>Your Posts</h3>
+<h3>Posts</h3>
 <!-- If you are comming here through searching or by clicking on your profile button -->
 <?php $flag ? showPosts('b') : showPosts($_GET['visitingUserID']) ?>
 </div>

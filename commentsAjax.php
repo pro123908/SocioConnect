@@ -19,7 +19,12 @@ if (isData($queryResult)) {
         }
     }
 
-    echo json_encode($data);
+    if ($counter != 0) {
+        echo json_encode($data);
+    } else {
+        echo '{"notEmpty" : "Bilal"}';
+    }
+    
 } else {
     echo '{"notEmpty" : "Bilal"}';
 }
