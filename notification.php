@@ -7,6 +7,7 @@
     $_SESSION['notiType'] = $_GET['type'];
     $notiID = $_GET['notiID'];
 
+    // Now notification has been seen, so set flag to 1
     $queryResult = queryFunc("UPDATE notifications SET seen=1  WHERE noti_id='$notiID'");
 
 

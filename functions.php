@@ -469,7 +469,7 @@ function notification($sUser, $dUser, $post, $type)
 
       //Checking if the src and dest user are not same  
      if ($sUser != $dUser) {
-        $notiQuery = queryFunc("INSERT INTO notifications(s_user_id,d_user_id,post_id,typeC) VALUES('$sUser', '$dUser','$post','$type')");
+        $notiQuery = queryFunc("INSERT INTO notifications(s_user_id,d_user_id,post_id,typeC,createdAt) VALUES('$sUser', '$dUser','$post','$type',now())");
      } else {
 
     }
@@ -516,12 +516,12 @@ NOTI;
            // queryFunc("DELETE from notifications WHERE d_user_id='$user'");
         }else{
             // Flag will be false, if no notifications were there to show
-            echo '<p>No new notifications</p>';
+           // echo '<p>No new notifications</p>';
         }
 
      
     }else{
-        echo '<p>No new notifications</p>';
+       // echo '<p>No new notifications</p>';
     }
 
     
