@@ -262,7 +262,6 @@ function commentsRefresh() {
         var data = JSON.parse(this.responseText);
         for (i = 0; i < data.length; i++) {
           var obj = data[i];
-          
 
           var comment = `
            <div class='comment comment_${obj.postID}'>
@@ -272,8 +271,9 @@ function commentsRefresh() {
        </div>
            `;
 
-            document.querySelector(`.commentArea_${obj.postID}`).innerHTML += comment; 
-           
+          document.querySelector(
+            `.commentArea_${obj.postID}`
+          ).innerHTML += comment;
         }
       } else if (xhr.status == 400) {
         alert("There was an error 400");
@@ -290,9 +290,9 @@ function commentsRefresh() {
   xhr.send();
 }
 
-setInterval(notificationRefresh,1000);
+setInterval(notificationRefresh, 1000);
 
-function notificationRefresh(){
+function notificationRefresh() {
   // Creating XHR object for AJAX Call
   var xhr = new XMLHttpRequest();
 
@@ -305,14 +305,16 @@ function notificationRefresh(){
         var data = JSON.parse(this.responseText);
         for (i = 0; i < data.length; i++) {
           var obj = data[i];
-          
 
           var notification = `
-          <a href='notification.php?postID=${obj.postID}&type=${obj.type}&notiID=${obj.notiID}'>${obj.name} has ${obj.type} your post<br><br></a>
+          <a href='notification.php?postID=${obj.postID}&type=${
+            obj.type
+          }&notiID=${obj.notiID}'>${obj.name} has ${
+            obj.type
+          } your post<br><br></a>
            `;
 
-            document.querySelector(`.notifications`).innerHTML += notification; 
-           
+          document.querySelector(`.notifications`).innerHTML += notification;
         }
       } else if (xhr.status == 400) {
         alert("There was an error 400");
@@ -327,4 +329,79 @@ function notificationRefresh(){
 
   // Sending paramters with request
   xhr.send();
+}
+
+setInterval(likesRefresh, 3000);
+
+function likesRefresh() {
+  // Creating XHR object for AJAX Call
+  var xhr = new XMLHttpRequest();
+
+  // When response has arrived
+  xhr.onreadystatechange = function() {
+    if (xhr.readyState == XMLHttpRequest.DONE) {
+      // XMLHttpRequest.DONE == 4
+      if (xhr.status == 200) {
+        // Displaying search results
+         var data = JSON.parse(this.responseText);
+
+        for (i = 0; i < data.length; i++) {
+          var obj = data[i];
+
+          document.querySelector(`.likeCount-${obj.postID}`).innerHTML =
+            obj.likes;
+        }
+
+        
+      } else if (xhr.status == 400) {
+        alert("There was an error 400");
+      } else {
+        alert("something else other than 200 was returned");
+      }
+    }
+  };
+
+  //Preparing the request
+  xhr.open("GET", "likesAjax.php", true);
+
+  // Sending paramters with request
+  xhr.send();
+}
+
+
+function likeUsers(postID){
+  // Creating XHR object for AJAX Call
+  var xhr = new XMLHttpRequest();
+
+  // When response has arrived
+  xhr.onreadystatechange = function() {
+    if (xhr.readyState == XMLHttpRequest.DONE) {
+      // XMLHttpRequest.DONE == 4
+      if (xhr.status == 200) {
+        // Displaying search results
+         var data = JSON.parse(this.responseText);
+
+        for (i = 0; i < data.length; i++) {
+          var obj = data[i];
+
+          document.querySelector(`.likeUsers-${postID}`).innerHTML += ' '+ obj.name + ' ' + '|'; 
+        }
+        
+      } else if (xhr.status == 400) {
+        alert("There was an error 400");
+      } else {
+        alert("something else other than 200 was returned");
+      }
+    }
+  };
+
+  //Preparing the request
+  xhr.open("GET", `likeUsers.php?postID=${postID}`, true);
+
+  // Sending paramters with request
+  xhr.send();
+}
+
+function hideLikers(postID){
+  document.querySelector(`.likeUsers-${postID}`).innerHTML = '';
 }

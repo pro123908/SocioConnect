@@ -233,7 +233,8 @@ PosDel;
                 <span class='user'>{$row['name']}</span>
                 <span class='postTime'>$timeToShow</span>
                 <p class='postContent'>{$row['post']}</p>
-                <span class='likeCount likeCount-{$postID}'>{$likes['count']}</span>
+                <span onmouseout='javascript:hideLikers({$postID})' onmouseover='javascript:likeUsers({$postID})' class='likeCount likeCount-{$postID}'>{$likes['count']}</span>
+                <span class='likeCount likeUsers-{$postID}'></span>
                 <a class='likeBtn' href='javascript:like({$postID})'>Like</a>
                 <a  class='commentBtn' href="javascript:showCommentField({$postID})">Comment</a>
                 {$PostDeleteButton}
@@ -466,12 +467,15 @@ DELIMETER;
 
 function notification($sUser, $dUser, $post, $type)
 {
+      //Checking if notification already been there
+      $notiAlready = queryFunc("SELECT * from notifications WHERE s_user_id='$sUser' AND post_id='$post' AND typeC='$type'");
 
-      //Checking if the src and dest user are not same  
-     if ($sUser != $dUser) {
-        $notiQuery = queryFunc("INSERT INTO notifications(s_user_id,d_user_id,post_id,typeC,createdAt) VALUES('$sUser', '$dUser','$post','$type',now())");
-     } else {
-
+    if (!isData($notiAlready)) {
+        //Checking if the src and dest user are not same
+        if ($sUser != $dUser) {
+            $notiQuery = queryFunc("INSERT INTO notifications(s_user_id,d_user_id,post_id,typeC,createdAt) VALUES('$sUser', '$dUser','$post','$type',now())");
+        } else {
+        }
     }
 }
 

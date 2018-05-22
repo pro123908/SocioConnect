@@ -18,7 +18,7 @@ if(isset($_GET['like'])){
   }
   else{
    //else like it
-   $likeResult = queryFunc("INSERT INTO likes (post_id,user_id) VALUES('$postID','$userID')");
+   $likeResult = queryFunc("INSERT INTO likes (post_id,user_id,createdAt) VALUES('$postID','$userID',now())");
    
    $whosePostQuery = queryFunc("SELECT user_id from posts where post_id='$postID'");
    $whosePost = isRecord($whosePostQuery);

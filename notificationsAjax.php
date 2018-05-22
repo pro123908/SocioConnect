@@ -3,7 +3,7 @@
   require_once('functions.php');
 
   $counter = 0;
-  $queryResult = queryFunc("SELECT * from notifications WHERE now() - createdAt < 1");
+  $queryResult = queryFunc("SELECT * from notifications WHERE now() - createdAt < 2");
 
   if(isData($queryResult)){
     while($row = isRecord($queryResult)){
@@ -24,8 +24,11 @@
 
       }
     }
-
-    echo json_encode($data);
+    if ($counter != 0) {
+        echo json_encode($data);
+    }else{
+      echo '{"notEmpty" : "Bilal"}';
+    }
   }
   else{
     echo '{"notEmpty" : "Bilal"}';
