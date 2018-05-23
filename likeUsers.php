@@ -2,28 +2,34 @@
 
 require_once('functions.php');
 
-if(isset($_GET['postID'])){
-  $postID = $_GET['postID'];
+// Getting the name of the persons who liked a certain post
 
-  $queryResult = queryFunc("SELECT user_id FROM likes WHERE post_id='$postID'");
-  $counter = 0;
-  if (isData($queryResult)) {
-      while ($row = isRecord($queryResult)) {
-          $userID = $row['user_id'];
+if (isset($_GET['postID'])) {
+    $postID = $_GET['postID']; // ID of the post
 
-          $queryName = queryFunc("SELECT CONCAT(first_name,' ',last_name) as name FROM users WHERE user_id='$userID'");
+    // Getting all likes of that particular post
+    $queryResult = queryFunc("SELECT user_id FROM likes WHERE post_id='$postID'");
+    $counter = 0;
+    if (isData($queryResult)) {
+        while ($row = isRecord($queryResult)) {
+            $userID = $row['user_id']; // Getting id of each user who liked the post
 
-          $nameResult = isRecord($queryName);
-          $name = $nameResult['name'];
+            // Getting name of that user
+            $queryName = queryFunc("SELECT CONCAT(first_name,' ',last_name) as name FROM users WHERE user_id='$userID'");
 
-          $data[$counter] = array('name' => $name);
-          $counter += 1;
-      }
+            $nameResult = isRecord($queryName);
+            $name = $nameResult['name']; // name of that user
 
-      echo json_encode($data);
-  }else{
-    echo '{"notEmpty" : "Bilal"}';
-  }
+            // Inserting user name in array
+            $data[$counter] = array('name' => $name);
+
+            // Moving to the next user by incrementing
+            $counter += 1;
+        }
+
+        // Simple converting the array to JSON format and passing it
+        echo json_encode($data);
+    } else { // If there were no data
+        echo '{"notEmpty" : "Bilal"}';
+    }
 }
-
-?>

@@ -653,3 +653,6 @@ function ignoreReq($id)
     // Just simply deleting the request from sending user's record
     $friend = queryFunc("delete from friend_requests where to_id =".$_SESSION['user_id']." and from_id = ".$id);
 }
+
+
+   

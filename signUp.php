@@ -1,30 +1,36 @@
 <?php
-  require('header.php');
+  require_once('header.php');
   
+  // Sign up form for registration of new user
 
   if(isset($_POST['submit'])){
   
-    $fname = mysqli_real_escape_string($connection,$_POST['fname']);
-    $lname = mysqli_real_escape_string($connection,$_POST['lname']);
-    $email = mysqli_real_escape_string($connection,$_POST['email']);
-    $password = hashString(mysqli_real_escape_string($connection,$_POST['password']));
-    $age = mysqli_real_escape_string($connection,$_POST['age']);
-    $gender = mysqli_real_escape_string($connection,$_POST['genderBox']);
+    $fname = mysqli_real_escape_string($connection,$_POST['fname']); // First name
+    $lname = mysqli_real_escape_string($connection,$_POST['lname']); // Last name
+    $email = mysqli_real_escape_string($connection,$_POST['email']); // Email
+    $password = hashString(mysqli_real_escape_string($connection,$_POST['password'])); // Password 
+    $age = mysqli_real_escape_string($connection,$_POST['age']); //Age
+    $gender = mysqli_real_escape_string($connection,$_POST['genderBox']);  // Gender
 
+    // Placing all fields value in session variables
     $_SESSION['s_first_name'] = $fname;
     $_SESSION['s_last_name'] = $lname;
     $_SESSION['s_email'] = $email;
     $_SESSION['s_age'] = $age;
 
+    // Validating the value of input fields
     if(!(formValidation($email,$_POST['password'],$_POST['repeatPassword'])))
       redirection('signUp.php');
     else{
+    // If fields are validated then adding the user to database
     $queryResult = queryFunc("INSERT INTO users(first_name,last_name,email,password,age,gender) VALUES('$fname','$lname','$email','$password','$age','$gender')");
+
+    //Selecting ID of new inserted user
     $queryResult2 = queryFunc("SELECT user_id from users where email='$email'");
 
     if($queryResult && $queryResult2){
       $row = isRecord($queryResult2);
-      $_SESSION['user'] = $fname.' '.$lname;
+      $_SESSION['user'] = $fname.' '.$lname; // Name of new user inserted
       $_SESSION['user_id'] = $row['user_id'];
       redirection('main.php');
     }

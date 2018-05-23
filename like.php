@@ -1,12 +1,13 @@
 <?php 
 
-require('header.php');
+require_once('header.php');
 
 // We need to add a new column to likes table, that would store the user_id of the person whose post in being liked.
 
+// For adding like to the current post
 if(isset($_GET['like'])){
-  $postID = mysqli_real_escape_string($connection,$_GET['like']);
-  $userID = $_SESSION['user_id'];
+  $postID = mysqli_real_escape_string($connection,$_GET['like']); // Post ID
+  $userID = $_SESSION['user_id']; // user who liked the post
 
   //Checking if the post is already been liked.
   $checkLikeResult = queryFunc("SELECT * from likes where post_id ='$postID' AND user_id ='$userID'");
@@ -19,9 +20,12 @@ if(isset($_GET['like'])){
   else{
    //else like it
    $likeResult = queryFunc("INSERT INTO likes (post_id,user_id,createdAt) VALUES('$postID','$userID',now())");
-   
+
+   // Getting the user_id of the user whose post is liked
    $whosePostQuery = queryFunc("SELECT user_id from posts where post_id='$postID'");
    $whosePost = isRecord($whosePostQuery);
+
+   // Creating notification
    notification($userID,$whosePost['user_id'],$postID,'liked');
   }
 
@@ -29,15 +33,7 @@ if(isset($_GET['like'])){
   $likesResult = queryFunc("SELECT count(*) as count from likes where post_id='$postID'");
   $likes = isRecord($likesResult);
 
-  
-  
-
-  
-  // echo 'POST : '.$postID;
-  // echo ' S_user : '.$userID;
-  // echo ' D_user : '.$data; 
-  
-
+  // Redirecting to other page
   redirection('likesCount.php?likeCount='.$likes['count']);
 
   }

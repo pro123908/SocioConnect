@@ -1,16 +1,15 @@
-
-
 <?php 
 
-require('functions.php'); 
+require_once('functions.php'); 
 
+	$userID = $_SESSION['user_id']; //Current User who is commenting
+	$postID = $_POST['post_id'];	// Post being commented 
+	$comment = $_POST['comment']; // Comment text
 
-	$userID = $_SESSION['user_id'];
-	$postID = $_POST['post_id'];
-	$comment = $_POST['comment'];
-
+	// Passing above values to this function and getting the ID of newly inserted comment as a result.
 	$commentID = addComment($userID,$postID,$comment);
 
+	// Giving commentID back to ajax function as a response so it can be added to the post without reloading
 	echo $commentID;
 	
 
