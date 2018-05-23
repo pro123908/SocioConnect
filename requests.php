@@ -20,7 +20,7 @@
                     $from_user = isRecord($from_user);
                     $friend_req = <<<DELIMETER
                     <p>{$from_user['first_name']}  {$from_user['last_name']} Sent You a Friend Request</p>
-                    <form action ="requests.php" method="post">
+                    <form action ="acceptRequest.php" method="post">
                         <input type="submit" name="accept" value="Confirm"> <input type="submit" name="ignore" value="Ignore">
                         <input type = "hidden" name = "id" value="{$from_user['user_id']}">
                     </form>
