@@ -148,7 +148,18 @@ function getUsers(value) {
     // Displaying search results
     document.querySelector(".search_results").innerHTML = result;
   });
+  // Pain in the ass
+  return false;
+}
 
+function getUsersForMessages(value) {
+  // Setting paramters for POST request
+  var param = `query=${value}`;
+
+  ajaxCalls("POST", "search.php", param).then(function(result) {
+    // Displaying search results
+    document.querySelector(".search_results_for_messages").innerHTML = result;
+  });
   // Pain in the ass
   return false;
 }
