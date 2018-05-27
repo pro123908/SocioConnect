@@ -10,7 +10,7 @@
 <!-- Starting div of main content area of the website, where all the stuff lies -->
 <div class='contentArea'>
 <div id='header'>
-<h1 >SocioConnect</h1>
+<a href='main.php' class='headerHeading'>SocioConnect</a>
  
 <?php
   // Displaying this navbar if user is logged in

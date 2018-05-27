@@ -2,6 +2,10 @@
 
   require_once('header.php');
 
+  if(!isset($_SESSION['user_id'])){
+    redirection('index.php');
+  }
+
   // Main file of the website
 
   // Getting current user name

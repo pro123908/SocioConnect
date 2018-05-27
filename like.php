@@ -1,6 +1,6 @@
 <?php 
 
-require_once('header.php');
+require_once('functions.php');
 
 // We need to add a new column to likes table, that would store the user_id of the person whose post in being liked.
 
@@ -33,7 +33,10 @@ if(isset($_GET['like'])){
   $likesResult = queryFunc("SELECT count(*) as count from likes where post_id='$postID'");
   $likes = isRecord($likesResult);
 
-  // Redirecting to other page
+  // $data = array('likeCount' => $likes['count'],'samp' => 'done');
+
+  // echo json_encode($data);
+  // // Redirecting to other page
   redirection('likesCount.php?likeCount='.$likes['count']);
 
   }

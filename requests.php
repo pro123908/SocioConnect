@@ -1,4 +1,6 @@
-<?php require_once('header.php'); ?>
+<?php require_once('header.php');
+        
+?>
 
 <div>
     <?php
@@ -24,6 +26,9 @@ echo $friend_req;
             else{
                 echo "You have no Friend Requests";
             }
+
+            echo '<h1>Friends</h1>';
+            displayFriends();
         }
     ?>
 </div>

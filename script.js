@@ -9,6 +9,14 @@ function like(postID) {
   });
 }
 
+// function ajaxFetchCalls(url, data = {}) {
+//   return new Promise(function(resolve, reject) {
+//     fetch(url, data).then(function(data) {
+//       resolve(data);
+//     });
+//   });
+// }
+
 // Function for making all ajax calls using promise
 function ajaxCalls(method, pathString, postParam = "") {
   // Creating promise
@@ -167,7 +175,6 @@ function getUsersForMessages(value) {
 setInterval(commentsRefresh, 1000);
 
 function commentsRefresh() {
-  
   ajaxCalls("GET", "commentsAjax.php").then(function(result) {
     // Displaying search results
     var data = JSON.parse(result);
@@ -210,7 +217,6 @@ function notificationRefresh() {
 setInterval(likesRefresh, 3000);
 
 function likesRefresh() {
-
   ajaxCalls("GET", "likesAjax.php").then(function(result) {
     // Displaying search results
     var data = JSON.parse(result);
@@ -224,7 +230,6 @@ function likesRefresh() {
 }
 
 function likeUsers(postID) {
-  
   ajaxCalls("GET", `likeUsers.php?postID=${postID}`).then(function(result) {
     // Displaying search results
     var data = JSON.parse(result);

@@ -654,5 +654,33 @@ function ignoreReq($id)
     $friend = queryFunc("delete from friend_requests where to_id =".$_SESSION['user_id']." and from_id = ".$id);
 }
 
+function displayFriends(){
+    $userID = $_SESSION['user_id'];
+
+    $queryResult = queryFunc("SELECT friends_array from users WHERE user_id='$userID'");
+
+    $friendsList = isRecord($queryResult);
+    $friendsListSeparated = explode(',',$friendsList['friends_array']);
+
+    for($i = 0; $i< sizeof($friendsListSeparated)-1;$i++){
+        
+        $friend_id = $friendsListSeparated[$i];
+        $queryFriends = queryFunc("SELECT *,CONCAT(first_name,' ',last_name) as name FROM users WHERE user_id='$friend_id'");
+
+        $friend = isRecord($queryFriends);
+
+        $content = <<<FRIEND
+            <div>
+                 <a href="timeline.php?visitingUserID={$friend['user_id']}"><h3>{$friend['name']}</h3></a>
+                 <img src='{$friend['profile_pic']}' width='50' height='50' >
+                
+                
+            </div>
+
+FRIEND;
+
+        echo $content;
+    }
+}
 
    
