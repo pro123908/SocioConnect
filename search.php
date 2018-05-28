@@ -1,6 +1,8 @@
 <?php
-    include "functions.php";
+    require_once('functions.php');
     
+    // Displaying the person which was cliked on when searching
+    // Checking if something was searched or not?
     if (strlen($_POST['query']) == 0) {
         echo " ";
     } else {
@@ -27,6 +29,7 @@
                     <p style='margin: 0;'>{$row['username']}</p>
                 </div>
             </a>
+            <a href='message.php?id={$row['user_id']}'><button >Message</button></a>
         </div>
 DELIMETER;
             echo $user;

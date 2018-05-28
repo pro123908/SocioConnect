@@ -1,11 +1,14 @@
 <?php 
 
-require('functions.php');
+require_once('functions.php');
+
+// For deleting post
+
 
 if($_GET['id']){
-  $postID = $_GET['id'];
+  $postID = $_GET['id']; // ID of the post to be deleted
 
-
+  // Function to call for the deletion of post with post ID
   if(deletePost($postID)){
     echo 'Post Deleted';
 }

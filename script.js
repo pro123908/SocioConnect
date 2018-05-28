@@ -9,7 +9,17 @@ function like(postID) {
   });
 }
 
+// function ajaxFetchCalls(url, data = {}) {
+//   return new Promise(function(resolve, reject) {
+//     fetch(url, data).then(function(data) {
+//       resolve(data);
+//     });
+//   });
+// }
+
+// Function for making all ajax calls using promise
 function ajaxCalls(method, pathString, postParam = "") {
+  // Creating promise
   return new Promise(function(resolve, reject) {
     // Creating XHR object for AJAX Call
     var xmlhttp = new XMLHttpRequest();
@@ -19,7 +29,7 @@ function ajaxCalls(method, pathString, postParam = "") {
       if (xmlhttp.readyState == XMLHttpRequest.DONE) {
         // XMLHttpRequest.DONE == 4
         if (xmlhttp.status == 200) {
-          // Adding response returned, like count in this case to post
+          // Return the response
           resolve(this.responseText);
         } else if (xmlhttp.status == 400) {
           reject("Rejected");
@@ -29,7 +39,7 @@ function ajaxCalls(method, pathString, postParam = "") {
       }
     };
 
-    // Preparing like.php with postID for data
+    // Preparing request with method and filename
     xmlhttp.open(method, pathString, true);
 
     if (postParam) {
@@ -47,9 +57,6 @@ function ajaxCalls(method, pathString, postParam = "") {
 
 function comment(postID) {
   // Adding comment to post
-
-  // Creating XHR object for AJAX Call
-  var xmlhttp = new XMLHttpRequest();
 
   // Getting post ID,content and user who posted comment from form
   var post = document.querySelector(`input[name='post_id_${postID}']`);
@@ -168,7 +175,6 @@ function getUsersForMessages(value) {
 setInterval(commentsRefresh, 1000);
 
 function commentsRefresh() {
-  
   ajaxCalls("GET", "commentsAjax.php").then(function(result) {
     // Displaying search results
     var data = JSON.parse(result);
@@ -196,12 +202,24 @@ function notificationRefresh() {
     var data = JSON.parse(result);
     for (i = 0; i < data.length; i++) {
       var obj = data[i];
+      var notification = '';
 
-      var notification = `
+      if(obj.type == 'post'){
+        notification = `
+        <a href='notification.php?postID=${obj.postID}&type=${obj.type}&notiID=${
+         obj.notiID
+       }'>${obj.name} has posted<br><br></a>
+         `;
+
+      }
+      else{
+        notification = `
        <a href='notification.php?postID=${obj.postID}&type=${obj.type}&notiID=${
         obj.notiID
       }'>${obj.name} has ${obj.type} your post<br><br></a>
         `;
+      }
+       
 
       document.querySelector(`.notifications`).innerHTML += notification;
     }
@@ -211,7 +229,6 @@ function notificationRefresh() {
 setInterval(likesRefresh, 3000);
 
 function likesRefresh() {
-
   ajaxCalls("GET", "likesAjax.php").then(function(result) {
     // Displaying search results
     var data = JSON.parse(result);
@@ -225,7 +242,6 @@ function likesRefresh() {
 }
 
 function likeUsers(postID) {
-  
   ajaxCalls("GET", `likeUsers.php?postID=${postID}`).then(function(result) {
     // Displaying search results
     var data = JSON.parse(result);
@@ -240,5 +256,6 @@ function likeUsers(postID) {
 }
 
 function hideLikers(postID) {
+  // Hiding likers when clicked on number again
   document.querySelector(`.likeUsers-${postID}`).innerHTML = "";
 }

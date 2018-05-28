@@ -126,6 +126,24 @@ function newPost($postContent)
     // Inserting post data
     $queryResult =  queryFunc("INSERT INTO posts(post,user_id,createdAt) VALUES('$post','$userID',now())");
 
+    //Getting post ID of inserted POST
+    $queryPostID = queryFunc("SELECT post_id from posts WHERE user_id='$userID' order by post_id desc LIMIT 1");
+    $recordPostID = isRecord($queryPostID);
+    $postID = $recordPostID['post_id'];
+
+    // Generating Notification for friends
+    $queryFriendsList = queryFunc("SELECT friends_array FROM users WHERE user_id='$userID'");
+
+    $friendsList = isRecord($queryFriendsList);
+    $friendsListSeparated = explode(',', $friendsList['friends_array']);
+
+    // notification for each friend
+    for ($i = 0; $i< sizeof($friendsListSeparated)-1;$i++) {
+        $friend_id = $friendsListSeparated[$i];
+        notification($userID,$friend_id,$postID,'post');
+    }
+
+
     // Calling show posts method with flag 4
     showPosts('d');
 }
@@ -242,7 +260,7 @@ PosDel;
             
 POST;
                 // Opening comment section if it is a comment notification else not
-                if ($flag == 'c' && $_SESSION['notiType'] != 'liked') {
+                if ($flag == 'c' && $_SESSION['notiType'] == 'commented') {
                     $commentShow = 'show';
                 } else {
                     $commentShow = 'hidden';
@@ -472,7 +490,7 @@ DELIMETER;
 function notification($sUser, $dUser, $post, $type)
 {
     //Checking if notification already been there
-    $notiAlready = queryFunc("SELECT * from notifications WHERE s_user_id='$sUser' AND post_id='$post' AND typeC='$type'");
+    $notiAlready = queryFunc("SELECT * from notifications WHERE s_user_id='$sUser' AND post_id='$post' AND typeC='$type' AND d_user_id='$dUser'");
 
     if (!isData($notiAlready)) {
         //Checking if the src and dest user are not same
@@ -488,7 +506,7 @@ function showNotifications()
     $user = $_SESSION['user_id'];
 
     // Selecting notifications for the current User
-    $notiQuery = queryFunc("SELECT * from notifications WHERE d_user_id='$user'");
+    $notiQuery = queryFunc("SELECT * from notifications WHERE d_user_id='$user' order by noti_id desc");
 
     // flag for user realization
     $isAny = false;
@@ -513,9 +531,17 @@ function showNotifications()
                 $sPerson = isRecord($personQuery);
     
                 // Rendering notification
-                $noti = <<<NOTI
-                <a href='notification.php?postID={$post}&type={$type}&notiID={$notiID}'>{$sPerson['name']} has {$type} your post<br><br></a>
+                // if notification is of type post
+                if($type=='post'){
+                    $noti = <<<NOTI
+                    <a href='notification.php?postID={$post}&type={$type}&notiID={$notiID}'>{$sPerson['name']} has posted<br><br></a>
 NOTI;
+                }else{
+                    $noti = <<<NOTI
+                    <a href='notification.php?postID={$post}&type={$type}&notiID={$notiID}'>{$sPerson['name']} has {$type} your post<br><br></a>
+NOTI;
+                }
+        
                 // You know the drill xD
                 echo $noti;
             }
@@ -654,6 +680,38 @@ function ignoreReq($id)
     $friend = queryFunc("delete from friend_requests where to_id =".$_SESSION['user_id']." and from_id = ".$id);
 }
 
+function displayFriends()
+{
+    // Displaying all friends of current user
+
+    $userID = $_SESSION['user_id'];
+
+    $queryResult = queryFunc("SELECT friends_array from users WHERE user_id='$userID'");
+
+    $friendsList = isRecord($queryResult);
+    // Breaking the friends list in array
+    $friendsListSeparated = explode(',', $friendsList['friends_array']);
+
+    for ($i = 0; $i< sizeof($friendsListSeparated)-1;$i++) {
+        $friend_id = $friendsListSeparated[$i]; // friend
+        // Getting name of that friend
+        $queryFriends = queryFunc("SELECT *,CONCAT(first_name,' ',last_name) as name FROM users WHERE user_id='$friend_id'");
+
+        $friend = isRecord($queryFriends);
+
+        $content = <<<FRIEND
+            <div>
+                 <a href="timeline.php?visitingUserID={$friend['user_id']}"><h3>{$friend['name']}</h3></a>
+                 <img src='{$friend['profile_pic']}' width='50' height='50' >
+                
+                
+            </div>
+
+FRIEND;
+
+        echo $content;
+    }
+}
 
 //Message Functions
 function sendMessage($user_to,$message_body){
@@ -684,7 +742,4 @@ function showMessages($partnerId){
         echo $convo;
     }
 }
-
-
-
 

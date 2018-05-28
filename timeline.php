@@ -1,4 +1,9 @@
-<?php include "header.php"; ?>
+<?php require_once('header.php');
+if(!isset($_SESSION['user_id'])){
+    redirection('index.php');
+  }
+
+?>
 
 
 <?php if(isset($_GET['visitingUserID']) && isset($_SESSION['user_id'])){
