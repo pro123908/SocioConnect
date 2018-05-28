@@ -202,12 +202,24 @@ function notificationRefresh() {
     var data = JSON.parse(result);
     for (i = 0; i < data.length; i++) {
       var obj = data[i];
+      var notification = '';
 
-      var notification = `
+      if(obj.type == 'post'){
+        notification = `
+        <a href='notification.php?postID=${obj.postID}&type=${obj.type}&notiID=${
+         obj.notiID
+       }'>${obj.name} has posted<br><br></a>
+         `;
+
+      }
+      else{
+        notification = `
        <a href='notification.php?postID=${obj.postID}&type=${obj.type}&notiID=${
         obj.notiID
       }'>${obj.name} has ${obj.type} your post<br><br></a>
         `;
+      }
+       
 
       document.querySelector(`.notifications`).innerHTML += notification;
     }

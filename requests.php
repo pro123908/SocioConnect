@@ -26,7 +26,7 @@ echo $friend_req;
             else{
                 echo "You have no Friend Requests";
             }
-
+            // Displaying friends
             echo '<h1>Friends</h1>';
             displayFriends();
         }
