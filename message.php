@@ -1,18 +1,31 @@
 
-    <?php include "header.php"; ?>
+<?php include "header.php"; ?>
 
+<?php
+  if(isset($_GET['id']))
+    {
+      $partner = queryFunc("select first_name from users where user_id =".$_GET['id']);
+      $partner = isRecord($partner);
+      echo "<h2>You and ". $partner['first_name'] ." </h2>";
+      ?>
+        <div id="messages_area">
+      <?php
+      showMessages($_GET['id']);
+      ?>
+      </div>
     <?php
-        if(isset($_GET['']))
-    
-    ?>
-    <div class="search">
-    <form action="search.php" method="get" name="search_form">
-      <input type="text"  onkeyup="getUsersForMessages(this.value)" name="q" placeholder="Enter friend name" autocomplete = "off" id="search_text_input">
-    </form>
-    <div class="search_results_for_messages"></div>
-    <div class="search_results_footer_empty"></div>
-  </div>
+      $messageInput = <<<DELIMETER
+        <form method="post">
+        <textarea name="message_body" placeholder="Type your message here"  id="message_textarea"></textarea>
+        <input type="submit" name="send_message" id="message_submit" value="send">
+        </form>
+DELIMETER;
+      echo $messageInput;     
+}
+  if(isset($_POST['send_message'])){
+      sendMessage($_GET['id'],$_POST['message_body']);
+  }
+?>
 
 
-
-<script src="script.js"></script>
+<script src="script.js" ></script>

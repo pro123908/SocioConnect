@@ -31,6 +31,7 @@
 <div class="friend_button">
 <!-- If you are comming here through searching or by clicking on your profile button -->
     <?php $flag ? showFriendButton(0) : showFriendButton($_GET['visitingUserID']) ?>
+    <a href="message.php?id=<?php echo $_GET['visitingUserID']; ?>">Message</a>
 </div>
 
 <div class='add_post_timeline'>

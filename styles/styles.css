@@ -362,4 +362,17 @@
 	font-size: 12px;
 }
 
-
+#blue{
+  color: blue;
+  /* float:left; */
+}
+#green{
+  color:green;
+  /* float:right; */
+}
+#messages_area{
+  margin: 10px 10px;
+  background-color: black;
+  padding: 10px;
+  font-size: 20px;
+}

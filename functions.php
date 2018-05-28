@@ -653,3 +653,38 @@ function ignoreReq($id)
     // Just simply deleting the request from sending user's record
     $friend = queryFunc("delete from friend_requests where to_id =".$_SESSION['user_id']." and from_id = ".$id);
 }
+
+
+//Message Functions
+function sendMessage($user_to,$message_body){
+    $user_from = $_SESSION['user_id'];
+    $flag = 0;
+    global $connection;
+    $queryInsert = $connection->prepare("INSERT INTO messages (user_to, user_from, body, opened, viewed, deleted, dateTime) VALUES (?,?,?,?,?,?,now())");
+    $queryInsert->bind_param("iisiii", $user_to, $user_from, $message_body, $flag, $flag, $flag);
+    $queryInsert->execute();
+    $queryInsert->close();
+}
+
+function showMessages($partnerId){
+    //Update opened to seen
+    $userLoggedIn = $_SESSION['user_id'];
+    $seen = queryFunc("update messages set opened = '1' where user_to = '$userLoggedIn'");
+
+    $getConvo = queryFunc("select * from messages where (user_to = '$partnerId' AND user_from = '$userLoggedIn') OR (user_to = '$userLoggedIn' AND user_from = '$partnerId')");
+
+    while($row = fetchArray($getConvo)){
+        if($row['user_to'] == $userLoggedIn)
+            $convo = "<div id='blue'>";
+        else
+            $convo = "<div id='green'>";
+
+        $convo.= $row['body']. "</div><hr>";
+         
+        echo $convo;
+    }
+}
+
+
+
+
