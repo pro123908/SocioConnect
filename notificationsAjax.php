@@ -14,10 +14,10 @@
           // Selecing notificaiton based on
           // If is your notification and it is not already been seen
           if ($row['d_user_id'] == $_SESSION['user_id'] && $row['seen'] != 1) {
-              $person = $row['s_user_id']; // Person who generated the notification
-        $post = $row['post_id']; // Post ID
-        $type = $row['typeC']; // type of the notification
-        $notiID = $row['noti_id']; // Notification ID
+             $person = $row['s_user_id']; // Person who generated the notification
+             $post = $row['post_id']; // Post ID
+             $type = $row['typeC']; // type of the notification
+             $notiID = $row['noti_id']; // Notification ID
 
         // Selecting name of the person who geneerated the notification
               $personQuery = queryFunc("SELECT CONCAT(first_name,' ',last_name) as name FROM users WHERE user_id='$person'");

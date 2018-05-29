@@ -490,7 +490,7 @@ DELIMETER;
 function notification($sUser, $dUser, $post, $type)
 {
     //Checking if notification already been there
-    $notiAlready = queryFunc("SELECT * from notifications WHERE s_user_id='$sUser' AND post_id='$post' AND typeC='$type' AND d_user_id='$dUser'");
+    $notiAlready = queryFunc("SELECT * from notifications WHERE s_user_id='$sUser' AND post_id='$post' AND typeC='$type' AND d_user_id='$dUser' AND seen != 1");
 
     if (!isData($notiAlready)) {
         //Checking if the src and dest user are not same

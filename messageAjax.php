@@ -4,18 +4,19 @@
   if (isset($_POST['partner'])) {
       sendMessage($_POST['partner'], $_POST['messageBody']);
 
-      $userID = $_SESSION['user_id'];
-      $partnerID = $_POST['partner'];
+      // To be deleted
+    //   $userID = $_SESSION['user_id'];
+    //   $partnerID = $_POST['partner'];
 
-      $queryMessage = queryFunc("SELECT body FROM messages WHERE user_from='$userID' AND user_to='$partnerID' order by id desc limit 1");
+    //   $queryMessage = queryFunc("SELECT body FROM messages WHERE user_from='$userID' AND user_to='$partnerID' order by id desc limit 1");
 
-      $queryMessageResult = isRecord($queryMessage);
+    //   $queryMessageResult = isRecord($queryMessage);
 
-      $message = $queryMessageResult['body'];
+    //   $message = $queryMessageResult['body'];
 
-      $data = array('message' => $message);
+    //   $data = array('message' => $message);
 
-      echo json_encode($data);
+    //   echo json_encode($data);
   }
 
   if (isset($_GET['get'])) {
