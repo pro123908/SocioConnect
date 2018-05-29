@@ -379,3 +379,18 @@
   padding: 10px;
   font-size: 20px;
 }
+
+/* Notification Display */
+.notificationDisplay a{
+  text-decoration: none;
+  color : black;
+}
+
+.notificationDisplay small{
+  color: gray;
+}
+
+.notificationDisplay .noSeen{
+  color: #e31414;
+}
+

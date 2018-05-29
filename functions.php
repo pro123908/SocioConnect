@@ -160,6 +160,9 @@ function deletePost($postID)
     //Deleting likes of that post
     $deletePostLikes = queryFunc("DELETE from likes WHERE post_id ='$postID'");
 
+    //Deleting notifications of that post
+    queryFunc("DELETE FROM notifications WHERE post_id='$postID'");
+
     // Returning success message
     return $deleteQuery;
 }
@@ -489,7 +492,7 @@ DELIMETER;
 
 function notification($sUser, $dUser, $post, $type)
 {
-    //Checking if notification already been there
+    //Checking if notification already been there and is seen
     $notiAlready = queryFunc("SELECT * from notifications WHERE s_user_id='$sUser' AND post_id='$post' AND typeC='$type' AND d_user_id='$dUser' AND seen != 1");
 
     if (!isData($notiAlready)) {
