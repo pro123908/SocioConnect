@@ -731,7 +731,7 @@ function showMessages($partnerId){
 
     $getConvo = queryFunc("select * from messages where (user_to = '$partnerId' AND user_from = '$userLoggedIn') OR (user_to = '$userLoggedIn' AND user_from = '$partnerId')");
 
-    while($row = fetchArray($getConvo)){
+    while($row = isRecord($getConvo)){
         if($row['user_to'] == $userLoggedIn)
             $convo = "<div id='blue'>";
         else
@@ -740,6 +740,7 @@ function showMessages($partnerId){
         $convo.= $row['body']. "</div><hr>";
          
         echo $convo;
+        $_SESSION['last_msg_id'] = $row['id'];
     }
 }
 

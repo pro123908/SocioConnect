@@ -6,7 +6,7 @@
 <head>
  <link rel="stylesheet" href="styles/styles.css"> 
 </head>
-<body>
+<body onload="setUserId('<?php echo $_SESSION['user_id'];?>')">
 <!-- Starting div of main content area of the website, where all the stuff lies -->
 <div class='contentArea'>
 <div id='header'>

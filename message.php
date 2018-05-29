@@ -2,30 +2,27 @@
 <?php include "header.php"; ?>
 
 <?php
-  if(isset($_POST['send_message'])){
-    sendMessage($_GET['id'],$_POST['message_body']);
-}
-  if(isset($_GET['id']))
-    {
-      $partner = queryFunc("select first_name from users where user_id =".$_GET['id']);
+  if (isset($_GET['id'])) {
+      $partnerID = $_GET['id'];
+      $_SESSION['partner'] = $partnerID;
+      $partner = queryFunc("select first_name from users where user_id =".$partnerID);
       $partner = isRecord($partner);
-      echo "<h2>You and ". $partner['first_name'] ." </h2>";
-      ?>
+      echo "<h2>You and ". $partner['first_name'] ." </h2>"; ?>
         <div id="messages_area">
       <?php
-      showMessages($_GET['id']);
-      ?>
+      showMessages($partnerID); ?>
       </div>
     <?php
-      $id = $_GET['id'];
+      $id = $partnerID;
       $messageInput = <<<DELIMETER
-        <form method="post" action="message.php?id=$id">
+        <form method="post" name='messageForm' action="javascript:message()">
         <textarea name="message_body" placeholder="Type your message here"  id="message_textarea"></textarea>
+        <input type='hidden' name='partner' value='$partnerID'>
         <input type="submit" name="send_message" id="message_submit" value="send">
         </form>
 DELIMETER;
-      echo $messageInput;     
-}
+      echo $messageInput;
+  }
   
 ?>
 

@@ -1,3 +1,8 @@
+function setUserId(id){
+  session_user_id = id;
+}
+
+
 function showCommentField(id) {
   // Displaying comment section when comment button is clicked
   document.getElementById("post_id_" + id).classList.toggle("hidden");
@@ -34,7 +39,6 @@ function ajaxCalls(method, pathString, postParam = "") {
         } else if (xmlhttp.status == 400) {
           reject("Rejected");
         } else {
-          alert("something else other than 200 was returned");
         }
       }
     };
@@ -202,24 +206,21 @@ function notificationRefresh() {
     var data = JSON.parse(result);
     for (i = 0; i < data.length; i++) {
       var obj = data[i];
-      var notification = '';
+      var notification = "";
 
-      if(obj.type == 'post'){
+      if (obj.type == "post") {
         notification = `
-        <a href='notification.php?postID=${obj.postID}&type=${obj.type}&notiID=${
-         obj.notiID
-       }'>${obj.name} has posted<br><br></a>
+        <a href='notification.php?postID=${obj.postID}&type=${
+          obj.type
+        }&notiID=${obj.notiID}'>${obj.name} has posted<br><br></a>
          `;
-
-      }
-      else{
+      } else {
         notification = `
        <a href='notification.php?postID=${obj.postID}&type=${obj.type}&notiID=${
-        obj.notiID
-      }'>${obj.name} has ${obj.type} your post<br><br></a>
+          obj.notiID
+        }'>${obj.name} has ${obj.type} your post<br><br></a>
         `;
       }
-       
 
       document.querySelector(`.notifications`).innerHTML += notification;
     }
@@ -258,4 +259,41 @@ function likeUsers(postID) {
 function hideLikers(postID) {
   // Hiding likers when clicked on number again
   document.querySelector(`.likeUsers-${postID}`).innerHTML = "";
+}
+
+function message() {
+  let messageBody = document.messageForm.message_body;
+  let partner = document.messageForm.partner;
+
+  let param = `partner=${partner.value}&messageBody=${messageBody.value}`;
+
+  document.querySelector("#messages_area").innerHTML += `
+      <div id='green'>${messageBody.value}</div><hr>
+     `;
+
+  ajaxCalls("POST", "messageAjax.php", param).then(function(response) {
+    // let messageResponse = JSON.parse(response);
+
+    // document.querySelector("#messages_area").innerHTML += `
+    //   <div id='green'>${messageResponse.message}</div><hr>
+    //  `;
+  });
+
+  messageBody.value = "";
+}
+
+setInterval(messageRefresh, 1000);
+
+function messageRefresh() {
+  ajaxCalls("GET", "messageAjax.php?get=1").then(function(response) {
+    let messageResponse = JSON.parse(response);
+
+    for (i = 0; i < messageResponse.length; i++) {
+      let obj = messageResponse[i];
+
+      document.querySelector("#messages_area").innerHTML += `
+        <div id='blue'>${obj.message}</div><hr>
+       `;
+    }
+  });
 }
