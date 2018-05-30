@@ -516,6 +516,7 @@ function showNotifications()
 
     if (isData($notiQuery)) {
         // If there are notifications
+        $notiCounter = 0;
         while ($row = isRecord($notiQuery)) {
             /*
                Checking if are you the one who generated the notification
@@ -528,6 +529,10 @@ function showNotifications()
                 $post = $row['post_id'];
                 $type = $row['typeC'];
                 $notiID = $row['noti_id'];
+                if ($notiCounter == 0) {
+                    $_SESSION['last_noti_id'] = $notiID;
+                    $notiCounter = 1;
+                }
 
                 // Selecting name of the user who generated the notification
                 $personQuery = queryFunc("SELECT CONCAT(first_name,' ',last_name) as name FROM users WHERE user_id='$person'");

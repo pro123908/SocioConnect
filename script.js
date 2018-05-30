@@ -197,7 +197,7 @@ function commentsRefresh() {
   });
 }
 
-setInterval(notificationRefresh, 1000);
+setInterval(notificationRefresh, 3000);
 
 function notificationRefresh() {
   ajaxCalls("GET", "notificationsAjax.php").then(function(result) {
@@ -220,8 +220,10 @@ function notificationRefresh() {
         }'>${obj.name} has ${obj.type} your post<br><br></a>
         `;
       }
+      
 
-      document.querySelector(`.notifications`).innerHTML += notification;
+      document.querySelector(`.notifications`).innerHTML =
+        notification + document.querySelector(`.notifications`).innerHTML;
     }
   });
 }
@@ -287,7 +289,7 @@ setInterval(messageRefresh, 1000);
 function messageRefresh() {
   var url = window.location.href;
   var id = url.substring(url.lastIndexOf("=") + 1);
-  
+
   ajaxCalls("GET", `messageAjax.php?id=${id}`).then(function(response) {
     let messageResponse = JSON.parse(response);
 
