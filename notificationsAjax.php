@@ -5,32 +5,39 @@
   // For loading notifcaitons without reloading the page
 
   $counter = 0;
+  $lastNotiID = $_SESSION['last_noti_id'];
+  $userID = $_SESSION['user_id'];
 
-  //Selecting recent notifications which were inserted under 2 seconds
-  $queryResult = queryFunc("SELECT * from notifications WHERE now() - createdAt < 2");
+  $queryResult = queryFunc("SELECT * from notifications WHERE seen !=1 AND noti_id > '$lastNotiID' AND d_user_id='$userID' order by noti_id desc");
+
 
   if (isData($queryResult)) {
+      $notiCounter = 0;
       while ($row = isRecord($queryResult)) {
           // Selecing notificaiton based on
           // If is your notification and it is not already been seen
-          if ($row['d_user_id'] == $_SESSION['user_id'] && $row['seen'] != 1) {
+          
              $person = $row['s_user_id']; // Person who generated the notification
              $post = $row['post_id']; // Post ID
              $type = $row['typeC']; // type of the notification
-             $notiID = $row['noti_id']; // Notification ID
+             $notiID = $row['noti_id']; // Notification 
+             if($notiCounter == 0){
+                $_SESSION['last_noti_id'] = $notiID;
+                $notiCounter = 1;
+             }
+             
 
-        // Selecting name of the person who geneerated the notification
-              $personQuery = queryFunc("SELECT CONCAT(first_name,' ',last_name) as name FROM users WHERE user_id='$person'");
-              $sPerson = isRecord($personQuery);
-              $sPersonName = $sPerson['name']; // Name of that person
+          // Selecting name of the person who geneerated the notification
+          $personQuery = queryFunc("SELECT CONCAT(first_name,' ',last_name) as name FROM users WHERE user_id='$person'");
+          $sPerson = isRecord($personQuery);
+          $sPersonName = $sPerson['name']; // Name of that person
 
-              // Inserting notifications into the array
-              // PostID,type,notification ID and name of the source person
-              $data[$counter] = array('postID' => $post,'type' => $type,'notiID' => $notiID,'name' => $sPersonName);
+          // Inserting notifications into the array
+          // PostID,type,notification ID and name of the source person
+          $data[$counter] = array('postID' => $post,'type' => $type,'notiID' => $notiID,'name' => $sPersonName);
 
-              // Moving on to the next notificaiton if any
-              $counter += 1;
-          }
+          // Moving on to the next notificaiton if any
+          $counter += 1;
       }
       // if there were no notifations for you
       if ($counter != 0) {
