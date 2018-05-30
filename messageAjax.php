@@ -3,6 +3,7 @@
 
   if (isset($_POST['partner'])) {
       sendMessage($_POST['partner'], $_POST['messageBody']);
+      echo $_POST['partner'];
 
       // To be deleted
     //   $userID = $_SESSION['user_id'];
@@ -19,9 +20,9 @@
     //   echo json_encode($data);
   }
 
-  if (isset($_GET['get'])) {
+  if (isset($_GET['id'])) {
       $userID = $_SESSION['user_id'];
-      $partnerID = $_SESSION['partner'];
+      $partnerID = $_GET['id'];
       $last_msg_id = $_SESSION['last_msg_id'];
 
       $queryResult = queryFunc("SELECT id,user_to,user_from,body from messages WHERE id>'$last_msg_id' AND user_to='$userID' AND user_from='$partnerID'");
@@ -33,7 +34,7 @@
               $messageBody = $row['body'];
 
               // Inserting data into the array to pass , postID and likesCount
-              $data[$counter] = array('message' => $messageBody);
+              $data[$counter] = array('message' => $messageBody,'partnerID' =>$partnerID);
               $counter += 1;
               $_SESSION['last_msg_id'] = $row['id'];
           }

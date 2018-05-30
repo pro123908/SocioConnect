@@ -1,7 +1,6 @@
-function setUserId(id){
+function setUserId(id) {
   session_user_id = id;
 }
-
 
 function showCommentField(id) {
   // Displaying comment section when comment button is clicked
@@ -272,6 +271,7 @@ function message() {
      `;
 
   ajaxCalls("POST", "messageAjax.php", param).then(function(response) {
+    console.log("Response messageSimple : " + response);
     // let messageResponse = JSON.parse(response);
 
     // document.querySelector("#messages_area").innerHTML += `
@@ -285,14 +285,17 @@ function message() {
 setInterval(messageRefresh, 1000);
 
 function messageRefresh() {
-  ajaxCalls("GET", "messageAjax.php?get=1").then(function(response) {
+  var url = window.location.href;
+  var id = url.substring(url.lastIndexOf("=") + 1);
+  
+  ajaxCalls("GET", `messageAjax.php?id=${id}`).then(function(response) {
     let messageResponse = JSON.parse(response);
 
     for (i = 0; i < messageResponse.length; i++) {
       let obj = messageResponse[i];
 
       document.querySelector("#messages_area").innerHTML += `
-        <div id='blue'>${obj.message}</div><hr>
+        <div id='blue'>PartnerID : ${obj.partnerID}   ${obj.message}</div><hr>
        `;
     }
   });
