@@ -20,7 +20,7 @@
     <a class="header_links" href="timeline.php">Profile</a>
     <a class="header_links" href="main.php">Newsfeed</a>  
     <a class="header_links" href="requests.php">Friend Requests</a> 
-    <a class="header_links" href="message.php">Messages</a>  
+    <a class="header_links" href="messages.php">Messages</a>  
     <a class='header_links' href='allNotification.php'>Notifications</a>
     <div class="search">
       <form action="search.php" method="get" name="search_form">

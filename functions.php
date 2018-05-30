@@ -747,3 +747,48 @@ function showMessages($partnerId){
     }
 }
 
+function getRecentChatsUserIds(){
+    $counter = 0;
+    $recentRecievedMsgs = queryFunc("SELECT DISTINCT user_from FROM messages where user_to = ".$_SESSION['user_id']);
+    $recentSenededMsgs = queryFunc("SELECT DISTINCT user_to FROM messages where user_from = ".$_SESSION['user_id']);
+    if(isData($recentSenededMsgs) || isData($recentRecievedMsgs)){
+        while($row = isRecord($recentRecievedMsgs)){
+                $recentConvos [$counter] = $row['user_from']; 
+                $counter++;
+        }
+        while($row = isRecord($recentSenededMsgs)){
+            if(array_search($row['user_to'],$recentConvos) === false ){
+                $recentConvos [$counter] = $row['user_to']; 
+                $counter++;
+            }
+        }
+    return $recentConvos;
+    }
+    return false;
+}
+
+function getRecentChatsUsernames($recentConvos){
+        $counter = 0;
+        while($counter < sizeof($recentConvos)){
+            $user_name = queryFunc("SELECT CONCAT(first_name,' ',last_name) as name FROM users WHERE user_id=".$recentConvos[$counter]);
+            $user_name = isRecord($user_name);
+            $recentUser[$counter] = $user_name['name'];
+            $counter++;
+        }
+        return $recentUser;
+    }
+    
+function showRecentChats(){
+    $recentUserIds = getRecentChatsUserIds();
+    $recentUsernames = getRecentChatsUsernames($recentUserIds);
+    $counter = 0;
+    while($counter < sizeof($recentUsernames)){
+        $user = <<<DELIMETER
+        <div class='resultDisplay'>
+            <a href='message.php?id={$recentUserIds[$counter]}'><button >{$recentUsernames[$counter]}</button></a>
+        </div>
+DELIMETER;
+        echo $user;  
+        $counter++;
+    }
+}
