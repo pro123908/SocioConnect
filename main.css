@@ -28,6 +28,18 @@ body {
 
 .header-text {
   flex: 0 0 10%;
+  
+}
+
+.flex-77{
+  flex: 0 0 77%;
+}
+
+.flex-13{
+  flex: 0 0 13%;
+}
+
+.mr-1{
   margin-right: 10px;
 }
 
@@ -54,7 +66,14 @@ body {
   justify-content: center;
   align-items: center;
   height: 80%;
+}
+
+.mt-50{
   margin-top: 50px;
+}
+
+.mt-20{
+  margin-top: 20px;
 }
 
 .login-heading{
@@ -108,4 +127,4 @@ body {
   background-color: #ffffff;
   color: #000000;
   border-color: #ffffff;
-}  
+}
