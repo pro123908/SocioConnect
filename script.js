@@ -268,7 +268,7 @@ function message() {
 
   let param = `partner=${partner.value}&messageBody=${messageBody.value}`;
 
-  document.querySelector("#messages_area").innerHTML += `
+  document.querySelector("#convo_area").innerHTML += `
       <div id='green'>${messageBody.value}</div><hr>
      `;
 
@@ -296,7 +296,7 @@ function messageRefresh() {
     for (i = 0; i < messageResponse.length; i++) {
       let obj = messageResponse[i];
 
-      document.querySelector("#messages_area").innerHTML += `
+      document.querySelector("#convo_area").innerHTML += `
         <div id='blue'>PartnerID : ${obj.partnerID}   ${obj.message}</div><hr>
        `;
     }

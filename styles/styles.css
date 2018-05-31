@@ -368,10 +368,16 @@
 
 #blue{
   color: blue;
+  background-color: black;
+  height: 40px;
+  padding: 5px 5px;
   /* float:left; */
 }
 #green{
   color:green;
+  background-color: black;
+  height: 40px;
+  padding: 5px 5px;
   /* float:right; */
 }
 #messages_area{
@@ -394,3 +400,36 @@
   color: #e31414;
 }
 
+.recent_chats{
+  width: 13%;
+  background-color:aqua;
+  margin: 10px 10px;
+  padding: 10px 10px;
+  text-align: center;
+  height: 400px;
+  overflow: scroll;
+  display: inline-grid;
+}
+
+.recent_user{
+  border: 1px solid black;
+  padding: 10px 10px;
+  margin: 5px 5px;
+  height: 52px;
+}
+
+.chat_box{
+  display: inline-grid;
+  margin: 10 100px;
+  width : 70%;
+  border: 1px solid black;
+  height: 585px;
+  overflow: scroll;
+}
+
+#convo_area{
+  margin: 5px 5px;
+}
+#convo_area h2,h3{
+  text-align: center;
+}
