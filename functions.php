@@ -754,14 +754,19 @@ function showMessages($partnerId){
 
 function getRecentChatsUserIds(){
     $counter = 0;
+    //Getting ids of all the users where messages are received from
     $recentRecievedMsgs = queryFunc("SELECT DISTINCT user_from FROM messages where user_to = ".$_SESSION['user_id']);
+
+    //Getting ids of all the users where messages are sent to
     $recentSenededMsgs = queryFunc("SELECT DISTINCT user_to FROM messages where user_from = ".$_SESSION['user_id']);
     if(isData($recentSenededMsgs) || isData($recentRecievedMsgs)){
         while($row = isRecord($recentRecievedMsgs)){
+                //Storing IDs into the array
                 $recentConvos [$counter] = $row['user_from']; 
                 $counter++;
         }
         while($row = isRecord($recentSenededMsgs)){
+            // Checking if ids are already in the array,if not then add it
             if(array_search($row['user_to'],$recentConvos) === false ){
                 $recentConvos [$counter] = $row['user_to']; 
                 $counter++;
@@ -773,6 +778,8 @@ function getRecentChatsUserIds(){
 }
 
 function getRecentChatsUsernames($recentConvos){
+
+        // Getting names of users whose ids are passed
         $counter = 0;
         while($counter < sizeof($recentConvos)){
             $user_name = queryFunc("SELECT CONCAT(first_name,' ',last_name) as name FROM users WHERE user_id=".$recentConvos[$counter]);
@@ -784,8 +791,8 @@ function getRecentChatsUsernames($recentConvos){
     }
     
 function showRecentChats(){
-    $recentUserIds = getRecentChatsUserIds();
-    $recentUsernames = getRecentChatsUsernames($recentUserIds);
+    $recentUserIds = getRecentChatsUserIds(); //IDS of users
+    $recentUsernames = getRecentChatsUsernames($recentUserIds); // Names of users
     $counter = 0;
     while($counter < sizeof($recentUsernames)){
         $user = <<<DELIMETER
