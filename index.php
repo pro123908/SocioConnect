@@ -29,26 +29,24 @@ if(isset($_SESSION['user_id'])){
 <a href="signUp.php">Haven't registered?</a>
 -->
 
-<div class="header">
-    <h1 class="header-heading">Socio Connect</h1>
-    <h3 class="header-text">Not a member?</h3>
-    <a href="signUp.php" class='header-btn'>Sign Up</a>
-  </div>
-  <div class='container'>
-    <div class="heading-container">
-      <h1 class='heading'>Socio Connect</h1>
+ <div class='main-container'>
+    <div class="header">
+      <div class="header-heading">
+        <h1>Socio Connect</h1>
+      </div>
+      <div class="header-text">
+        <h3>Not a member?</h3>
+      </div>
+      <a href="signUp.php" class="header-btn">Sign Up</a>
     </div>
-
     <div class="login-container">
-      <form action="login.php" method='POST' class="login">
-        <input type="text" name='email' placeholder="Email" class="login-input">
-        <br>
-        <input type="password" name='password' placeholder="Password" class="login-input">
-        <br>
-        <input type="submit" name='submit'  class='login-submit'>
+      <h1 class="login-heading">Welcome</h1>
+      <form action="login.php" method='POST' class="login-form">
+        <input type="text"  name='email' placeholder="Email" class="login-input"><br>
+        <input type="password" name='password' placeholder="Password" class="login-input"><br>
+        <input type="submit" name='submit' class="login-submit">
       </form>
     </div>
-
   </div>
 
 </body>
