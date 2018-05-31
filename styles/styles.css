@@ -400,7 +400,7 @@
   color: #e31414;
 }
 
-.recent_chats{
+.recent_chats_area{
   width: 13%;
   background-color:aqua;
   margin: 10px 10px;
@@ -409,6 +409,12 @@
   height: 400px;
   overflow: scroll;
   display: inline-grid;
+}
+
+.recent_chats{
+  background-color: blue;
+  height: 300px;
+  overflow: scroll;
 }
 
 .recent_user{
@@ -432,4 +438,8 @@
 }
 #convo_area h2,h3{
   text-align: center;
+}
+
+.search_results_for_messages{
+  background-color: black;
 }

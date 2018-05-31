@@ -804,3 +804,18 @@ DELIMETER;
         $counter++;
     }
 }
+
+function searchUsersFortChats(){
+    $search = <<<DELIMETER
+    <div class="search">
+    <form action="search.php" method="get" name="message_search_form">
+      <input type="text"  onkeyup="getUsersForMessages(this.value)" name="q" placeholder="Search..." autocomplete = "off" id="message_search_text_input">
+    </form>
+    <div class="search_results_for_messages"></div>
+    <div class="message_search_results_footer_empty"></div>
+  </div>
+DELIMETER;
+    echo $search;
+}
+
+

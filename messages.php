@@ -9,9 +9,15 @@
             $id = $partnerID;
         }
         ?>
-        <div class="recent_chats">
-            <?php showRecentChats();?>
-        </div>
+        <div class="recent_chats_area">
+            <div class="recent_chats">
+                <h2>Recent Chats<h2>
+                <?php showRecentChats(); ?> 
+            </div>
+            <div class="search_user_for_chats">
+                <?php searchUsersFortChats(); ?> 
+            </div>
+        </div>    
         <div class="chat_box">
             <div id="convo_area">
                 <?php 
