@@ -29,7 +29,7 @@
                     <p style='margin: 0;'>{$row['username']}</p>
                 </div>
             </a>
-            <a href='message.php?id={$row['user_id']}'><button >Message</button></a>
+            <a href='messages.php?id={$row['user_id']}'><button >Message</button></a>
         </div>
 DELIMETER;
             echo $user;
