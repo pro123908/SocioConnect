@@ -22,7 +22,7 @@
             <div id="convo_area">
                 <?php 
                 if (isset($_GET['id'])){
-                    echo "<h2>You and ". $partner['first_name'] ." </h2>";
+                    echo "<h2 id='partner_heading'>You and ". $partner['first_name'] ." </h2>";
                     showMessages($partnerID);
                 }
                 else{

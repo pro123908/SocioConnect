@@ -797,7 +797,7 @@ function showRecentChats(){
     while($counter < sizeof($recentUsernames)){
         $user = <<<DELIMETER
         <div class='recent_user'>
-            <a href='messages.php?id={$recentUserIds[$counter]}'><button >{$recentUsernames[$counter]}</button></a>
+            <a href='messages.php?id={$recentUserIds[$counter]}'><button class="recent_username" >{$recentUsernames[$counter]}</button></a>
         </div>
 DELIMETER;
         echo $user;  
