@@ -355,6 +355,9 @@
 	margin: 1px 12px 0 2px;
 	float: left;
 }
+.liveSearchProfilePicForMessages img{
+  height: 38px !important; 
+}
 
 .liveSearchText {
 	background-color: transparent;
@@ -442,4 +445,8 @@
 
 .search_results_for_messages{
   background-color: black;
+}
+
+.resultDisplayForMessages{
+  height: 40px;
 }

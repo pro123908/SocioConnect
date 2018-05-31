@@ -153,7 +153,8 @@ function changePic() {
 
 function getUsers(value) {
   // Setting paramters for POST request
-  var param = `query=${value}`;
+  var flag = 1;
+  var param = `query=${value}&flag=${flag}`;
 
   ajaxCalls("POST", "search.php", param).then(function(result) {
     // Displaying search results
@@ -165,7 +166,8 @@ function getUsers(value) {
 
 function getUsersForMessages(value) {
   // Setting paramters for POST request
-  var param = `query=${value}`;
+  var flag = 0;
+  var param = `query=${value}&flag=${flag}`;
 
   ajaxCalls("POST", "search.php", param).then(function(result) {
     // Displaying search results
@@ -266,6 +268,23 @@ function message() {
   let messageBody = document.messageForm.message_body;
   let partner = document.messageForm.partner;
 
+  //to add a new user in recent contact list
+  // var flag = 0;
+  // var partnerName = document.getElementById("partner_heading").innerHTML;
+  // partnerName = partnerName.slice(partnerName.indexOf(" and ")+5);
+
+  // var usernames = document.querySelectorAll(".recent_username");
+  // alert(partnerName);
+  // alert(usernames.length)
+  //  for(i=0; i<usernames.length; i++){
+  //   if(usernames[i].value == partnerName)
+  //       flag = 1;
+  //       alert(usernames[i].value);    
+  // }
+  // if(flag == 0)
+  //   alert("New user found");
+  // else
+  //   alert("No new found");
   let param = `partner=${partner.value}&messageBody=${messageBody.value}`;
 
   document.querySelector("#convo_area").innerHTML += `

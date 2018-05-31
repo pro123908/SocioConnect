@@ -17,21 +17,41 @@
         }
     
         isData($users);
-        while ($row = isRecord($users)) {
-            $user = <<<DELIMETER
-        <div class='resultDisplay'>
-            <a href="timeline.php?visitingUserID={$row['user_id']}" style='color: #000'>
-                <div class='liveSearchProfilePic'>
-                    <img src={$row['profile_pic']} height=200px width=50px>
+        if($_POST['flag'] == 1){
+            while ($row = isRecord($users)) {
+                $user = <<<DELIMETER
+                <div class='resultDisplay'>
+                    <a href="timeline.php?visitingUserID={$row['user_id']}" style='color: #000'>
+                        <div class='liveSearchProfilePic'>
+                            <img src={$row['profile_pic']} height=200px width=50px>
+                        </div>
+                        <div class='liveSearchText'>
+                            {$row['first_name']} {$row['last_name']}
+                            <p style='margin: 0;'>{$row['username']}</p>
+                        </div>
+                    </a>
+                    <a href='message.php?id={$row['user_id']}'><button >Message</button></a>
                 </div>
-                <div class='liveSearchText'>
-                    {$row['first_name']} {$row['last_name']}
-                    <p style='margin: 0;'>{$row['username']}</p>
-                </div>
-            </a>
-            <a href='messages.php?id={$row['user_id']}'><button >Message</button></a>
-        </div>
 DELIMETER;
-            echo $user;
+                echo $user;
+            }
         }
-    }
+        else{
+            while ($row = isRecord($users)) {
+                $user = <<<DELIMETER
+            <div class='resultDisplay  resultDisplayForMessages'>
+                <a href='messages.php?id={$row['user_id']}' style='color: #000'>
+                    <div class='liveSearchProfilePic liveSearchProfilePicForMessages'>
+                        <img src={$row['profile_pic']} height=38px width=38px>
+                    </div>
+                    <div class='liveSearchText'>
+                        {$row['first_name']} {$row['last_name']}
+                        <p style='margin: 0;'>{$row['username']}</p>
+                    </div>
+                </a>
+            </div>
+DELIMETER;
+                echo $user;
+            }
+        }
+}
