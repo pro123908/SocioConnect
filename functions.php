@@ -777,27 +777,48 @@ function getRecentChatsUserIds(){
     return false;
 }
 
+function getUserFirstAndLastName($user_id){
+    $user_name = queryFunc("SELECT CONCAT(first_name,' ',last_name) as name FROM users WHERE user_id=".$user_id);
+    $user_name = isRecord($user_name);
+    return $user_name['name'];   
+}
+
 function getRecentChatsUsernames($recentConvos){
 
         // Getting names of users whose ids are passed
         $counter = 0;
         while($counter < sizeof($recentConvos)){
-            $user_name = queryFunc("SELECT CONCAT(first_name,' ',last_name) as name FROM users WHERE user_id=".$recentConvos[$counter]);
-            $user_name = isRecord($user_name);
-            $recentUser[$counter] = $user_name['name'];
+            $recentUser[$counter] = getUserFirstAndLastName($recentConvos[$counter]);
             $counter++;
         }
         return $recentUser;
-    }
+}
+
+function getPartnersLastMessage($partnerId){
+    $userLoggedIn = $_SESSION['user_id'];
+    $details = queryFunc("SELECT user_from,body,dateTime from messages where (user_to = '$partnerId' AND user_from = '$userLoggedIn') OR (user_to = '$userLoggedIn' AND user_from = '$partnerId') order by id desc limit 1");
+    $details = isRecord($details);
+    return $details;
+}
     
 function showRecentChats(){
     $recentUserIds = getRecentChatsUserIds(); //IDS of users
     $recentUsernames = getRecentChatsUsernames($recentUserIds); // Names of users
     $counter = 0;
     while($counter < sizeof($recentUsernames)){
+        $lastMessageDetails = getPartnersLastMessage($recentUserIds[$counter]);
+        $from = $lastMessageDetails['user_from'];
+        if($from == $_SESSION['user_id'])
+            $from = "You ";
+        else    
+            $from = getUserFirstAndLastName($from);
+        $msg = $lastMessageDetails['body'];
+        $at = $lastMessageDetails['dateTime'];
         $user = <<<DELIMETER
         <div class='recent_user'>
             <a href='messages.php?id={$recentUserIds[$counter]}'><button class="recent_username" >{$recentUsernames[$counter]}</button></a>
+            <p>{$from}:{$msg}</p>
+            <p>{$at}</p>
         </div>
 DELIMETER;
         echo $user;  
