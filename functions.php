@@ -809,7 +809,7 @@ function searchUsersFortChats(){
     $search = <<<DELIMETER
     <div class="search">
     <form action="search.php" method="get" name="message_search_form">
-      <input type="text"  onkeyup="getUsersForMessages(this.value)" name="q" placeholder="Search..." autocomplete = "off" id="message_search_text_input">
+      <input type="text"  onkeyup="getUsers(this.value,0)" name="q" placeholder="Search..." autocomplete = "off" id="message_search_text_input">
     </form>
     <div class="search_results_for_messages"></div>
     <div class="message_search_results_footer_empty"></div>
@@ -818,4 +818,67 @@ DELIMETER;
     echo $search;
 }
 
+function getSearchedUsers($value,$flag){
+    //flag == 0 ==> called from search in messages.php 
+    //flag == 1 ==> called from normal search
+    //flag == 2 ==> called from allSearchResults.php
+    if (strlen($value) == 0) {
+        echo " ";
+    } else {
+        //explode breakes the string into array, each substring is made when the first arg of explode is found in the string
+        $names = explode(" ", $value);
+        if (count($names) == 2) {
+            if($flag == 2)
+                $users = queryFunc("SELECT first_name, last_name,profile_pic,username,user_id from users where first_name like '$names[0]%' AND last_name like '$names[1]%'");        
+            else
+                //if there there are two substrings then it would search for first substirng in first name and second string in the last name
+                $users = queryFunc("SELECT first_name, last_name,profile_pic,username,user_id from users where first_name like '$names[0]%' AND last_name like '$names[1]%' limit 5");
+        } else {
+            if($flag == 2)
+               $users = queryFunc("SELECT first_name, last_name,profile_pic,username,user_id from users where first_name like '$names[0]%' OR last_name like '$names[0]%'");
+            else    
+                //if there is only one substring, i.e no spaces are present in the input then it would search that substring in both first name and last name
+                $users = queryFunc("SELECT first_name, last_name,profile_pic,username,user_id from users where first_name like '$names[0]%' OR last_name like '$names[0]%' limit 5");
+        }
+    
+        isData($users);
+        if($flag == 1 || $flag == 2){
+            while ($row = isRecord($users)) {
+                $user = <<<DELIMETER
+                <div class='resultDisplay'>
+                    <a href="timeline.php?visitingUserID={$row['user_id']}" style='color: #000'>
+                        <div class='liveSearchProfilePic'>
+                            <img src={$row['profile_pic']} height=200px width=50px>
+                        </div>
+                        <div class='liveSearchText'>
+                            {$row['first_name']} {$row['last_name']}
+                            <p style='margin: 0;'>{$row['username']}</p>
+                        </div>
+                    </a>
+                    <a href='message.php?id={$row['user_id']}'><button >Message</button></a>
+                </div>
+DELIMETER;
+                echo $user;
+            }
+        }
+        else{
+            while ($row = isRecord($users)) {
+                $user = <<<DELIMETER
+            <div class='resultDisplay  resultDisplayForMessages'>
+                <a href='messages.php?id={$row['user_id']}' style='color: #000'>
+                    <div class='liveSearchProfilePic liveSearchProfilePicForMessages'>
+                        <img src={$row['profile_pic']} height=38px width=38px>
+                    </div>
+                    <div class='liveSearchText'>
+                        {$row['first_name']} {$row['last_name']}
+                        <p style='margin: 0;'>{$row['username']}</p>
+                    </div>
+                </a>
+            </div>
+DELIMETER;
+                echo $user;
+            }
+        }
+}
 
+}

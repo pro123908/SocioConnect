@@ -151,31 +151,28 @@ function changePic() {
 
 //Search Function
 
-function getUsers(value) {
+function getUsers(value,flag) {
   // Setting paramters for POST request
-  var flag = 1;
   var param = `query=${value}&flag=${flag}`;
-
+  var searchFooter;
   ajaxCalls("POST", "search.php", param).then(function(result) {
-    // Displaying search results
-    document.querySelector(".search_results").innerHTML = result;
+    // Displaying search results for normal search
+    if(flag == 1){
+      document.querySelector(".search_results").innerHTML = result;
+      if(value.length == 0)
+        searchFooter = "";
+      else
+        searchFooter = `<form method="GET" action="allSearchResults.php"><input type="hidden" name="query" value=${value}><input type="submit" value="View All Results For ${value}"></form>`;
+      document.querySelector(".search_results_footer_empty").innerHTML = searchFooter;  
+    }
+     // Displaying search results for searching in messages.php
+    else if(flag == 0)
+      document.querySelector(".search_results_for_messages").innerHTML = result;
   });
   // Pain in the ass
   return false;
 }
 
-function getUsersForMessages(value) {
-  // Setting paramters for POST request
-  var flag = 0;
-  var param = `query=${value}&flag=${flag}`;
-
-  ajaxCalls("POST", "search.php", param).then(function(result) {
-    // Displaying search results
-    document.querySelector(".search_results_for_messages").innerHTML = result;
-  });
-  // Pain in the ass
-  return false;
-}
 
 setInterval(commentsRefresh, 1000);
 

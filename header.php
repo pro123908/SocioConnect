@@ -24,7 +24,7 @@
     <a class='header_links' href='allNotification.php'>Notifications</a>
     <div class="search">
       <form action="search.php" method="get" name="search_form">
-        <input type="text"  onkeyup="getUsers(this.value)" name="q" placeholder="Search..." autocomplete = "off" id="search_text_input">
+        <input type="text"  onkeyup="getUsers(this.value,1)" name="q" placeholder="Search..." autocomplete = "off" id="search_text_input">
       </form>
       <div class="search_results"></div>
       <div class="search_results_footer_empty"></div>
