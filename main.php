@@ -13,34 +13,40 @@
 ?>
 
 <!-- User name display section -->
-<div class='firstSection'>
+<!-- <div class='firstSection'>
 <h1>Welcome <?php echo $user ?></h1>
+</div> -->
 </div>
 
 <!-- Notification Area of the page -->
-<div class='notificationArea'>
-  <div class='notifications'>
-  <?php showNotifications();?>
-  </div>
-  
-</div>
+
+<div class="content-area">
+      <div class="notification-area">
+        Notification Area
+        <?php showNotifications();?>
+      </div>
 
 
+<div class='post-area'>
+  <div class='new-post'>
 <?php 
 // Add post functionality
 addPost(true,"");
 
 ?>
 
-<h3 id="postHeading">Posts</h3>
-<div id='postArea'>
+
+<div class='posts'>
   
 <?php
 // Showing posts of friends only
 showPosts('a') 
 ?>
 </div>
+</div>
 
+<div class="friends-area">
+        Friends Area
 </div>
 
 </body>

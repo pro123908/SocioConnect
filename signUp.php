@@ -1,5 +1,6 @@
 <?php
-  require_once('functions.php');
+
+  require_once('header.php');
   
   // Sign up form for registration of new user
 
@@ -38,11 +39,7 @@
 ?>
 
 
-<html>
-  <head>
-    <link rel="stylesheet" href="main.css">
-  </head>
- <body>
+
  <!-- <h1>Sign Up</h1>
 <form action="signUp.php" method='POST'>
   <input type="text" id="fname"  name='fname' placeholder='First Name' maxlength="20" minlength='3' required value=<?php  if (isset($_SESSION['s_first_name'])) {
@@ -72,18 +69,15 @@
 </form> -->
 
 
-<div class='main-container'>
-    <div class="header">
-      <div class="header-heading flex-77">
-        <h1>Socio Connect</h1>
+<div class='header-links'>
+        <a href="index.php" class="header-btn mr-1">Login</a>
       </div>
-      <div class="header-text flex-13">
-        <h3>Already a member?</h3>
-      </div>
-      <a href="index.php" class="header-btn">Login</a>
+      
     </div>
-    <div class="login-container mt-20">
-      <h1 class="login-heading">Welcome</h1>
+
+
+    <div class="login-container">
+      <!-- <h1 class="login-heading"></h1> -->
       <form action="signUp.php" method='POST' class="login-form">
       <input type="text" id="fname"  class='login-input' name='fname' placeholder='First Name' maxlength="20" minlength='3' required value=<?php  if (isset($_SESSION['s_first_name'])) {
     echo $_SESSION['s_first_name'];
@@ -111,7 +105,4 @@
   <input type="submit" name='submit' class='login-submit' value='Register'>
       </form>
     </div>
-  </div>
 
- </body>
-</html>

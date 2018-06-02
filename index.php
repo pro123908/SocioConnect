@@ -1,4 +1,4 @@
-<?php // require_once('header.php');
+<?php require_once('header.php');
 
 // If user has already logged in, then redirect user to main.php
 if(isset($_SESSION['user_id'])){
@@ -7,12 +7,8 @@ if(isset($_SESSION['user_id'])){
 
 ?>
 
-<html>
-<head>
-  <link rel="stylesheet" href="main.css">
-</head>
 <!-- Login page, the first page where user comes -->
-<body>
+
   <?php
     
   ?>
@@ -29,15 +25,10 @@ if(isset($_SESSION['user_id'])){
 <a href="signUp.php">Haven't registered?</a>
 -->
 
- <div class='main-container'>
-    <div class="header">
-      <div class="header-heading">
-        <h1>Socio Connect</h1>
+      <div class='header-links'>
+        <a href="signUp.php" class="header-btn mr-1">Sign Up</a>
       </div>
-      <div class="header-text">
-        <h3>Not a member?</h3>
-      </div>
-      <a href="signUp.php" class="header-btn">Sign Up</a>
+      
     </div>
     <div class="login-container">
       <h1 class="login-heading">Welcome</h1>
@@ -47,8 +38,4 @@ if(isset($_SESSION['user_id'])){
         <input type="submit" name='submit' class="login-submit">
       </form>
     </div>
-  </div>
-   
-</body>
-
-</html>
+ 
