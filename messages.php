@@ -10,8 +10,8 @@
         }
         ?>
         <div class="recent_chats_area">
-            <div class="recent_chats">
-                <h2>Recent Chats<h2>
+            <h2>Recent Chats<h2>
+            <div class="recent_chats">  
                 <?php showRecentChats(); ?> 
             </div>
             <div class="search_user_for_chats">

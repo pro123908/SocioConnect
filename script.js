@@ -318,3 +318,25 @@ function messageRefresh() {
     }
   });
 }
+
+function refreshRecentConvos(){
+  
+  document.querySelector(".recent_chats").innerHTML = ""; 
+  ajaxCalls("GET", "recentConvoAjax.php").then(function(result) {
+    var data = JSON.parse(result);
+    for (i = 0; i < data.length; i++) {
+      var obj = data[i];
+
+      var recentMessage = `
+        <div class='recent_user'>
+          <a href='messages.php?id=${obj.fromID}'><button class="recent_username" >${obj.partner}</button></a>
+          <p>${obj.from}:${obj.msg}</p>
+          <p>${obj.at}</p>
+        </div>
+         `;
+    document.querySelector(".recent_chats").innerHTML += recentMessage; 
+    }
+  });
+}
+
+setInterval(refreshRecentConvos, 30000);
