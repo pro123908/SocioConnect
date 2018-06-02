@@ -2,6 +2,11 @@
 
 require_once('functions.php');
 
+if(!isset($_SESSION['user_id'])){
+    redirection('index.php');
+}
+
+
 $recentUserIds = array();
 //Getting ids of all the users where messages are received from
 $lastMsg = $_SESSION['last_message_retrieved_for_recent_convos'];

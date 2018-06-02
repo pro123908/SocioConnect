@@ -1,7 +1,11 @@
-<?php   require_once("functions.php"); ?>
+<?php   
 
-<?php 
+    require_once("functions.php"); 
 
+    if(!isset($_SESSION['user_id'])){
+        redirection('index.php');
+    }
+    
     // When profile pic is uploaded
 
     $name = $_FILES['file']['name'];  // Getting the name of the file

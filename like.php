@@ -2,6 +2,10 @@
 
 require_once('functions.php');
 
+if(!isset($_SESSION['user_id'])){
+  redirection('index.php');
+}
+
 // We need to add a new column to likes table, that would store the user_id of the person whose post in being liked.
 
 // For adding like to the current post
@@ -18,15 +22,15 @@ if(isset($_GET['like'])){
     $unlikeResult = queryFunc("DELETE from likes where post_id='$postID' AND user_id ='$userID'");
   }
   else{
-   //else like it
-   $likeResult = queryFunc("INSERT INTO likes (post_id,user_id,createdAt) VALUES('$postID','$userID',now())");
+  //else like it
+  $likeResult = queryFunc("INSERT INTO likes (post_id,user_id,createdAt) VALUES('$postID','$userID',now())");
 
-   // Getting the user_id of the user whose post is liked
-   $whosePostQuery = queryFunc("SELECT user_id from posts where post_id='$postID'");
-   $whosePost = isRecord($whosePostQuery);
+  // Getting the user_id of the user whose post is liked
+  $whosePostQuery = queryFunc("SELECT user_id from posts where post_id='$postID'");
+  $whosePost = isRecord($whosePostQuery);
 
-   // Creating notification
-   notification($userID,$whosePost['user_id'],$postID,'liked');
+  // Creating notification
+  notification($userID,$whosePost['user_id'],$postID,'liked');
   }
 
   //Getting total number of likes for a post
@@ -39,9 +43,7 @@ if(isset($_GET['like'])){
   // // Redirecting to other page
   redirection('likesCount.php?likeCount='.$likes['count']);
 
-  }
-
-
+}
 ?>
 
 

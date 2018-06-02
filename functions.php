@@ -875,9 +875,13 @@ function getSearchedUsers($value,$flag){
                             <p style='margin: 0;'>{$row['username']}</p>
                         </div>
                     </a>
-                    <a href='message.php?id={$row['user_id']}'><button >Message</button></a>
+DELIMETER;
+                if($row['user_id'] != $_SESSION['user_id']){
+                $user .= <<<DELIMETER
+                    <a href='messages.php?id={$row['user_id']}'><button >Message</button></a>
                 </div>
 DELIMETER;
+}
                 echo $user;
             }
         }
@@ -901,4 +905,12 @@ DELIMETER;
         }
 }
 
+}
+
+function getRecentConvo(){
+    $userLoggedIn =$_SESSION['user_id'];
+    $recentUser = queryFunc("SELECT user_to,user_from from messages where user_to = ".$userLoggedIn." OR user_from = ".$userLoggedIn." order by id DESC limit 1");
+    $recentUser = isRecord($recentUser);
+    $recentPartnerId = ($recentUser['user_from'] == $userLoggedIn) ? $recentUser['user_to'] : $recentUser['user_from'];
+    redirection("http://localhost/socioConnect/messages.php?id=".$recentPartnerId);
 }

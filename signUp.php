@@ -1,4 +1,5 @@
 <?php
+ 
   require_once('functions.php');
   
   // Sign up form for registration of new user

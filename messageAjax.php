@@ -1,5 +1,11 @@
 <?php 
+  
   require_once('functions.php');
+
+  if(!isset($_SESSION['user_id'])){
+    redirection('index.php');
+  }
+  
 
   if (isset($_POST['partner'])) {
       sendMessage($_POST['partner'], $_POST['messageBody']);

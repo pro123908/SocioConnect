@@ -1,10 +1,12 @@
 <?php 
 
-
 require_once('functions.php');
 
-// For loading comments from different users using ajax without reloading the page
+if(!isset($_SESSION['user_id'])){
+    redirection('index.php');
+}
 
+// For loading comments from different users using ajax without reloading the page
 $counter = 0;
 
 // Getting comments that have been inserted into the database one second before
@@ -27,18 +29,18 @@ if (isData($queryResult)) {
 
             // counter incremented
             $counter += 1;
-        }
     }
+}
 
-    // Checking if there were comments of other users in last one second
-    if ($counter != 0) {
-        // Simple converting the array to JSON format and passing it
-        echo json_encode($data);
-    } else {
-        // If there were no comments inserted, then just giving a JSON response for avoiding error 
-        echo '{"notEmpty" : "Bilal"}';
-    }
-    // If no user inserted comments or comment
+// Checking if there were comments of other users in last one second
+if ($counter != 0) {
+    // Simple converting the array to JSON format and passing it
+    echo json_encode($data);
 } else {
+    // If there were no comments inserted, then just giving a JSON response for avoiding error 
     echo '{"notEmpty" : "Bilal"}';
+}
+// If no user inserted comments or comment
+} else {
+echo '{"notEmpty" : "Bilal"}';
 }

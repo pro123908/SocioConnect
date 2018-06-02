@@ -1,6 +1,10 @@
 <?php
+
   require_once('header.php');
-  require_once('functions.php');
+  
+  if(!isset($_SESSION['user_id'])){
+    redirection('index.php');
+  }
 
   // Rendering the post that was clicked through notification
 

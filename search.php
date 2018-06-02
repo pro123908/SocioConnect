@@ -1,7 +1,11 @@
 <?php
     require_once('functions.php');
+        
+    if(!isset($_SESSION['user_id'])){
+        redirection('index.php');
+    }
+
     
-    // Displaying the person which was cliked on when searching
-    // Checking if something was searched or not?
+    //Passing input value and flag to the search functiom
     getSearchedUsers($_POST['query'],$_POST['flag']);
     
