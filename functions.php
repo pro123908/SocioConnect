@@ -800,26 +800,28 @@ function getPartnersLastMessage($partnerId){
     
 function showRecentChats(){
     $recentUserIds = getRecentChatsUserIds(); //IDS of users
-    $recentUsernames = getRecentChatsUsernames($recentUserIds); // Names of users
-    $counter = 0;
-    while($counter < sizeof($recentUsernames)){
-        $lastMessageDetails = getPartnersLastMessage($recentUserIds[$counter]);
-        $from = $lastMessageDetails['user_from'];
-        if($from == $_SESSION['user_id'])
-            $from = "You ";
-        else    
-            $from = getUserFirstAndLastName($from);
-        $msg = $lastMessageDetails['body'];
-        $at =  timeString(differenceInTime($lastMessageDetails['dateTime']));
-        $user = <<<DELIMETER
-        <div class='recent_user recent_user_{$recentUserIds[$counter]}'>
-            <a href='messages.php?id={$recentUserIds[$counter]}'><button class="recent_username" >{$recentUsernames[$counter]}</button></a>
-            <p>{$from}:{$msg}</p>
-            <p>{$at}</p>
-        </div>
+    if($recentUserIds){
+        $recentUsernames = getRecentChatsUsernames($recentUserIds); // Names of users
+        $counter = 0;
+        while($counter < sizeof($recentUsernames)){
+            $lastMessageDetails = getPartnersLastMessage($recentUserIds[$counter]);
+            $from = $lastMessageDetails['user_from'];
+            if($from == $_SESSION['user_id'])
+                $from = "You ";
+            else    
+                $from = getUserFirstAndLastName($from);
+            $msg = $lastMessageDetails['body'];
+            $at =  timeString(differenceInTime($lastMessageDetails['dateTime']));
+            $user = <<<DELIMETER
+            <div class='recent_user recent_user_{$recentUserIds[$counter]}'>
+                <a href='messages.php?id={$recentUserIds[$counter]}'><button class="recent_username" >{$recentUsernames[$counter]}</button></a>
+                <p>{$from}:{$msg}</p>
+                <p>{$at}</p>
+            </div>
 DELIMETER;
-        echo $user;  
-        $counter++;
+            echo $user;  
+            $counter++;
+        }   
     }
 }
 

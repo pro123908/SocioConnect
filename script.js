@@ -326,7 +326,8 @@ function refreshRecentConvos(){
     if(!(data.notEmpty == "Bilal")){ 
       for (i = data.length-1; i >= 0; i--) {
         var obj = data[i];
-        document.querySelector(".recent_user_"+obj.fromID).style.display = "none";
+        if(document.querySelector(".recent_user_"+obj.fromID))
+           document.querySelector(".recent_user_"+obj.fromID).style.display = "none";
         var recentMessage = `
           <div class='recent_user recent_user_${obj.fromID}'>
             <a href='messages.php?id=${obj.fromID}'><button class="recent_username" >${obj.partner}</button></a>
@@ -334,7 +335,7 @@ function refreshRecentConvos(){
             <p>${obj.at}</p>
           </div>
            `;
-      document.querySelector(".recent_chats").innerHTML = recentMessage + document.querySelector(".recent_chats").innerHTML
+      document.querySelector(".recent_chats").innerHTML = recentMessage + document.querySelector(".recent_chats").innerHTML;
       }  
     }
   });
