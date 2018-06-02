@@ -755,10 +755,14 @@ function showMessages($partnerId){
 function getRecentChatsUserIds(){
     $recentConvos = array();
     //Getting ids of all the users where messages are received from
-    $senderOfRecentMsgs = queryFunc("SELECT user_from,user_to FROM messages where user_to = ".$_SESSION['user_id']." or user_from = ".$_SESSION['user_id']." ORDER BY id DESC ");
-
+    $senderOfRecentMsgs = queryFunc("SELECT id,user_from,user_to FROM messages where user_to = ".$_SESSION['user_id']." or user_from = ".$_SESSION['user_id']." ORDER BY id DESC ");
+    $flag = 0;
     if(isData($senderOfRecentMsgs)){
         while($row = isRecord($senderOfRecentMsgs)){
+            if($flag == 0 ){
+                $_SESSION['last_message_retrieved_for_recent_convos'] = $row['id'] ;
+                $flag = 1;
+            }
             //if user logged in is the sender then store reciever's id, else store sender's id
             $idToPush = ($row['user_from'] == $_SESSION['user_id'] ? $row['user_to'] : $row['user_from']);
             //Check whether that sender is already in the list, if not, only then push his id
@@ -808,7 +812,7 @@ function showRecentChats(){
         $msg = $lastMessageDetails['body'];
         $at =  timeString(differenceInTime($lastMessageDetails['dateTime']));
         $user = <<<DELIMETER
-        <div class='recent_user'>
+        <div class='recent_user recent_user_{$recentUserIds[$counter]}'>
             <a href='messages.php?id={$recentUserIds[$counter]}'><button class="recent_username" >{$recentUsernames[$counter]}</button></a>
             <p>{$from}:{$msg}</p>
             <p>{$at}</p>

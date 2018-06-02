@@ -321,22 +321,22 @@ function messageRefresh() {
 
 function refreshRecentConvos(){
   
-  document.querySelector(".recent_chats").innerHTML = ""; 
   ajaxCalls("GET", "recentConvoAjax.php").then(function(result) {
     var data = JSON.parse(result);
-    for (i = 0; i < data.length; i++) {
-      var obj = data[i];
-
-      var recentMessage = `
-        <div class='recent_user'>
-          <a href='messages.php?id=${obj.fromID}'><button class="recent_username" >${obj.partner}</button></a>
-          <p>${obj.from}:${obj.msg}</p>
-          <p>${obj.at}</p>
-        </div>
-         `;
-    document.querySelector(".recent_chats").innerHTML += recentMessage; 
+    if(!(data.notEmpty == "Bilal")){ 
+      for (i = data.length-1; i >= 0; i--) {
+        var obj = data[i];
+        document.querySelector(".recent_user_"+obj.fromID).style.display = "none";
+        var recentMessage = `
+          <div class='recent_user recent_user_${obj.fromID}'>
+            <a href='messages.php?id=${obj.fromID}'><button class="recent_username" >${obj.partner}</button></a>
+            <p>${obj.from}:${obj.msg}</p>
+            <p>${obj.at}</p>
+          </div>
+           `;
+      document.querySelector(".recent_chats").innerHTML = recentMessage + document.querySelector(".recent_chats").innerHTML
+      }  
     }
   });
 }
-
-setInterval(refreshRecentConvos, 30000);
+setInterval(refreshRecentConvos, 1000);
