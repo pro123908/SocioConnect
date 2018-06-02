@@ -787,26 +787,24 @@ function showMessages($partnerId){
 }
 
 function getRecentChatsUserIds(){
-    $counter = 0;
+    $recentConvos = array();
     //Getting ids of all the users where messages are received from
-    $recentRecievedMsgs = queryFunc("SELECT DISTINCT user_from FROM messages where user_to = ".$_SESSION['user_id']);
-
-    //Getting ids of all the users where messages are sent to
-    $recentSenededMsgs = queryFunc("SELECT DISTINCT user_to FROM messages where user_from = ".$_SESSION['user_id']);
-    if(isData($recentSenededMsgs) || isData($recentRecievedMsgs)){
-        while($row = isRecord($recentRecievedMsgs)){
-                //Storing IDs into the array
-                $recentConvos [$counter] = $row['user_from']; 
-                $counter++;
-        }
-        while($row = isRecord($recentSenededMsgs)){
-            // Checking if ids are already in the array,if not then add it
-            if(array_search($row['user_to'],$recentConvos) === false ){
-                $recentConvos [$counter] = $row['user_to']; 
-                $counter++;
+    $senderOfRecentMsgs = queryFunc("SELECT id,user_from,user_to FROM messages where user_to = ".$_SESSION['user_id']." or user_from = ".$_SESSION['user_id']." ORDER BY id DESC ");
+    $flag = 0;
+    if(isData($senderOfRecentMsgs)){
+        while($row = isRecord($senderOfRecentMsgs)){
+            if($flag == 0 ){
+                $_SESSION['last_message_retrieved_for_recent_convos'] = $row['id'] ;
+                $flag = 1;
+            }
+            //if user logged in is the sender then store reciever's id, else store sender's id
+            $idToPush = ($row['user_from'] == $_SESSION['user_id'] ? $row['user_to'] : $row['user_from']);
+            //Check whether that sender is already in the list, if not, only then push his id
+            if(array_search($idToPush,$recentConvos) === false ){
+                array_push($recentConvos,$idToPush);      
             }
         }
-    return $recentConvos;
+        return $recentConvos;
     }
     return false;
 }
@@ -818,14 +816,13 @@ function getUserFirstAndLastName($user_id){
 }
 
 function getRecentChatsUsernames($recentConvos){
-
-        // Getting names of users whose ids are passed
-        $counter = 0;
-        while($counter < sizeof($recentConvos)){
-            $recentUser[$counter] = getUserFirstAndLastName($recentConvos[$counter]);
-            $counter++;
-        }
-        return $recentUser;
+    // Getting names of users whose ids are passed
+    $counter = 0;
+    while($counter < sizeof($recentConvos)){
+        $recentUser[$counter] = getUserFirstAndLastName($recentConvos[$counter]);
+        $counter++;
+    }
+    return $recentUser;
 }
 
 function getPartnersLastMessage($partnerId){
@@ -837,26 +834,28 @@ function getPartnersLastMessage($partnerId){
     
 function showRecentChats(){
     $recentUserIds = getRecentChatsUserIds(); //IDS of users
-    $recentUsernames = getRecentChatsUsernames($recentUserIds); // Names of users
-    $counter = 0;
-    while($counter < sizeof($recentUsernames)){
-        $lastMessageDetails = getPartnersLastMessage($recentUserIds[$counter]);
-        $from = $lastMessageDetails['user_from'];
-        if($from == $_SESSION['user_id'])
-            $from = "You ";
-        else    
-            $from = getUserFirstAndLastName($from);
-        $msg = $lastMessageDetails['body'];
-        $at = $lastMessageDetails['dateTime'];
-        $user = <<<DELIMETER
-        <div class='recent_user'>
-            <a href='messages.php?id={$recentUserIds[$counter]}'><button class="recent_username" >{$recentUsernames[$counter]}</button></a>
-            <p>{$from}:{$msg}</p>
-            <p>{$at}</p>
-        </div>
+    if($recentUserIds){
+        $recentUsernames = getRecentChatsUsernames($recentUserIds); // Names of users
+        $counter = 0;
+        while($counter < sizeof($recentUsernames)){
+            $lastMessageDetails = getPartnersLastMessage($recentUserIds[$counter]);
+            $from = $lastMessageDetails['user_from'];
+            if($from == $_SESSION['user_id'])
+                $from = "You ";
+            else    
+                $from = getUserFirstAndLastName($from);
+            $msg = $lastMessageDetails['body'];
+            $at =  timeString(differenceInTime($lastMessageDetails['dateTime']));
+            $user = <<<DELIMETER
+            <div class='recent_user recent_user_{$recentUserIds[$counter]}'>
+                <a href='messages.php?id={$recentUserIds[$counter]}'><button class="recent_username" >{$recentUsernames[$counter]}</button></a>
+                <p>{$from}:{$msg}</p>
+                <p>{$at}</p>
+            </div>
 DELIMETER;
-        echo $user;  
-        $counter++;
+            echo $user;  
+            $counter++;
+        }   
     }
 }
 
@@ -910,9 +909,13 @@ function getSearchedUsers($value,$flag){
                             <p style='margin: 0;'>{$row['username']}</p>
                         </div>
                     </a>
-                    <a href='message.php?id={$row['user_id']}'><button >Message</button></a>
+DELIMETER;
+                if($row['user_id'] != $_SESSION['user_id']){
+                $user .= <<<DELIMETER
+                    <a href='messages.php?id={$row['user_id']}'><button >Message</button></a>
                 </div>
 DELIMETER;
+}
                 echo $user;
             }
         }
@@ -936,4 +939,12 @@ DELIMETER;
         }
 }
 
+}
+
+function getRecentConvo(){
+    $userLoggedIn =$_SESSION['user_id'];
+    $recentUser = queryFunc("SELECT user_to,user_from from messages where user_to = ".$userLoggedIn." OR user_from = ".$userLoggedIn." order by id DESC limit 1");
+    $recentUser = isRecord($recentUser);
+    $recentPartnerId = ($recentUser['user_from'] == $userLoggedIn) ? $recentUser['user_to'] : $recentUser['user_from'];
+    redirection("http://localhost/socioConnect/messages.php?id=".$recentPartnerId);
 }

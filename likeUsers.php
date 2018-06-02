@@ -2,8 +2,12 @@
 
 require_once('functions.php');
 
-// Getting the name of the persons who liked a certain post
+if(!isset($_SESSION['user_id'])){
+    redirection('index.php');
+}
 
+
+// Getting the name of the persons who liked a certain post
 if (isset($_GET['postID'])) {
     $postID = $_GET['postID']; // ID of the post
 
@@ -33,3 +37,4 @@ if (isset($_GET['postID'])) {
         echo '{"notEmpty" : "Bilal"}';
     }
 }
+?>

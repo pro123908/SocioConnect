@@ -2,6 +2,10 @@
 
 require_once('functions.php');
 
+if(!isset($_SESSION['user_id'])){
+    redirection('index.php');
+}
+
 // Getting likes of other users on posts without reloading
 
 // Getting recently inserted likes which were inserted under 3 seconds
@@ -34,3 +38,4 @@ if (isData($queryResult)) {
 } else {
     echo '{"notEmpty" : "Bilal"}';
 }
+?>
