@@ -1,4 +1,5 @@
-<?php require_once('header.php');
+<link rel="stylesheet" href="styles/styles.css">
+<?php require_once('functions.php');
  
 if(isset($_GET['visitingUserID']) && isset($_SESSION['user_id'])){
 // If both conditions are satisfied then you have come to this page by searching

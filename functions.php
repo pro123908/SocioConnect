@@ -97,18 +97,23 @@ function addPost($flag, $visitorID)
     $userID = $_SESSION['user_id'];
     if ($flag || $visitorID == $userID) {
         // 2nd condition - if you came to your profile by searching
-        $addPost = "<div id='addPost' class='show'>";
+        $addPost = "<div class='show'>";
     } else {
-        $addPost = "<div id='addPost' class='hidden'>";
+        $addPost = "<div class='hidden'>";
     }
     $addPost .= <<<DELIMETER
-            <h2>Add a post</h2>
+            <div class='post-options'></div>
             <form action="post.php" method='POST'>
-                <textarea name="post" id="" cols="50" rows="10" placeholder='Start Writing'></textarea><br><br>
-                <input type="file"><br><br>
-                <a class='postBtn' href="javascript:addPost({$userID})" >Post</a>
-            </form>
+            <textarea name="post" id="" cols="30" rows="10" placeholder='Share what you are thinking here' class="post-input"></textarea>
+            <br>
+            <div class='post-btn-container'>
+            <a  href="javascript:addPost({$userID})"  class='add-post-btn'>Post</a>
+            </div>
+        </form>
         </div>
+        </div>
+
+        
 DELIMETER;
     echo $addPost;
 }
@@ -213,17 +218,17 @@ function showPosts($flag)
     any numner => Searched user's ID;
     */
     if ($flag=='a') {
-        $queryResult = queryFunc("SELECT post,post_id,posts.user_id,CONCAT(first_name,' ',last_name) as 'name',createdAt from posts inner join users on users.user_id = posts.user_id order by post_id desc");
+        $queryResult = queryFunc("SELECT post,post_id,posts.user_id,users.profile_pic,CONCAT(first_name,' ',last_name) as 'name',createdAt from posts inner join users on users.user_id = posts.user_id order by post_id desc");
     } elseif ($flag == 'b') {
-        $queryResult = queryFunc("SELECT post,post_id,posts.user_id,CONCAT(first_name,' ',last_name) as 'name',createdAt from posts inner join users on users.user_id = posts.user_id where users.user_id = {$_SESSION['user_id']} order by post_id desc");
+        $queryResult = queryFunc("SELECT post,post_id,posts.user_id,users.profile_pic,CONCAT(first_name,' ',last_name) as 'name',createdAt from posts inner join users on users.user_id = posts.user_id where users.user_id = {$_SESSION['user_id']} order by post_id desc");
     } elseif ($flag=='c') {
         $postID = $_SESSION['notiPostID'];
-        $queryResult = queryFunc("SELECT post,post_id,posts.user_id,CONCAT(first_name,' ',last_name) as 'name',createdAt from posts inner join users on users.user_id = posts.user_id WHERE post_id='$postID'");
+        $queryResult = queryFunc("SELECT post,post_id,posts.user_id,users.profile_pic,CONCAT(first_name,' ',last_name) as 'name',createdAt from posts inner join users on users.user_id = posts.user_id WHERE post_id='$postID'");
     } elseif ($flag == 'd') {
         $userID = $_SESSION["user_id"];
-        $queryResult = queryFunc("SELECT post,post_id,posts.user_id,CONCAT(first_name,' ',last_name) as 'name',createdAt from posts inner join users on users.user_id = posts.user_id WHERE posts.user_id='$userID' order by post_id desc LIMIT 1");
+        $queryResult = queryFunc("SELECT post,post_id,posts.user_id,users.profile_pic,CONCAT(first_name,' ',last_name) as 'name',createdAt from posts inner join users on users.user_id = posts.user_id WHERE posts.user_id='$userID' order by post_id desc LIMIT 1");
     } elseif ($flag > 0) {
-        $queryResult = queryFunc("SELECT post,post_id,posts.user_id,CONCAT(first_name,' ',last_name) as 'name',createdAt from posts inner join users on users.user_id = posts.user_id where users.user_id = '$flag' order by post_id desc");
+        $queryResult = queryFunc("SELECT post,post_id,posts.user_id,users.profile_pic,CONCAT(first_name,' ',last_name) as 'name',createdAt from posts inner join users on users.user_id = posts.user_id where users.user_id = '$flag' order by post_id desc");
     }
 
     
@@ -237,13 +242,27 @@ function showPosts($flag)
                 $timeToShow = timeString($diffTime);
             
                 // Getting likes count for the current post
-                $likesResult = queryFunc("SELECT count(*) as count from likes where post_id='$postID'");
+                $likesResult = queryFunc("SELECT user_id,count(*) as count from likes where post_id='$postID'");
                 $likes = isRecord($likesResult);
+
+                // Getting number of comments for post
+                $commentCountResult = queryFunc("SELECT count(*) as count from comments where post_id='$postID'");
+                $commentsCount = isRecord($commentCountResult);
+                
+
+                if($likes['user_id'] == $_SESSION['user_id']){
+                    $likeIcon = "<i class='blue far fa-thumbs-up'></i>";
+                }
+                else{
+                    $likeIcon = "<i class='far fa-thumbs-up'></i>";
+                }
 
                 // Enabling delete option for post if it is current user's post else disabling
                 if ($row['user_id'] == $_SESSION['user_id']) {
                     $PostDeleteButton = <<<PosDel
-                <a  class='deleteBtn' href="javascript:deletePost({$postID})" >Delete</a>
+                    <div class='post-delete-icon'>
+                    <i onclick="javascript:deletePost({$postID})" class="far fa-trash-alt"></i>
+                    </div>
 PosDel;
                 } else {
                     $PostDeleteButton = '';
@@ -251,15 +270,30 @@ PosDel;
             
                 // Rendering Post
                 $post = <<<POST
-            <div class='post post_{$postID}'>
-                <span class='user'>{$row['name']}</span>
-                <span class='postTime'>$timeToShow</span>
-                <p class='postContent'>{$row['post']}</p>
-                <span onmouseout='javascript:hideLikers({$postID})' onmouseover='javascript:likeUsers({$postID})' class='likeCount likeCount-{$postID}'>{$likes['count']}</span>
-                <span class='likeCount likeUsers-{$postID}'></span>
-                <a class='likeBtn' href='javascript:like({$postID})'>Like</a>
-                <a  class='commentBtn' href="javascript:showCommentField({$postID})">Comment</a>
+            <div class='post post-{$postID}'>
+                <div class='post-content'>
+                <img src='{$row['profile_pic']}' class='post-avatar'/>
+                
+                <div class='post-info'>
+                <h3 class='user'>{$row['name']}</h3>
+                <small class='post-time'>$timeToShow</small>
+                </div>
                 {$PostDeleteButton}
+                
+                
+                
+                <p>{$row['post']}</p>
+                <div class='post-stats'>
+                <span onmouseout='javascript:hideLikers({$postID})' onmouseover='javascript:likeUsers({$postID})' class='like-count like-count-{$postID}'><i class='like-count-icon fas fa-thumbs-up'></i>  {$likes['count']}</span>
+                <span class='comment-count'><i class='fas fa-comment-dots'></i> {$commentsCount['count']}</span>
+                <span class='like-users-{$postID}'></span>
+                </div>
+                </div>
+                <div class='post-buttons'>
+                <a class='post-btn like-btn' href='javascript:like({$postID})'>{$likeIcon} Like</a>
+                <a  class='post-btn comment-btn' href="javascript:showCommentField({$postID})"><i class="far fa-comment-dots"></i> Comment</a>
+                </div>
+                
             
 POST;
                 // Opening comment section if it is a comment notification else not
@@ -271,8 +305,8 @@ POST;
 
                 // Comment Section of a post
                 $post .= <<<POST
-            <div id="post_id_{$postID}" class='{$commentShow}'>
-                <div class='commentArea_{$postID}'>
+            <div id="comment-section-{$postID}" class='{$commentShow}'>
+                <div class='comment-area-{$postID}'>
 
 POST;
 
@@ -287,7 +321,7 @@ POST;
                     // Enabling delete option for comment if it is current user's comment else disabling
                     if ($comments['user_id'] == $_SESSION['user_id']) {
                         $commentDeleteButton = <<<ComDel
-                    <a class='commentDelete' href='javascript:deleteComment({$commentID})'>X</a>
+                    <i class='far fa-trash-alt comment-delete' onclick='javascript:deleteComment({$commentID})'></i>
 ComDel;
                     } else {
                         $commentDeleteButton = '';
@@ -295,11 +329,11 @@ ComDel;
 
                     // Rendering comment
                     $post .= <<<POST
-                <div class='comment comment_{$commentID}'>
+                <div class='comment comment-{$commentID}'>
                     {$commentDeleteButton}
-                    <span class='commentUser'>{$comments['name']} : </span>
-                    <span class='commentText'>{$comments['comment']}</span>
-                    <span class='commentTime'>$timeToShow</span>
+                    <span class='comment-user'>{$comments['name']} : </span>
+                    <span class='comment-text'>{$comments['comment']}</span>
+                    <small class='comment-time'>$timeToShow</small>
                 </div>
             
 POST;
@@ -307,12 +341,12 @@ POST;
                 // Rendering input field for adding comment
                 $post .= <<<POST
             </div>
-            <div class='commentForm'>
+            <div class='comment-form'>
                 <form onsubmit="return comment({$postID})" method="post" id='commentForm'>
                     <input name = "comment_{$postID}" type='text'>
                     <input type="text" value="{$postID}" style="display:none" name="post_id_{$postID}">
                     <input type="text" value="{$user}" style="display:none" name="post_user">
-                    <input type='submit' id="{$postID}" value="Comment"> 
+                    <input style='display:none;' type='submit' id="{$postID}" value="Comment" > 
                 </form>
             </div>
        

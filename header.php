@@ -4,18 +4,21 @@
 
 <html>
 <head>
- <link rel="stylesheet" href="styles/styles.css"> 
+<!-- <link href="fonts/fontawesome-all.css" rel="stylesheet"> -->
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700,800" rel="stylesheet">
+ <link rel="stylesheet" href="main.css">
 </head>
 <body onload="setUserId('<?php echo $_SESSION['user_id'];?>')">
 <!-- Starting div of main content area of the website, where all the stuff lies -->
-<div class='contentArea'>
+<!-- <div class='contentArea'>
 <div id='header'>
 <a href='main.php' class='headerHeading'>SocioConnect</a>
  
 <?php
   // Displaying this navbar if user is logged in
-  if (isset($_SESSION['user_id'])) {
-      ?>
+  // if (isset($_SESSION['user_id'])) {
+  ?>
     <a class="header_links" href="logout.php">Logout</a>
     <a class="header_links" href="timeline.php">Profile</a>
     <a class="header_links" href="main.php">Newsfeed</a>  
@@ -30,10 +33,35 @@
       <div class="search_results_footer_empty"></div>
     </div>
   <?php
-  }
+  
 ?>
-</div>
+</div> --> 
 
 
-
-</html>
+<div class="main-container">
+    <div class="header">
+      <div class="header-heading">
+        <h1>Socio Connect</h1>
+      </div>
+      
+      
+      <?php
+  // Displaying this navbar if user is logged in
+  if (isset($_SESSION['user_id'])) {
+      ?>
+      <div class="header-search-bar">
+        <input type="text" class="search-input" placeholder="Search">
+      </div>
+      <div class="header-links">
+        <a href="allNotification.php" class="header-btn mr-1">Notifications</a>
+        <a href="messages.php" class="header-btn mr-1">Messages</a>
+        <a href="requests.php" class="header-btn mr-1">Friend Requests</a>
+        <a href="main.php" class="header-btn mr-1">Newsfeed</a>
+        <a href="timeline.php" class="header-btn mr-1">Profile</a>
+        <a href="logout.php" class="header-btn mr-1">Logout</a>
+      </div>
+  </div>
+      <?php
+  } ?>
+  
+    

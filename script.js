@@ -4,12 +4,17 @@ function setUserId(id) {
 
 function showCommentField(id) {
   // Displaying comment section when comment button is clicked
-  document.getElementById("post_id_" + id).classList.toggle("hidden");
+  document.getElementById("comment-section-" + id).classList.toggle("hidden");
 }
 
 function like(postID) {
   ajaxCalls("GET", `like.php?like=${postID}`).then(function(result) {
-    document.querySelector(`.likeCount-${postID}`).textContent = result.trim();
+    let value = result.trim();
+    document.querySelector(
+      `.like-count-${postID}`
+    ).innerHTML = `<i class='like-count-icon fas fa-thumbs-up'></i> ${value}`;
+    let icon = document.querySelector(`.post-${postID} .like-btn i`);
+    icon.classList.toggle("blue");
   });
 }
 
@@ -74,12 +79,12 @@ function comment(postID) {
     commentID = result.trim();
 
     // Rendering the added comment in post
-    document.querySelector(`.commentArea_${post.value}`).innerHTML += `
-        <div class='comment comment_${commentID}'>
-        <a class='commentDelete' href="javascript:deleteComment(${commentID})">X</a>
-          <span class='commentUser'>${user.value} : </span>
-          <span class='commentText'>${comment.value}</span>
-          <span class='commentTime'>1 Second Ago</span>
+    document.querySelector(`.comment-area-${post.value}`).innerHTML += `
+        <div class='comment comment-${commentID}'>
+        <i class='far fa-trash-alt comment-delete' onclick="javascript:deleteComment(${commentID})"></i>
+          <span class='comment-user'>${user.value} : </span>
+          <span class='comment-text'>${comment.value}</span>
+          <span class='comment-time'>Just now</span>
         </div>
    `;
     comment.value = "";
@@ -93,7 +98,7 @@ function deletePost(postID) {
   // As the name suggests
 
   ajaxCalls("GET", `delete.php?id=${postID}`).then(function(result) {
-    document.querySelector(`.post_${postID}`).style.display = "none";
+    document.querySelector(`.post-${postID}`).style.display = "none";
   });
 }
 
@@ -109,8 +114,8 @@ function addPost(user_id) {
   ajaxCalls("POST", "post.php", param).then(function(result) {
     // Adding new post to post Area
     // Adding post to the top not bottom. Clue xD
-    document.querySelector("#postArea").innerHTML =
-      result + document.querySelector("#postArea").innerHTML;
+    document.querySelector(".posts").innerHTML =
+      result + document.querySelector(".posts").innerHTML;
   });
 }
 
@@ -118,7 +123,7 @@ function deleteComment(commentID) {
   // Deleting Comment specified by comment ID
 
   ajaxCalls("GET", `commentDelete.php?id=${commentID}`).then(function(result) {
-    document.querySelector(`.comment_${commentID}`).style.display = "none";
+    document.querySelector(`.comment-${commentID}`).style.display = "none";
   });
 }
 
@@ -151,28 +156,28 @@ function changePic() {
 
 //Search Function
 
-function getUsers(value,flag) {
+function getUsers(value, flag) {
   // Setting paramters for POST request
   var param = `query=${value}&flag=${flag}`;
   var searchFooter;
   ajaxCalls("POST", "search.php", param).then(function(result) {
     // Displaying search results for normal search
-    if(flag == 1){
+    if (flag == 1) {
       document.querySelector(".search_results").innerHTML = result;
-      if(value.length == 0)
-        searchFooter = "";
+      if (value.length == 0) searchFooter = "";
       else
         searchFooter = `<form method="GET" action="allSearchResults.php"><input type="hidden" name="query" value=${value}><input type="submit" value="View All Results For ${value}"></form>`;
-      document.querySelector(".search_results_footer_empty").innerHTML = searchFooter;  
+      document.querySelector(
+        ".search_results_footer_empty"
+      ).innerHTML = searchFooter;
     }
-     // Displaying search results for searching in messages.php
-    else if(flag == 0)
+    // Displaying search results for searching in messages.php
+    else if (flag == 0)
       document.querySelector(".search_results_for_messages").innerHTML = result;
   });
   // Pain in the ass
   return false;
 }
-
 
 setInterval(commentsRefresh, 1000);
 
@@ -184,14 +189,16 @@ function commentsRefresh() {
       var obj = data[i];
 
       var comment = `
-         <div class='comment comment_${obj.postID}'>
-         <span class='commentUser'>${obj.name} : </span>
-         <span class='commentText'>${obj.comment}</span>
-         <span class='commentTime'>Just now</span>
+         <div class='comment comment-${obj.postID}'>
+         <span class='comment-user'>${obj.name} : </span>
+         <span class='comment-text'>${obj.comment}</span>
+         <span class='comment-time'>Just now</span>
      </div>
          `;
 
-      document.querySelector(`.commentArea_${obj.postID}`).innerHTML += comment;
+      document.querySelector(
+        `.comment-area-${obj.postID}`
+      ).innerHTML += comment;
     }
   });
 }
@@ -219,7 +226,6 @@ function notificationRefresh() {
         }'>${obj.name} has ${obj.type} your post<br><br></a>
         `;
       }
-      
 
       document.querySelector(`.notifications`).innerHTML =
         notification + document.querySelector(`.notifications`).innerHTML;
@@ -237,7 +243,7 @@ function likesRefresh() {
     for (i = 0; i < data.length; i++) {
       var obj = data[i];
 
-      document.querySelector(`.likeCount-${obj.postID}`).innerHTML = obj.likes;
+      document.querySelector(`.like-count-${obj.postID}`).innerHTML = obj.likes;
     }
   });
 }
@@ -250,7 +256,7 @@ function likeUsers(postID) {
     for (i = 0; i < data.length; i++) {
       var obj = data[i];
 
-      document.querySelector(`.likeUsers-${postID}`).innerHTML +=
+      document.querySelector(`.like-users-${postID}`).innerHTML +=
         " " + obj.name + " " + "|";
     }
   });
@@ -258,7 +264,7 @@ function likeUsers(postID) {
 
 function hideLikers(postID) {
   // Hiding likers when clicked on number again
-  document.querySelector(`.likeUsers-${postID}`).innerHTML = "";
+  document.querySelector(`.like-users-${postID}`).innerHTML = "";
 }
 
 function message() {
@@ -276,7 +282,7 @@ function message() {
   //  for(i=0; i<usernames.length; i++){
   //   if(usernames[i].value == partnerName)
   //       flag = 1;
-  //       alert(usernames[i].value);    
+  //       alert(usernames[i].value);
   // }
   // if(flag == 0)
   //   alert("New user found");
