@@ -53,15 +53,47 @@
         <input type="text" class="search-input" placeholder="Search">
       </div>
       <div class="header-links">
-        <a href="allNotification.php" class="header-btn mr-1">Notifications</a>
-        <a href="messages.php" class="header-btn mr-1">Messages</a>
-        <a href="requests.php" class="header-btn mr-1">Friend Requests</a>
-        <a href="main.php" class="header-btn mr-1">Newsfeed</a>
-        <a href="timeline.php" class="header-btn mr-1">Profile</a>
-        <a href="logout.php" class="header-btn mr-1">Logout</a>
+        <a href="allNotification.php" class="header-btn mr-1" id="noti_id" ><i class="fas fa-bell"></i> <span  id="noti_desc">Notifications</span></a>
+        <a href="messages.php" class="header-btn mr-1" id="msg_id"><i class="fas fa-envelope"></i><span  id="msg_desc">Messages</span></a>
+        <a href="requests.php" class="header-btn mr-1" id="req_id"><i class="fas fa-user-plus"></i><span  id="req_desc">Friend Requests</span></a>
+        <a href="main.php" class="header-btn mr-1" id="newsfeed_id"><i class="fas fa-users"></i><span  id="newsfeed_desc">Newsfeed</span></a>
+        <a href="timeline.php" class="header-btn mr-1" id="timeline_id"><i class="fas fa-user-circle"></i><span  id="timeline_desc">Timeline</span></a>
+        <a href="logout.php" class="header-btn mr-1" id="logout_id"><i class="fas fa-sign-out-alt"></i><span  id="logout_desc">Logout</span></a>
       </div>
   </div>
       <?php
   } ?>
   
+  <style>
+ #noti_id:hover #noti_desc {
+    display: block;
+}
+#msg_id:hover #msg_desc {
+    display: block;
+} 
+#req_id:hover #req_desc {
+    display: block;
+} 
+#newsfeed_id:hover #newsfeed_desc {
+    display: block;
+}
+#timeline_id:hover #timeline_desc {
+    display: block;
+}
+#logout_id:hover #logout_desc {
+    display: block;
+}
+#noti_desc, #logout_desc, #timeline_desc, #newsfeed_desc, #req_desc, #msg_desc{
+    display: none;
+    background-color:black;
+    color:white;
+    margin-left: 98px;
+    padding: 2px;
+    position: absolute;
+    z-index: 1000;
+    width:160px;
+    height:22px;
+    border-radius:5px;
+}
+  </style>
     

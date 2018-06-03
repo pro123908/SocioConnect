@@ -251,6 +251,7 @@ function likesRefresh() {
 function likeUsers(postID) {
   ajaxCalls("GET", `likeUsers.php?postID=${postID}`).then(function(result) {
     // Displaying search results
+    document.querySelector(`.like-users-${postID}`).innerHTML = "";
     var data = JSON.parse(result);
 
     for (i = 0; i < data.length; i++) {
