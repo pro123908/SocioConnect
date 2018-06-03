@@ -149,7 +149,7 @@ function newPost($postContent)
     }
 
 
-    // Calling show posts method with flag 4
+    // Calling show posts method with flag d
     showPosts('d');
 }
 
@@ -343,7 +343,7 @@ POST;
             </div>
             <div class='comment-form'>
                 <form onsubmit="return comment({$postID})" method="post" id='commentForm'>
-                    <input name = "comment_{$postID}" type='text'>
+                    <input name = "comment_{$postID}" type='text' autocomplete = "off">
                     <input type="text" value="{$postID}" style="display:none" name="post_id_{$postID}">
                     <input type="text" value="{$user}" style="display:none" name="post_user">
                     <input style='display:none;' type='submit' id="{$postID}" value="Comment" > 
@@ -390,6 +390,9 @@ function timeString($time)
         // if it is just one second
         if ($time == 1) {
             return $time ." Second Ago";
+        }
+        else if($time == 0){
+            return "Just Now";
         } else {
             return $time ." Seconds Ago";
         }
@@ -399,7 +402,8 @@ function timeString($time)
         // if it is just one minute
         if (($time / 60) < 2) {
             return floor($time / 60) . " Minute Ago";
-        } else {
+        } 
+        else {
             return floor($time / 60) . " Minutes Ago";
         }
     }
