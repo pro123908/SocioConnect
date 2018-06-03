@@ -60,7 +60,7 @@
         <a href="timeline.php" class="header-btn mr-1">Profile</a>
         <a href="logout.php" class="header-btn mr-1">Logout</a>
       </div>
-  
+  </div>
       <?php
   } ?>
   

@@ -16,7 +16,7 @@
 <!-- <div class='firstSection'>
 <h1>Welcome <?php echo $user ?></h1>
 </div> -->
-</div>
+
 
 <!-- Notification Area of the page -->
 

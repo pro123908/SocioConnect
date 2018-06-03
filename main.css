@@ -270,7 +270,7 @@ body {
   margin-left: 10px;
 }
 
-.post .post-content .post-avatar {
+.post-avatar {
   height: 40px;
   width: 40px;
   border-radius: 100%;
@@ -382,4 +382,50 @@ body {
 }
 .blue{
   color:#3578e5;
+}
+
+/* Notification Page */
+.notification-display{
+  padding: 50px;
+  background-color: #fff;
+  
+} 
+
+.notification-display h1{
+  margin-bottom: 30px;
+}
+
+.notification-display .notification-text{
+  text-decoration: none;
+  color: black;
+  display: block;
+    
+}
+.notification-display .noti-icon{
+  display: inline-block;
+  margin-right: 5px;
+}
+
+.notification-display .noti-time{
+  font-size: 12px;
+  color: #90949c;
+  display: inline-block;
+}
+
+.notification-display .notification{
+  margin-bottom: 15px;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.notification-display .notification:hover{
+  background-color: #f6f6f6;
+}
+
+.notification-display .notification-info{
+  display: inline-block;
+}
+
+.notification-display .noSeen{
+  background-color: #edf2fa;
 }
