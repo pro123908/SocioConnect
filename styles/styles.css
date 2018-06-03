@@ -450,3 +450,37 @@
 .resultDisplayForMessages{
   height: 40px;
 }
+#noti_id:hover #noti_desc {
+  display: block;
+}
+#msg_id:hover #msg_desc {
+  display: block;
+} 
+#req_id:hover #req_desc {
+  display: block;
+} 
+#newsfeed_id:hover #newsfeed_desc {
+  display: block;
+}
+#timeline_id:hover #timeline_desc {
+  display: block;
+}
+#logout_id:hover #logout_desc {
+  display: block;
+}
+#noti_desc, #logout_desc, #timeline_desc, #newsfeed_desc, #req_desc, #msg_desc{
+  display: none;
+  background-color:black;
+  color:white;
+  margin-left: 98px;
+  padding: 2px;
+  position: absolute;
+  z-index: 1000;
+  width:160px;
+  height:22px;
+  border-radius:5px;
+}
+#heading_link{
+text-decoration:none;
+color:#ced7d7
+}

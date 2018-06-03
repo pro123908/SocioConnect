@@ -1,7 +1,7 @@
 <link rel="stylesheet" href="styles/styles.css">
 <?php 
 
-require_once('functions.php');
+require_once('header.php');
 
 if(!isset($_SESSION['user_id'])){
     redirection('index.php');
