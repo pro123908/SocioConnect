@@ -13,7 +13,6 @@ if (isset($_GET['id'])) {
     $_SESSION['partner'] = $partnerID;
     $partner = queryFunc("select first_name from users where user_id =".$partnerID);
     $partner = isRecord($partner);
-    $id = $partnerID;
 }
 else{
     getRecentConvo();
