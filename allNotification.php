@@ -44,7 +44,9 @@ if (isData($queryResult)) {
 
         $noti .= <<<NOTI
             <div class='notification  {$colorNoti}'>
-            <img src='{$sPerson['profile_pic']}' class='post-avatar' />
+            <div class='notification-image'>
+            <img src='{$sPerson['profile_pic']}' class='post-avatar post-avatar-40' />
+            </div>
             <div class='notification-info'>
     <a class='notification-text' href='notification.php?postID={$postID}&type={$type}&notiID={$notiID}'>{$sPerson['name']} has {$type} {$conflict}</a><i class='noti-icon {$notiIcon}'></i><span class='noti-time'>{$time}</span></div></div>
 NOTI;

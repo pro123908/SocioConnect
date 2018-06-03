@@ -22,8 +22,10 @@
 
 <div class="content-area">
       <div class="notification-area">
-        Notification Area
-        <?php showNotifications();?>
+        <div class='notifications'>
+          <div class='notification-heading'>Notifications</div>
+          <?php showNotifications();?>
+        </div>
       </div>
 
 
@@ -46,7 +48,8 @@ showPosts('a')
 </div>
 
 <div class="friends-area">
-        Friends Area
+    <div class='friend-heading'>Friends</div>
+      <?php displayFriends(); ?>
 </div>
 
 </body>

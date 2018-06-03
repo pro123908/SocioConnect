@@ -70,6 +70,7 @@ function comment(postID) {
   var post = document.querySelector(`input[name='post_id_${postID}']`);
   var comment = document.querySelector(`input[name='comment_${post.value}']`);
   var user = document.querySelector('input[name="post_user"]');
+  var profilePic = document.querySelector('input[name="pic_user"]');
 
   // Setting up parameters for POST request to the file
   var param = `comment=${comment.value}&post_id=${post.value}`;
@@ -78,15 +79,35 @@ function comment(postID) {
     // Added Comment ID is returned in response
     commentID = result.trim();
 
-    // Rendering the added comment in post
-    document.querySelector(`.comment-area-${post.value}`).innerHTML += `
-        <div class='comment comment-${commentID}'>
-        <i class='far fa-trash-alt comment-delete' onclick="javascript:deleteComment(${commentID})"></i>
-          <span class='comment-user'>${user.value} : </span>
-          <span class='comment-text'>${comment.value}</span>
-          <span class='comment-time'>Just now</span>
-        </div>
-   `;
+  //   // Rendering the added comment in post
+  //   document.querySelector(`.comment-area-${post.value}`).innerHTML += `
+  //       <div class='comment comment-${commentID}'>
+  //       <i class='far fa-trash-alt comment-delete' onclick="javascript:deleteComment(${commentID})"></i>
+  //         <span class='comment-user'>${user.value} : </span>
+  //         <span class='comment-text'>${comment.value}</span>
+  //         <span class='comment-time'>Just now</span>
+  //       </div>
+  //  `;
+    console.log(profilePic.value);
+  document.querySelector(`.comment-area-${post.value}`).innerHTML += `
+  <div class='comment comment-${commentID}'>
+                
+  <div class='user-image'>
+      <img src='${profilePic.value}' class='post-avatar post-avatar-30' />
+  </div>
+  
+  <div class='comment-info'>
+  <i class='far fa-trash-alt comment-delete' onclick="javascript:deleteComment(${commentID})"></i>
+  <div class='comment-body'>
+  <span class='comment-user'>${user.value} : </span>
+  <span class='comment-text'>${comment.value}</span>
+  <span class='comment-time'>Just now</span>
+  </div>
+  
+  </div>
+</div>
+  `
+   
     comment.value = "";
   });
 

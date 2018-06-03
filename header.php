@@ -33,7 +33,7 @@
       <div class="search_results_footer_empty"></div>
     </div>
   <?php
-  
+
 ?>
 </div> --> 
 

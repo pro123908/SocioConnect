@@ -217,6 +217,10 @@ function showPosts($flag)
     d => New post is added
     any numner => Searched user's ID;
     */
+
+    $userID = $_SESSION["user_id"];
+
+
     if ($flag=='a') {
         $queryResult = queryFunc("SELECT post,post_id,posts.user_id,users.profile_pic,CONCAT(first_name,' ',last_name) as 'name',createdAt from posts inner join users on users.user_id = posts.user_id order by post_id desc");
     } elseif ($flag == 'b') {
@@ -225,17 +229,23 @@ function showPosts($flag)
         $postID = $_SESSION['notiPostID'];
         $queryResult = queryFunc("SELECT post,post_id,posts.user_id,users.profile_pic,CONCAT(first_name,' ',last_name) as 'name',createdAt from posts inner join users on users.user_id = posts.user_id WHERE post_id='$postID'");
     } elseif ($flag == 'd') {
-        $userID = $_SESSION["user_id"];
+        
         $queryResult = queryFunc("SELECT post,post_id,posts.user_id,users.profile_pic,CONCAT(first_name,' ',last_name) as 'name',createdAt from posts inner join users on users.user_id = posts.user_id WHERE posts.user_id='$userID' order by post_id desc LIMIT 1");
     } elseif ($flag > 0) {
         $queryResult = queryFunc("SELECT post,post_id,posts.user_id,users.profile_pic,CONCAT(first_name,' ',last_name) as 'name',createdAt from posts inner join users on users.user_id = posts.user_id where users.user_id = '$flag' order by post_id desc");
     }
+    // Profile Pic query
+    $profilePicQuery = queryFunc("SELECT profile_pic from users where user_id='$userID'");
+    $profilePicResult = isRecord($profilePicQuery);
+    $profilePic = $profilePicResult['profile_pic'];
 
     
     if (isData($queryResult)) {
         // If database returns something
         while ($row = isRecord($queryResult)) {
             if ($row['user_id'] == $_SESSION['user_id'] || isFriend($row['user_id'])) {
+
+                
                 $postID = $row['post_id'];
                 $user = $_SESSION['user'];
                 $diffTime = differenceInTime($row['createdAt']);
@@ -272,13 +282,16 @@ PosDel;
                 $post = <<<POST
             <div class='post post-{$postID}'>
                 <div class='post-content'>
-                <img src='{$row['profile_pic']}' class='post-avatar'/>
+                {$PostDeleteButton}
+                <div class='post-header'>
+                <img src='{$row['profile_pic']}' class='post-avatar post-avatar-40'/>
                 
                 <div class='post-info'>
                 <h3 class='user'>{$row['name']}</h3>
-                <small class='post-time'>$timeToShow</small>
+                <span class='post-time'>$timeToShow</span>
                 </div>
-                {$PostDeleteButton}
+                </div>
+                
                 
                 
                 
@@ -311,7 +324,7 @@ POST;
 POST;
 
                 // Querying database for the current post comments if any
-                $commentResult = queryFunc("SELECT comments.user_id,comment_id,comment,CONCAT(first_name,' ',last_name) as 'name',createdAt from comments inner join users on users.user_id = comments.user_id where comments.post_id ='$postID' order by createdAt");
+                $commentResult = queryFunc("SELECT comments.user_id,comment_id,comment,CONCAT(first_name,' ',last_name) as 'name',createdAt,users.profile_pic from comments inner join users on users.user_id = comments.user_id where comments.post_id ='$postID' order by createdAt");
 
                 while ($comments = isRecord($commentResult)) {
                     $diffTime = differenceInTime($comments['createdAt']);
@@ -330,10 +343,20 @@ ComDel;
                     // Rendering comment
                     $post .= <<<POST
                 <div class='comment comment-{$commentID}'>
+                
+                    <div class='user-image'>
+                        <img src='{$comments['profile_pic']}' class='post-avatar post-avatar-30' />
+                    </div>
+                    
+                    <div class='comment-info'>
                     {$commentDeleteButton}
+                    <div class='comment-body'>
                     <span class='comment-user'>{$comments['name']} : </span>
                     <span class='comment-text'>{$comments['comment']}</span>
-                    <small class='comment-time'>$timeToShow</small>
+                    <span class='comment-time'>$timeToShow</span>
+                    </div>
+                    
+                    </div>
                 </div>
             
 POST;
@@ -346,6 +369,7 @@ POST;
                     <input name = "comment_{$postID}" type='text'>
                     <input type="text" value="{$postID}" style="display:none" name="post_id_{$postID}">
                     <input type="text" value="{$user}" style="display:none" name="post_user">
+                    <input type="text" value="{$profilePic}" style="display:none" name="pic_user">
                     <input style='display:none;' type='submit' id="{$postID}" value="Comment" > 
                 </form>
             </div>
@@ -543,7 +567,7 @@ function showNotifications()
     $user = $_SESSION['user_id'];
 
     // Selecting notifications for the current User
-    $notiQuery = queryFunc("SELECT * from notifications WHERE d_user_id='$user' order by noti_id desc");
+    $notiQuery = queryFunc("SELECT * from notifications WHERE d_user_id='$user' order by noti_id desc LIMIT 10");
 
     // flag for user realization
     $isAny = false;
@@ -557,48 +581,59 @@ function showNotifications()
                if yes then not printing the notification else printing it
             */
             
-            if ($user != $row['s_user_id'] && $row['seen'] != 1) {
+            if (true) {
                 $isAny = true;
-                $person = $row['s_user_id'];
-                $post = $row['post_id'];
+                $sUser = $row['s_user_id'];
+                $postID = $row['post_id'];
                 $type = $row['typeC'];
                 $notiID = $row['noti_id'];
+                $diffTime = differenceInTime($row['createdAt']);
+                $time = timeString($diffTime);
+                $colorNoti = '';
+
                 if ($notiCounter == 0) {
                     $_SESSION['last_noti_id'] = $notiID;
                     $notiCounter = 1;
                 }
 
-                // Selecting name of the user who generated the notification
-                $personQuery = queryFunc("SELECT CONCAT(first_name,' ',last_name) as name FROM users WHERE user_id='$person'");
-                $sPerson = isRecord($personQuery);
-    
-                // Rendering notification
-                // if notification is of type post
-                if($type=='post'){
-                    $noti = <<<NOTI
-                    <a href='notification.php?postID={$post}&type={$type}&notiID={$notiID}'>{$sPerson['name']} has posted<br><br></a>
-NOTI;
-                }else{
-                    $noti = <<<NOTI
-                    <a href='notification.php?postID={$post}&type={$type}&notiID={$notiID}'>{$sPerson['name']} has {$type} your post<br><br></a>
-NOTI;
+                if ($row['seen'] == 0) {
+                    $colorNoti = 'noSeen';
                 }
         
-                // You know the drill xD
-                echo $noti;
+                // Selecting name of the user who generated the notification
+                $personQuery = queryFunc("SELECT profile_pic,CONCAT(first_name,' ',last_name) as name FROM users WHERE user_id='$sUser'");
+                $sPerson = isRecord($personQuery);
+                
+                
+            if ($type=='post') {
+                $conflict = 'posted';
+                $notiIcon = 'far fa-user';
+            } elseif($type=='commented') {
+                $conflict = 'on your post';
+                $notiIcon = 'far fa-comment-dots';
+            }else{
+                $conflict = 'your post';
+                $notiIcon = 'far fa-thumbs-up';
+            }
+
+            $noti = <<<NOTI
+                <div class='notification  {$colorNoti}'>
+                <div class='notification-image'>
+                <img src='{$sPerson['profile_pic']}' class='post-avatar post-avatar-30' />
+                </div>
+                <div class='notification-info'>
+            <a class='notification-text' href='notification.php?postID={$postID}&type={$type}&notiID={$notiID}'>{$sPerson['name']} has {$type} {$conflict}</a><i class='noti-icon {$notiIcon}'></i><span class='noti-time'>{$time}</span></div></div>
+NOTI;
+        echo $noti;
+            }
+
+            // $noti .= '</div>';
+           
+        }
+
             }
         }
-        // Deleting notifications after they have been checked
-        if ($isAny) {
-            // queryFunc("DELETE from notifications WHERE d_user_id='$user'");
-        } else {
-            // Flag will be false, if no notifications were there to show
-           // echo '<p>No new notifications</p>';
-        }
-    } else {
-        // echo '<p>No new notifications</p>';
-    }
-}
+
 
 //Friend Functions
 
@@ -734,7 +769,7 @@ function displayFriends()
     // Breaking the friends list in array
     $friendsListSeparated = explode(',', $friendsList['friends_array']);
 
-    for ($i = 0; $i< sizeof($friendsListSeparated)-1;$i++) {
+    for ($i = 0; $i< sizeof($friendsListSeparated)-2;$i++) {
         $friend_id = $friendsListSeparated[$i]; // friend
         // Getting name of that friend
         $queryFriends = queryFunc("SELECT *,CONCAT(first_name,' ',last_name) as name FROM users WHERE user_id='$friend_id'");
@@ -742,12 +777,18 @@ function displayFriends()
         $friend = isRecord($queryFriends);
 
         $content = <<<FRIEND
-            <div>
-                 <a href="timeline.php?visitingUserID={$friend['user_id']}"><h3>{$friend['name']}</h3></a>
-                 <img src='{$friend['profile_pic']}' width='50' height='50' >
-                
+            <div class='friend'>
+            <div class='friend-image'>
+            <img class='post-avatar post-avatar-30' src='{$friend['profile_pic']}'  >
+            </div>
+            
+            <div class='friend-info'>
+                 <a href="timeline.php?visitingUserID={$friend['user_id']}" class='friend-text'>{$friend['name']}</a>
+                 
+            </div>
                 
             </div>
+            
 
 FRIEND;
 
@@ -948,3 +989,5 @@ function getRecentConvo(){
     $recentPartnerId = ($recentUser['user_from'] == $userLoggedIn) ? $recentUser['user_to'] : $recentUser['user_from'];
     redirection("http://localhost/socioConnect/messages.php?id=".$recentPartnerId);
 }
+
+
