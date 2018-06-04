@@ -63,7 +63,3 @@
   </div>
       <?php
   } ?>
-  
-  <style>
-  </style>
-    
