@@ -56,7 +56,6 @@
         <a href="allNotification.php" class="header-btn mr-1" id="noti_id" ><i class="fas fa-bell fa-lg"></i> <span  id="noti_desc">Notifications</span></a>
         <a href="messages.php" class="header-btn mr-1" id="msg_id"><i class="fas fa-envelope fa-lg"></i><span  id="msg_desc">Messages</span></a>
         <a href="requests.php" class="header-btn mr-1" id="req_id"><i class="fas fa-user-plus fa-lg"></i><span  id="req_desc">Friend Requests</span></a>
-        <a href="main.php" class="header-btn mr-1" id="newsfeed_id"><i class="fas fa-users fa-lg"></i><span  id="newsfeed_desc">Newsfeed</span></a>
         <a href="timeline.php" class="header-btn mr-1" id="timeline_id"><i class="fas fa-user-circle fa-lg"></i><span  id="timeline_desc">Timeline</span></a>
         <a href="logout.php" class="header-btn mr-1" id="logout_id"><i class="fas fa-sign-out-alt fa-lg"></i><span  id="logout_desc">Logout</span></a>
       </div>

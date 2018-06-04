@@ -193,7 +193,7 @@ body {
 }
 
 #logout_desc {
-  margin-left: 200px;
+  margin-left: 150px;
 }
 
 #msg_desc {
@@ -204,12 +204,8 @@ body {
   margin-left: 40px
 }
 
-#newsfeed_desc {
-  margin-left: 110px;
-}
-
 #timeline_desc {
-  margin-left: 170px;
+  margin-left: 100px;
 }
 
 #heading_link {

@@ -6,6 +6,14 @@ require_once('header.php');
 if(!isset($_SESSION['user_id'])){
     redirection('index.php');
 }
+if(isset($_POST['add_friend']))
+    addFriend($_POST['userId']);
+else if(isset($_POST['cancel_req']))
+    cancelReq($_POST['userId']);
+else if(isset($_POST['respond_to_request'])) 
+    redirection("requests.php");
+else if(isset($_POST['remove_friend']))
+    removeFriend($_POST['userId']);
 ?>
 
 <div class='content'>
@@ -32,10 +40,10 @@ DELIMETER;
             $friend_req .= "<p>No Friend Requests</p></div>";
         }
         // Displaying friends
-        $friend_req .= '<div class="friends-list"><h1>Friends</h1>';
+        $friend_req .= '<div class="friends-list"><h1>Friends</h1><div class="friends-list-elements">';
         echo $friend_req;  
         displayFriends('All');
-        
+        echo "</div>";
         
     ?>
 </div>

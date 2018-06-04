@@ -34,7 +34,10 @@ else{
   <div class='new-post'>
 <?php 
 // Add post functionality
-addPost(true,"");
+if(isset($_GET['visitingUserID']))
+    addPost(false,$_GET['visitingUserID']); 
+else
+    addPost(true,"abc");
 
 ?>
 </div>

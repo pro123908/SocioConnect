@@ -369,3 +369,30 @@ function refreshRecentConvos(){
   });
 }
 setInterval(refreshRecentConvos, 1000);
+
+function removeFriend(id){
+  let param = `friendId=${id}`;
+  ajaxCalls("POST", "removeFriendAjax.php", param).then(function(result) {
+    var data = JSON.parse(result);
+    console.log("Response messageSimple : " + data);
+    document.querySelector(".friends-list-elements").innerHTML = "";
+    console.log(data.length);
+    for (i = 0; i < data.length; i++) {
+      var obj = data[i];
+      var friend = `
+        <div class='friend'>
+          <div class='friend-image'>
+            <img class='post-avatar post-avatar-30' src='${obj.profile_pic}'  >
+          </div>
+          <div class='friend-info'>
+            <a href="timeline.php?visitingUserID=${obj.user_id}" class='friend-text'>${obj.name}</a>            
+          </div>
+          <div class='friend-action'>&nbsp&nbsp&nbsp
+            <a href="javascript:removeFriend(${obj.user_id})" class='remove-friend'><i class="fas fa-times"></i></a>
+          </div>
+        </div>  
+      `;
+        document.querySelector(".friends-list-elements").innerHTML += friend;
+      }
+  });
+}

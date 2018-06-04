@@ -332,7 +332,7 @@ POST;
                     $commentID = $comments['comment_id'];
 
                     // Enabling delete option for comment if it is current user's comment else disabling
-                    if ($comments['user_id'] == $_SESSION['user_id']) {
+                    if ($comments['user_id'] == $_SESSION['user_id'] || $_SESSION['user_id'] == $row['user_id']) {
                         $commentDeleteButton = <<<ComDel
                     <i class='far fa-trash-alt comment-delete' onclick='javascript:deleteComment({$commentID})'></i>
 ComDel;
@@ -684,6 +684,22 @@ function reqRecieved($id)
     }
 }
 
+function checkUserState($id){
+    if (isFriend($id)) {
+        // If person is already your friend
+        $state = "<input type = 'Submit' name='remove_friend' value='Remove Friend'>";
+    } elseif (reqSent($id)) {
+        // If person hasn't accepted your request :(
+        $state = "<input type = 'Submit' name='cancel_req' value='Friend Request Sent'>";
+    } elseif (reqRecieved($id)) {
+        //  If you haven't responded to the person's friend request xD
+        $state = "<input type = 'Submit' name='respond_to_request' value='Respond to Friend Request'>";
+    } else {
+        // And if all above conditions fails, then people have no connection xD
+        $state = "<input type = 'Submit' name='add_friend' value='Add Friend'>";
+    }
+    return $state;
+}
 function showFriendButton($id)
 {
     // Showing add friend button if you came to someones else profile xD
@@ -691,19 +707,7 @@ function showFriendButton($id)
         // 2nd condition - You have not come to your profile through searching
 
         $button = "<form action = 'timeline.php?visitingUserID=$id' method='POST'>";
-        if (isFriend($id)) {
-            // If person is already your friend
-            $button .= "<input type = 'Submit' name='remove_friend' value='Remove Friend'>";
-        } elseif (reqSent($id)) {
-            // If person hasn't accepted your request :(
-            $button .= "<input type = 'Submit' name='cancel_req' value='Friend Request Sent'>";
-        } elseif (reqRecieved($id)) {
-            //  If you haven't responded to the person's friend request xD
-            $button .= "<input type = 'Submit' name='respond_to_request' value='Respond to Friend Request'>";
-        } else {
-            // And if all above conditions fails, then people have no connection xD
-            $button .= "<input type = 'Submit' name='add_friend' value='Add Friend'>";
-        }
+        $button .= checkUserState();
         $button .= "</form>";
         echo $button;
     }
@@ -727,13 +731,14 @@ function cancelReq($id)
     redirection("timeline.php?visitingUserID=".$id);
 }
 
-function removeFriend($id)
+function removeFriend($id,$redirection = "")
 {
     // When remove friend button is clicked
     // Removing friends and from both's records
     updateFriendList($id, $_SESSION['user_id']);
     updateFriendList($_SESSION['user_id'], $id);
-    redirection("timeline.php?visitingUserID=".$id);
+    if($redirection == "")
+        redirection("timeline.php?visitingUserID=".$id);    
 }
 
 function updateFriendList($user, $friend)
@@ -788,28 +793,28 @@ function displayFriends($count)
 
     for ($i = 0; $i< $expression;$i++) {
         $friend_id = $friendsListSeparated[$i]; // friend
-        // Getting name of that friend
-        $queryFriends = queryFunc("SELECT *,CONCAT(first_name,' ',last_name) as name FROM users WHERE user_id='$friend_id'");
+        if($friend_id){
+            // Getting name of that friend
+            $queryFriends = queryFunc("SELECT *,CONCAT(first_name,' ',last_name) as name FROM users WHERE user_id='$friend_id'");
 
-        $friend = isRecord($queryFriends);
+            $friend = isRecord($queryFriends);
 
-        $content = <<<FRIEND
-            <div class='friend'>
-            <div class='friend-image'>
-            <img class='post-avatar post-avatar-30' src='{$friend['profile_pic']}'  >
-            </div>
-            
-            <div class='friend-info'>
-                 <a href="timeline.php?visitingUserID={$friend['user_id']}" class='friend-text'>{$friend['name']}</a>
-                 
-            </div>
+            $content = <<<FRIEND
+                <div class='friend'>
+                <div class='friend-image'>
+                <img class='post-avatar post-avatar-30' src='{$friend['profile_pic']}'  >
+                </div>
                 
+                <div class='friend-info'>
+                    <a href="timeline.php?visitingUserID={$friend['user_id']}" class='friend-text'>{$friend['name']}</a>            
+                </div>
+                <div class='friend-action'>&nbsp&nbsp&nbsp
+                <a href="javascript:removeFriend({$friend['user_id']})" class='remove-friend'><i class="fas fa-times"></i></a>
             </div>
-            
-
+            </div>
 FRIEND;
-
-        echo $content;
+            echo $content;
+        }
     }
 }
 
