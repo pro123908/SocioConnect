@@ -1,4 +1,4 @@
-<link rel="stylesheet" href="styles/styles.css">
+
 <?php require_once('header.php');
  
 if(isset($_GET['visitingUserID']) && isset($_SESSION['user_id'])){
@@ -22,27 +22,34 @@ else{
     redirection("index.php"); // previously it was set to main.php
 }
 ?>
-
-<div class="personal_info">
-<!-- If you are comming here through searching or by clicking on your profile button -->
-    <?php $flag ? personalInfo(true,"") : personalInfo(false,$_GET['visitingUserID']) ?>
+<div class='user-timeline'>
+<div class='user-cover-area'>
+<?php $flag ? profilePic($_SESSION['user_id']) : profilePic($_GET['visitingUserID']) ?>
 </div>
 
-<div class="friend_button">
-<!-- If you are comming here through searching or by clicking on your profile button -->
-    <?php $flag ? showFriendButton(0) : showFriendButton($_GET['visitingUserID']) ?>
-    <a href="messages.php?id=<?php echo $_GET['visitingUserID']; ?>">Message</a>
+<div class='content-area'>
+<div class='user-info-area'>
+</div>
+<div class='post-area'>
+  <div class='new-post'>
+<?php 
+// Add post functionality
+addPost(true,"");
+
+?>
 </div>
 
-<div class='add_post_timeline'>
-<!-- If you are comming here through searching or by clicking on your profile button -->
-<?php  $flag ? addPost(true,"") : addPost(false,$_GET['visitingUserID']) ?>
+<div class='posts'>
+  
+<?php
+
+$flag ? showPosts('b') : showPosts($_GET['visitingUserID']) ?>
+
+</div>
+</div>
+<div class='friends-area'></div>
 </div>
 
-<div id='postArea'>
-<h3>Posts</h3>
-<!-- If you are comming here through searching or by clicking on your profile button -->
-<?php $flag ? showPosts('b') : showPosts($_GET['visitingUserID']) ?>
 </div>
 
 <script src="script.js" >

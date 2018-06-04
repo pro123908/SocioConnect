@@ -110,7 +110,7 @@ function addPost($flag, $visitorID)
             <a  href="javascript:addPost({$userID})"  class='add-post-btn'>Post</a>
             </div>
         </form>
-        </div>
+        
         </div>
 
         
@@ -562,12 +562,18 @@ function notification($sUser, $dUser, $post, $type)
     }
 }
 
-function showNotifications()
+function showNotifications($flag)
 {
     $user = $_SESSION['user_id'];
 
-    // Selecting notifications for the current User
-    $notiQuery = queryFunc("SELECT * from notifications WHERE d_user_id='$user' order by noti_id desc LIMIT 10");
+    if ($flag==10) {
+        // Selecting notifications for the current User
+        $notiQuery = queryFunc("SELECT * from notifications WHERE d_user_id='$user' order by noti_id desc LIMIT 10");
+        $postAvatar = 'post-avatar-30';
+    }else{
+        $notiQuery = queryFunc("SELECT * from notifications WHERE d_user_id='$user' order by noti_id desc");
+        $postAvatar = 'post-avatar-40';
+    }
 
     // flag for user realization
     $isAny = false;
@@ -619,7 +625,7 @@ function showNotifications()
             $noti = <<<NOTI
                 <div class='notification  {$colorNoti}'>
                 <div class='notification-image'>
-                <img src='{$sPerson['profile_pic']}' class='post-avatar post-avatar-30' />
+                <img src='{$sPerson['profile_pic']}' class='post-avatar $postAvatar' />
                 </div>
                 <div class='notification-info'>
             <a class='notification-text' href='notification.php?postID={$postID}&type={$type}&notiID={$notiID}'>{$sPerson['name']} has {$type} {$conflict}</a><i class='noti-icon {$notiIcon}'></i><span class='noti-time'>{$time}</span></div></div>
@@ -757,7 +763,7 @@ function ignoreReq($id)
     $friend = queryFunc("delete from friend_requests where to_id =".$_SESSION['user_id']." and from_id = ".$id);
 }
 
-function displayFriends()
+function displayFriends($count)
 {
     // Displaying all friends of current user
 
@@ -769,7 +775,14 @@ function displayFriends()
     // Breaking the friends list in array
     $friendsListSeparated = explode(',', $friendsList['friends_array']);
 
-    for ($i = 0; $i< sizeof($friendsListSeparated)-2;$i++) {
+    if($count == 2){
+        $expression = 2;
+    }
+    else{
+        $expression = sizeof($friendsListSeparated)-1;
+    }
+
+    for ($i = 0; $i< $expression;$i++) {
         $friend_id = $friendsListSeparated[$i]; // friend
         // Getting name of that friend
         $queryFriends = queryFunc("SELECT *,CONCAT(first_name,' ',last_name) as name FROM users WHERE user_id='$friend_id'");
@@ -991,3 +1004,27 @@ function getRecentConvo(){
 }
 
 
+function profilePic($id){
+    
+
+    $queryResult = queryFunc("SELECT * FROM users WHERE user_id='$id'");
+    $queryUser = isRecord($queryResult);
+    $name = $queryUser['first_name'].' '.$queryUser['last_name'];
+    
+
+    $content =<<<PROFILE
+    <div class='user-cover'>
+        <div class='user-pic'>
+            <span class='user-pic-container'>
+            <img src='{$queryUser['profile_pic']}'  />
+            <span>
+        </div>
+    </div>
+    <div class='user-info'>
+    <h3>{$name}</h3>
+    <span>{$queryUser['email']}</span>
+    </div>
+PROFILE;
+    
+    echo $content;
+}

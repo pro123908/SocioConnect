@@ -610,5 +610,82 @@ body {
 
 .friends-list h1{
   margin: 10px 0px 10px 10px;
+}
 
+/* User timeline */
+.user-timeline{
+  
+  height: 100%;
+}
+
+.user-cover-area{
+  position: relative;
+  height: 500px;
+  margin: 30px 100px;
+  border-radius: 5px 5px 0px 0px;
+  border-radius: 5px;
+  background-color: #fff;
+}
+
+.user-cover-area .user-info{
+  text-align: center;
+    margin-top: 40px;
+}
+
+.user-cover-area .user-info span{
+  font-size: 12px;
+  color: #888fab;
+}
+
+.user-cover{
+  background: linear-gradient(to bottom,#083023,#1f4b49);
+  height: 400px;
+  border-radius: 5px;
+}
+
+.user-pic-container{
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translate(-50%,-140%);
+  width: 130px;
+  height: 150px;
+  overflow: hidden;
+  border-radius: 100%;
+  text-align: center;
+  border: 6px solid #fff;
+  margin: 0 auto;
+}
+
+.user-pic-container img{
+  width: 130px;
+  height: 150px;
+}
+
+.user-info-area{
+  flex: 1 ;
+  border-radius: 5px;
+  /* border: 1px solid #e6ecf5; */
+  border: 1px solid #000;
+  background-color: #fff;
+  /* height: max-content; */
+}
+
+.user-timeline .content-area{
+ padding: 0px; 
+}
+
+.see-more{
+  padding: 10px 5px;
+  text-align: center;
+  text-decoration: none;
+  display: block;
+  color: #000000;
+  font-size: 14px;
+  
+}
+.see-more:hover{
+  background-color: #f6f6f6;
+  cursor: pointer;
+  
 }

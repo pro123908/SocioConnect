@@ -24,7 +24,10 @@
       <div class="notification-area">
         <div class='notifications'>
           <div class='notification-heading'>Notifications</div>
-          <?php showNotifications();?>
+          <?php showNotifications(10);?>
+          <a href='allNotification.php' class='see-more'>
+        <span>See more</span>
+      </a>
         </div>
       </div>
 
@@ -36,7 +39,7 @@
 addPost(true,"");
 
 ?>
-
+</div>
 
 <div class='posts'>
   
@@ -49,7 +52,10 @@ showPosts('a')
 
 <div class="friends-area">
     <div class='friend-heading'>Friends</div>
-      <?php displayFriends(); ?>
+      <?php displayFriends(2); ?>
+      <a href='requests.php' class='see-more'>
+        <span>See more</span>
+      </a>
 </div>
 
 </body>
