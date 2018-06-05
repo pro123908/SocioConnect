@@ -44,8 +44,7 @@ addPost(true,"");
 <div class='posts'>
   
 <?php
-// Showing posts of friends only
-//showPosts('a') 
+  showPosts('a',1,10);
 ?>
 </div>
 <div id='loading'><a href="javascript:showNextPage('a')">Show More Posts</a></div>
@@ -64,10 +63,6 @@ addPost(true,"");
 <script src="script.js" ></script>
 
 <script>
-window.addEventListener('load',function(){
-  showFirstPage('a');
-});
-
 // window.addEventListener('scroll',function(){
 //   showNextPageCaller('a')
 // });
