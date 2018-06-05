@@ -411,3 +411,10 @@ function removeFriend(id){
       }
   });
 }
+
+window.onclick = function(e){
+  if(e.srcElement.className != "search-input"){
+    document.querySelector(".search-result").style.display = 'none';
+  }
+  
+}
