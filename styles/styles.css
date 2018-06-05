@@ -404,7 +404,7 @@
 }
 
 .recent_chats_area{
-  width: 13%;
+  width: 20%; 
   background-color:aqua;
   margin: 10px 10px;
   padding: 10px 10px;
@@ -430,7 +430,7 @@
 .chat_box{
   display: inline-grid;
   margin: 10 100px;
-  width : 70%;
+  width : 60%;
   border: 1px solid black;
   height: 585px;
   overflow: scroll;
