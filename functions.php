@@ -246,7 +246,7 @@ function showPosts($flag,$page,$limit)
             if($numberOfIteration++ < $start)
                 continue;
             //If defined number of posts are rendered then break    
-            if( $start + $limit == mysqli_num_rows($queryResult))
+            if($start + $limit == mysqli_num_rows($queryResult))
                     $count = 0;
             if($count > $limit){ 
                 break;

@@ -149,6 +149,8 @@ body {
   border-top-right-radius: 10px;
   border-top-left-radius: 10px;
   top: 47px;
+  z-index: 1;
+  
 }
 
 .search-person {
@@ -715,7 +717,7 @@ body {
 
 .friends-list .friend-container{
   display: inline-block;
-  width: 19%;
+  width: 28%;
   margin-right: 5%;
 }
 
