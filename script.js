@@ -160,6 +160,7 @@ function showImage() {
   modal.classList.add("modal-open");
   modal.classList.remove("modal-close");
   modal.style.display = "block";
+  document.getElementById("modal-img").src = document.getElementById("profile_picture").src; 
 }
 
 function changePic() {

@@ -436,13 +436,11 @@ POST;
                 echo $post;
             }
         }
-        if($flag != 'd'){
-        if($count >= $limit)
+        if($count > $limit)
             $infoForNextTime = "<input type='hidden' id='nextPage' value='".($page+1)."' ><input type='hidden' id='noMorePosts' value='false'>";
         else
             $infoForNextTime = "<input type='hidden' id='noMorePosts' value='true'>";
         echo $infoForNextTime;    
-        }
     }
 }
 
@@ -452,6 +450,7 @@ function logout()
 {
     //Closing the session and destroying all the session variables
     session_start();
+    turnOffline($_SESSION['user_id']);
     session_destroy();
     // Redirecting to the login page
     redirection('index.php');
@@ -858,6 +857,11 @@ function displayFriends($count)
             $queryFriends = queryFunc("SELECT *,CONCAT(first_name,' ',last_name) as name FROM users WHERE user_id='$friend_id'");
 
             $friend = isRecord($queryFriends);
+            
+            if($friend['online'] == 0)
+                $state = "Offline";
+            else
+                $state = "Online";
 
             $content = <<<FRIEND
             <div class='friend-container'>
@@ -867,7 +871,8 @@ function displayFriends($count)
                 </div>
                 
                 <div class='friend-info'>
-                    <a href="timeline.php?visitingUserID={$friend['user_id']}" class='friend-text'>{$friend['name']}</a>            
+                    <a href="timeline.php?visitingUserID={$friend['user_id']}" class='friend-text'>{$friend['name']}</a> 
+                    <p>{$state}</p>           
                 </div>
                 <div class='friend-action'>
                 <div>
@@ -1099,8 +1104,12 @@ function profilePic($id){
     <div class='user-cover'>
         <div class='user-pic'>
             <span class='user-pic-container'>
-            <img src='{$queryUser['profile_pic']}'  />
+            <img src='{$queryUser['profile_pic']}' onclick="showImage()" id="profile_picture"/>
             <span>
+        </div>
+        <div id="modal" class="modal">
+            <span class="close" id="modal-close" onclick="onClosedImagModal()">&times;</span>
+            <img class="modal-content" id="modal-img" src="">
         </div>
     </div>
     <div class='user-info'>
@@ -1110,4 +1119,12 @@ function profilePic($id){
 PROFILE;
     
     echo $content;
+}
+
+function turnOnline($id){
+    queryFunc("update users set online = 1 where user_id =".$id);
+}
+
+function turnOffline($id){
+    queryFunc("update users set online = 0 where user_id =".$id);
 }

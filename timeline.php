@@ -45,10 +45,12 @@ else
   
 <?php
 
-$flag ? showPosts('b',1,10) : showPosts($_GET['visitingUserID'],1,10) ?>
+$user = $flag ? 'b' : $_GET['visitingUserID'];
+showPosts($user,1,10);
+?>
 
 </div>
-<div id='loading'><a href="javascript:showNextPage('b')">Show More Posts</a></div>
+<div id='loading'><a href="javascript:showNextPage(<?php echo $user?>)">Show More Posts</a></div>
 </div>
 <div class='friends-area'></div>
 </div>
