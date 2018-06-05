@@ -912,6 +912,8 @@ function getPartnersLastMessage($partnerId){
     $userLoggedIn = $_SESSION['user_id'];
     $details = queryFunc("SELECT user_from,body,dateTime from messages where (user_to = '$partnerId' AND user_from = '$userLoggedIn') OR (user_to = '$userLoggedIn' AND user_from = '$partnerId') order by id desc limit 1");
     $details = isRecord($details);
+    if(strlen($details['body']) > 15)
+        $details['body'] = (substr($details['body'],0,15)."...");  
     return $details;
 }
     
