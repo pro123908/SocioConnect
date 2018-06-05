@@ -246,7 +246,7 @@ function showPosts($flag,$page,$limit)
             if($numberOfIteration++ < $start)
                 continue;
             //If defined number of posts are rendered then break    
-            if( $start + $limit == mysqli_num_rows($queryResult))
+            if($start + $limit == mysqli_num_rows($queryResult))
                     $count = 0;
             if($count > $limit){ 
                 break;
@@ -816,6 +816,7 @@ function displayFriends($count)
             $friend = isRecord($queryFriends);
 
             $content = <<<FRIEND
+            <div class='friend-container'>
                 <div class='friend'>
                 <div class='friend-image'>
                 <img class='post-avatar post-avatar-30' src='{$friend['profile_pic']}'  >
@@ -830,6 +831,7 @@ function displayFriends($count)
                 <span class='tooltip tooltip-right'>Remove Friend</span>
                 </i></a>
                 </div>
+            </div>
             </div>
             </div>
 FRIEND;
