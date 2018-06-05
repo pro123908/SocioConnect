@@ -23,7 +23,7 @@
     
     <?php
     // Displaying that post only
-    showPosts('c'); ?>
+    showPosts('c',1,1); ?>
     </div>
     <div class='friends-area'></div>
     </div>

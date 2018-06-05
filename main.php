@@ -45,9 +45,10 @@ addPost(true,"");
   
 <?php
 // Showing posts of friends only
-showPosts('a') 
+//showPosts('a') 
 ?>
 </div>
+<div id='loading'><a href="javascript:showNextPage('a')">Show More Posts</a></div>
 </div>
 
 <div class="friends-area">
@@ -60,7 +61,19 @@ showPosts('a')
 
 </body>
 </html>
+<script src="script.js" ></script>
 
-<script src="script.js" >
+<script>
+window.addEventListener('load',function(){
+  showFirstPage('a');
+});
 
+// window.addEventListener('scroll',function(){
+//   showNextPageCaller('a')
+// });
 </script>
+
+
+
+
+

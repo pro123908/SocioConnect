@@ -148,9 +148,8 @@ function newPost($postContent)
         notification($userID,$friend_id,$postID,'post');
     }
 
-
     // Calling show posts method with flag d
-    showPosts('d');
+    showPosts('d',1,10);
 }
 
 
@@ -206,7 +205,7 @@ function addComment($userID, $postID, $comment)
     return $row['comment_id'];
 }
 
-function showPosts($flag)
+function showPosts($flag,$page,$limit)
 {
     //Selecting all the posts in a manner where user_id matches post_id
     // Querying database depending on flag value
@@ -217,9 +216,8 @@ function showPosts($flag)
     d => New post is added
     any numner => Searched user's ID;
     */
-
+    $start = ($page - 1) * $limit;
     $userID = $_SESSION["user_id"];
-
 
     if ($flag=='a') {
         $queryResult = queryFunc("SELECT post,post_id,posts.user_id,users.profile_pic,CONCAT(first_name,' ',last_name) as 'name',createdAt from posts inner join users on users.user_id = posts.user_id order by post_id desc");
@@ -228,8 +226,7 @@ function showPosts($flag)
     } elseif ($flag=='c') {
         $postID = $_SESSION['notiPostID'];
         $queryResult = queryFunc("SELECT post,post_id,posts.user_id,users.profile_pic,CONCAT(first_name,' ',last_name) as 'name',createdAt from posts inner join users on users.user_id = posts.user_id WHERE post_id='$postID'");
-    } elseif ($flag == 'd') {
-        
+    } elseif ($flag == 'd') { 
         $queryResult = queryFunc("SELECT post,post_id,posts.user_id,users.profile_pic,CONCAT(first_name,' ',last_name) as 'name',createdAt from posts inner join users on users.user_id = posts.user_id WHERE posts.user_id='$userID' order by post_id desc LIMIT 1");
     } elseif ($flag > 0) {
         $queryResult = queryFunc("SELECT post,post_id,posts.user_id,users.profile_pic,CONCAT(first_name,' ',last_name) as 'name',createdAt from posts inner join users on users.user_id = posts.user_id where users.user_id = '$flag' order by post_id desc");
@@ -241,10 +238,22 @@ function showPosts($flag)
 
     
     if (isData($queryResult)) {
+        $numberOfIteration = 0; //Number of results checked
+        $count = 1;
         // If database returns something
         while ($row = isRecord($queryResult)) {
+            //Wait to reach start value to start rendering posts, because before $start are already rendered
+            if($numberOfIteration++ < $start)
+                continue;
+            //If defined number of posts are rendered then break    
+            if( $start + $limit == mysqli_num_rows($queryResult))
+                    $count = 0;
+            if($count > $limit){ 
+                break;
+            }
+            else    
+                $count++;    
             if ($row['user_id'] == $_SESSION['user_id'] || isFriend($row['user_id'])) {
-
                 
                 $postID = $row['post_id'];
                 $userID = $_SESSION['user_id'];
@@ -293,9 +302,6 @@ PosDel;
                 <span class='post-time'>$timeToShow</span>
                 </div>
                 </div>
-                
-                
-                
                 
                 <p>{$row['post']}</p>
                 <div class='post-stats'>
@@ -385,6 +391,13 @@ POST;
                 // Finally rendering all the content in the variable xD
                 echo $post;
             }
+        }
+        if($flag != 'd'){
+        if($count >= $limit)
+            $infoForNextTime = "<input type='hidden' id='nextPage' value='".($page+1)."' ><input type='hidden' id='noMorePosts' value='false'>";
+        else
+            $infoForNextTime = "<input type='hidden' id='noMorePosts' value='true'>";
+        echo $infoForNextTime;    
         }
     }
 }
