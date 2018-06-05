@@ -17,11 +17,15 @@
     $queryResult = queryFunc("UPDATE notifications SET seen=1  WHERE noti_id='$notiID'");
 
     ?>
-    <div id='postArea'>
-    <h3>Post</h3>
+    <div class='content-area'>
+    <div class='notification-area'></div>
+    <div class='post-area'>
+    
     <?php
     // Displaying that post only
     showPosts('c'); ?>
+    </div>
+    <div class='friends-area'></div>
     </div>
     <?php
     

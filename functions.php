@@ -247,7 +247,9 @@ function showPosts($flag)
 
                 
                 $postID = $row['post_id'];
+                $userID = $_SESSION['user_id'];
                 $user = $_SESSION['user'];
+                $fUser = $row['user_id'];
                 $diffTime = differenceInTime($row['createdAt']);
                 $timeToShow = timeString($diffTime);
             
@@ -271,7 +273,7 @@ function showPosts($flag)
                 if ($row['user_id'] == $_SESSION['user_id']) {
                     $PostDeleteButton = <<<PosDel
                     <div class='post-delete-icon'>
-                    <i onclick="javascript:deletePost({$postID})" class="far fa-trash-alt"></i>
+                    <i onclick="javascript:deletePost({$postID})" class="tooltip-container far fa-trash-alt"><span class='tooltip tooltip-right'>Remove</span></i>
                     </div>
 PosDel;
                 } else {
@@ -284,10 +286,10 @@ PosDel;
                 <div class='post-content'>
                 {$PostDeleteButton}
                 <div class='post-header'>
-                <img src='{$row['profile_pic']}' class='post-avatar post-avatar-40'/>
+                <a href='timeline.php?visitingUserID={$fUser}'><img src='{$row['profile_pic']}' class='post-avatar post-avatar-40'/></a>
                 
                 <div class='post-info'>
-                <h3 class='user'>{$row['name']}</h3>
+                <a href='timeline.php?visitingUserID={$fUser}' class='user'>{$row['name']}</a>
                 <span class='post-time'>$timeToShow</span>
                 </div>
                 </div>
@@ -297,9 +299,10 @@ PosDel;
                 
                 <p>{$row['post']}</p>
                 <div class='post-stats'>
-                <span onmouseout='javascript:hideLikers({$postID})' onmouseover='javascript:likeUsers({$postID})' class='like-count like-count-{$postID}'><i class='like-count-icon fas fa-thumbs-up'></i>  {$likes['count']}</span>
-                <span class='comment-count'><i class='fas fa-comment-dots'></i> {$commentsCount['count']}</span>
-                <span class='like-users-{$postID}'></span>
+                <span onmouseout='javascript:hideLikers({$postID})' onmouseover='javascript:likeUsers({$postID})' class='tooltip-container like-count like-count-{$postID}'><i class='like-count-icon fas fa-thumbs-up'></i> {$likes['count']}
+                <span class='tooltip tooltip-bottom count'></span>
+                </span>
+                <a href="javascript:showCommentField({$postID})" class='comment-count'><i class='fas fa-comment-dots comment-count-{$postID}'></i> {$commentsCount['count']}</a>
                 </div>
                 </div>
                 <div class='post-buttons'>
@@ -331,10 +334,10 @@ POST;
                     $timeToShow = timeString($diffTime);
                     $commentID = $comments['comment_id'];
 
-                    // Enabling delete option for comment if it is current user's comment else disabling
+                    // Enabling delete option for comment if it is user's post else disabling
                     if ($comments['user_id'] == $_SESSION['user_id'] || $_SESSION['user_id'] == $row['user_id']) {
                         $commentDeleteButton = <<<ComDel
-                    <i class='far fa-trash-alt comment-delete' onclick='javascript:deleteComment({$commentID})'></i>
+                    <i class='tooltip-container far fa-trash-alt comment-delete' onclick='javascript:deleteComment({$commentID})'><span class='tooltip tooltip-right'>Remove</span></i>
 ComDel;
                     } else {
                         $commentDeleteButton = '';
@@ -345,13 +348,13 @@ ComDel;
                 <div class='comment comment-{$commentID}'>
                 
                     <div class='user-image'>
-                        <img src='{$comments['profile_pic']}' class='post-avatar post-avatar-30' />
+                        <a href='timeline.php?visitingUserID={$comments['user_id']}'><img src='{$comments['profile_pic']}' class='post-avatar post-avatar-30' /></a>
                     </div>
                     
                     <div class='comment-info'>
                     {$commentDeleteButton}
                     <div class='comment-body'>
-                    <span class='comment-user'>{$comments['name']} : </span>
+                    <a href='timeline.php?visitingUserID={$comments['user_id']}' class='comment-user'>{$comments['name']} : </a>
                     <span class='comment-text'>{$comments['comment']}</span>
                     <span class='comment-time'>$timeToShow</span>
                     </div>
@@ -627,12 +630,12 @@ function showNotifications($flag)
             }
 
             $noti = <<<NOTI
-                <div class='notification  {$colorNoti}'>
-                <div class='notification-image'>
+                <a href='notification.php?postID={$postID}&type={$type}&notiID={$notiID}' class='notification  {$colorNoti}'>
+                <span class='notification-image'>
                 <img src='{$sPerson['profile_pic']}' class='post-avatar $postAvatar' />
-                </div>
-                <div class='notification-info'>
-            <a class='notification-text' href='notification.php?postID={$postID}&type={$type}&notiID={$notiID}'>{$sPerson['name']} has {$type} {$conflict}</a><i class='noti-icon {$notiIcon}'></i><span class='noti-time'>{$time}</span></div></div>
+                </span>
+                <span class='notification-info'>
+            <span class='notification-text'>{$sPerson['name']} has {$type} {$conflict}</span><i class='noti-icon {$notiIcon}'></i><span class='noti-time'>{$time}</span></span></a>
 NOTI;
         echo $noti;
             }
@@ -808,8 +811,12 @@ function displayFriends($count)
                 <div class='friend-info'>
                     <a href="timeline.php?visitingUserID={$friend['user_id']}" class='friend-text'>{$friend['name']}</a>            
                 </div>
-                <div class='friend-action'>&nbsp&nbsp&nbsp
-                <a href="javascript:removeFriend({$friend['user_id']})" class='remove-friend'><i class="fas fa-times"></i></a>
+                <div class='friend-action'>
+                <div>
+                <a href="javascript:removeFriend({$friend['user_id']})" class='remove-friend'><i class="tooltip-container fas fa-times">
+                <span class='tooltip tooltip-right'>Remove Friend</span>
+                </i></a>
+                </div>
             </div>
             </div>
 FRIEND;
@@ -942,50 +949,52 @@ function getSearchedUsers($value,$flag){
     if (strlen($value) == 0) {
         echo " ";
     } else {
-         $value = strtolower($value);
+        $value = strtolower($value);
         //explode breakes the string into array, each substring is made when the first arg of explode is found in the string
         $names = explode(" ", $value);
         if (count($names) == 2) {
-            if($flag == 2)
-                $users = queryFunc("SELECT first_name, last_name,profile_pic,username,user_id from users where lower(first_name) like '$names[0]%' AND lower(last_name) like '$names[1]%'");        
-            else
-                //if there there are two substrings then it would search for first substirng in first name and second string in the last name
-                $users = queryFunc("SELECT first_name, last_name,profile_pic,username,user_id from users where lower(first_name) like '$names[0]%' AND lower(last_name) like '$names[1]%' limit 5");
+            //if there there are two substrings then it would search for first substirng in first name and second string in the last name
+
+            if ($flag == 2) {
+                $users = queryFunc("SELECT CONCAT(first_name,' ',last_name) as name,profile_pic,username,user_id from users where lower(first_name) like '$names[0]%' AND lower(last_name) like '$names[1]%'");
+            } else {
+                $users = queryFunc("SELECT CONCAT(first_name,' ',last_name) as name,profile_pic,username,user_id from users where lower(first_name) like '$names[0]%' AND lower(last_name) like '$names[1]%' limit 5");
+            }
         } else {
-            if($flag == 2)
-               $users = queryFunc("SELECT first_name, last_name,profile_pic,username,user_id from users where lower(first_name) like '$names[0]%' OR lower(last_name) like '$names[0]%'");
-            else    
-                //if there is only one substring, i.e no spaces are present in the input then it would search that substring in both first name and last name
-                $users = queryFunc("SELECT first_name, last_name,profile_pic,username,user_id from users where lower(first_name) like '$names[0]%' OR lower(last_name) like '$names[0]%' limit 5");
-        }
-    
-        isData($users);
-        if($flag == 1 || $flag == 2){
-            while ($row = isRecord($users)) {
-                $user = <<<DELIMETER
-                <div class='resultDisplay'>
-                    <a href="timeline.php?visitingUserID={$row['user_id']}" style='color: #000'>
-                        <div class='liveSearchProfilePic'>
-                            <img src={$row['profile_pic']} height=200px width=50px>
-                        </div>
-                        <div class='liveSearchText'>
-                            {$row['first_name']} {$row['last_name']}
-                            <p style='margin: 0;'>{$row['username']}</p>
-                        </div>
-                    </a>
-DELIMETER;
-                if($row['user_id'] != $_SESSION['user_id']){
-                $user .= <<<DELIMETER
-                    <a href='messages.php?id={$row['user_id']}'><button >Message</button></a>
-                </div>
-DELIMETER;
-}
-                echo $user;
+            //if there is only one substring, i.e no spaces are present in the input then it would search that substring in both first name and last name
+            if ($flag == 2) {
+                $users = queryFunc("SELECT CONCAT(first_name,' ',last_name) as name,profile_pic,username,user_id from users where lower(first_name) like '$names[0]%' OR lower(last_name) like '$names[0]%'");
+            } else {
+                $users = queryFunc("SELECT CONCAT(first_name,' ',last_name) as name,profile_pic,username,user_id from users where lower(first_name) like '$names[0]%' OR lower(last_name) like '$names[0]%' limit 5");
             }
         }
-        else{
-            while ($row = isRecord($users)) {
-                $user = <<<DELIMETER
+        if (isData($users)) {
+            if ($flag == 1 || $flag == 2) {
+                while ($row = isRecord($users)) {
+                    $user = <<<DELIMETER
+                <div class='search-person'>
+                <div class='search-person-image'>
+                <img src='{$row['profile_pic']}' class='post-avatar post-avatar-30'/>
+                </div>
+                <a href='timeline.php?visitingUserID={$row['user_id']}' class='search-person-info'>
+                <span class='person-name'>{$row['name']}</span>
+                </a>
+DELIMETER;
+                    if ($row['user_id'] != $_SESSION['user_id']) {
+                        $user .= <<<DELIMETER
+                    <div class='person-message'>
+                    <a href='messages.php?id={$row['user_id']}'><i class='fas fa-envelope message-icon'></i></a>
+                    </div>
+                </div>
+DELIMETER;
+                    } else {
+                        $user .= '</div>';
+                    }
+                    echo $user;
+                }
+            } else {
+                while ($row = isRecord($users)) {
+                    $user = <<<DELIMETER
             <div class='resultDisplay  resultDisplayForMessages'>
                 <a href='messages.php?id={$row['user_id']}' style='color: #000'>
                     <div class='liveSearchProfilePic liveSearchProfilePicForMessages'>
@@ -998,10 +1007,13 @@ DELIMETER;
                 </a>
             </div>
 DELIMETER;
-                echo $user;
+                    echo $user;
+                }
             }
+        }else{
+            echo 'No';
         }
-}
+    }
 
 }
 

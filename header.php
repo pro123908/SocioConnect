@@ -51,7 +51,9 @@
       ?>
       <div class="header-search-bar">
         <input type="text" class="search-input" placeholder="Search" onkeyup="getUsers(this.value,1)" name="q" autocomplete = "off" id="search_text_input">
+      <div class='search-result'></div>
       </div>
+      
       <div class="header-links">
         <a href="allNotification.php" class="header-btn mr-1" id="noti_id" ><i class="fas fa-bell fa-lg"></i> <span  id="noti_desc">Notifications</span></a>
         <a href="messages.php" class="header-btn mr-1" id="msg_id"><i class="fas fa-envelope fa-lg"></i><span  id="msg_desc">Messages</span></a>

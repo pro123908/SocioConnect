@@ -18,6 +18,7 @@ function like(postID) {
   });
 }
 
+
 // function ajaxFetchCalls(url, data = {}) {
 //   return new Promise(function(resolve, reject) {
 //     fetch(url, data).then(function(data) {
@@ -79,15 +80,6 @@ function comment(postID) {
     // Added Comment ID is returned in response
     commentID = result.trim();
 
-  //   // Rendering the added comment in post
-  //   document.querySelector(`.comment-area-${post.value}`).innerHTML += `
-  //       <div class='comment comment-${commentID}'>
-  //       <i class='far fa-trash-alt comment-delete' onclick="javascript:deleteComment(${commentID})"></i>
-  //         <span class='comment-user'>${user.value} : </span>
-  //         <span class='comment-text'>${comment.value}</span>
-  //         <span class='comment-time'>Just now</span>
-  //       </div>
-  //  `;
     console.log(profilePic.value);
   document.querySelector(`.comment-area-${post.value}`).innerHTML += `
   <div class='comment comment-${commentID}'>
@@ -109,6 +101,7 @@ function comment(postID) {
   `
    
     comment.value = "";
+    console.log(document.querySelector(`.comment-count-${postID}`));
   });
 
   // Pain in the ass xD
@@ -182,19 +175,37 @@ function getUsers(value, flag) {
   var param = `query=${value}&flag=${flag}`;
   var searchFooter;
   ajaxCalls("POST", "search.php", param).then(function(result) {
-    // Displaying search results for normal search
+
+    if(result == 'No'){
+      document.querySelector(".search-result").style.display = 'none';
+    }else{
+
+      // Displaying search results for normal search
     if (flag == 1) {
-      document.querySelector(".search_results").innerHTML = result;
-      if (value.length == 0) searchFooter = "";
-      else
-        searchFooter = `<form method="GET" action="allSearchResults.php"><input type="hidden" name="query" value=${value}><input type="submit" value="View All Results For ${value}"></form>`;
+      document.querySelector(".search-result").style.display = 'block';
+      document.querySelector(".search-result").innerHTML = result;
+      
+
+      if (value.length == 0) {
+        document.querySelector(".search-result").style.display = 'none';
+        searchFooter = "";
+      }
+      else{
+      //   searchFooter = `<form method="GET" action="allSearchResults.php"><input type="hidden" name="query" value=${value}><input type="submit" value="View All Results For ${value}"></form>`;
+      // document.querySelector(
+      //   ".search-result"
+      // ).innerHTML += searchFooter;
+
+      searchFooter = `<a class='see-more' href='allSearchResults.php?query=${value}'>See more</a>`;
       document.querySelector(
-        ".search_results_footer_empty"
-      ).innerHTML = searchFooter;
+        ".search-result"
+      ).innerHTML += searchFooter;
+    }
     }
     // Displaying search results for searching in messages.php
     else if (flag == 0)
       document.querySelector(".search_results_for_messages").innerHTML = result;
+    }
   });
   // Pain in the ass
   return false;
@@ -272,21 +283,25 @@ function likesRefresh() {
 function likeUsers(postID) {
   ajaxCalls("GET", `likeUsers.php?postID=${postID}`).then(function(result) {
     // Displaying search results
-    document.querySelector(`.like-users-${postID}`).innerHTML = "";
+    document.querySelector(`.like-count-${postID} .count`).innerHTML = "";
     var data = JSON.parse(result);
+    let flag = true;
 
     for (i = 0; i < data.length; i++) {
+      flag = false;
       var obj = data[i];
-
-      document.querySelector(`.like-users-${postID}`).innerHTML +=
-        " " + obj.name + " " + "|";
+      console.log('In');
+      document.querySelector(`.like-count-${postID} .count`).innerHTML +=`${obj.name}<br>`;
+    }
+    if(flag){
+      document.querySelector(`.like-count-${postID} .count`).classList.remove('tooltip');
     }
   });
 }
 
 function hideLikers(postID) {
   // Hiding likers when clicked on number again
-  document.querySelector(`.like-users-${postID}`).innerHTML = "";
+  document.querySelector(`.like-count-${postID} .count`).innerHTML = "";
 }
 
 function message() {
