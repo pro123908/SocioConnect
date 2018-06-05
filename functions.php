@@ -120,37 +120,81 @@ DELIMETER;
 
 function newPost($postContent)
 {
-
     // Function for adding a post
-
     global $connection;
-
     $post = mysqli_real_escape_string($connection, $postContent);
     $userID = $_SESSION['user_id'];
 
     // Inserting post data
     $queryResult =  queryFunc("INSERT INTO posts(post,user_id,createdAt) VALUES('$post','$userID',now())");
 
-    //Getting post ID of inserted POST
-    $queryPostID = queryFunc("SELECT post_id from posts WHERE user_id='$userID' order by post_id desc LIMIT 1");
-    $recordPostID = isRecord($queryPostID);
-    $postID = $recordPostID['post_id'];
+    //Getting info of inserted POST
+    $queryResult = queryFunc("SELECT post,post_id,posts.user_id,users.profile_pic,CONCAT(first_name,' ',last_name) as 'name',createdAt from posts inner join users on users.user_id = posts.user_id WHERE posts.user_id='$userID' order by post_id desc LIMIT 1");
 
-    // Generating Notification for friends
-    $queryFriendsList = queryFunc("SELECT friends_array FROM users WHERE user_id='$userID'");
+    if (isData($queryResult)) {
+        $queryResult = isRecord($queryResult);
+        $postID = $queryResult['post_id'];
+        $userID = $_SESSION['user_id'];
+        $user = $_SESSION['user'];
+        $diffTime = differenceInTime($queryResult['createdAt']);
+        $timeToShow = timeString($diffTime);
+        
+        $PostDeleteButton = <<<PosDel
+        <div class='post-delete-icon'>
+        <i onclick="javascript:deletePost({$postID})" class="tooltip-container far fa-trash-alt"><span class='tooltip tooltip-right'>Remove</span></i>
+        </div>
+PosDel;
 
-    $friendsList = isRecord($queryFriendsList);
-    $friendsListSeparated = explode(',', $friendsList['friends_array']);
+        $post = <<<POST
+        <div class='post post-{$postID}'>
+            <div class='post-content'>
+                {$PostDeleteButton}
+                <div class='post-header'>
+                    <a href='timeline.php?visitingUserID={$userID}'><img src='{$queryResult['profile_pic']}' class='post-avatar post-avatar-40'/></a>
+        
+                    <div class='post-info'>
+                        <a href='timeline.php?visitingUserID={$userID}' class='user'>{$queryResult['name']}</a>
+                        <span class='post-time'>$timeToShow</span>
+                    </div>
+                </div>
+        
+                <p>{$queryResult['post']}</p>
+                <div class='post-stats'>
+                    <span onmouseout='javascript:hideLikers({$postID})' onmouseover='javascript:likeUsers({$postID})' class='tooltip-container like-count like-count-{$postID}'><i class='like-count-icon fas fa-thumbs-up'></i> 0</span>
+                    <span class='tooltip tooltip-bottom count'></span>
+                    <a href="javascript:showCommentField({$postID})" class='comment-count'><i class='fas fa-comment-dots comment-count-{$postID}'></i> 0</a>
+                </div>
+            </div>
+            <div class='post-buttons'>
+                <a class='post-btn like-btn' href='javascript:like({$postID})'><i class='far fa-thumbs-up'></i> Like</a>
+                <a  class='post-btn comment-btn' href="javascript:showCommentField({$postID})"><i class="far fa-comment-dots"></i> Comment</a>
+            </div>    
+            <div id="comment-section-{$postID}" class='hidden'>
+                <div class='comment-area-{$postID}'>
+            </div>
+        </div>
+        </div>
+        </div>
+        <br>
+POST;
+    
+        // Finally rendering all the content in the variable xD
+        echo $post;
 
-    // notification for each friend
-    for ($i = 0; $i< sizeof($friendsListSeparated)-1;$i++) {
-        $friend_id = $friendsListSeparated[$i];
-        notification($userID,$friend_id,$postID,'post');
+        
+        //FASAD KI JAR
+        // Generating Notification for friends
+        // $queryFriendsList = queryFunc("SELECT friends_array,profile_pic FROM users WHERE user_id='$userID'");
+        // $friendsList = isRecord($queryFriendsList);
+        // $friendsListSeparated = explode(',', $friendsList['friends_array']);
+        // // notification for each friend
+        // for ($i = 0; $i< sizeof($friendsListSeparated)-1;$i++) {
+        //     $friend_id = $friendsListSeparated[$i];
+        //     notification($userID,$friend_id,$postID,'post');
+        // }
     }
-
-    // Calling show posts method with flag d
-    showPosts('d',1,10);
 }
+    //showPosts('d',1,10);
 
 
 function deletePost($postID)

@@ -130,6 +130,7 @@ function addPost(user_id) {
     // Adding post to the top not bottom. Clue xD
     document.querySelector(".posts").innerHTML =
       result + document.querySelector(".posts").innerHTML;
+      document.querySelector("textarea[name='post']").value = " ";
   });
 }
 
