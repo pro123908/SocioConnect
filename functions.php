@@ -182,16 +182,16 @@ POST;
         echo $post;
 
         
-        //FASAD KI JAR
-        // Generating Notification for friends
-        // $queryFriendsList = queryFunc("SELECT friends_array,profile_pic FROM users WHERE user_id='$userID'");
-        // $friendsList = isRecord($queryFriendsList);
-        // $friendsListSeparated = explode(',', $friendsList['friends_array']);
-        // // notification for each friend
-        // for ($i = 0; $i< sizeof($friendsListSeparated)-1;$i++) {
-        //     $friend_id = $friendsListSeparated[$i];
-        //     notification($userID,$friend_id,$postID,'post');
-        // }
+        //FASAD KI JAR - koi baat nahi XD
+        //Generating Notification for friends
+        $queryFriendsList = queryFunc("SELECT friends_array,profile_pic FROM users WHERE user_id='$userID'");
+        $friendsList = isRecord($queryFriendsList);
+        $friendsListSeparated = explode(',', $friendsList['friends_array']);
+        // notification for each friend
+        for ($i = 0; $i< sizeof($friendsListSeparated)-1;$i++) {
+            $friend_id = $friendsListSeparated[$i];
+            notification($userID,$friend_id,$postID,'post');
+        }
     }
 }
     //showPosts('d',1,10);
@@ -678,10 +678,10 @@ function showNotifications($flag)
                 $conflict = 'posted';
                 $notiIcon = 'far fa-user';
             } elseif($type=='commented') {
-                $conflict = 'on your post';
+                $conflict = 'commented on your post';
                 $notiIcon = 'far fa-comment-dots';
             }else{
-                $conflict = 'your post';
+                $conflict = 'liked your post';
                 $notiIcon = 'far fa-thumbs-up';
             }
 
@@ -691,7 +691,7 @@ function showNotifications($flag)
                 <img src='{$sPerson['profile_pic']}' class='post-avatar $postAvatar' />
                 </span>
                 <span class='notification-info'>
-            <span class='notification-text'>{$sPerson['name']} has {$type} {$conflict}</span><i class='noti-icon {$notiIcon}'></i><span class='noti-time'>{$time}</span></span></a>
+            <span class='notification-text'>{$sPerson['name']} has {$conflict}</span><i class='noti-icon {$notiIcon}'></i><span class='noti-time'>{$time}</span></span></a>
 NOTI;
         echo $noti;
             }
