@@ -803,6 +803,7 @@ function displayFriends($count)
             $friend = isRecord($queryFriends);
 
             $content = <<<FRIEND
+            <div class='friend-container'>
                 <div class='friend'>
                 <div class='friend-image'>
                 <img class='post-avatar post-avatar-30' src='{$friend['profile_pic']}'  >
@@ -817,6 +818,7 @@ function displayFriends($count)
                 <span class='tooltip tooltip-right'>Remove Friend</span>
                 </i></a>
                 </div>
+            </div>
             </div>
             </div>
 FRIEND;

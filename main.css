@@ -694,10 +694,29 @@ body {
 }
 
 .content {
-  padding: 20px;
+  display: flex;
+  padding: 40px;
   /* Giving padding around content */
+  height: auto;
+}
+
+.friend-request-area {
+  flex: 4;
   background-color: #fff;
-  height: 100%;
+  margin-right: 50px;
+  padding: 20px;
+}
+
+.people-you-may-know-area {
+  flex: 1;
+  height: 78vh;
+  background-color: #fff;
+}
+
+.friends-list .friend-container{
+  display: inline-block;
+  width: 19%;
+  margin-right: 5%;
 }
 
 .friends-list h1 {
@@ -705,7 +724,7 @@ body {
 }
 
 .friends-list-elements {
-  width: 20%;
+  width: 100%;
 }
 
 /* User timeline */
