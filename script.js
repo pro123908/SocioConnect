@@ -418,3 +418,43 @@ window.onclick = function(e){
   }
   
 }
+
+function showPage(flag,page){
+  document.getElementById("loading").style.display = 'none';
+  var xhr = new XMLHttpRequest();
+  xhr.open("GET","loadPostsAjax.php?flag="+flag+"&page="+page,true);
+  xhr.onload = function(){
+    if(this.status = 200){
+      document.getElementById("loading").style.display = 'block';
+      document.querySelector(".posts").innerHTML += this.responseText;
+    }
+  }
+  xhr.send();
+}
+
+function showFirstPage(flag){
+  showPage(flag,1);
+}
+
+function showNextPageCaller(flag){
+  //if user has scrolled to the bottom of the page
+  if(true)
+    setTimeout(function(){
+        showNextPage(flag)
+    },2000);
+}
+
+function showNextPage(flag){
+  //Fetching page no and flag to find whether more post are availible or not
+  var noMorePosts = document.getElementById("noMorePosts");
+  var page = document.getElementById("nextPage"); 
+  if(noMorePosts.value == "false"){
+    //deleting previous data
+    var div = document.querySelector(".posts");
+    div.removeChild(page);
+    div.removeChild(noMorePosts);
+    
+    showPage(flag,page.value);
+  }
+  else{alert("khtm")}
+}

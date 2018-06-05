@@ -26,7 +26,6 @@ else{
 <div class='user-cover-area'>
 <?php $flag ? profilePic($_SESSION['user_id']) : profilePic($_GET['visitingUserID']) ?>
 </div>
-
 <div class='content-area'>
 <div class='user-info-area'>
 </div>
@@ -46,9 +45,10 @@ else
   
 <?php
 
-$flag ? showPosts('b') : showPosts($_GET['visitingUserID']) ?>
+$flag ? showPosts('b',1,10) : showPosts($_GET['visitingUserID'],1,10) ?>
 
 </div>
+<div id='loading'><a href="javascript:showNextPage('b')">Show More Posts</a></div>
 </div>
 <div class='friends-area'></div>
 </div>
