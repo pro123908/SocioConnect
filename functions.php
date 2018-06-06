@@ -261,6 +261,7 @@ function showPosts($flag,$page,$limit)
     d => New post is added
     any numner => Searched user's ID;
     */
+    $_SESSION['posts_availible'] = true;
     if($page == 1)
         $start = 0;
     else    
@@ -270,15 +271,13 @@ function showPosts($flag,$page,$limit)
     if ($flag=='a') {
         $queryResult = queryFunc("SELECT post,post_id,posts.user_id,users.profile_pic,CONCAT(first_name,' ',last_name) as 'name',createdAt from posts inner join users on users.user_id = posts.user_id order by post_id desc");
     } elseif ($flag == 'b') {
-        $queryResult = queryFunc("SELECT post,post_id,posts.user_id,users.profile_pic,CONCAT(first_name,' ',last_name) as 'name',createdAt from posts inner join users on users.user_id = posts.user_id where users.user_id = {$_SESSION['user_id']} order by post_id desc");
+        $queryResult = queryFunc("SELECT post,post_id,posts.user_id,users.profile_pic,CONCAT(first_name,' ',last_name) as 'name',createdAt from posts inner join users on users.user_id = posts.user_id where users.user_id = {$userID} order by post_id desc");
     } elseif ($flag=='c') {
         $postID = $_SESSION['notiPostID'];
         $queryResult = queryFunc("SELECT post,post_id,posts.user_id,users.profile_pic,CONCAT(first_name,' ',last_name) as 'name',createdAt from posts inner join users on users.user_id = posts.user_id WHERE post_id='$postID'");
-     } 
-    //elseif ($flag == 'd') { 
-    //     $queryResult = queryFunc("SELECT post,post_id,posts.user_id,users.profile_pic,CONCAT(first_name,' ',last_name) as 'name',createdAt from posts inner join users on users.user_id = posts.user_id WHERE posts.user_id='$userID' order by post_id desc LIMIT 1");
-    // } 
-    elseif ($flag > 0) {
+     }elseif ($flag == 'd') { 
+        $queryResult = queryFunc("SELECT post,post_id,posts.user_id,users.profile_pic,CONCAT(first_name,' ',last_name) as 'name',createdAt from posts inner join users on users.user_id = posts.user_id WHERE posts.user_id='$userID' order by post_id desc LIMIT 1");
+    }elseif ($flag > 0) {
         $queryResult = queryFunc("SELECT post,post_id,posts.user_id,users.profile_pic,CONCAT(first_name,' ',last_name) as 'name',createdAt from posts inner join users on users.user_id = posts.user_id where users.user_id = '$flag' order by post_id desc");
     }
     // Profile Pic query
@@ -298,13 +297,13 @@ function showPosts($flag,$page,$limit)
             //If defined number of posts are rendered then break    
             if($start + $limit == mysqli_num_rows($queryResult))
                     $count = 0;
-            if($count > $limit){ 
-                break;
-            }
-            else    
-                $count++;    
+            if($numberOfIteration == mysqli_num_rows($queryResult))
+                    $count = 0;           
             if ($row['user_id'] == $_SESSION['user_id'] || isFriend($row['user_id'])) {
-                
+                if($count > $limit)
+                    break;
+                else    
+                    $count++; 
                 $postID = $row['post_id'];
                 $userID = $_SESSION['user_id'];
                 $user = $_SESSION['user'];
@@ -444,12 +443,12 @@ POST;
         }
         if($count > $limit)
             $infoForNextTime = "<input type='hidden' id='nextPage' value='".($page+1)."' ><input type='hidden' id='noMorePosts' value='false'>";
-        else
-            $infoForNextTime = "<input type='hidden' id='noMorePosts' value='true'>";
+        else{
+            $infoForNextTime = "<input type='hidden' id='noMorePosts' value='true'>";   
+        }
         echo $infoForNextTime;    
     }
 }
-
 
 
 function logout()
@@ -844,11 +843,12 @@ function displayFriends($count)
     $userID = $_SESSION['user_id'];
 
     $queryResult = queryFunc("SELECT friends_array from users WHERE user_id='$userID'");
-
-    $friendsList = isRecord($queryResult);
+    $friendsList = isRecord($queryResult);    
+    
     // Breaking the friends list in array
     $friendsListSeparated = explode(',', $friendsList['friends_array']);
 
+    if(sizeof($friendsListSeparated) > 1){
     if($count == 2){
         $expression = 2;
     }
@@ -897,6 +897,7 @@ FRIEND;
             echo $content;
         }
     }
+}
 }
 
 //Message Functions
@@ -1153,9 +1154,11 @@ function getRecentConvo(){
 
     $userLoggedIn =$_SESSION['user_id'];
     $recentUser = queryFunc("SELECT user_to,user_from from messages where user_to = ".$userLoggedIn." OR user_from = ".$userLoggedIn." order by id DESC limit 1");
-    $recentUser = isRecord($recentUser);
-    $recentPartnerId = ($recentUser['user_from'] == $userLoggedIn) ? $recentUser['user_to'] : $recentUser['user_from'];
-    redirection("http://localhost/socioConnect/messages.php?id=".$recentPartnerId);
+    if(isData($recentUser)){
+        $recentUser = isRecord($recentUser);
+        $recentPartnerId = ($recentUser['user_from'] == $userLoggedIn) ? $recentUser['user_to'] : $recentUser['user_from'];
+        redirection("http://localhost/socioConnect/messages.php?id=".$recentPartnerId);
+    }
 }
 
 
@@ -1172,7 +1175,7 @@ function profilePic($id){
             <span>
         </div>
 PROFILE;
-    if(isFriend($id)){
+    if(isFriend($id) || $_SESSION['user_id'] == $id){
 $content .=<<<PROFILE
     <div id="modal" class="modal">
             <span class="close" id="modal-close" onclick="onClosedImagModal()">&times;</span>

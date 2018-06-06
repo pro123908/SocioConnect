@@ -1,4 +1,14 @@
 function setUserId(id) {
+  if(window.location.href == 'http://localhost/socioConnect/main.php' || window.location.href == 'http://localhost/socioConnect/timeline.php'){
+    var post = document.querySelectorAll(".post");
+    if(post.length < 10)
+      document.getElementById("loading").innerHTML = 'No More Posts To Show';    
+    else{
+      var flag = document.getElementById("noMorePosts");
+      if(flag.value == "true")
+          document.getElementById("loading").innerHTML = 'No More Posts To Show';
+    }    
+  }
   session_user_id = id;
 }
 
@@ -433,18 +443,20 @@ window.onclick = function(e) {
   if (e.srcElement.className != "search-input") {
     document.querySelector(".search-result").style.display = "none";
   }
-};
+}
 
 function showPage(flag, page) {
   document.getElementById("loading").style.display = "none";
   var xhr = new XMLHttpRequest();
-  xhr.open("GET", "loadPostsAjax.php?flag=" + flag + "&page=" + page, true);
-  xhr.onload = function() {
-    if ((this.status = 200)) {
-      document.getElementById("loading").style.display = "block";
+  xhr.open("GET","loadPostsAjax.php?flag="+flag+"&page="+page,true);
+  xhr.onload = function(){
+    if(this.status = 200){
       document.querySelector(".posts").innerHTML += this.responseText;
+      document.getElementById("loading").style.display = 'block';
     }
-  };
+    if(document.getElementById("noMorePosts").value == "true")
+      document.getElementById("loading").innerHTML = 'No More Posts To Show';
+  }
   xhr.send();
 }
 
@@ -474,4 +486,9 @@ function showNextPage(flag) {
   } else {
     alert("khtm");
   }
+
+}
+
+function hello(){
+  alert("hello");
 }
