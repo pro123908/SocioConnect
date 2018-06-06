@@ -14,8 +14,10 @@ if(isset($_GET['visitingUserID']) && isset($_SESSION['user_id'])){
         removeFriend($_GET['visitingUserID']);    
 }
 else if(isset($_SESSION['user_id'])){
-    // If this condition is true then you have come to the page by clicking on profile button on your profile - So you ain't searching anybody xD
+    // If this condition is true then you have come to the page by clicking on profile button on your profile - So you ain't searching anybody xD  
     $flag = true;
+    $_SESSION['no_of_posts_changed'] = 0;
+    
 }
 else{
     // Not authorized dude,go back to login page xD
@@ -44,13 +46,12 @@ else
 <div class='posts'>
   
 <?php
-
 $user = $flag ? 'b' : $_GET['visitingUserID'];
 showPosts($user,1,10);
 ?>
 
 </div>
-<div id='loading'><a href="javascript:showNextPage(<?php echo $user?>)">Show More Posts</a></div>
+<div id='loading'><a href="javascript:showNextPage('<?php echo $user?>')">Show More Posts</a></div>
 </div>
 <div class='friends-area'></div>
 </div>

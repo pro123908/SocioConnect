@@ -180,18 +180,18 @@ POST;
     
         // Finally rendering all the content in the variable xD
         echo $post;
-
         
+        $_SESSION['no_of_posts_changed']++;
         //FASAD KI JAR - koi baat nahi XD
         //Generating Notification for friends
-        $queryFriendsList = queryFunc("SELECT friends_array,profile_pic FROM users WHERE user_id='$userID'");
-        $friendsList = isRecord($queryFriendsList);
-        $friendsListSeparated = explode(',', $friendsList['friends_array']);
-        // notification for each friend
-        for ($i = 0; $i< sizeof($friendsListSeparated)-1;$i++) {
-            $friend_id = $friendsListSeparated[$i];
-            notification($userID,$friend_id,$postID,'post');
-        }
+        // $queryFriendsList = queryFunc("SELECT friends_array,profile_pic FROM users WHERE user_id='$userID'");
+        // $friendsList = isRecord($queryFriendsList);
+        // $friendsListSeparated = explode(',', $friendsList['friends_array']);
+        // // notification for each friend
+        // for ($i = 0; $i< sizeof($friendsListSeparated)-1;$i++) {
+        //     $friend_id = $friendsListSeparated[$i];
+        //     notification($userID,$friend_id,$postID,'post');
+        // }
     }
 }
     //showPosts('d',1,10);
@@ -212,6 +212,7 @@ function deletePost($postID)
     queryFunc("DELETE FROM notifications WHERE post_id='$postID'");
 
     // Returning success message
+    $_SESSION['no_of_posts_changed']--;
     return $deleteQuery;
 }
 
@@ -260,7 +261,10 @@ function showPosts($flag,$page,$limit)
     d => New post is added
     any numner => Searched user's ID;
     */
-    $start = ($page - 1) * $limit;
+    if($page == 1)
+        $start = 0;
+    else    
+        $start = ($page - 1) * $limit + $_SESSION['no_of_posts_changed'];
     $userID = $_SESSION["user_id"];
 
     if ($flag=='a') {

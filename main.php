@@ -9,7 +9,8 @@
   // Main file of the website
 
   // Getting current user name
-  $user = $_SESSION['user'];
+    $_SESSION['no_of_posts_changed'] = 0;
+    $user = $_SESSION['user'];
 ?>
 
 <!-- User name display section -->
