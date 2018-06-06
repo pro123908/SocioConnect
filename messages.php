@@ -38,9 +38,7 @@ else{
         <?php 
         if (isset($_GET['id'])){
             $userID = $_SESSION['user_id'];
-            $profilePicQueryMe = queryFunc("SELECT profile_pic from users where user_id='$userID'");
-            $profilePicQueryMeResult = isRecord($profilePicQueryMe);
-            $profilePicMe = $profilePicQueryMeResult['profile_pic'];
+            $profilePicMe = getUserProfilePic($userID);
 
 
             $message =<<<MESSAGE
@@ -49,13 +47,21 @@ else{
 MESSAGE;
             echo $message;
             showMessages($partnerID);
-            $message = '</div>';
+            
+             $message = '</div>';
             echo $message;
+            ?>
+            <script> 
+                var last = document.querySelector(".chat-message:last-child");
+                last.scrollIntoView();
+            </script> 
+            <?php
         }
         else{
             echo "  <h2>Start a Conversation</h2><h3>&lt;==== Select Friend to start convo</h3> ";
         } 
         ?>
+        
     </div>
     <div class='message-input-form'>
         <?php

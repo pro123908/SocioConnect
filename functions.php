@@ -910,21 +910,24 @@ function sendMessage($user_to,$message_body){
     $queryInsert->close();
 }
 
+function getUserProfilePic($userID){
+    $profilePicQuery= queryFunc("SELECT profile_pic from users where user_id='$userID'");
+    $profilePicQueryResult = isRecord($profilePicQuery);
+    return $profilePicQueryResult['profile_pic'];
+}
+
 function showMessages($partnerId){
     //Update opened to seen
     $userLoggedIn = $_SESSION['user_id'];
     $seen = queryFunc("update messages set opened = '1' where user_to = '$userLoggedIn'");
 
-    $profilePicQueryMe = queryFunc("SELECT profile_pic from users where user_id='$userLoggedIn'");
-    $profilePicQueryYou = queryFunc("SELECT profile_pic from users where user_id='$partnerId'");
 
-    $profilePicQueryMeResult = isRecord($profilePicQueryMe);
-    $profilePicQueryYouResult = isRecord($profilePicQueryYou);
-
-    $profilePicMe = $profilePicQueryMeResult['profile_pic'];
-    $profilePicYou = $profilePicQueryYouResult['profile_pic'];
+    $profilePicMe = getUserProfilePic($userLoggedIn);
+    $profilePicYou = getUserProfilePic($partnerId);
 
     $getConvo = queryFunc("select * from messages where (user_to = '$partnerId' AND user_from = '$userLoggedIn') OR (user_to = '$userLoggedIn' AND user_from = '$partnerId')");
+
+    // echo '<script type="text/javascript"> scrollToLastMessage(); </script>';
 
 
     while($row = isRecord($getConvo)){
@@ -937,10 +940,15 @@ function showMessages($partnerId){
             $pic = $profilePicMe;
         }
 
+        $time = timeString(differenceInTime($row['dateTime']));
+
+        
+
         $convo = <<<MESSAGE
         <div class='chat-message {$type}'>
             <img src='{$pic}' class='post-avatar post-avatar-30' />
             <span class='message'>{$row['body']}</span>
+            <span class='message-time'>{$time}</span>
         </div>
 MESSAGE;
          

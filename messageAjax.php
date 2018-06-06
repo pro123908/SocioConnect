@@ -30,6 +30,9 @@
       $userID = $_SESSION['user_id'];
       $partnerID = $_GET['id'];
       $last_msg_id = $_SESSION['last_msg_id'];
+      $profilePicQueryYou = queryFunc("SELECT profile_pic from users where user_id='$partnerID'");
+      $profilePicQueryYouResult = isRecord($profilePicQueryYou);
+      $profilePicYou = $profilePicQueryYouResult['profile_pic'];
 
       $queryResult = queryFunc("SELECT id,user_to,user_from,body from messages WHERE id>'$last_msg_id' AND user_to='$userID' AND user_from='$partnerID'");
       $counter = 0;
@@ -40,7 +43,7 @@
               $messageBody = $row['body'];
 
               // Inserting data into the array to pass , postID and likesCount
-              $data[$counter] = array('message' => $messageBody,'partnerID' =>$partnerID);
+              $data[$counter] = array('message' => $messageBody,'partnerID' =>$partnerID,'pic' => $profilePicYou);
               $counter += 1;
               $_SESSION['last_msg_id'] = $row['id'];
           }

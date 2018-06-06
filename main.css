@@ -982,6 +982,17 @@ body {
   background-color: #f1f0f0;
 }
 
+.message-time{
+  color: #90949c;
+    display: inline-block;
+    font-size: 10px;
+    margin: 5px;
+    width: 120px;
+}
+.my-message .message-time{
+  text-align: right;
+}
+
 .message-input-form{
   padding: 10px;
   text-align: center;
@@ -1086,4 +1097,28 @@ body {
 
 #profile_picture:hover {
   cursor: pointer;
+}
+
+/* Custom Scroll Bar */
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+  
+}
+
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #d9d9d9; 
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #7c7c7c; 
+  border-radius: 5px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  /* background: #555;  */
 }

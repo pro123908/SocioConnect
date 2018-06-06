@@ -200,20 +200,21 @@ function getUsers(value, flag) {
         }
       }
       // Displaying search results for searching in messages.php
-      else if (flag == 0){
-        document.querySelector(".search-result-message").style.display = "block";
-      document.querySelector(".search-result-message").innerHTML = result;
+      else if (flag == 0) {
+        document.querySelector(".search-result-message").style.display =
+          "block";
+        document.querySelector(".search-result-message").innerHTML = result;
 
-      if (value.length == 0) {
-        document.querySelector(".search-result-message").style.display = "none";
+        if (value.length == 0) {
+          document.querySelector(".search-result-message").style.display =
+            "none";
+        }
+      }
     }
-  }
-}
   });
   // Pain in the ass
   return false;
 }
-
 
 setInterval(commentsRefresh, 1000);
 
@@ -323,6 +324,7 @@ function message() {
       <div class='chat-message my-message'>
       <img src='${pic.value}' class='post-avatar post-avatar-30' />
       <span class='message'>${messageBody.value}</span>
+      <span class='message-time'>Just now</span>
       </div>
      `;
 
@@ -331,6 +333,11 @@ function message() {
   });
 
   messageBody.value = "";
+
+  var last = document.querySelector(".my-message:last-child");
+  // var last = nodes[nodes.length - 1];
+
+  last.scrollIntoView();
 }
 
 setInterval(messageRefresh, 1000);
@@ -345,9 +352,18 @@ function messageRefresh() {
     for (i = 0; i < messageResponse.length; i++) {
       let obj = messageResponse[i];
 
-      document.querySelector("#convo_area").innerHTML += `
-        <div id='blue'>PartnerID : ${obj.partnerID}   ${obj.message}</div><hr>
+      document.querySelector(".chat-messages").innerHTML += `
+      <div class='chat-message their-message'>
+            <img src='${obj.pic}' class='post-avatar post-avatar-30' />
+            <span class='message'>${obj.message}</span>
+            <span class='message-time'>Just now</span>
+        </div>
        `;
+
+      var last = document.querySelector(".their-message:last-child");
+      // var last = nodes[nodes.length - 1];
+
+      last.scrollIntoView();
     }
   });
 }
@@ -358,20 +374,24 @@ function refreshRecentConvos() {
     if (!(data.notEmpty == "Bilal")) {
       for (i = data.length - 1; i >= 0; i--) {
         var obj = data[i];
-        if (document.querySelector(".recent_user_" + obj.fromID))
-          document.querySelector(".recent_user_" + obj.fromID).style.display =
+        if (document.querySelector(".recent-user-" + obj.fromID)){
+          document.querySelector(".recent-user-" + obj.fromID).style.display =
             "none";
+        }
         var recentMessage = `
-          <div class='recent_user recent_user_${obj.fromID}'>
-            <a href='messages.php?id=${
-              obj.fromID
-            }'><button class="recent_username" >${obj.partner}</button></a>
-            <p>${obj.from}:${obj.msg}</p>
-            <p>${obj.at}</p>
-          </div>
+        <a href='messages.php?id=${obj.fromID}' class='recent-user recent-user-${obj.fromID}'>
+        <span class='recent-user-image'>
+        <img src='${obj.pic}' class='post-avatar post-avatar-40' />
+        </span>
+        <span class='recent-message-info'>
+        <span class="recent-username">${obj.partner}</span>
+        <span class='recent-message-text'>${obj.from} ${obj.msg}</span>
+        <span class='recent-message-time'>${obj.at}</span>
+        </span>
+    </a>
            `;
-        document.querySelector(".recent_chats").innerHTML =
-          recentMessage + document.querySelector(".recent_chats").innerHTML;
+        document.querySelector(".recent-chats").innerHTML =
+          recentMessage + document.querySelector(".recent-chats").innerHTML;
       }
     }
   });
