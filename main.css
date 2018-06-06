@@ -824,6 +824,32 @@ body {
   
 }
 
+.no-message{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+.no-message-text{
+  flex: 3;
+}
+
+.no-message-icon{
+  flex: 2;
+  text-align: center;
+}
+
+.no-message-icon i{
+  font-size: 40px;
+  color: #ff763a;
+}
+
+.no-message-text h2{
+  color: #8e8d8d
+}
+
 .recent-chat-area {
   flex: 1;
   margin-right: 20px;
@@ -995,23 +1021,31 @@ body {
 
 .message-input-form{
   padding: 10px;
-  text-align: center;
+  border: 1px solid #dedddd;
+    border-right: none;
+    border-left: none;
+  
 }
 
 .message-input{
-  background-color: #f6f7f9;
+  /* background-color: #f6f7f9; */
   border-radius: 5px;
   border-style: none;
   box-sizing: border-box;
   font-size: 14px;
   height: 30px;
   line-height: 30px;
-  padding: 0 28px;
-  width: 100%;
+  /* padding: 0 28px; */
+  width: 80%;
+  resize: none;
 }
 
 .message-input:focus{
   outline: 0;
+}
+
+.message-input::placeholder{
+  font-family: 'Open Sans';
 }
 
 /* profile picture */
