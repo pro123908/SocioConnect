@@ -129,7 +129,7 @@ function newPost($postContent)
     $queryResult =  queryFunc("INSERT INTO posts(post,user_id,createdAt) VALUES('$post','$userID',now())");
 
     //Getting info of inserted POST
-    $queryResult = queryFunc("SELECT post,post_id,posts.user_id,users.profile_pic,CONCAT(first_name,' ',last_name) as 'name',createdAt from posts inner join users on users.user_id = posts.user_id WHERE posts.user_id='$userID' order by post_id desc LIMIT 1");
+    $queryResult = queryFunc("SELECT post,post_id,posts.user_id,users.profile_pic,CONCAT(first_name,' ',last_name) as 'name',createdAt from posts inner join users on users.user_id = posts.user_id WHERE posts.user_id='$userID' AND post = '$post' order by post_id desc LIMIT 1");
 
     if (isData($queryResult)) {
         $queryResult = isRecord($queryResult);
@@ -274,9 +274,11 @@ function showPosts($flag,$page,$limit)
     } elseif ($flag=='c') {
         $postID = $_SESSION['notiPostID'];
         $queryResult = queryFunc("SELECT post,post_id,posts.user_id,users.profile_pic,CONCAT(first_name,' ',last_name) as 'name',createdAt from posts inner join users on users.user_id = posts.user_id WHERE post_id='$postID'");
-    } elseif ($flag == 'd') { 
-        $queryResult = queryFunc("SELECT post,post_id,posts.user_id,users.profile_pic,CONCAT(first_name,' ',last_name) as 'name',createdAt from posts inner join users on users.user_id = posts.user_id WHERE posts.user_id='$userID' order by post_id desc LIMIT 1");
-    } elseif ($flag > 0) {
+     } 
+    //elseif ($flag == 'd') { 
+    //     $queryResult = queryFunc("SELECT post,post_id,posts.user_id,users.profile_pic,CONCAT(first_name,' ',last_name) as 'name',createdAt from posts inner join users on users.user_id = posts.user_id WHERE posts.user_id='$userID' order by post_id desc LIMIT 1");
+    // } 
+    elseif ($flag > 0) {
         $queryResult = queryFunc("SELECT post,post_id,posts.user_id,users.profile_pic,CONCAT(first_name,' ',last_name) as 'name',createdAt from posts inner join users on users.user_id = posts.user_id where users.user_id = '$flag' order by post_id desc");
     }
     // Profile Pic query
@@ -1102,7 +1104,6 @@ function profilePic($id){
     $queryResult = queryFunc("SELECT * FROM users WHERE user_id='$id'");
     $queryUser = isRecord($queryResult);
     $name = $queryUser['first_name'].' '.$queryUser['last_name'];
-    
 
     $content =<<<PROFILE
     <div class='user-cover'>
@@ -1111,10 +1112,16 @@ function profilePic($id){
             <img src='{$queryUser['profile_pic']}' onclick="showImage()" id="profile_picture"/>
             <span>
         </div>
-        <div id="modal" class="modal">
+PROFILE;
+    if(isFriend($id)){
+$content .=<<<PROFILE
+    <div id="modal" class="modal">
             <span class="close" id="modal-close" onclick="onClosedImagModal()">&times;</span>
             <img class="modal-content" id="modal-img" src="">
         </div>
+PROFILE;
+    }
+$content .=<<<PROFILE
     </div>
     <div class='user-info'>
     <h3>{$name}</h3>
