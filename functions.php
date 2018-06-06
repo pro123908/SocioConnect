@@ -858,10 +858,14 @@ function displayFriends($count)
 
             $friend = isRecord($queryFriends);
             
-            if($friend['online'] == 0)
+            if ($friend['online'] == 0) {
                 $state = "Offline";
-            else
+                $stateClass = 'state-off';
+            }
+            else{
                 $state = "Online";
+                $stateClass = 'state-on';
+            }
 
             $content = <<<FRIEND
             <div class='friend-container'>
@@ -872,7 +876,7 @@ function displayFriends($count)
                 
                 <div class='friend-info'>
                     <a href="timeline.php?visitingUserID={$friend['user_id']}" class='friend-text'>{$friend['name']}</a> 
-                    <p>{$state}</p>           
+                    <span class='{$stateClass}'>{$state}</span>           
                 </div>
                 <div class='friend-action'>
                 <div>
@@ -905,15 +909,34 @@ function showMessages($partnerId){
     $userLoggedIn = $_SESSION['user_id'];
     $seen = queryFunc("update messages set opened = '1' where user_to = '$userLoggedIn'");
 
+    $profilePicQueryMe = queryFunc("SELECT profile_pic from users where user_id='$userLoggedIn'");
+    $profilePicQueryYou = queryFunc("SELECT profile_pic from users where user_id='$partnerId'");
+
+    $profilePicQueryMeResult = isRecord($profilePicQueryMe);
+    $profilePicQueryYouResult = isRecord($profilePicQueryYou);
+
+    $profilePicMe = $profilePicQueryMeResult['profile_pic'];
+    $profilePicYou = $profilePicQueryYouResult['profile_pic'];
+
     $getConvo = queryFunc("select * from messages where (user_to = '$partnerId' AND user_from = '$userLoggedIn') OR (user_to = '$userLoggedIn' AND user_from = '$partnerId')");
 
-    while($row = isRecord($getConvo)){
-        if($row['user_to'] == $userLoggedIn)
-            $convo = "<div id='blue'>";
-        else
-            $convo = "<div id='green'>";
 
-        $convo.= $row['body']. "</div><hr>";
+    while($row = isRecord($getConvo)){
+        if($row['user_to'] == $userLoggedIn){
+            $type='their-message';
+            $pic = $profilePicYou;
+        }
+        else{
+            $type='my-message';
+            $pic = $profilePicMe;
+        }
+
+        $convo = <<<MESSAGE
+        <div class='chat-message {$type}'>
+            <img src='{$pic}' class='post-avatar post-avatar-30' />
+            <span class='message'>{$row['body']}</span>
+        </div>
+MESSAGE;
          
         echo $convo;
         $_SESSION['last_msg_id'] = $row['id'];
@@ -959,6 +982,22 @@ function getRecentChatsUsernames($recentConvos){
     return $recentUser;
 }
 
+function getProfilePicData($recentConvos){
+     // Getting pic of users whose ids are passed
+     $counter = 0;
+     while($counter < sizeof($recentConvos)){
+         $recentPic[$counter] = getProfilePic($recentConvos[$counter]);
+         $counter++;
+     }
+     return $recentPic;
+}
+
+function getProfilePic($user_id){
+    $user_pic = queryFunc("SELECT profile_pic FROM users WHERE user_id=".$user_id);
+    $user_pic = isRecord($user_pic);
+    return $user_pic['profile_pic'];   
+}
+
 function getPartnersLastMessage($partnerId){
     $userLoggedIn = $_SESSION['user_id'];
     $details = queryFunc("SELECT user_from,body,dateTime from messages where (user_to = '$partnerId' AND user_from = '$userLoggedIn') OR (user_to = '$userLoggedIn' AND user_from = '$partnerId') order by id desc limit 1");
@@ -972,22 +1011,31 @@ function showRecentChats(){
     $recentUserIds = getRecentChatsUserIds(); //IDS of users
     if($recentUserIds){
         $recentUsernames = getRecentChatsUsernames($recentUserIds); // Names of users
+        $recentProfilePics = getProfilePicData($recentUserIds); // Pics of users
         $counter = 0;
         while($counter < sizeof($recentUsernames)){
             $lastMessageDetails = getPartnersLastMessage($recentUserIds[$counter]);
             $from = $lastMessageDetails['user_from'];
-            if($from == $_SESSION['user_id'])
-                $from = "You ";
-            else    
-                $from = getUserFirstAndLastName($from);
+            if ($from == $_SESSION['user_id']) {
+                $from = "You : ";
+            }
+            else{
+                // $from = getUserFirstAndLastName($from);
+                $from = '';
+            }
             $msg = $lastMessageDetails['body'];
             $at =  timeString(differenceInTime($lastMessageDetails['dateTime']));
             $user = <<<DELIMETER
-            <div class='recent_user recent_user_{$recentUserIds[$counter]}'>
-                <a href='messages.php?id={$recentUserIds[$counter]}'><button class="recent_username" >{$recentUsernames[$counter]}</button></a>
-                <p>{$from}:{$msg}</p>
-                <p>{$at}</p>
-            </div>
+            <a href='messages.php?id={$recentUserIds[$counter]}' class='recent-user recent-user-{$recentUserIds[$counter]}'>
+                <span class='recent-user-image'>
+                <img src='{$recentProfilePics[$counter]}' class='post-avatar post-avatar-40' />
+                </span>
+                <span class='recent-message-info'>
+                <span class="recent-username">{$recentUsernames[$counter]}</span>
+                <span class='recent-message-text'>{$from}{$msg}</span>
+                <span class='recent-message-time'>{$at}</span>
+                </span>
+            </a>
 DELIMETER;
             echo $user;  
             $counter++;
@@ -997,12 +1045,15 @@ DELIMETER;
 
 function searchUsersFortChats(){
     $search = <<<DELIMETER
-    <div class="search">
+    <div class="search-message">
     <form action="search.php" method="get" name="message_search_form">
-      <input type="text"  onkeyup="getUsers(this.value,0)" name="q" placeholder="Search..." autocomplete = "off" id="message_search_text_input">
+    
+    <input type="text"  onkeyup="getUsers(this.value,0)" name="q" placeholder="Search..." autocomplete = "off" id="message_search_text_input" class='search-message-input'>
+   
+      
     </form>
-    <div class="search_results_for_messages"></div>
-    <div class="message_search_results_footer_empty"></div>
+    <div class="search-result-message"></div>
+    <div class="search-result-message-footer"></div>
   </div>
 DELIMETER;
     echo $search;
@@ -1061,15 +1112,15 @@ DELIMETER;
             } else {
                 while ($row = isRecord($users)) {
                     $user = <<<DELIMETER
-            <div class='resultDisplay  resultDisplayForMessages'>
-                <a href='messages.php?id={$row['user_id']}' style='color: #000'>
-                    <div class='liveSearchProfilePic liveSearchProfilePicForMessages'>
-                        <img src={$row['profile_pic']} height=38px width=38px>
-                    </div>
-                    <div class='liveSearchText'>
-                        {$row['first_name']} {$row['last_name']}
-                        <p style='margin: 0;'>{$row['username']}</p>
-                    </div>
+            <div class='search-person'>
+            <div class='search-person-image'>
+                <img src='{$row['profile_pic']}' class='post-avatar post-avatar-30' />
+            </div>
+
+                <a href='messages.php?id={$row['user_id']}' class='search-person-info'>
+                    <span class='person-name'>
+                        {$row['name']}
+                    </span>
                 </a>
             </div>
 DELIMETER;
@@ -1084,6 +1135,8 @@ DELIMETER;
 }
 
 function getRecentConvo(){
+    //Will get the ID of the person whom you recently had a chat with
+
     $userLoggedIn =$_SESSION['user_id'];
     $recentUser = queryFunc("SELECT user_to,user_from from messages where user_to = ".$userLoggedIn." OR user_from = ".$userLoggedIn." order by id DESC limit 1");
     $recentUser = isRecord($recentUser);
@@ -1093,8 +1146,6 @@ function getRecentConvo(){
 
 
 function profilePic($id){
-    
-
     $queryResult = queryFunc("SELECT * FROM users WHERE user_id='$id'");
     $queryUser = isRecord($queryResult);
     $name = $queryUser['first_name'].' '.$queryUser['last_name'];

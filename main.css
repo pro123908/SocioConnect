@@ -150,7 +150,6 @@ body {
   border-top-left-radius: 10px;
   top: 47px;
   z-index: 1;
-  
 }
 
 .search-person {
@@ -715,7 +714,7 @@ body {
   background-color: #fff;
 }
 
-.friends-list .friend-container{
+.friends-list .friend-container {
   display: inline-block;
   width: 28%;
   margin-right: 5%;
@@ -806,88 +805,285 @@ body {
   cursor: pointer;
 }
 
+/* Online or Offline state*/
+
+.state-on {
+  font-size: 10px;
+  color: green;
+}
+
+.state-off {
+  font-size: 10px;
+  color: red;
+}
+
+/* Message Area */
+
+.message-area {
+  display: flex;
+  
+}
+
+.recent-chat-area {
+  flex: 1;
+  margin-right: 20px;
+  background-color: #fff;
+}
+
+.recent-chats {
+  margin: 10px;
+  background-color: #fff;
+  height: 80%;
+    overflow-y: scroll;
+}
+
+.recent-user {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+  padding: 10px;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.recent-user:hover {
+  background-color: #f6f6f6;
+}
+
+.recent-username {
+  text-decoration: none;
+  color: black;
+  display: block;
+  font-size: 16px;
+}
+
+.recent-message-text {
+  display: block;
+  color: black;
+  font-size: 12px;
+}
+
+.recent-message-time {
+  color: #90949c;
+  display: inline-block;
+  font-size: 10px;
+}
+
+.search-message {
+  position: relative;
+  text-align: center;
+}
+
+.search-message-input {
+  background-color: #f6f7f9;
+  border-radius: 5px;
+  border-style: none;
+  box-sizing: border-box;
+  font-size: 14px;
+  height: 30px;
+  line-height: 30px;
+  padding: 0 28px;
+  width: 80%;
+}
+
+.search-message-input::placeholder {
+  text-align: center;
+}
+
+.search-message-input:focus {
+  outline: none;
+}
+
+.search-result-message {
+  position: absolute;
+  display: none;
+  background-color: #fff;
+  border: 5px solid #000;
+  width: 100%;
+  border: 1px solid rgba(0, 0, 0, .15);
+  box-shadow: 0 4px 6px 2px rgba(0, 0, 0, .10);
+  border-top-right-radius: 10px;
+  border-top-left-radius: 10px;
+  top: 47px;
+  z-index: 1;
+  text-align: left;
+}
+
+.search-user-for-chats {
+  margin: 10px;
+  /* text-align: center; */
+}
+
+.chat-box {
+  flex: 2;
+  
+  background-color: #fff;
+}
+
+.convo-area {
+  
+  margin: 10px;
+  height: 70%;
+  overflow-y: scroll;
+}
+
+.chat-user {
+  padding: 10px;
+  font-weight: bold;
+  
+  margin: 10px;
+}
+
+.chat-messages {
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  margin: 10px;
+/*   
+  height: 80%;
+    overflow-y: scroll; */
+}
+
+.chat-message{
+  padding: 5px;
+  border-radius: 12px;
+  max-width: 80%;
+  margin-bottom: 10px;
+  display: flex;
+    align-items: center;
+    
+}
+
+.my-message{
+  display: flex;
+    flex-direction: row-reverse;
+    align-self: flex-end;
+}
+
+.my-message .post-avatar{
+  margin-left:8px;
+}
+.their-message{
+  
+  align-self: flex-start;
+  
+}
+
+.message{
+  border-radius: 12px;
+  padding: 5px 10px;
+}
+
+.my-message .message{
+  background-color: #d4a88c;
+}
+
+.their-message .message{
+  background-color: #f1f0f0;
+}
+
+.message-input-form{
+  padding: 10px;
+  text-align: center;
+}
+
+.message-input{
+  background-color: #f6f7f9;
+  border-radius: 5px;
+  border-style: none;
+  box-sizing: border-box;
+  font-size: 14px;
+  height: 30px;
+  line-height: 30px;
+  padding: 0 28px;
+  width: 100%;
+}
+
+.message-input:focus{
+  outline: 0;
+}
+
 /* profile picture */
+
 .format {
+  width: 250px;
+  height: 230px;
+}
 
-      width: 250px;
-      height: 230px;
+/* Modal starts */
+
+/* The Modal (background) */
+
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 500;
+  padding-top: 100px;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+/* Modal Content (image) */
+
+.modal-content {
+  margin: auto;
+  display: block;
+  width: 80%;
+  max-width: 700px;
+}
+
+/* Add Animation - Zoom in the Modal */
+
+.modal-open {
+  animation-name: zoomIn;
+  animation-duration: 0.6s;
+}
+
+@keyframes zoomIn {
+  from {
+    transform: scale(0)
   }
-
-  /* Modal starts */
-
-  /* The Modal (background) */
-
-  .modal {
-      display: none;
-      position: fixed;
-      z-index: 500;
-      padding-top: 100px;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      overflow: auto;
-      background-color: rgba(0, 0, 0, 0.3);
+  to {
+    transform: scale(1)
   }
+}
 
-  /* Modal Content (image) */
+.modal-close {
+  animation-name: zoomOut;
+  animation-duration: 0.6s;
+}
 
-  .modal-content {
-      margin: auto;
-      display: block;
-      width: 80%;
-      max-width: 700px;
+@keyframes zoomOut {
+  from {
+    transform: scale(1)
   }
-
-  /* Add Animation - Zoom in the Modal */
-
-  .modal-open {
-      animation-name: zoomIn;
-      animation-duration: 0.6s;
+  to {
+    transform: scale(0)
   }
+}
 
-  @keyframes zoomIn {
-      from {
-          transform: scale(0)
-      }
-      to {
-          transform: scale(1)
-      }
-  }
+/* The Close Button */
 
-  .modal-close {
-      animation-name: zoomOut;
-      animation-duration: 0.6s;
-  }
+.close {
+  position: absolute;
+  top: 50px;
+  right: 10%;
+  color: #f1f1f1;
+  font-size: 40px;
+  font-weight: normal;
+  transition: 0.3s;
+}
 
-  @keyframes zoomOut {
-      from {
-          transform: scale(1)
-      }
-      to {
-          transform: scale(0)
-      }
-  }
+.close:hover, .close:focus {
+  color: #bbb;
+  text-decoration: none;
+  cursor: pointer;
+}
 
-  /* The Close Button */
-
-  .close {
-      position: absolute;
-      top: 50px;
-      right: 10%;
-      color: #f1f1f1;
-      font-size: 40px;
-      font-weight: normal;
-      transition: 0.3s;
-  }
-
-  .close:hover,
-  .close:focus {
-      color: #bbb;
-      text-decoration: none;
-      cursor: pointer;
-  }
-
-#profile_picture:hover{
+#profile_picture:hover {
   cursor: pointer;
 }

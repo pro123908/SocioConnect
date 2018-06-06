@@ -1,4 +1,3 @@
-<link rel="stylesheet" href="styles/styles.css">
 <?php
 
 require_once('header.php');
@@ -8,8 +7,9 @@ if(!isset($_SESSION['user_id'])){
 }
 if (isset($_GET['id'])) {
     //If Someone tries to message himself
-    if($_GET['id'] == $_SESSION['user_id'])
+    if ($_GET['id'] == $_SESSION['user_id']) {
         redirection("messages.php");
+    }
     $partnerID = $_GET['id'];
     $_SESSION['partner'] = $partnerID;
     $partner = queryFunc("select first_name from users where user_id =".$partnerID);
@@ -19,40 +19,61 @@ else{
     getRecentConvo();
 }
 ?>
-<div class="recent_chats_area">
-    <h2>Recent Chats<h2>
-    <div class="recent_chats">  
-        <?php showRecentChats(); ?> 
-    </div>
-    <div class="search_user_for_chats">
+<div class='message-area'>
+<div class="recent-chat-area">
+    
+    <div class="search-user-for-chats">
         <?php searchUsersFortChats(); ?> 
     </div>
+    <div class="recent-chats">  
+        <?php showRecentChats(); ?> 
+    </div>
+    
 </div>    
-<div class="chat_box">
-    <div id="convo_area">
+<div class="chat-box">
+<div class='chat-user'>
+                <span class='chat-username'><?php echo $partner['first_name'] ?></span>
+</div>
+    <div class="convo-area">
         <?php 
         if (isset($_GET['id'])){
-            echo "<h2 id='partner_heading'>You and ". $partner['first_name'] ." </h2>";
+            $userID = $_SESSION['user_id'];
+            $profilePicQueryMe = queryFunc("SELECT profile_pic from users where user_id='$userID'");
+            $profilePicQueryMeResult = isRecord($profilePicQueryMe);
+            $profilePicMe = $profilePicQueryMeResult['profile_pic'];
+
+
+            $message =<<<MESSAGE
+            
+            <div class='chat-messages'>
+MESSAGE;
+            echo $message;
             showMessages($partnerID);
+            $message = '</div>';
+            echo $message;
         }
         else{
             echo "  <h2>Start a Conversation</h2><h3>&lt;==== Select Friend to start convo</h3> ";
         } 
         ?>
     </div>
-    <div>
+    <div class='message-input-form'>
         <?php
         if (isset($_GET['id'])){
             $messageInput = <<<DELIMETER
             <form method="post" name='messageForm' action="javascript:message()">
-            <textarea name="message_body" placeholder="Type your message here"  id="message_textarea"></textarea>
+            <input autocomplete='off' name="message_body" placeholder="Type your message here"  class='message-input'></input>
             <input type='hidden' name='partner' value='$partnerID'>
-            <input type="submit" name="send_message" id="message_submit" value="send">
+            <input type='hidden' name='pic' value='$profilePicMe'>
+            <input type="submit" name="send_message" id="message_submit" value="send" style='display:none'>
             </form>
 DELIMETER;
             echo $messageInput;
         }
         ?>
     </div>    
+    
 </div>
+</div>
+<!-- <div style='height:200px;'></div> -->
 <script src="script.js" ></script>

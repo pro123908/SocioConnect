@@ -18,7 +18,6 @@ function like(postID) {
   });
 }
 
-
 // function ajaxFetchCalls(url, data = {}) {
 //   return new Promise(function(resolve, reject) {
 //     fetch(url, data).then(function(data) {
@@ -81,7 +80,7 @@ function comment(postID) {
     commentID = result.trim();
 
     console.log(profilePic.value);
-  document.querySelector(`.comment-area-${post.value}`).innerHTML += `
+    document.querySelector(`.comment-area-${post.value}`).innerHTML += `
   <div class='comment comment-${commentID}'>
                 
   <div class='user-image'>
@@ -98,8 +97,8 @@ function comment(postID) {
   
   </div>
 </div>
-  `
-   
+  `;
+
     comment.value = "";
     console.log(document.querySelector(`.comment-count-${postID}`));
   });
@@ -130,7 +129,7 @@ function addPost(user_id) {
     // Adding post to the top not bottom. Clue xD
     document.querySelector(".posts").innerHTML =
       result + document.querySelector(".posts").innerHTML;
-      document.querySelector("textarea[name='post']").value = " ";
+    document.querySelector("textarea[name='post']").value = " ";
   });
 }
 
@@ -160,7 +159,9 @@ function showImage() {
   modal.classList.add("modal-open");
   modal.classList.remove("modal-close");
   modal.style.display = "block";
-  document.getElementById("modal-img").src = document.getElementById("profile_picture").src; 
+  document.getElementById("modal-img").src = document.getElementById(
+    "profile_picture"
+  ).src;
 }
 
 function changePic() {
@@ -177,41 +178,42 @@ function getUsers(value, flag) {
   var param = `query=${value}&flag=${flag}`;
   var searchFooter;
   ajaxCalls("POST", "search.php", param).then(function(result) {
-
-    if(result == 'No'){
-      document.querySelector(".search-result").style.display = 'none';
-    }else{
-
+    if (result == "No") {
+      document.querySelector(".search-result").style.display = "none";
+    } else {
       // Displaying search results for normal search
-    if (flag == 1) {
-      document.querySelector(".search-result").style.display = 'block';
-      document.querySelector(".search-result").innerHTML = result;
-      
+      if (flag == 1) {
+        document.querySelector(".search-result").style.display = "block";
+        document.querySelector(".search-result").innerHTML = result;
+
+        if (value.length == 0) {
+          document.querySelector(".search-result").style.display = "none";
+          searchFooter = "";
+        } else {
+          //   searchFooter = `<form method="GET" action="allSearchResults.php"><input type="hidden" name="query" value=${value}><input type="submit" value="View All Results For ${value}"></form>`;
+          // document.querySelector(
+          //   ".search-result"
+          // ).innerHTML += searchFooter;
+
+          searchFooter = `<a class='see-more' href='allSearchResults.php?query=${value}'>See more</a>`;
+          document.querySelector(".search-result").innerHTML += searchFooter;
+        }
+      }
+      // Displaying search results for searching in messages.php
+      else if (flag == 0){
+        document.querySelector(".search-result-message").style.display = "block";
+      document.querySelector(".search-result-message").innerHTML = result;
 
       if (value.length == 0) {
-        document.querySelector(".search-result").style.display = 'none';
-        searchFooter = "";
-      }
-      else{
-      //   searchFooter = `<form method="GET" action="allSearchResults.php"><input type="hidden" name="query" value=${value}><input type="submit" value="View All Results For ${value}"></form>`;
-      // document.querySelector(
-      //   ".search-result"
-      // ).innerHTML += searchFooter;
-
-      searchFooter = `<a class='see-more' href='allSearchResults.php?query=${value}'>See more</a>`;
-      document.querySelector(
-        ".search-result"
-      ).innerHTML += searchFooter;
+        document.querySelector(".search-result-message").style.display = "none";
     }
-    }
-    // Displaying search results for searching in messages.php
-    else if (flag == 0)
-      document.querySelector(".search_results_for_messages").innerHTML = result;
-    }
+  }
+}
   });
   // Pain in the ass
   return false;
 }
+
 
 setInterval(commentsRefresh, 1000);
 
@@ -292,11 +294,15 @@ function likeUsers(postID) {
     for (i = 0; i < data.length; i++) {
       flag = false;
       var obj = data[i];
-      console.log('In');
-      document.querySelector(`.like-count-${postID} .count`).innerHTML +=`${obj.name}<br>`;
+      console.log("In");
+      document.querySelector(`.like-count-${postID} .count`).innerHTML += `${
+        obj.name
+      }<br>`;
     }
-    if(flag){
-      document.querySelector(`.like-count-${postID} .count`).classList.remove('tooltip');
+    if (flag) {
+      document
+        .querySelector(`.like-count-${postID} .count`)
+        .classList.remove("tooltip");
     }
   });
 }
@@ -309,37 +315,19 @@ function hideLikers(postID) {
 function message() {
   let messageBody = document.messageForm.message_body;
   let partner = document.messageForm.partner;
+  let pic = document.messageForm.pic;
 
-  //to add a new user in recent contact list
-  // var flag = 0;
-  // var partnerName = document.getElementById("partner_heading").innerHTML;
-  // partnerName = partnerName.slice(partnerName.indexOf(" and ")+5);
-
-  // var usernames = document.querySelectorAll(".recent_username");
-  // alert(partnerName);
-  // alert(usernames.length)
-  //  for(i=0; i<usernames.length; i++){
-  //   if(usernames[i].value == partnerName)
-  //       flag = 1;
-  //       alert(usernames[i].value);
-  // }
-  // if(flag == 0)
-  //   alert("New user found");
-  // else
-  //   alert("No new found");
   let param = `partner=${partner.value}&messageBody=${messageBody.value}`;
 
-  document.querySelector("#convo_area").innerHTML += `
-      <div id='green'>${messageBody.value}</div><hr>
+  document.querySelector(".chat-messages").innerHTML += `
+      <div class='chat-message my-message'>
+      <img src='${pic.value}' class='post-avatar post-avatar-30' />
+      <span class='message'>${messageBody.value}</span>
+      </div>
      `;
 
   ajaxCalls("POST", "messageAjax.php", param).then(function(response) {
     console.log("Response messageSimple : " + response);
-    // let messageResponse = JSON.parse(response);
-
-    // document.querySelector("#messages_area").innerHTML += `
-    //   <div id='green'>${messageResponse.message}</div><hr>
-    //  `;
   });
 
   messageBody.value = "";
@@ -364,30 +352,33 @@ function messageRefresh() {
   });
 }
 
-function refreshRecentConvos(){
-  
+function refreshRecentConvos() {
   ajaxCalls("GET", "recentConvoAjax.php").then(function(result) {
     var data = JSON.parse(result);
-    if(!(data.notEmpty == "Bilal")){ 
-      for (i = data.length-1; i >= 0; i--) {
+    if (!(data.notEmpty == "Bilal")) {
+      for (i = data.length - 1; i >= 0; i--) {
         var obj = data[i];
-        if(document.querySelector(".recent_user_"+obj.fromID))
-           document.querySelector(".recent_user_"+obj.fromID).style.display = "none";
+        if (document.querySelector(".recent_user_" + obj.fromID))
+          document.querySelector(".recent_user_" + obj.fromID).style.display =
+            "none";
         var recentMessage = `
           <div class='recent_user recent_user_${obj.fromID}'>
-            <a href='messages.php?id=${obj.fromID}'><button class="recent_username" >${obj.partner}</button></a>
+            <a href='messages.php?id=${
+              obj.fromID
+            }'><button class="recent_username" >${obj.partner}</button></a>
             <p>${obj.from}:${obj.msg}</p>
             <p>${obj.at}</p>
           </div>
            `;
-      document.querySelector(".recent_chats").innerHTML = recentMessage + document.querySelector(".recent_chats").innerHTML;
-      }  
+        document.querySelector(".recent_chats").innerHTML =
+          recentMessage + document.querySelector(".recent_chats").innerHTML;
+      }
     }
   });
 }
 setInterval(refreshRecentConvos, 1000);
 
-function removeFriend(id){
+function removeFriend(id) {
   let param = `friendId=${id}`;
   ajaxCalls("POST", "removeFriendAjax.php", param).then(function(result) {
     var data = JSON.parse(result);
@@ -402,61 +393,65 @@ function removeFriend(id){
             <img class='post-avatar post-avatar-30' src='${obj.profile_pic}'  >
           </div>
           <div class='friend-info'>
-            <a href="timeline.php?visitingUserID=${obj.user_id}" class='friend-text'>${obj.name}</a>            
+            <a href="timeline.php?visitingUserID=${
+              obj.user_id
+            }" class='friend-text'>${obj.name}</a>            
           </div>
           <div class='friend-action'>&nbsp&nbsp&nbsp
-            <a href="javascript:removeFriend(${obj.user_id})" class='remove-friend'><i class="fas fa-times"></i></a>
+            <a href="javascript:removeFriend(${
+              obj.user_id
+            })" class='remove-friend'><i class="fas fa-times"></i></a>
           </div>
         </div>  
       `;
-        document.querySelector(".friends-list-elements").innerHTML += friend;
-      }
+      document.querySelector(".friends-list-elements").innerHTML += friend;
+    }
   });
 }
 
-window.onclick = function(e){
-  if(e.srcElement.className != "search-input"){
-    document.querySelector(".search-result").style.display = 'none';
+window.onclick = function(e) {
+  if (e.srcElement.className != "search-input") {
+    document.querySelector(".search-result").style.display = "none";
   }
-  
-}
+};
 
-function showPage(flag,page){
-  document.getElementById("loading").style.display = 'none';
+function showPage(flag, page) {
+  document.getElementById("loading").style.display = "none";
   var xhr = new XMLHttpRequest();
-  xhr.open("GET","loadPostsAjax.php?flag="+flag+"&page="+page,true);
-  xhr.onload = function(){
-    if(this.status = 200){
-      document.getElementById("loading").style.display = 'block';
+  xhr.open("GET", "loadPostsAjax.php?flag=" + flag + "&page=" + page, true);
+  xhr.onload = function() {
+    if ((this.status = 200)) {
+      document.getElementById("loading").style.display = "block";
       document.querySelector(".posts").innerHTML += this.responseText;
     }
-  }
+  };
   xhr.send();
 }
 
-function showFirstPage(flag){
-  showPage(flag,1);
+function showFirstPage(flag) {
+  showPage(flag, 1);
 }
 
-function showNextPageCaller(flag){
+function showNextPageCaller(flag) {
   //if user has scrolled to the bottom of the page
-  if(true)
-    setTimeout(function(){
-        showNextPage(flag)
-    },2000);
+  if (true)
+    setTimeout(function() {
+      showNextPage(flag);
+    }, 2000);
 }
 
-function showNextPage(flag){
+function showNextPage(flag) {
   //Fetching page no and flag to find whether more post are availible or not
   var noMorePosts = document.getElementById("noMorePosts");
-  var page = document.getElementById("nextPage"); 
-  if(noMorePosts.value == "false"){
+  var page = document.getElementById("nextPage");
+  if (noMorePosts.value == "false") {
     //deleting previous data
     var div = document.querySelector(".posts");
     div.removeChild(page);
     div.removeChild(noMorePosts);
-    
-    showPage(flag,page.value);
+
+    showPage(flag, page.value);
+  } else {
+    alert("khtm");
   }
-  else{alert("khtm")}
 }
