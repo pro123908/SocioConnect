@@ -17,7 +17,6 @@ else if(isset($_SESSION['user_id'])){
     // If this condition is true then you have come to the page by clicking on profile button on your profile - So you ain't searching anybody xD  
     $flag = true;
     $_SESSION['no_of_posts_changed'] = 0;
-    
 }
 else{
     // Not authorized dude,go back to login page xD
@@ -25,37 +24,49 @@ else{
 }
 ?>
 <div class='user-timeline'>
-<div class='user-cover-area'>
-<?php $flag ? profilePic($_SESSION['user_id']) : profilePic($_GET['visitingUserID']) ?>
-</div>
-<div class='content-area'>
-<div class='user-info-area'>
-</div>
-<div class='post-area'>
-  <div class='new-post'>
-<?php 
-// Add post functionality
-if(isset($_GET['visitingUserID']))
-    addPost(false,$_GET['visitingUserID']); 
-else
-    addPost(true,"abc");
+    <div class='user-cover-area'>
+        <?php $flag ? profilePic($_SESSION['user_id']) : profilePic($_GET['visitingUserID']) ?>
+    </div>
+    <div class='content-area'>
+        <div class='user-info-area'>
+        </div>
+        <div class='post-area'>
+            <div class='new-post'>
+            <?php 
+            // Add post functionality
+            if(isset($_GET['visitingUserID']))
+                addPost(false,$_GET['visitingUserID']); 
+            else
+                addPost(true,"abc");
 
-?>
-</div>
+            ?>
+            </div>
 
-<div class='posts'>
+            <div class='posts'>
   
-<?php
-$user = $flag ? 'b' : $_GET['visitingUserID'];
-showPosts($user,1,10);
-?>
+            <?php
+            $user = $flag ? 'b' : $_GET['visitingUserID'];
+            showPosts($user,1,10);
+            ?>
 
-</div>
-<div id='loading'><a href="javascript:showNextPage('<?php echo $user?>')">Show More Posts</a></div>
-</div>
-<div class='friends-area'></div>
-</div>
-
+            </div>
+    
+            <?php
+            if($flag){
+                $show = true;
+            }
+            else{
+                $show = isFriend($_GET['visitingUserID']) ? true : false;    
+            }
+            if($show){
+                $showMoreButton = <<<MSG
+                <div id='loading'><a href="javascript:showNextPage('{$user}')">Show More Posts</a></div>
+MSG;
+            echo $showMoreButton;
+            }
+            ?>
+        </div>    
+    <div class='friends-area'></div>
 </div>
 
 <script src="script.js" >
