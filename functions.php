@@ -298,14 +298,13 @@ function showPosts($flag,$page,$limit)
             if($start + $limit == mysqli_num_rows($queryResult))
                     $count = 0;
             if($numberOfIteration == mysqli_num_rows($queryResult))
-                    $count = 0;        
-            if($count > $limit){ 
-                break;
-            }
-            else    
-                $count++;    
+                    $count = 0;           
             if ($row['user_id'] == $_SESSION['user_id'] || isFriend($row['user_id'])) {
-                
+                if($count > $limit){ 
+                    break;
+                }
+                else    
+                    $count++; 
                 $postID = $row['post_id'];
                 $userID = $_SESSION['user_id'];
                 $user = $_SESSION['user'];

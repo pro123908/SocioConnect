@@ -1,19 +1,13 @@
 function setUserId(id) {
-  if(window.location.href == 'http://localhost/socioConnect/main.php'){
+  if(window.location.href == 'http://localhost/socioConnect/main.php' || window.location.href == 'http://localhost/socioConnect/timeline.php'){
     var post = document.querySelectorAll(".post");
-    alert(post.length)
     if(post.length < 10)
-      alert("no more")
-  }
-  else if(window.location.href == 'http://localhost/socioConnect/timeline.php'){
-    var flag = document.getElementById("noMorePosts");
-    if(flag){
-      if(flag.value == "true")
-        document.getElementById("loading").innerHTML = 'No More Posts To Show';
-    }
+      document.getElementById("loading").innerHTML = 'No More Posts To Show';    
     else{
-      document.getElementById("loading").innerHTML = 'No More Posts To Show';
-    } 
+      var flag = document.getElementById("noMorePosts");
+      if(flag.value == "true")
+          document.getElementById("loading").innerHTML = 'No More Posts To Show';
+    }    
   }
   session_user_id = id;
 }
