@@ -129,7 +129,7 @@ function newPost($postContent)
     $queryResult =  queryFunc("INSERT INTO posts(post,user_id,createdAt) VALUES('$post','$userID',now())");
 
     //Getting info of inserted POST
-    $queryResult = queryFunc("SELECT post,post_id,posts.user_id,users.profile_pic,CONCAT(first_name,' ',last_name) as 'name',createdAt from posts inner join users on users.user_id = posts.user_id WHERE posts.user_id='$userID' order by post_id desc LIMIT 1");
+    $queryResult = queryFunc("SELECT post,post_id,posts.user_id,users.profile_pic,CONCAT(first_name,' ',last_name) as 'name',createdAt from posts inner join users on users.user_id = posts.user_id WHERE posts.user_id='$userID' AND post = '$post' order by post_id desc LIMIT 1");
 
     if (isData($queryResult)) {
         $queryResult = isRecord($queryResult);
@@ -180,18 +180,18 @@ POST;
     
         // Finally rendering all the content in the variable xD
         echo $post;
-
         
+        $_SESSION['no_of_posts_changed']++;
         //FASAD KI JAR - koi baat nahi XD
         //Generating Notification for friends
-        $queryFriendsList = queryFunc("SELECT friends_array,profile_pic FROM users WHERE user_id='$userID'");
-        $friendsList = isRecord($queryFriendsList);
-        $friendsListSeparated = explode(',', $friendsList['friends_array']);
-        // notification for each friend
-        for ($i = 0; $i< sizeof($friendsListSeparated)-1;$i++) {
-            $friend_id = $friendsListSeparated[$i];
-            notification($userID,$friend_id,$postID,'post');
-        }
+        // $queryFriendsList = queryFunc("SELECT friends_array,profile_pic FROM users WHERE user_id='$userID'");
+        // $friendsList = isRecord($queryFriendsList);
+        // $friendsListSeparated = explode(',', $friendsList['friends_array']);
+        // // notification for each friend
+        // for ($i = 0; $i< sizeof($friendsListSeparated)-1;$i++) {
+        //     $friend_id = $friendsListSeparated[$i];
+        //     notification($userID,$friend_id,$postID,'post');
+        // }
     }
 }
     //showPosts('d',1,10);
@@ -212,6 +212,7 @@ function deletePost($postID)
     queryFunc("DELETE FROM notifications WHERE post_id='$postID'");
 
     // Returning success message
+    $_SESSION['no_of_posts_changed']--;
     return $deleteQuery;
 }
 
@@ -260,7 +261,10 @@ function showPosts($flag,$page,$limit)
     d => New post is added
     any numner => Searched user's ID;
     */
-    $start = ($page - 1) * $limit;
+    if($page == 1)
+        $start = 0;
+    else    
+        $start = ($page - 1) * $limit + $_SESSION['no_of_posts_changed'];
     $userID = $_SESSION["user_id"];
 
     if ($flag=='a') {
@@ -270,9 +274,11 @@ function showPosts($flag,$page,$limit)
     } elseif ($flag=='c') {
         $postID = $_SESSION['notiPostID'];
         $queryResult = queryFunc("SELECT post,post_id,posts.user_id,users.profile_pic,CONCAT(first_name,' ',last_name) as 'name',createdAt from posts inner join users on users.user_id = posts.user_id WHERE post_id='$postID'");
-    } elseif ($flag == 'd') { 
-        $queryResult = queryFunc("SELECT post,post_id,posts.user_id,users.profile_pic,CONCAT(first_name,' ',last_name) as 'name',createdAt from posts inner join users on users.user_id = posts.user_id WHERE posts.user_id='$userID' order by post_id desc LIMIT 1");
-    } elseif ($flag > 0) {
+     } 
+    //elseif ($flag == 'd') { 
+    //     $queryResult = queryFunc("SELECT post,post_id,posts.user_id,users.profile_pic,CONCAT(first_name,' ',last_name) as 'name',createdAt from posts inner join users on users.user_id = posts.user_id WHERE posts.user_id='$userID' order by post_id desc LIMIT 1");
+    // } 
+    elseif ($flag > 0) {
         $queryResult = queryFunc("SELECT post,post_id,posts.user_id,users.profile_pic,CONCAT(first_name,' ',last_name) as 'name',createdAt from posts inner join users on users.user_id = posts.user_id where users.user_id = '$flag' order by post_id desc");
     }
     // Profile Pic query
@@ -1149,7 +1155,6 @@ function profilePic($id){
     $queryResult = queryFunc("SELECT * FROM users WHERE user_id='$id'");
     $queryUser = isRecord($queryResult);
     $name = $queryUser['first_name'].' '.$queryUser['last_name'];
-    
 
     $content =<<<PROFILE
     <div class='user-cover'>
@@ -1158,10 +1163,16 @@ function profilePic($id){
             <img src='{$queryUser['profile_pic']}' onclick="showImage()" id="profile_picture"/>
             <span>
         </div>
-        <div id="modal" class="modal">
+PROFILE;
+    if(isFriend($id)){
+$content .=<<<PROFILE
+    <div id="modal" class="modal">
             <span class="close" id="modal-close" onclick="onClosedImagModal()">&times;</span>
             <img class="modal-content" id="modal-img" src="">
         </div>
+PROFILE;
+    }
+$content .=<<<PROFILE
     </div>
     <div class='user-info'>
     <h3>{$name}</h3>
