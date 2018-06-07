@@ -1076,6 +1076,8 @@ DELIMETER;
             $counter++;
         }   
     }
+    else
+        $_SESSION['last_message_retrieved_for_recent_convos'] = 0;
 }
 
 function searchUsersFortChats(){

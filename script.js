@@ -401,8 +401,10 @@ function messageRefresh() {
 
 function refreshRecentConvos() {
   ajaxCalls("GET", "recentConvoAjax.php").then(function(result) {
+    console.log(result);
     var data = JSON.parse(result);
     if (!(data.notEmpty == "Bilal")) {
+      console.log(data);
       for (i = data.length - 1; i >= 0; i--) {
         var obj = data[i];
         if (document.querySelector(".recent-user-" + obj.fromID)){
