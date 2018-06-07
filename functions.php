@@ -261,7 +261,6 @@ function showPosts($flag,$page,$limit)
     d => New post is added
     any numner => Searched user's ID;
     */
-    $_SESSION['posts_availible'] = true;
     if($page == 1)
         $start = 0;
     else    
@@ -285,21 +284,19 @@ function showPosts($flag,$page,$limit)
     $profilePicResult = isRecord($profilePicQuery);
     $profilePic = $profilePicResult['profile_pic'];
 
-    
     if (isData($queryResult)) {
         $numberOfIteration = 0; //Number of results checked
         $count = 1;
         // If database returns something
         while ($row = isRecord($queryResult)) {
             //Wait to reach start value to start rendering posts, because before $start are already rendered
-            if($numberOfIteration++ < $start)
-                continue;
+
             //If defined number of posts are rendered then break    
             if($start + $limit == mysqli_num_rows($queryResult))
-                    $count = 0;
-            if($numberOfIteration == mysqli_num_rows($queryResult))
                     $count = 0;           
             if ($row['user_id'] == $_SESSION['user_id'] || isFriend($row['user_id'])) {
+                if($numberOfIteration++ < $start)
+                    continue;
                 if($count > $limit)
                     break;
                 else    
@@ -340,31 +337,31 @@ PosDel;
             
                 // Rendering Post
                 $post = <<<POST
-            <div class='post post-{$postID}'>
-                <div class='post-content'>
-                {$PostDeleteButton}
-                <div class='post-header'>
-                <a href='timeline.php?visitingUserID={$fUser}'><img src='{$row['profile_pic']}' class='post-avatar post-avatar-40'/></a>
+                <div class='post post-{$postID}'>
+                    <div class='post-content'>
+                    {$PostDeleteButton}
+                    <div class='post-header'>
+                        <a href='timeline.php?visitingUserID={$fUser}'><img src='{$row['profile_pic']}' class='post-avatar post-avatar-40'/></a>
                 
-                <div class='post-info'>
-                <a href='timeline.php?visitingUserID={$fUser}' class='user'>{$row['name']}</a>
-                <span class='post-time'>$timeToShow</span>
-                </div>
-                </div>
+                        <div class='post-info'>
+                            <a href='timeline.php?visitingUserID={$fUser}' class='user'>{$row['name']}</a>
+                            <span class='post-time'>$timeToShow</span>
+                        </div>
+                    </div>
                 
-                <p>{$row['post']}</p>
-                <div class='post-stats'>
-                <span onmouseout='javascript:hideLikers({$postID})' onmouseover='javascript:likeUsers({$postID})' class='tooltip-container like-count like-count-{$postID}'><i class='like-count-icon fas fa-thumbs-up'></i> {$likes['count']}
-                <span class='tooltip tooltip-bottom count'></span>
-                </span>
-                <a href="javascript:showCommentField({$postID})" class='comment-count'><i class='fas fa-comment-dots comment-count-{$postID}'></i> {$commentsCount['count']}</a>
-                </div>
-                </div>
+                    <p>{$row['post']}</p>
+                    <div class='post-stats'>
+                        <span onmouseout='javascript:hideLikers({$postID})' onmouseover='javascript:likeUsers({$postID})' class='tooltip-container like-count like-count-{$postID}'><i class='like-count-icon fas fa-thumbs-up'></i> {$likes['count']}
+                            <span class='tooltip tooltip-bottom count'></span>
+                        </span>
+                        <a href="javascript:showCommentField({$postID})" class='comment-count'><i class='fas fa-comment-dots comment-count-{$postID}'></i> {$commentsCount['count']}</a>
+                    </div>
+                
                 <div class='post-buttons'>
                 <a class='post-btn like-btn' href='javascript:like({$postID})'>{$likeIcon} Like</a>
                 <a  class='post-btn comment-btn' href="javascript:showCommentField({$postID})"><i class="far fa-comment-dots"></i> Comment</a>
                 </div>
-                
+                </div>
             
 POST;
                 // Opening comment section if it is a comment notification else not
@@ -431,7 +428,6 @@ POST;
                     <input style='display:none;' type='submit' id="{$postID}" value="Comment" > 
                 </form>
             </div>
-       
     </div>
    </div>
    <br>
@@ -1064,19 +1060,17 @@ function showRecentChats(){
             $msg = $lastMessageDetails['body'];
             $at =  timeString(differenceInTime($lastMessageDetails['dateTime']));
             $user = <<<DELIMETER
-            <div class= 'recent-user-{$recentUserIds[$counter]}' >
-                <a href='messages.php?id={$recentUserIds[$counter]}' class='recent-user'>
-                    <span class='recent-user-image'>
-                        <img src='{$recentProfilePics[$counter]}' class='post-avatar post-avatar-40' />
-                    </span>
-                    <span class='recent-message-info'>
-                        <span class="recent-username">{$recentUsernames[$counter]}</span>
-                        <span class='recent-message-text'>{$from}{$msg}</span>
-                        <span class='recent-message-time'>{$at}</span>
-                    </span>
-                    <span class='recent-message-delete-action'><a href=javascript:deleteConvo({$recentUserIds[$counter]})>Delete</a></span>
-                </a>
-            </div>    
+            <a href='messages.php?id={$recentUserIds[$counter]}' class='recent-user 'recent-user-{$recentUserIds[$counter]}' '>
+                <span class='recent-user-image'>
+                    <img src='{$recentProfilePics[$counter]}' class='post-avatar post-avatar-40' />
+                </span>
+                <span class='recent-message-info'>
+                    <span class="recent-username">{$recentUsernames[$counter]}</span>
+                    <span class='recent-message-text'>{$from}{$msg}</span>
+                    <span class='recent-message-time'>{$at}</span>
+                </span>
+                <i class='tooltip-container far fa-trash-alt  comment-delete' onclick='javascript:deleteConvo({$recentUserIds[$counter]})'><span class='tooltip tooltip-right'>Delete</span></i>
+            </a> 
 DELIMETER;
             echo $user;  
             $counter++;

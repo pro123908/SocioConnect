@@ -410,19 +410,17 @@ function refreshRecentConvos() {
             "none";
         }
         var recentMessage = `
-        <div class ='recent-user-${obj.fromID}'>
-          <a href='messages.php?id=${obj.fromID}' class='recent-user'>
-            <span class='recent-user-image'>
-              <img src='${obj.pic}' class='post-avatar post-avatar-40' />
-            </span>
-            <span class='recent-message-info'>
-              <span class="recent-username">${obj.partner}</span>
-              <span class='recent-message-text'>${obj.from} ${obj.msg}</span>
-              <span class='recent-message-time'>${obj.at}</span>
-            </span>
-          </a>
-          <span class='recent-message-delete-action'><a href=javascript:deleteConvo(${obj.fromID})>Delete</a></span>
-        </div>
+        <a href='messages.php?id=${obj.fromID}' class='recent-user recent-user-${obj.fromID}'>
+          <span class='recent-user-image'>
+            <img src='${obj.pic}' class='post-avatar post-avatar-40' />
+          </span>
+          <span class='recent-message-info'>
+            <span class="recent-username">${obj.partner}</span>
+            <span class='recent-message-text'>${obj.from} ${obj.msg}</span>
+            <span class='recent-message-time'>${obj.at}</span>
+          </span>
+          <i class='tooltip-container far fa-trash-alt  comment-delete' onclick='javascript:deleteConvo(${obj.fromID})'><span class='tooltip tooltip-right'>Delete</span></i>
+        </a>
         `;
         document.querySelector(".recent-chats").innerHTML =
           recentMessage + document.querySelector(".recent-chats").innerHTML;

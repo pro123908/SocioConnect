@@ -1,9 +1,12 @@
 
 <?php require_once('header.php');
- 
+   $_SESSION['no_of_posts_changed'] = 0;
 if(isset($_GET['visitingUserID']) && isset($_SESSION['user_id'])){
 // If both conditions are satisfied then you have come to this page by searching
-    $flag = false;
+    if($_GET['visitingUserID'] == $_SESSION['user_id'])
+        $flag = true;
+    else    
+        $flag = false;
     if(isset($_POST['add_friend']))
         addFriend($_GET['visitingUserID']);
     else if(isset($_POST['cancel_req']))
@@ -16,7 +19,6 @@ if(isset($_GET['visitingUserID']) && isset($_SESSION['user_id'])){
 else if(isset($_SESSION['user_id'])){
     // If this condition is true then you have come to the page by clicking on profile button on your profile - So you ain't searching anybody xD  
     $flag = true;
-    $_SESSION['no_of_posts_changed'] = 0;
 }
 else{
     // Not authorized dude,go back to login page xD
@@ -38,7 +40,6 @@ else{
                 addPost(false,$_GET['visitingUserID']); 
             else
                 addPost(true,"abc");
-
             ?>
             </div>
 
