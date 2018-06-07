@@ -13,12 +13,6 @@
     $user = $_SESSION['user'];
 ?>
 
-<!-- User name display section -->
-<!-- <div class='firstSection'>
-<h1>Welcome <?php echo $user ?></h1>
-</div> -->
-
-
 <!-- Notification Area of the page -->
 
 <div class="content-area">

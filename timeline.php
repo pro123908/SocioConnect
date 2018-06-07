@@ -1,24 +1,23 @@
 
 <?php require_once('header.php');
  
-if(isset($_GET['visitingUserID']) && isset($_SESSION['user_id'])){
-// If both conditions are satisfied then you have come to this page by searching
+if (isset($_GET['visitingUserID']) && isset($_SESSION['user_id'])) {
+    // If both conditions are satisfied then you have come to this page by searching or by clicking of user
     $flag = false;
-    if(isset($_POST['add_friend']))
+    if (isset($_POST['add_friend'])) {
         addFriend($_GET['visitingUserID']);
-    else if(isset($_POST['cancel_req']))
+    } elseif (isset($_POST['cancel_req'])) {
         cancelReq($_GET['visitingUserID']);
-    else if(isset($_POST['respond_to_request'])) 
+    } elseif (isset($_POST['respond_to_request'])) {
         redirection("requests.php");
-    else if(isset($_POST['remove_friend']))
-        removeFriend($_GET['visitingUserID']);    
-}
-else if(isset($_SESSION['user_id'])){
-    // If this condition is true then you have come to the page by clicking on profile button on your profile - So you ain't searching anybody xD  
+    } elseif (isset($_POST['remove_friend'])) {
+        removeFriend($_GET['visitingUserID']);
+    }
+} elseif (isset($_SESSION['user_id'])) {
+    // If this condition is true then you have come to the page by clicking on profile button on your profile - So you ain't searching anybody xD
     $flag = true;
     $_SESSION['no_of_posts_changed'] = 0;
-}
-else{
+} else {
     // Not authorized dude,go back to login page xD
     redirection("index.php"); // previously it was set to main.php
 }
@@ -27,6 +26,16 @@ else{
     <div class='user-cover-area'>
         <?php $flag ? profilePic($_SESSION['user_id']) : profilePic($_GET['visitingUserID']) ?>
     </div>
+
+    <div class='user-attributes-area'>
+    <div class="user-friend-button">
+        <!-- If you are comming here through searching or by clicking on your profile button -->
+        <?php $flag ? showFriendButton(0) : showFriendButton($_GET['visitingUserID']) ?>
+        <?php if (isset($_GET['visitingUserID']) && $_GET['visitingUserID']!=$_SESSION['user_id']){?>
+        <a href="messages.php?id=<?php echo $_GET['visitingUserID']; ?>">Message</a>
+        <?php } ?>
+    </div>
+    </div>
     <div class='content-area'>
         <div class='user-info-area'>
         </div>
@@ -34,10 +43,11 @@ else{
             <div class='new-post'>
             <?php 
             // Add post functionality
-            if(isset($_GET['visitingUserID']))
-                addPost(false,$_GET['visitingUserID']); 
-            else
-                addPost(true,"abc");
+            if (isset($_GET['visitingUserID'])) {
+                addPost(false, $_GET['visitingUserID']);
+            } else {
+                addPost(true, "abc");
+            }
 
             ?>
             </div>
@@ -46,23 +56,22 @@ else{
   
             <?php
             $user = $flag ? 'b' : $_GET['visitingUserID'];
-            showPosts($user,1,10);
+            showPosts($user, 1, 10);
             ?>
 
             </div>
     
             <?php
-            if($flag){
+            if ($flag) {
                 $show = true;
+            } else {
+                $show = isFriend($_GET['visitingUserID']) ? true : false;
             }
-            else{
-                $show = isFriend($_GET['visitingUserID']) ? true : false;    
-            }
-            if($show){
+            if ($show) {
                 $showMoreButton = <<<MSG
                 <div id='loading'><a href="javascript:showNextPage('{$user}')">Show More Posts</a></div>
 MSG;
-            echo $showMoreButton;
+                echo $showMoreButton;
             }
             ?>
         </div>    

@@ -2,28 +2,6 @@
 require('db.php');
 session_start();
 
-
-function setMessage($msg)
-{
-    // Setting message variable for messages
-
-    if (!empty($msg)) {
-        $_SESSION['message'] = $msg;
-    } else {
-        $msg = "";
-    }
-}
-
-function displayMessage()
-{
-    // Just displaying those set messages
-
-    if (isset($_SESSION['message'])) {
-        echo $_SESSION['message'];
-        unset($_SESSION['message']);
-    }
-}
-
 function queryFunc($query)
 {
     // Function to query the database for queries
@@ -61,13 +39,6 @@ function fetchArray($result)
     return mysqli_fetch_array($result);
 }
 
-//Not working
-function escapeString($string)
-{
-    global $connection;
-    return mysqli_real_escape_string($connection, $string);
-}
-
 function hashString($string)
 {
     //Function for password hashing
@@ -94,10 +65,11 @@ function redirection($path)
 function addPost($flag, $visitorID)
 {
     // Adding post form
+    // flag - true => If you have come to your timeline
     $userID = $_SESSION['user_id'];
     if ($flag || $visitorID == $userID) {
         // 2nd condition - if you came to your profile by searching
-        $addPost = "<div class='show'>";
+        $addPost = "<div class='show'>"; //Showing add post area
     } else {
         $addPost = "<div class='hidden'>";
     }
@@ -112,10 +84,20 @@ function addPost($flag, $visitorID)
         </form>
         
         </div>
-
-        
 DELIMETER;
     echo $addPost;
+}
+
+function getRecordsFromQuery($queryResult)
+{
+    if (isData($queryResult)) {
+        return isRecord($queryResult);
+    }
+}
+
+function getTime($time)
+{
+    return timeString(differenceInTime($time));
 }
 
 function newPost($postContent)
@@ -126,18 +108,21 @@ function newPost($postContent)
     $userID = $_SESSION['user_id'];
 
     // Inserting post data
-    $queryResult =  queryFunc("INSERT INTO posts(post,user_id,createdAt) VALUES('$post','$userID',now())");
+    $queryResult =  queryFunc("INSERT INTO posts(post,user_id) VALUES('$post','$userID')");
+    // ID of top inserted post
+    $ID = mysqli_insert_id($connection);
 
     //Getting info of inserted POST
-    $queryResult = queryFunc("SELECT post,post_id,posts.user_id,users.profile_pic,CONCAT(first_name,' ',last_name) as 'name',createdAt from posts inner join users on users.user_id = posts.user_id WHERE posts.user_id='$userID' AND post = '$post' order by post_id desc LIMIT 1");
+    // $queryResult = queryFunc("SELECT post,post_id,posts.user_id,users.profile_pic,CONCAT(first_name,' ',last_name) as 'name',createdAt from posts inner join users on users.user_id = posts.user_id WHERE posts.user_id='$userID' AND post = '$post' order by post_id desc LIMIT 1");
 
-    if (isData($queryResult)) {
-        $queryResult = isRecord($queryResult);
+    //Getting info of last inserted POST
+    $queryResult = queryFunc("SELECT post,post_id,posts.user_id,users.profile_pic,CONCAT(first_name,' ',last_name) as 'name',createdAt from posts inner join users on users.user_id = posts.user_id WHERE post_id='$ID'");
+
+    if ($queryResult = getRecordsFromQuery($queryResult)) {
         $postID = $queryResult['post_id'];
         $userID = $_SESSION['user_id'];
         $user = $_SESSION['user'];
-        $diffTime = differenceInTime($queryResult['createdAt']);
-        $timeToShow = timeString($diffTime);
+        $timeToShow = getTime($queryResult['createdAt']);
         
         $PostDeleteButton = <<<PosDel
         <div class='post-delete-icon'>
@@ -181,7 +166,8 @@ POST;
         // Finally rendering all the content in the variable xD
         echo $post;
         
-        $_SESSION['no_of_posts_changed']++;
+        $_SESSION['no_of_posts_changed']++; // ???
+
         //FASAD KI JAR - koi baat nahi XD
         //Generating Notification for friends
         // $queryFriendsList = queryFunc("SELECT friends_array,profile_pic FROM users WHERE user_id='$userID'");
@@ -194,7 +180,7 @@ POST;
         // }
     }
 }
-    //showPosts('d',1,10);
+    
 
 
 function deletePost($postID)
@@ -203,10 +189,10 @@ function deletePost($postID)
     $deleteQuery = queryFunc("DELETE from posts WHERE post_id ='$postID'");
 
     // Deleting comments of that post too
-    $deletePostComments = queryFunc("DELETE from comments WHERE post_id ='$postID'");
+    queryFunc("DELETE from comments WHERE post_id ='$postID'");
 
     //Deleting likes of that post
-    $deletePostLikes = queryFunc("DELETE from likes WHERE post_id ='$postID'");
+    queryFunc("DELETE from likes WHERE post_id ='$postID'");
 
     //Deleting notifications of that post
     queryFunc("DELETE FROM notifications WHERE post_id='$postID'");
@@ -234,6 +220,8 @@ function addComment($userID, $postID, $comment)
     $queryInsert->execute();
     $queryInsert->close();
 
+    $ID = mysqli_insert_id($connection);
+
     
     //Generating Notification
     $whosePostQuery = queryFunc("SELECT user_id from posts where post_id='$postID'");
@@ -242,16 +230,25 @@ function addComment($userID, $postID, $comment)
     // Calling notification method for notification entry to database
     notification($userID, $whosePost['user_id'], $postID, 'commented');
     
-    // Query for getting the latest comment
-    $queryResult = queryFunc("SELECT comment_id from comments ORDER BY comment_id DESC LIMIT 1");
-    $row = isRecord($queryResult);
+    // // Query for getting the latest comment
+    // $queryResult = queryFunc("SELECT comment_id from comments ORDER BY comment_id DESC LIMIT 1");
+    // $row = isRecord($queryResult);
 
     // Returning the latest comemnt ID
-    return $row['comment_id'];
+    // return $row['comment_id'];
+    return $ID;
 }
 
-function showPosts($flag,$page,$limit)
+function showPostsQueries($exception)
 {
+    $queryResult = queryFunc("SELECT post,post_id,posts.user_id,users.profile_pic,CONCAT(first_name,' ',last_name) as 'name',createdAt from posts inner join users on users.user_id = posts.user_id {$exception}");
+
+    return $queryResult;
+}
+
+function showPostQuery($flag)
+{
+
     //Selecting all the posts in a manner where user_id matches post_id
     // Querying database depending on flag value
     /*
@@ -261,166 +258,121 @@ function showPosts($flag,$page,$limit)
     d => New post is added
     any numner => Searched user's ID;
     */
-    $_SESSION['posts_availible'] = true;
-    if($page == 1)
-        $start = 0;
-    else    
-        $start = ($page - 1) * $limit + $_SESSION['no_of_posts_changed'];
+
+    
     $userID = $_SESSION["user_id"];
 
     if ($flag=='a') {
-        $queryResult = queryFunc("SELECT post,post_id,posts.user_id,users.profile_pic,CONCAT(first_name,' ',last_name) as 'name',createdAt from posts inner join users on users.user_id = posts.user_id order by post_id desc");
+        // $queryResult = queryFunc("SELECT post,post_id,posts.user_id,users.profile_pic,CONCAT(first_name,' ',last_name) as 'name',createdAt from posts inner join users on users.user_id = posts.user_id order by post_id desc");
+
+        $queryResult = showPostsQueries('order by post_id desc');
     } elseif ($flag == 'b') {
-        $queryResult = queryFunc("SELECT post,post_id,posts.user_id,users.profile_pic,CONCAT(first_name,' ',last_name) as 'name',createdAt from posts inner join users on users.user_id = posts.user_id where users.user_id = {$userID} order by post_id desc");
+        // $queryResult = queryFunc("SELECT post,post_id,posts.user_id,users.profile_pic,CONCAT(first_name,' ',last_name) as 'name',createdAt from posts inner join users on users.user_id = posts.user_id where users.user_id = {$userID} order by post_id desc");
+
+        $queryResult = showPostsQueries("where users.user_id = {$userID} order by post_id desc");
     } elseif ($flag=='c') {
         $postID = $_SESSION['notiPostID'];
-        $queryResult = queryFunc("SELECT post,post_id,posts.user_id,users.profile_pic,CONCAT(first_name,' ',last_name) as 'name',createdAt from posts inner join users on users.user_id = posts.user_id WHERE post_id='$postID'");
-     }elseif ($flag == 'd') { 
-        $queryResult = queryFunc("SELECT post,post_id,posts.user_id,users.profile_pic,CONCAT(first_name,' ',last_name) as 'name',createdAt from posts inner join users on users.user_id = posts.user_id WHERE posts.user_id='$userID' order by post_id desc LIMIT 1");
-    }elseif ($flag > 0) {
-        $queryResult = queryFunc("SELECT post,post_id,posts.user_id,users.profile_pic,CONCAT(first_name,' ',last_name) as 'name',createdAt from posts inner join users on users.user_id = posts.user_id where users.user_id = '$flag' order by post_id desc");
-    }
-    // Profile Pic query
-    $profilePicQuery = queryFunc("SELECT profile_pic from users where user_id='$userID'");
-    $profilePicResult = isRecord($profilePicQuery);
-    $profilePic = $profilePicResult['profile_pic'];
+        // $queryResult = queryFunc("SELECT post,post_id,posts.user_id,users.profile_pic,CONCAT(first_name,' ',last_name) as 'name',createdAt from posts inner join users on users.user_id = posts.user_id WHERE post_id='$postID'");
 
+        $queryResult = showPostsQueries("WHERE post_id={$postID}");
+    } elseif ($flag == 'd') {
+        // $queryResult = queryFunc("SELECT post,post_id,posts.user_id,users.profile_pic,CONCAT(first_name,' ',last_name) as 'name',createdAt from posts inner join users on users.user_id = posts.user_id WHERE posts.user_id='$userID' order by post_id desc LIMIT 1");
+
+        $queryResult = showPostsQueries("WHERE posts.user_id={$userID} order by post_id desc LIMIT 1");
+    } elseif ($flag > 0) {
+        // $queryResult = queryFunc("SELECT post,post_id,posts.user_id,users.profile_pic,CONCAT(first_name,' ',last_name) as 'name',createdAt from posts inner join users on users.user_id = posts.user_id where users.user_id = '$flag' order by post_id desc");
+
+        $queryResult = showPostsQueries("where users.user_id = {$flag} order by post_id desc");
+    }
+
+    return $queryResult;
+}
+
+function showPosts($flag, $page, $limit)
+{
+    $temp = $_SESSION['no_of_posts_changed'];
     
+    $_SESSION['posts_availible'] = true;
+
+    // start -> Where to start showing posts from
+    // limit - limit of posts to show on one page i.e is max 10
+    // Page - Current iteration of posts rendering or collection of 10 posts rendered treated as 1
+    //$_SESSION['no_of_posts_changed'] - to keep track of no of posts added or deleted before page refreshing
+
+    if ($page == 1) { // if you are at first page then starting with post 0
+        $start = 0;
+    } else { // else calculating which post to start from
+        $start = ($page - 1) * $limit + $_SESSION['no_of_posts_changed'];
+    }
+
+    // Getting query Result
+    $queryResult = showPostQuery($flag);
+   
+    // Profile Pic query of you
+    $profilePic =  getUserProfilePic($_SESSION['user_id']);
+
     if (isData($queryResult)) {
-        $numberOfIteration = 0; //Number of results checked
-        $count = 1;
+        $numberOfIteration = 0; //Number of results checked - once it reaches to value of start we start rendering posts.
+        $count = 1; // To keep track of no of posts rendered
+
         // If database returns something
         while ($row = isRecord($queryResult)) {
             //Wait to reach start value to start rendering posts, because before $start are already rendered
-            if($numberOfIteration++ < $start)
+            if ($numberOfIteration++ < $start) {
+                //once it reaches to value of $start we start rendering posts.
                 continue;
-            //If defined number of posts are rendered then break    
-            if($start + $limit == mysqli_num_rows($queryResult))
-                    $count = 0;
-            if($numberOfIteration == mysqli_num_rows($queryResult))
-                    $count = 0;           
+            }
+
+            
+            //If defined number of posts are rendered then break
+            if ($start + $limit == mysqli_num_rows($queryResult)) {
+                $count = 0;
+            }
+
+            // If number of iterations have been reached to maximum posts
+            if ($numberOfIteration == mysqli_num_rows($queryResult)) {
+                $count = 0;
+                
+            }
+
             if ($row['user_id'] == $_SESSION['user_id'] || isFriend($row['user_id'])) {
-                if($count > $limit)
-                    break;
-                else    
+                if ($count > $limit) { // If count > limit means count becomes 11 so break loop
+                    break; 
+                } else {
                     $count++; 
+                }
+
                 $postID = $row['post_id'];
-                $userID = $_SESSION['user_id'];
+                // $userID = $_SESSION['user_id'];
                 $user = $_SESSION['user'];
-                $fUser = $row['user_id'];
-                $diffTime = differenceInTime($row['createdAt']);
-                $timeToShow = timeString($diffTime);
-            
-                // Getting likes count for the current post
-                $likesResult = queryFunc("SELECT user_id,count(*) as count from likes where post_id='$postID'");
-                $likes = isRecord($likesResult);
-
-                // Getting number of comments for post
-                $commentCountResult = queryFunc("SELECT count(*) as count from comments where post_id='$postID'");
-                $commentsCount = isRecord($commentCountResult);
+                // $fUser = $row['user_id'];
+                // $timeToShow = getTime($row['createdAt']);
                 
+              
+                $post = renderPost($row);
+                $post .= renderPostComments($flag, $postID, $row['user_id']);
+                $post .= renderPostCommentForm($postID, $user, $profilePic);
 
-                if($likes['user_id'] == $_SESSION['user_id']){
-                    $likeIcon = "<i class='blue far fa-thumbs-up'></i>";
-                }
-                else{
-                    $likeIcon = "<i class='far fa-thumbs-up'></i>";
-                }
+         
+                // Finally rendering all the content in the variable xD
+                echo $post;
+            }
+        }
+        // if 10 posts are rendered on the page and still more posts are there to show
+        if ($count > $limit) {
+            $infoForNextTime = "<input type='hidden' id='nextPage' value='".($page+1)."' ><input type='hidden' id='noMorePosts' value='false'>";
+        } else { // That's it no more posts to show. packup xD
+            $infoForNextTime = "<input type='hidden' id='noMorePosts' value='true'>";
+        }
+        echo $infoForNextTime;
+    }
+}
 
-                // Enabling delete option for post if it is current user's post else disabling
-                if ($row['user_id'] == $_SESSION['user_id']) {
-                    $PostDeleteButton = <<<PosDel
-                    <div class='post-delete-icon'>
-                    <i onclick="javascript:deletePost({$postID})" class="tooltip-container far fa-trash-alt"><span class='tooltip tooltip-right'>Remove</span></i>
-                    </div>
-PosDel;
-                } else {
-                    $PostDeleteButton = '';
-                }
-            
-                // Rendering Post
-                $post = <<<POST
-            <div class='post post-{$postID}'>
-                <div class='post-content'>
-                {$PostDeleteButton}
-                <div class='post-header'>
-                <a href='timeline.php?visitingUserID={$fUser}'><img src='{$row['profile_pic']}' class='post-avatar post-avatar-40'/></a>
-                
-                <div class='post-info'>
-                <a href='timeline.php?visitingUserID={$fUser}' class='user'>{$row['name']}</a>
-                <span class='post-time'>$timeToShow</span>
-                </div>
-                </div>
-                
-                <p>{$row['post']}</p>
-                <div class='post-stats'>
-                <span onmouseout='javascript:hideLikers({$postID})' onmouseover='javascript:likeUsers({$postID})' class='tooltip-container like-count like-count-{$postID}'><i class='like-count-icon fas fa-thumbs-up'></i> {$likes['count']}
-                <span class='tooltip tooltip-bottom count'></span>
-                </span>
-                <a href="javascript:showCommentField({$postID})" class='comment-count'><i class='fas fa-comment-dots comment-count-{$postID}'></i> {$commentsCount['count']}</a>
-                </div>
-                </div>
-                <div class='post-buttons'>
-                <a class='post-btn like-btn' href='javascript:like({$postID})'>{$likeIcon} Like</a>
-                <a  class='post-btn comment-btn' href="javascript:showCommentField({$postID})"><i class="far fa-comment-dots"></i> Comment</a>
-                </div>
-                
-            
-POST;
-                // Opening comment section if it is a comment notification else not
-                if ($flag == 'c' && $_SESSION['notiType'] == 'commented') {
-                    $commentShow = 'show';
-                } else {
-                    $commentShow = 'hidden';
-                }
-
-                // Comment Section of a post
-                $post .= <<<POST
-            <div id="comment-section-{$postID}" class='{$commentShow}'>
-                <div class='comment-area-{$postID}'>
-
-POST;
-
-                // Querying database for the current post comments if any
-                $commentResult = queryFunc("SELECT comments.user_id,comment_id,comment,CONCAT(first_name,' ',last_name) as 'name',createdAt,users.profile_pic from comments inner join users on users.user_id = comments.user_id where comments.post_id ='$postID' order by createdAt");
-
-                while ($comments = isRecord($commentResult)) {
-                    $diffTime = differenceInTime($comments['createdAt']);
-                    $timeToShow = timeString($diffTime);
-                    $commentID = $comments['comment_id'];
-
-                    // Enabling delete option for comment if it is user's post else disabling
-                    if ($comments['user_id'] == $_SESSION['user_id'] || $_SESSION['user_id'] == $row['user_id']) {
-                        $commentDeleteButton = <<<ComDel
-                    <i class='tooltip-container far fa-trash-alt comment-delete' onclick='javascript:deleteComment({$commentID})'><span class='tooltip tooltip-right'>Remove</span></i>
-ComDel;
-                    } else {
-                        $commentDeleteButton = '';
-                    }
-
-                    // Rendering comment
-                    $post .= <<<POST
-                <div class='comment comment-{$commentID}'>
-                
-                    <div class='user-image'>
-                        <a href='timeline.php?visitingUserID={$comments['user_id']}'><img src='{$comments['profile_pic']}' class='post-avatar post-avatar-30' /></a>
-                    </div>
-                    
-                    <div class='comment-info'>
-                    {$commentDeleteButton}
-                    <div class='comment-body'>
-                    <a href='timeline.php?visitingUserID={$comments['user_id']}' class='comment-user'>{$comments['name']} : </a>
-                    <span class='comment-text'>{$comments['comment']}</span>
-                    <span class='comment-time'>$timeToShow</span>
-                    </div>
-                    
-                    </div>
-                </div>
-            
-POST;
-                }
+function renderPostCommentForm($postID, $user, $profilePic)
+{
+       
                 // Rendering input field for adding comment
-                $post .= <<<POST
+    $post = <<<POST
             </div>
             <div class='comment-form'>
                 <form onsubmit="return comment({$postID})" method="post" id='commentForm'>
@@ -436,19 +388,132 @@ POST;
    </div>
    <br>
 POST;
-    
-                // Finally rendering all the content in the variable xD
-                echo $post;
-            }
-        }
-        if($count > $limit)
-            $infoForNextTime = "<input type='hidden' id='nextPage' value='".($page+1)."' ><input type='hidden' id='noMorePosts' value='false'>";
-        else{
-            $infoForNextTime = "<input type='hidden' id='noMorePosts' value='true'>";   
-        }
-        echo $infoForNextTime;    
-    }
+    return $post;
 }
+
+function renderPostComments($flag, $postID, $fUser)
+{
+    // Opening comment section if it is a comment notification else not
+    if ($flag == 'c' && $_SESSION['notiType'] == 'commented') {
+        $commentShow = 'show';
+    } else {
+        $commentShow = 'hidden';
+    }
+
+    // Comment Section of a post
+    $post = <<<POST
+            <div id="comment-section-{$postID}" class='{$commentShow}'>
+                <div class='comment-area-{$postID}'>
+
+POST;
+
+    // Querying database for the current post comments if any
+    $commentResult = queryFunc("SELECT comments.user_id,comment_id,comment,CONCAT(first_name,' ',last_name) as 'name',createdAt,users.profile_pic from comments inner join users on users.user_id = comments.user_id where comments.post_id ='$postID'");
+
+    while ($comments = isRecord($commentResult)) {
+        $timeToShow = getTime($comments['createdAt']);
+        $commentID = $comments['comment_id'];
+
+        // Enabling delete option for comment if it is user's post or his comment else disabling
+        if ($comments['user_id'] == $_SESSION['user_id'] || $_SESSION['user_id'] == $fUser) {
+            $commentDeleteButton = <<<ComDel
+        <i class='tooltip-container far fa-trash-alt comment-delete' onclick='javascript:deleteComment({$commentID})'><span class='tooltip tooltip-right'>Remove</span></i>
+ComDel;
+        } else {
+            $commentDeleteButton = '';
+        }
+
+        // Rendering comment
+        $post .= <<<POST
+                    <div class='comment comment-{$commentID}'>
+                    
+                        <div class='user-image'>
+                            <a href='timeline.php?visitingUserID={$comments['user_id']}'><img src='{$comments['profile_pic']}' class='post-avatar post-avatar-30' /></a>
+                        </div>
+                        
+                        <div class='comment-info'>
+                        {$commentDeleteButton}
+                        <div class='comment-body'>
+                        <a href='timeline.php?visitingUserID={$comments['user_id']}' class='comment-user'>{$comments['name']} : </a>
+                        <span class='comment-text'>{$comments['comment']}</span>
+                        <span class='comment-time'>$timeToShow</span>
+                        </div>
+                        
+                        </div>
+                    </div>
+
+POST;
+    }
+
+    return $post;
+}
+
+function renderPost($row)
+{
+    $postID = $row['post_id'];
+    $timeToShow = getTime($row['createdAt']);
+
+
+    // Getting likes count for the current post
+    $likesResult = queryFunc("SELECT user_id,count(*) as count from likes where post_id='$postID'");
+    $likes = isRecord($likesResult);
+
+    // Getting number of comments for post
+    $commentCountResult = queryFunc("SELECT count(*) as count from comments where post_id='$postID'");
+    $commentsCount = isRecord($commentCountResult);
+
+    //Checking if you have liked the post?
+    if ($likes['user_id'] == $_SESSION['user_id']) {
+        $likeIcon = "<i class='blue far fa-thumbs-up'></i>";
+    } else {
+        $likeIcon = "<i class='far fa-thumbs-up'></i>";
+    }
+
+
+
+
+    // Enabling delete option for post if it is current user's post else disabling
+    if ($row['user_id'] == $_SESSION['user_id']) {
+        $PostDeleteButton = <<<PosDel
+                            <div class='post-delete-icon'>
+                                <i onclick="javascript:deletePost({$postID})" class="tooltip-container far fa-trash-alt"><span class='tooltip tooltip-right'>Remove</span></i>
+                            </div>
+PosDel;
+    } else {
+        $PostDeleteButton = '';
+    }
+
+    // Rendering Post
+    $post = <<<POST
+                <div class='post post-{$postID}'>
+                    <div class='post-content'>
+                    {$PostDeleteButton}
+                    <div class='post-header'>
+                    <a href='timeline.php?visitingUserID={$row['user_id']}'><img src='{$row['profile_pic']}' class='post-avatar post-avatar-40'/></a>
+
+                    <div class='post-info'>
+                    <a href='timeline.php?visitingUserID={$row['user_id']}' class='user'>{$row['name']}</a>
+                    <span class='post-time'>$timeToShow</span>
+                    </div>
+                    </div>
+
+                    <p>{$row['post']}</p>
+                    <div class='post-stats'>
+                    <span onmouseout='javascript:hideLikers({$postID})' onmouseover='javascript:likeUsers({$postID})' class='tooltip-container like-count like-count-{$postID}'><i class='like-count-icon fas fa-thumbs-up'></i> {$likes['count']}
+                    <span class='tooltip tooltip-bottom count'></span>
+                    </span>
+                    <a href="javascript:showCommentField({$postID})" class='comment-count'><i class='fas fa-comment-dots comment-count-{$postID}'></i> {$commentsCount['count']}</a>
+                    </div>
+                    </div>
+                <div class='post-buttons'>
+                <a class='post-btn like-btn' href='javascript:like({$postID})'>{$likeIcon} Like</a>
+                <a  class='post-btn comment-btn' href="javascript:showCommentField({$postID})"><i class="far fa-comment-dots"></i> Comment</a>
+                </div>
+POST;
+
+    return $post;
+}
+
 
 
 function logout()
@@ -478,8 +543,7 @@ function timeString($time)
         // if it is just one second
         if ($time == 1) {
             return $time ." Second Ago";
-        }
-        else if($time == 0){
+        } elseif ($time == 0) {
             return "Just Now";
         } else {
             return $time ." Seconds Ago";
@@ -490,8 +554,7 @@ function timeString($time)
         // if it is just one minute
         if (($time / 60) < 2) {
             return floor($time / 60) . " Minute Ago";
-        } 
-        else {
+        } else {
             return floor($time / 60) . " Minutes Ago";
         }
     }
@@ -637,34 +700,31 @@ function showNotifications($flag)
     if ($flag==10) {
         // Selecting notifications for the current User
         $notiQuery = queryFunc("SELECT * from notifications WHERE d_user_id='$user' order by noti_id desc LIMIT 10");
-        $postAvatar = 'post-avatar-30';
-    }else{
+        $postAvatar = 'post-avatar-30'; // For notification areaa
+    } else {
         $notiQuery = queryFunc("SELECT * from notifications WHERE d_user_id='$user' order by noti_id desc");
-        $postAvatar = 'post-avatar-40';
+        $postAvatar = 'post-avatar-40'; // For notification Page
     }
 
     // flag for user realization
-    $isAny = false;
+    // $isAny = false;
 
     if (isData($notiQuery)) {
         // If there are notifications
         $notiCounter = 0;
         while ($row = isRecord($notiQuery)) {
-            /*
-               Checking if are you the one who generated the notification
-               if yes then not printing the notification else printing it
-            */
             
-            if (true) {
-                $isAny = true;
+        
+                // $isAny = true;
                 $sUser = $row['s_user_id'];
                 $postID = $row['post_id'];
                 $type = $row['typeC'];
                 $notiID = $row['noti_id'];
-                $diffTime = differenceInTime($row['createdAt']);
-                $time = timeString($diffTime);
+                $time = getTime($row['createdAt']);
                 $colorNoti = '';
 
+                // Storing the ID of last notification
+                // As we got results in descending order
                 if ($notiCounter == 0) {
                     $_SESSION['last_noti_id'] = $notiID;
                     $notiCounter = 1;
@@ -679,34 +739,30 @@ function showNotifications($flag)
                 $sPerson = isRecord($personQuery);
                 
                 
-            if ($type=='post') {
-                $conflict = 'posted';
-                $notiIcon = 'far fa-user';
-            } elseif($type=='commented') {
-                $conflict = 'commented on your post';
-                $notiIcon = 'far fa-comment-dots';
-            }else{
-                $conflict = 'liked your post';
-                $notiIcon = 'far fa-thumbs-up';
-            }
+                if ($type=='post') {
+                    $conflict = 'posted';
+                    $notiIcon = 'far fa-user';
+                } elseif ($type=='commented') {
+                    $conflict = 'commented on your post';
+                    $notiIcon = 'far fa-comment-dots';
+                } else {
+                    $conflict = 'liked your post';
+                    $notiIcon = 'far fa-thumbs-up';
+                }
 
-            $noti = <<<NOTI
+                $noti = <<<NOTI
                 <a href='notification.php?postID={$postID}&type={$type}&notiID={$notiID}' class='notification  {$colorNoti}'>
                 <span class='notification-image'>
                 <img src='{$sPerson['profile_pic']}' class='post-avatar $postAvatar' />
                 </span>
                 <span class='notification-info'>
-            <span class='notification-text'>{$sPerson['name']} has {$conflict}</span><i class='noti-icon {$notiIcon}'></i><span class='noti-time'>{$time}</span></span></a>
+            <span class='notification-text'>{$sPerson['name']} {$conflict}</span><i class='noti-icon {$notiIcon}'></i><span class='noti-time'>{$time}</span></span></a>
 NOTI;
-        echo $noti;
-            }
-
-            // $noti .= '</div>';
-           
-        }
-
+                echo $noti;
             }
         }
+    
+}
 
 
 //Friend Functions
@@ -748,7 +804,8 @@ function reqRecieved($id)
     }
 }
 
-function checkUserState($id){
+function checkUserState($id)
+{
     if (isFriend($id)) {
         // If person is already your friend
         $state = "<input type = 'Submit' name='remove_friend' value='Remove Friend'>";
@@ -771,7 +828,7 @@ function showFriendButton($id)
         // 2nd condition - You have not come to your profile through searching
 
         $button = "<form action = 'timeline.php?visitingUserID=$id' method='POST'>";
-        $button .= checkUserState();
+        $button .= checkUserState($id);
         $button .= "</form>";
         echo $button;
     }
@@ -795,14 +852,15 @@ function cancelReq($id)
     redirection("timeline.php?visitingUserID=".$id);
 }
 
-function removeFriend($id,$redirection = "")
+function removeFriend($id, $redirection = "")
 {
     // When remove friend button is clicked
     // Removing friends and from both's records
     updateFriendList($id, $_SESSION['user_id']);
     updateFriendList($_SESSION['user_id'], $id);
-    if($redirection == "")
-        redirection("timeline.php?visitingUserID=".$id);    
+    if ($redirection == "") {
+        redirection("timeline.php?visitingUserID=".$id);
+    }
 }
 
 function updateFriendList($user, $friend)
@@ -843,37 +901,35 @@ function displayFriends($count)
     $userID = $_SESSION['user_id'];
 
     $queryResult = queryFunc("SELECT friends_array from users WHERE user_id='$userID'");
-    $friendsList = isRecord($queryResult);    
+    $friendsList = isRecord($queryResult);
     
     // Breaking the friends list in array
     $friendsListSeparated = explode(',', $friendsList['friends_array']);
 
-    if(sizeof($friendsListSeparated) > 1){
-    if($count == 2){
-        $expression = 2;
-    }
-    else{
-        $expression = sizeof($friendsListSeparated)-1;
-    }
+    if (sizeof($friendsListSeparated) > 1) {
+        if ($count == 2) { // For friends area
+            $expression = 2;
+        } else {
+            $expression = sizeof($friendsListSeparated)-1; // For request.php page
+        }
 
-    for ($i = 0; $i< $expression;$i++) {
-        $friend_id = $friendsListSeparated[$i]; // friend
-        if($friend_id){
-            // Getting name of that friend
-            $queryFriends = queryFunc("SELECT *,CONCAT(first_name,' ',last_name) as name FROM users WHERE user_id='$friend_id'");
+        for ($i = 0; $i< $expression;$i++) {
+            $friend_id = $friendsListSeparated[$i]; // friend
+            if ($friend_id) {
+                // Getting name of that friend
+                $queryFriends = queryFunc("SELECT *,CONCAT(first_name,' ',last_name) as name FROM users WHERE user_id='$friend_id'");
 
-            $friend = isRecord($queryFriends);
+                $friend = isRecord($queryFriends);
             
-            if ($friend['online'] == 0) {
-                $state = "Offline";
-                $stateClass = 'state-off';
-            }
-            else{
-                $state = "Online";
-                $stateClass = 'state-on';
-            }
+                if ($friend['online'] == 0) {
+                    $state = "Offline";
+                    $stateClass = 'state-off';
+                } else {
+                    $state = "Online";
+                    $stateClass = 'state-on';
+                }
 
-            $content = <<<FRIEND
+                $content = <<<FRIEND
             <div class='friend-container'>
                 <div class='friend'>
                 <div class='friend-image'>
@@ -894,30 +950,33 @@ function displayFriends($count)
             </div>
             </div>
 FRIEND;
-            echo $content;
+                echo $content;
+            }
         }
     }
 }
-}
 
 //Message Functions
-function sendMessage($user_to,$message_body){
+function sendMessage($user_to, $message_body)
+{
     $user_from = $_SESSION['user_id'];
     $flag = 0;
     global $connection;
-    $queryInsert = $connection->prepare("INSERT INTO messages (user_to, user_from, body, opened, viewed, deleted, dateTime) VALUES (?,?,?,?,?,?,now())");
+    $queryInsert = $connection->prepare("INSERT INTO messages (user_to, user_from, body, opened, viewed, deleted) VALUES (?,?,?,?,?,?)");
     $queryInsert->bind_param("iisiii", $user_to, $user_from, $message_body, $flag, $flag, $flag);
     $queryInsert->execute();
     $queryInsert->close();
 }
 
-function getUserProfilePic($userID){
-    $profilePicQuery= queryFunc("SELECT profile_pic from users where user_id='$userID'");
+function getUserProfilePic($userID)
+{
+    $profilePicQuery= queryFunc("SELECT profile_pic from users where user_id={$userID}");
     $profilePicQueryResult = isRecord($profilePicQuery);
     return $profilePicQueryResult['profile_pic'];
 }
 
-function showMessages($partnerId){
+function showMessages($partnerId)
+{
     //Update opened to seen
     $userLoggedIn = $_SESSION['user_id'];
     $seen = queryFunc("update messages set opened = '1' where user_to = '$userLoggedIn'");
@@ -928,22 +987,16 @@ function showMessages($partnerId){
 
     $getConvo = queryFunc("select * from messages where (user_to = '$partnerId' AND user_from = '$userLoggedIn') OR (user_to = '$userLoggedIn' AND user_from = '$partnerId')");
 
-    // echo '<script type="text/javascript"> scrollToLastMessage(); </script>';
-
-
-    while($row = isRecord($getConvo)){
-        if($row['user_to'] == $userLoggedIn){
+    while ($row = isRecord($getConvo)) {
+        if ($row['user_to'] == $userLoggedIn) {
             $type='their-message';
             $pic = $profilePicYou;
-        }
-        else{
+        } else {
             $type='my-message';
             $pic = $profilePicMe;
         }
 
-        $time = timeString(differenceInTime($row['dateTime']));
-
-        
+        $time = getTime($row['dateTime']);
 
         $convo = <<<MESSAGE
         <div class='chat-message {$type}'>
@@ -958,88 +1011,102 @@ MESSAGE;
     }
 }
 
-function getRecentChatsUserIds(){
+function getRecentChatsUserIds()
+{
     $recentConvos = array();
+    $userID = $_SESSION['user_id'];
     //Getting ids of all the users where messages are received from
-    $senderOfRecentMsgs = queryFunc("SELECT id,user_from,user_to FROM messages where user_to = ".$_SESSION['user_id']." or user_from = ".$_SESSION['user_id']." ORDER BY id DESC ");
+    $senderOfRecentMsgs = queryFunc("SELECT id,user_from,user_to FROM messages where user_to ={$userID} or user_from ={$userID} ORDER BY id DESC");
     $flag = 0;
-    if(isData($senderOfRecentMsgs)){
-        while($row = isRecord($senderOfRecentMsgs)){
-            if($flag == 0 ){
+    if (isData($senderOfRecentMsgs)) {
+        while ($row = isRecord($senderOfRecentMsgs)) {
+            if ($flag == 0) {
+                //Storing the ID of last message user sent
                 $_SESSION['last_message_retrieved_for_recent_convos'] = $row['id'] ;
                 $flag = 1;
             }
             //if user logged in is the sender then store reciever's id, else store sender's id
             $idToPush = ($row['user_from'] == $_SESSION['user_id'] ? $row['user_to'] : $row['user_from']);
             //Check whether that sender is already in the list, if not, only then push his id
-            if(array_search($idToPush,$recentConvos) === false ){
-                array_push($recentConvos,$idToPush);      
+            // Pushing person into the list of recent chats area
+            if (array_search($idToPush, $recentConvos) === false) {
+                array_push($recentConvos, $idToPush);
             }
         }
+        // Returning array of recent chat users
         return $recentConvos;
     }
+    // If no messages were there
     return false;
 }
 
-function getUserFirstAndLastName($user_id){
+function getUserFirstAndLastName($user_id)
+{
     $user_name = queryFunc("SELECT CONCAT(first_name,' ',last_name) as name FROM users WHERE user_id=".$user_id);
     $user_name = isRecord($user_name);
-    return $user_name['name'];   
+    return $user_name['name'];
 }
 
-function getRecentChatsUsernames($recentConvos){
+function getRecentChatsUsernames($recentConvos)
+{
     // Getting names of users whose ids are passed
     $counter = 0;
-    while($counter < sizeof($recentConvos)){
+    while ($counter < sizeof($recentConvos)) {
         $recentUser[$counter] = getUserFirstAndLastName($recentConvos[$counter]);
         $counter++;
     }
     return $recentUser;
 }
 
-function getProfilePicData($recentConvos){
-     // Getting pic of users whose ids are passed
-     $counter = 0;
-     while($counter < sizeof($recentConvos)){
-         $recentPic[$counter] = getProfilePic($recentConvos[$counter]);
-         $counter++;
-     }
-     return $recentPic;
+function getProfilePicData($recentConvos)
+{
+    // Getting pic of users whose ids are passed
+    $counter = 0;
+    while ($counter < sizeof($recentConvos)) {
+        $recentPic[$counter] = getUserProfilePic($recentConvos[$counter]);
+        $counter++;
+    }
+    return $recentPic;
 }
 
-function getProfilePic($user_id){
-    $user_pic = queryFunc("SELECT profile_pic FROM users WHERE user_id=".$user_id);
-    $user_pic = isRecord($user_pic);
-    return $user_pic['profile_pic'];   
-}
+// function getProfilePic($user_id)
+// {
+//     $user_pic = queryFunc("SELECT profile_pic FROM users WHERE user_id=".$user_id);
+//     $user_pic = isRecord($user_pic);
+//     return $user_pic['profile_pic'];
+// }
 
-function getPartnersLastMessage($partnerId){
+function getPartnersLastMessage($partnerId)
+{
+    // Getting the last message to display in recent convo area for specific user
     $userLoggedIn = $_SESSION['user_id'];
     $details = queryFunc("SELECT user_from,body,dateTime from messages where (user_to = '$partnerId' AND user_from = '$userLoggedIn') OR (user_to = '$userLoggedIn' AND user_from = '$partnerId') order by id desc limit 1");
     $details = isRecord($details);
-    if(strlen($details['body']) > 15)
-        $details['body'] = (substr($details['body'],0,15)."...");  
+    if (strlen($details['body']) > 15) {
+        $details['body'] = (substr($details['body'], 0, 15)."...");
+    }
     return $details;
 }
     
-function showRecentChats(){
+function showRecentChats()
+{
     $recentUserIds = getRecentChatsUserIds(); //IDS of users
-    if($recentUserIds){
+    if ($recentUserIds) {
         $recentUsernames = getRecentChatsUsernames($recentUserIds); // Names of users
         $recentProfilePics = getProfilePicData($recentUserIds); // Pics of users
         $counter = 0;
-        while($counter < sizeof($recentUsernames)){
+        while ($counter < sizeof($recentUsernames)) {
             $lastMessageDetails = getPartnersLastMessage($recentUserIds[$counter]);
             $from = $lastMessageDetails['user_from'];
             if ($from == $_SESSION['user_id']) {
                 $from = "You : ";
-            }
-            else{
+            } else {
                 // $from = getUserFirstAndLastName($from);
                 $from = '';
             }
             $msg = $lastMessageDetails['body'];
-            $at =  timeString(differenceInTime($lastMessageDetails['dateTime']));
+            $at =  getTime($lastMessageDetails['dateTime']);
+
             $user = <<<DELIMETER
             <a href='messages.php?id={$recentUserIds[$counter]}' class='recent-user recent-user-{$recentUserIds[$counter]}'>
                 <span class='recent-user-image'>
@@ -1052,13 +1119,14 @@ function showRecentChats(){
                 </span>
             </a>
 DELIMETER;
-            echo $user;  
+            echo $user;
             $counter++;
-        }   
+        }
     }
 }
 
-function searchUsersFortChats(){
+function searchUsersFortChats()
+{
     $search = <<<DELIMETER
     <div class="search-message">
     <form action="search.php" method="get" name="message_search_form">
@@ -1074,8 +1142,9 @@ DELIMETER;
     echo $search;
 }
 
-function getSearchedUsers($value,$flag){
-    //flag == 0 ==> called from search in messages.php 
+function getSearchedUsers($value, $flag)
+{
+    //flag == 0 ==> called from search in messages.php
     //flag == 1 ==> called from normal search
     //flag == 2 ==> called from allSearchResults.php
     if (strlen($value) == 0) {
@@ -1142,27 +1211,30 @@ DELIMETER;
                     echo $user;
                 }
             }
-        }else{
+        } else {
             echo 'No';
         }
     }
-
 }
 
-function getRecentConvo(){
+function getRecentConvo()
+{
+    // If user comes to messages page just by clicking on messages
     //Will get the ID of the person whom you recently had a chat with
 
     $userLoggedIn =$_SESSION['user_id'];
     $recentUser = queryFunc("SELECT user_to,user_from from messages where user_to = ".$userLoggedIn." OR user_from = ".$userLoggedIn." order by id DESC limit 1");
-    if(isData($recentUser)){
+    if (isData($recentUser)) {
         $recentUser = isRecord($recentUser);
         $recentPartnerId = ($recentUser['user_from'] == $userLoggedIn) ? $recentUser['user_to'] : $recentUser['user_from'];
+        // Opening the most recent chat
         redirection("http://localhost/socioConnect/messages.php?id=".$recentPartnerId);
     }
 }
 
 
-function profilePic($id){
+function profilePic($id)
+{
     $queryResult = queryFunc("SELECT * FROM users WHERE user_id='$id'");
     $queryUser = isRecord($queryResult);
     $name = $queryUser['first_name'].' '.$queryUser['last_name'];
@@ -1175,29 +1247,32 @@ function profilePic($id){
             <span>
         </div>
 PROFILE;
-    if(isFriend($id) || $_SESSION['user_id'] == $id){
-$content .=<<<PROFILE
+    if (isFriend($id) || $_SESSION['user_id'] == $id) {
+        $content .=<<<PROFILE
     <div id="modal" class="modal">
             <span class="close" id="modal-close" onclick="onClosedImagModal()">&times;</span>
             <img class="modal-content" id="modal-img" src="">
         </div>
 PROFILE;
     }
-$content .=<<<PROFILE
+    $content .=<<<PROFILE
     </div>
     <div class='user-info'>
     <h3>{$name}</h3>
     <span>{$queryUser['email']}</span>
+    
     </div>
 PROFILE;
     
     echo $content;
 }
 
-function turnOnline($id){
+function turnOnline($id)
+{
     queryFunc("update users set online = 1 where user_id =".$id);
 }
 
-function turnOffline($id){
+function turnOffline($id)
+{
     queryFunc("update users set online = 0 where user_id =".$id);
 }

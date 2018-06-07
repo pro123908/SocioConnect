@@ -731,7 +731,7 @@ body {
 /* User timeline */
 
 .user-timeline {
-  height: 100%;
+  /* height: 100%; */
 }
 
 .user-cover-area {
@@ -789,6 +789,12 @@ body {
 
 .user-timeline .content-area {
   padding: 0px;
+}
+
+/* User attributes */
+.user-attributes-area{
+  background: #ccc;
+  margin: 30px 100px;
 }
 
 .see-more {

@@ -448,7 +448,7 @@ window.onclick = function(e) {
 function showPage(flag, page) {
   document.getElementById("loading").style.display = "none";
   var xhr = new XMLHttpRequest();
-  xhr.open("GET","loadPostsAjax.php?flag="+flag+"&page="+page,true);
+  xhr.open("GET",`loadPostsAjax.php?flag=${flag}&page=${page}`,true);
   xhr.onload = function(){
     if(this.status = 200){
       document.querySelector(".posts").innerHTML += this.responseText;
@@ -483,10 +483,7 @@ function showNextPage(flag) {
     div.removeChild(noMorePosts);
 
     showPage(flag, page.value);
-  } else {
-    alert("khtm");
-  }
-
+  } 
 }
 
 function hello(){

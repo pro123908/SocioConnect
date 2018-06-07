@@ -60,20 +60,7 @@
   <input type="number" name='age' placeholder='Age' required value=<?php  if (isset($_SESSION['s_age'])) {
     echo $_SESSION['s_age'];
 }?>><br><br>
-  <select name="genderBox" id="" required>
-    <option value="male">Male</option>
-    <option value="female">Female</option>
-    <option value="other">Other</option>
-  </select><br><br>
-  <input type="submit" name='submit' value='Register'><br><br>
-</form> -->
-
-
-<div class='header-links'>
-        <a href="index.php" class="header-btn mr-1">Login</a>
-      </div>
-      
-    </div>
+  
 
 
     <div class="login-container">

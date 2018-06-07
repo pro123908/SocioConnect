@@ -15,6 +15,7 @@ if (isset($_GET['id'])) {
     $partner = queryFunc("select first_name from users where user_id =".$partnerID);
     $partner = isRecord($partner);
 } else {
+    // If user comes to messages page just by clicking on messages
     getRecentConvo();
 }
 ?>
