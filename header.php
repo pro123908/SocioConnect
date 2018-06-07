@@ -1,4 +1,5 @@
 <?php  include "functions.php"; ?>
+<!-- Dont remove this comment-->
 
 <!-- Header Section of the website. Will be included in every page  -->
 

@@ -44,21 +44,23 @@ if (isset($_GET['id'])) {
         if (isset($_GET['id'])) {
             $userID = $_SESSION['user_id'];
             $profilePicMe = getUserProfilePic($userID);
-
-
+            ?>
+            <div id='loadingMessages'><a href="javascript:showNextPageMessages('<?php echo $_GET['id']?>')">Show More Messages</a></div> 
+            <?php
             $message =<<<MESSAGE
             
             <div class='chat-messages'>
 MESSAGE;
             echo $message;
-            showMessages($partnerID);
-            
+            showMessages($partnerID,1,10);
+
             $message = '</div>';
             echo $message; ?>
+            
             <script> 
-                var last = document.querySelector(".chat-message:last-child");
+                var last = document.getElementById("noMoreMessages").previousSibling;
                 last.scrollIntoView();
-            </script> 
+            </script>
             <?php
         } else {
             $noMessage = <<<MESSAGE

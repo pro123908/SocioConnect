@@ -383,7 +383,6 @@ function renderPostCommentForm($postID, $user, $profilePic)
                     <input style='display:none;' type='submit' id="{$postID}" value="Comment" > 
                 </form>
             </div>
-       
     </div>
    </div>
    <br>
@@ -980,12 +979,12 @@ function showMessages($partnerId)
     //Update opened to seen
     $userLoggedIn = $_SESSION['user_id'];
     $seen = queryFunc("update messages set opened = '1' where user_to = '$userLoggedIn'");
-
+    $start = ($page - 1) * $limitMsg;
 
     $profilePicMe = getUserProfilePic($userLoggedIn);
     $profilePicYou = getUserProfilePic($partnerId);
 
-    $getConvo = queryFunc("select * from messages where (user_to = '$partnerId' AND user_from = '$userLoggedIn') OR (user_to = '$userLoggedIn' AND user_from = '$partnerId')");
+    $getConvo = queryFunc("select * from messages where ((user_to = '$partnerId' AND user_from = '$userLoggedIn') OR (user_to = '$userLoggedIn' AND user_from = '$partnerId')) AND deleted = 0 order by id desc");
 
     while ($row = isRecord($getConvo)) {
         if ($row['user_to'] == $userLoggedIn) {
@@ -1006,9 +1005,15 @@ function showMessages($partnerId)
         </div>
 MESSAGE;
          
-        echo $convo;
-        $_SESSION['last_msg_id'] = $row['id'];
+        $convoList =  $convo . $convoList;
     }
+    echo $convoList;
+    if($count > $limitMsg)
+        $infoForNextTime = "<input type='hidden' id='noMoreMessages' value='false'><input type='hidden' id='nextPageMessages' value='".($page+1)."' >";
+    else{
+        $infoForNextTime = "<input type='hidden' id='noMoreMessages' value='true'>";   
+    }
+    echo $infoForNextTime; 
 }
 
 function getRecentChatsUserIds()
@@ -1080,7 +1085,7 @@ function getPartnersLastMessage($partnerId)
 {
     // Getting the last message to display in recent convo area for specific user
     $userLoggedIn = $_SESSION['user_id'];
-    $details = queryFunc("SELECT user_from,body,dateTime from messages where (user_to = '$partnerId' AND user_from = '$userLoggedIn') OR (user_to = '$userLoggedIn' AND user_from = '$partnerId') order by id desc limit 1");
+    $details = queryFunc("SELECT user_from,body,dateTime from messages where ((user_to = '$partnerId' AND user_from = '$userLoggedIn') OR (user_to = '$userLoggedIn' AND user_from = '$partnerId')) AND deleted = 0 order by id desc limit 1");
     $details = isRecord($details);
     if (strlen($details['body']) > 15) {
         $details['body'] = (substr($details['body'], 0, 15)."...");
@@ -1108,28 +1113,31 @@ function showRecentChats()
             $at =  getTime($lastMessageDetails['dateTime']);
 
             $user = <<<DELIMETER
-            <a href='messages.php?id={$recentUserIds[$counter]}' class='recent-user recent-user-{$recentUserIds[$counter]}'>
+            <a href='messages.php?id={$recentUserIds[$counter]}' class='recent-user 'recent-user-{$recentUserIds[$counter]}' '>
                 <span class='recent-user-image'>
-                <img src='{$recentProfilePics[$counter]}' class='post-avatar post-avatar-40' />
+                    <img src='{$recentProfilePics[$counter]}' class='post-avatar post-avatar-40' />
                 </span>
                 <span class='recent-message-info'>
-                <span class="recent-username">{$recentUsernames[$counter]}</span>
-                <span class='recent-message-text'>{$from}{$msg}</span>
-                <span class='recent-message-time'>{$at}</span>
+                    <span class="recent-username">{$recentUsernames[$counter]}</span>
+                    <span class='recent-message-text'>{$from}{$msg}</span>
+                    <span class='recent-message-time'>{$at}</span>
                 </span>
-            </a>
+                <i class='tooltip-container far fa-trash-alt  comment-delete' onclick='javascript:deleteConvo({$recentUserIds[$counter]})'><span class='tooltip tooltip-right'>Delete</span></i>
+            </a> 
 DELIMETER;
             echo $user;
             $counter++;
         }
     }
+    else
+        $_SESSION['last_message_retrieved_for_recent_convos'] = 0;
 }
 
 function searchUsersFortChats()
 {
     $search = <<<DELIMETER
     <div class="search-message">
-    <form action="search.php" method="get" name="message_search_form">
+    <form action="" method="get" name="message_search_form">
     
     <input type="text"  onkeyup="getUsers(this.value,0)" name="q" placeholder="Search..." autocomplete = "off" id="message_search_text_input" class='search-message-input'>
    
@@ -1230,6 +1238,11 @@ function getRecentConvo()
         // Opening the most recent chat
         redirection("http://localhost/socioConnect/messages.php?id=".$recentPartnerId);
     }
+}
+
+function deleteConvo($partnerId){
+    $userLoggedIn = $_SESSION['user_id'];
+    queryFunc("update messages set deleted = 1 where (user_to = '$partnerId' AND user_from = '$userLoggedIn') OR (user_to = '$userLoggedIn' AND user_from = '$partnerId')");
 }
 
 

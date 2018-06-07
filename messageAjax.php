@@ -34,7 +34,7 @@
       $profilePicQueryYouResult = isRecord($profilePicQueryYou);
       $profilePicYou = $profilePicQueryYouResult['profile_pic'];
 
-      $queryResult = queryFunc("SELECT id,user_to,user_from,body from messages WHERE id>'$last_msg_id' AND user_to='$userID' AND user_from='$partnerID'");
+      $queryResult = queryFunc("SELECT id,user_to,user_from,body from messages WHERE id>'$last_msg_id' AND user_to='$userID' AND user_from='$partnerID' AND deleted = 0");
       $counter = 0;
   
 

@@ -1,13 +1,29 @@
 function setUserId(id) {
-  if(window.location.href == 'http://localhost/socioConnect/main.php' || window.location.href == 'http://localhost/socioConnect/timeline.php'){
+  var url = window.location.href;
+  if(url == 'http://localhost/socioConnect/main.php' || url == 'http://localhost/socioConnect/timeline.php' || url.slice(0,42) == 'http://localhost/socioConnect/timeline.php'){
+    
     var post = document.querySelectorAll(".post");
-    if(post.length < 10)
+    if(post.length == 0)
+      document.getElementById("loading").innerHTML = 'No Posts To Show';    
+    else if(post.length < 10)
       document.getElementById("loading").innerHTML = 'No More Posts To Show';    
     else{
       var flag = document.getElementById("noMorePosts");
       if(flag.value == "true")
           document.getElementById("loading").innerHTML = 'No More Posts To Show';
     }    
+  }
+  else if(url.slice(0,42) == 'http://localhost/socioConnect/messages.php'){
+    var msgs = document.querySelectorAll(".chat-message");
+    if(msgs.length == 0)
+      document.getElementById("loadingMessages").innerHTML = 'No Messages To Show';
+    else if(msgs.length < 10)
+      document.getElementById("loadingMessages").innerHTML = 'No More Messages To Show';    
+    else{
+      var flag = document.getElementById("noMoreMessages");
+      if(flag.value == "true")
+          document.getElementById("loadingMessages").innerHTML = 'No More Messages To Show';
+    }
   }
   session_user_id = id;
 }
@@ -327,27 +343,32 @@ function message() {
   let messageBody = document.messageForm.message_body;
   let partner = document.messageForm.partner;
   let pic = document.messageForm.pic;
+  
+  if(messageBody.value.length > 0){
+    let param = `partner=${partner.value}&messageBody=${messageBody.value}`;
 
-  let param = `partner=${partner.value}&messageBody=${messageBody.value}`;
-
-  document.querySelector(".chat-messages").innerHTML += `
-      <div class='chat-message my-message'>
-      <img src='${pic.value}' class='post-avatar post-avatar-30' />
-      <span class='message'>${messageBody.value}</span>
-      <span class='message-time'>Just now</span>
+    document.querySelector(".chat-messages").innerHTML += `
+      <div class="chat-message my-message">
+        <img src='${pic.value}' class='post-avatar post-avatar-30' />
+        <span class='message'>${messageBody.value}</span>
+        <span class='message-time'>Just now</span>
       </div>
-     `;
+      `;
 
-  ajaxCalls("POST", "messageAjax.php", param).then(function(response) {
-    console.log("Response messageSimple : " + response);
-  });
+    ajaxCalls("POST", "messageAjax.php", param).then(function(response) {
+      console.log("Response messageSimple : " + response);
+      var msgs = document.querySelectorAll(".chat-message");
+      if(document.getElementById("loadingMessages").innerHTML == 'No Messages To Show')
+        document.getElementById("loadingMessages").innerHTML = 'No More Messages To Show';    
+    });
 
-  messageBody.value = "";
+    messageBody.value = "";
 
-  var last = document.querySelector(".my-message:last-child");
-  // var last = nodes[nodes.length - 1];
+    var last = document.querySelector(".my-message:last-child");
+    // var last = nodes[nodes.length - 1];
 
-  last.scrollIntoView();
+    last.scrollIntoView();
+  }  
 }
 
 setInterval(messageRefresh, 1000);
@@ -380,8 +401,10 @@ function messageRefresh() {
 
 function refreshRecentConvos() {
   ajaxCalls("GET", "recentConvoAjax.php").then(function(result) {
+    console.log(result);
     var data = JSON.parse(result);
     if (!(data.notEmpty == "Bilal")) {
+      console.log(data);
       for (i = data.length - 1; i >= 0; i--) {
         var obj = data[i];
         if (document.querySelector(".recent-user-" + obj.fromID)){
@@ -390,16 +413,17 @@ function refreshRecentConvos() {
         }
         var recentMessage = `
         <a href='messages.php?id=${obj.fromID}' class='recent-user recent-user-${obj.fromID}'>
-        <span class='recent-user-image'>
-        <img src='${obj.pic}' class='post-avatar post-avatar-40' />
-        </span>
-        <span class='recent-message-info'>
-        <span class="recent-username">${obj.partner}</span>
-        <span class='recent-message-text'>${obj.from} ${obj.msg}</span>
-        <span class='recent-message-time'>${obj.at}</span>
-        </span>
-    </a>
-           `;
+          <span class='recent-user-image'>
+            <img src='${obj.pic}' class='post-avatar post-avatar-40' />
+          </span>
+          <span class='recent-message-info'>
+            <span class="recent-username">${obj.partner}</span>
+            <span class='recent-message-text'>${obj.from} ${obj.msg}</span>
+            <span class='recent-message-time'>${obj.at}</span>
+          </span>
+          <i class='tooltip-container far fa-trash-alt  comment-delete' onclick='javascript:deleteConvo(${obj.fromID})'><span class='tooltip tooltip-right'>Delete</span></i>
+        </a>
+        `;
         document.querySelector(".recent-chats").innerHTML =
           recentMessage + document.querySelector(".recent-chats").innerHTML;
       }
@@ -407,6 +431,51 @@ function refreshRecentConvos() {
   });
 }
 setInterval(refreshRecentConvos, 1000);
+
+function deleteConvo(id){
+  var url = window.location.href;
+  var openConvoId =  url.slice(46);
+  let param = `id=${id}&urlID=${openConvoId}`;  
+  ajaxCalls("POST", `deleteConvoAjax.php`,param).then(function(response) {
+    console.log(response);
+      //If response is not a redirection, this would be changed if this comment is removed from messags.php
+      if(response == "Reload the page")
+        window.location = "messages.php";
+      else
+        document.querySelector(".recent-chats").innerHTML = response;
+  });
+}
+
+function showPageMessages(id,page){
+  document.getElementById("loadingMessages").style.display = "none";
+  var xhr = new XMLHttpRequest();
+  xhr.open("GET","loadMessagesAjax.php?id="+id+"&page="+page,true);
+  xhr.onload = function(){
+    if(this.status = 200){
+      document.querySelector(".chat-messages").innerHTML = this.responseText + document.querySelector(".chat-messages").innerHTML;
+      document.getElementById("loadingMessages").style.display = 'block';
+    }
+    if(document.getElementById("noMoreMessages").value == "true")
+      document.getElementById("loadingMessages").innerHTML = 'No More Messages To Show';
+  }
+  xhr.send();
+} 
+
+function showNextPageMessages(id){
+  var noMorePosts = document.getElementById("noMoreMessages");
+  var page = document.getElementById("nextPageMessages");
+  if (noMorePosts.value == "false") {
+    //deleting previous data
+    var div = document.querySelector(".chat-messages");
+    div.removeChild(page);
+    div.removeChild(noMorePosts);
+
+    showPageMessages(id, page.value);
+  } 
+  else {
+    alert("khtm");
+  }
+}
 
 function removeFriend(id) {
   let param = `friendId=${id}`;

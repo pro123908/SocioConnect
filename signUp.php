@@ -23,7 +23,11 @@
           redirection('signUp.php');
       } else {
           // If fields are validated then adding the user to database
-          $queryResult = queryFunc("INSERT INTO users(first_name,last_name,email,password,age,gender) VALUES('$fname','$lname','$email','$password','$age','$gender')");
+          if($gender == "female")
+            $profile_pic = "assets/profile_pictures/female.jpg";
+          else
+          $profile_pic = "assets/profile_pictures/male.jpg";
+          $queryResult = queryFunc("INSERT INTO users(first_name,last_name,email,password,age,gender,profile_pic) VALUES('$fname','$lname','$email','$password','$age','$gender','$profile_pic')");
 
           //Selecting ID of new inserted user
           $queryResult2 = queryFunc("SELECT user_id from users where email='$email'");

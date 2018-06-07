@@ -10,7 +10,7 @@ if(!isset($_SESSION['user_id'])){
 $recentUserIds = array();
 //Getting ids of all the users where messages are received from
 $lastMsg = $_SESSION['last_message_retrieved_for_recent_convos'];
-$senderOfRecentMsgs = queryFunc("SELECT id,user_from,user_to FROM messages where (user_to = ".$_SESSION['user_id']." or user_from = ".$_SESSION['user_id'].") AND id > ".$lastMsg ." ORDER BY id DESC");
+$senderOfRecentMsgs = queryFunc("SELECT id,user_from,user_to FROM messages where (user_to = ".$_SESSION['user_id']." or user_from = ".$_SESSION['user_id'].") AND id > ".$lastMsg ." AND deleted = 0 ORDER BY id DESC");
 // 
 $flag = 0; 
 if (isData($senderOfRecentMsgs)) {
