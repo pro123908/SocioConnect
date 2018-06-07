@@ -1087,7 +1087,7 @@ DELIMETER;
 function searchUsersFortChats(){
     $search = <<<DELIMETER
     <div class="search-message">
-    <form action="search.php" method="get" name="message_search_form">
+    <form action="" method="get" name="message_search_form">
     
     <input type="text"  onkeyup="getUsers(this.value,0)" name="q" placeholder="Search..." autocomplete = "off" id="message_search_text_input" class='search-message-input'>
    

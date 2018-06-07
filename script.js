@@ -3,7 +3,9 @@ function setUserId(id) {
   if(url == 'http://localhost/socioConnect/main.php' || url == 'http://localhost/socioConnect/timeline.php' || url.slice(0,42) == 'http://localhost/socioConnect/timeline.php'){
     
     var post = document.querySelectorAll(".post");
-    if(post.length < 10)
+    if(post.length == 0)
+      document.getElementById("loading").innerHTML = 'No Posts To Show';    
+    else if(post.length < 10)
       document.getElementById("loading").innerHTML = 'No More Posts To Show';    
     else{
       var flag = document.getElementById("noMorePosts");
@@ -13,7 +15,9 @@ function setUserId(id) {
   }
   else if(url.slice(0,42) == 'http://localhost/socioConnect/messages.php'){
     var msgs = document.querySelectorAll(".chat-message");
-    if(msgs.length < 10)
+    if(msgs.length == 0)
+      document.getElementById("loadingMessages").innerHTML = 'No Messages To Show';
+    else if(msgs.length < 10)
       document.getElementById("loadingMessages").innerHTML = 'No More Messages To Show';    
     else{
       var flag = document.getElementById("noMoreMessages");
@@ -353,6 +357,9 @@ function message() {
 
     ajaxCalls("POST", "messageAjax.php", param).then(function(response) {
       console.log("Response messageSimple : " + response);
+      var msgs = document.querySelectorAll(".chat-message");
+      if(document.getElementById("loadingMessages").innerHTML == 'No Messages To Show')
+        document.getElementById("loadingMessages").innerHTML = 'No More Messages To Show';    
     });
 
     messageBody.value = "";
