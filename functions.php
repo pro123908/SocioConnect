@@ -934,7 +934,12 @@ function showMessages($partnerId,$page,$limitMsg){
     $count = 1;
 
     $convoList = "";
+    $flag = 0;
     while($row = isRecord($getConvo)){
+        if($flag == 0){
+            $_SESSION['last_msg_id'] = $row['id'];
+            $flag = 1;
+        }
         if($numberOfIteration++ < $start)
             continue;
         //If defined number of posts are rendered then break    
@@ -964,7 +969,6 @@ function showMessages($partnerId,$page,$limitMsg){
 MESSAGE;
          
         $convoList =  $convo . $convoList;
-        $_SESSION['last_msg_id'] = $row['id'];
     }
     echo $convoList;
     if($count > $limitMsg)
