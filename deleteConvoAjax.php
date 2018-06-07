@@ -7,7 +7,7 @@ require_once('functions.php');
     if(isset($_POST['id'])){
         deleteConvo($_POST['id']);
         if($_POST['id'] == $_POST['urlID']){
-            redirection("messages.php");
+            echo "Reload the page";
         }
         else{
             showRecentChats();

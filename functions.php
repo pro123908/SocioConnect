@@ -1179,7 +1179,7 @@ function getRecentConvo(){
     //Will get the ID of the person whom you recently had a chat with
 
     $userLoggedIn =$_SESSION['user_id'];
-    $recentUser = queryFunc("SELECT user_to,user_from from messages where user_to = ".$userLoggedIn." OR user_from = ".$userLoggedIn." order by id DESC limit 1");
+    $recentUser = queryFunc("SELECT user_to,user_from from messages where (user_to = ".$userLoggedIn." OR user_from = ".$userLoggedIn.") AND deleted = 0 order by id DESC limit 1");
     if(isData($recentUser)){
         $recentUser = isRecord($recentUser);
         $recentPartnerId = ($recentUser['user_from'] == $userLoggedIn) ? $recentUser['user_to'] : $recentUser['user_from'];

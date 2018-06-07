@@ -430,11 +430,12 @@ function deleteConvo(id){
   var openConvoId =  url.slice(46);
   let param = `id=${id}&urlID=${openConvoId}`;  
   ajaxCalls("POST", `deleteConvoAjax.php`,param).then(function(response) {
+    console.log(response);
       //If response is not a redirection, this would be changed if this comment is removed from messags.php
-      if(response.slice(0,9) != "<!-- Dont")  
+      if(response == "Reload the page")
+        window.location = "messages.php";
+      else
         document.querySelector(".recent-chats").innerHTML = response;
-      //else
-        //Code to refresh the page
   });
 }
 
