@@ -57,7 +57,7 @@ MESSAGE;
             echo $message; ?>
             
             <script> 
-                var last = document.querySelector(".chat-message:last-child");
+                var last = document.getElementById("noMoreMessages").previousSibling;
                 last.scrollIntoView();
             </script>
             <?php

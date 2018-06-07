@@ -972,7 +972,7 @@ MESSAGE;
     }
     echo $convoList;
     if($count > $limitMsg)
-        $infoForNextTime = "<input type='hidden' id='nextPageMessages' value='".($page+1)."' ><input type='hidden' id='noMoreMessages' value='false'>";
+        $infoForNextTime = "<input type='hidden' id='noMoreMessages' value='false'><input type='hidden' id='nextPageMessages' value='".($page+1)."' >";
     else{
         $infoForNextTime = "<input type='hidden' id='noMoreMessages' value='true'>";   
     }
