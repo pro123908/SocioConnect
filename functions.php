@@ -917,21 +917,33 @@ function getUserProfilePic($userID){
     return $profilePicQueryResult['profile_pic'];
 }
 
-function showMessages($partnerId){
+function showMessages($partnerId,$page,$limitMsg){
     //Update opened to seen
     $userLoggedIn = $_SESSION['user_id'];
     $seen = queryFunc("update messages set opened = '1' where user_to = '$userLoggedIn'");
-
+    $start = ($page - 1) * $limitMsg;
 
     $profilePicMe = getUserProfilePic($userLoggedIn);
     $profilePicYou = getUserProfilePic($partnerId);
 
-    $getConvo = queryFunc("select * from messages where (user_to = '$partnerId' AND user_from = '$userLoggedIn') OR (user_to = '$userLoggedIn' AND user_from = '$partnerId')");
+    $getConvo = queryFunc("select * from messages where ((user_to = '$partnerId' AND user_from = '$userLoggedIn') OR (user_to = '$userLoggedIn' AND user_from = '$partnerId')) AND deleted = 0 order by id desc");
 
     // echo '<script type="text/javascript"> scrollToLastMessage(); </script>';
 
+    $numberOfIteration = 0; //Number of results checked
+    $count = 1;
 
+    $convoList = "";
     while($row = isRecord($getConvo)){
+        if($numberOfIteration++ < $start)
+            continue;
+        //If defined number of posts are rendered then break    
+        if($count > $limitMsg)
+            break;
+        else    
+            $count++; 
+        if($numberOfIteration == mysqli_num_rows($getConvo))
+            $count = 0;               
         if($row['user_to'] == $userLoggedIn){
             $type='their-message';
             $pic = $profilePicYou;
@@ -943,8 +955,6 @@ function showMessages($partnerId){
 
         $time = timeString(differenceInTime($row['dateTime']));
 
-        
-
         $convo = <<<MESSAGE
         <div class='chat-message {$type}'>
             <img src='{$pic}' class='post-avatar post-avatar-30' />
@@ -953,28 +963,37 @@ function showMessages($partnerId){
         </div>
 MESSAGE;
          
-        echo $convo;
+        $convoList =  $convo . $convoList;
         $_SESSION['last_msg_id'] = $row['id'];
     }
+    echo $convoList;
+    if($count > $limitMsg)
+        $infoForNextTime = "<input type='hidden' id='nextPageMessages' value='".($page+1)."' ><input type='hidden' id='noMoreMessages' value='false'>";
+    else{
+        $infoForNextTime = "<input type='hidden' id='noMoreMessages' value='true'>";   
+    }
+    echo $infoForNextTime; 
 }
 
 function getRecentChatsUserIds(){
     $recentConvos = array();
     //Getting ids of all the users where messages are received from
-    $senderOfRecentMsgs = queryFunc("SELECT id,user_from,user_to FROM messages where user_to = ".$_SESSION['user_id']." or user_from = ".$_SESSION['user_id']." ORDER BY id DESC ");
+    $senderOfRecentMsgs = queryFunc("SELECT id,user_from,user_to,deleted FROM messages where ((user_to = ".$_SESSION['user_id']." or user_from = ".$_SESSION['user_id'].")) AND deleted = 0 ORDER BY id DESC ");
     $flag = 0;
     if(isData($senderOfRecentMsgs)){
         while($row = isRecord($senderOfRecentMsgs)){
-            if($flag == 0 ){
-                $_SESSION['last_message_retrieved_for_recent_convos'] = $row['id'] ;
-                $flag = 1;
-            }
-            //if user logged in is the sender then store reciever's id, else store sender's id
-            $idToPush = ($row['user_from'] == $_SESSION['user_id'] ? $row['user_to'] : $row['user_from']);
-            //Check whether that sender is already in the list, if not, only then push his id
-            if(array_search($idToPush,$recentConvos) === false ){
-                array_push($recentConvos,$idToPush);      
-            }
+            if($row['deleted'] == 0){
+                if($flag == 0 ){
+                    $_SESSION['last_message_retrieved_for_recent_convos'] = $row['id'] ;
+                    $flag = 1;
+                }
+                //if user logged in is the sender then store reciever's id, else store sender's id
+                $idToPush = ($row['user_from'] == $_SESSION['user_id'] ? $row['user_to'] : $row['user_from']);
+                //Check whether that sender is already in the list, if not, only then push his id
+                if(array_search($idToPush,$recentConvos) === false ){
+                    array_push($recentConvos,$idToPush);      
+                }
+            }    
         }
         return $recentConvos;
     }
@@ -1015,7 +1034,7 @@ function getProfilePic($user_id){
 
 function getPartnersLastMessage($partnerId){
     $userLoggedIn = $_SESSION['user_id'];
-    $details = queryFunc("SELECT user_from,body,dateTime from messages where (user_to = '$partnerId' AND user_from = '$userLoggedIn') OR (user_to = '$userLoggedIn' AND user_from = '$partnerId') order by id desc limit 1");
+    $details = queryFunc("SELECT user_from,body,dateTime from messages where ((user_to = '$partnerId' AND user_from = '$userLoggedIn') OR (user_to = '$userLoggedIn' AND user_from = '$partnerId')) AND deleted = 0 order by id desc limit 1");
     $details = isRecord($details);
     if(strlen($details['body']) > 15)
         $details['body'] = (substr($details['body'],0,15)."...");  
@@ -1041,16 +1060,19 @@ function showRecentChats(){
             $msg = $lastMessageDetails['body'];
             $at =  timeString(differenceInTime($lastMessageDetails['dateTime']));
             $user = <<<DELIMETER
-            <a href='messages.php?id={$recentUserIds[$counter]}' class='recent-user recent-user-{$recentUserIds[$counter]}'>
-                <span class='recent-user-image'>
-                <img src='{$recentProfilePics[$counter]}' class='post-avatar post-avatar-40' />
-                </span>
-                <span class='recent-message-info'>
-                <span class="recent-username">{$recentUsernames[$counter]}</span>
-                <span class='recent-message-text'>{$from}{$msg}</span>
-                <span class='recent-message-time'>{$at}</span>
-                </span>
-            </a>
+            <div class= 'recent-user-{$recentUserIds[$counter]}' >
+                <a href='messages.php?id={$recentUserIds[$counter]}' class='recent-user'>
+                    <span class='recent-user-image'>
+                        <img src='{$recentProfilePics[$counter]}' class='post-avatar post-avatar-40' />
+                    </span>
+                    <span class='recent-message-info'>
+                        <span class="recent-username">{$recentUsernames[$counter]}</span>
+                        <span class='recent-message-text'>{$from}{$msg}</span>
+                        <span class='recent-message-time'>{$at}</span>
+                    </span>
+                    <span class='recent-message-delete-action'><a href=javascript:deleteConvo({$recentUserIds[$counter]})>Delete</a></span>
+                </a>
+            </div>    
 DELIMETER;
             echo $user;  
             $counter++;
@@ -1159,6 +1181,11 @@ function getRecentConvo(){
         $recentPartnerId = ($recentUser['user_from'] == $userLoggedIn) ? $recentUser['user_to'] : $recentUser['user_from'];
         redirection("http://localhost/socioConnect/messages.php?id=".$recentPartnerId);
     }
+}
+
+function deleteConvo($partnerId){
+    $userLoggedIn = $_SESSION['user_id'];
+    queryFunc("update messages set deleted = 1 where (user_to = '$partnerId' AND user_from = '$userLoggedIn') OR (user_to = '$userLoggedIn' AND user_from = '$partnerId')");
 }
 
 
