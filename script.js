@@ -16,13 +16,13 @@ function setUserId(id) {
   else if(url.slice(0,42) == 'http://localhost/socioConnect/messages.php'){
     var msgs = document.querySelectorAll(".chat-message");
     if(msgs.length == 0)
-      document.getElementById("loadingMessages").innerHTML = 'No Messages To Show';
+      document.getElementById("loading-messages").innerHTML = 'No Messages To Show';
     else if(msgs.length < 10)
-      document.getElementById("loadingMessages").innerHTML = 'No More Messages To Show';    
+      document.getElementById("loading-messages").innerHTML = 'No More Messages To Show';    
     else{
       var flag = document.getElementById("noMoreMessages");
       if(flag.value == "true")
-          document.getElementById("loadingMessages").innerHTML = 'No More Messages To Show';
+          document.getElementById("loading-messages").innerHTML = 'No More Messages To Show';
     }
   }
   session_user_id = id;
@@ -358,8 +358,8 @@ function message() {
     ajaxCalls("POST", "messageAjax.php", param).then(function(response) {
       console.log("Response messageSimple : " + response);
       var msgs = document.querySelectorAll(".chat-message");
-      if(document.getElementById("loadingMessages").innerHTML == 'No Messages To Show')
-        document.getElementById("loadingMessages").innerHTML = 'No More Messages To Show';    
+      if(document.getElementById("loading-messages").innerHTML == 'No Messages To Show')
+        document.getElementById("loading-messages").innerHTML = 'No More Messages To Show';    
     });
 
     messageBody.value = "";
@@ -401,7 +401,6 @@ function messageRefresh() {
 
 function refreshRecentConvos() {
   ajaxCalls("GET", "recentConvoAjax.php").then(function(result) {
-    console.log(result);
     var data = JSON.parse(result);
     if (!(data.notEmpty == "Bilal")) {
       console.log(data);
@@ -447,16 +446,16 @@ function deleteConvo(id){
 }
 
 function showPageMessages(id,page){
-  document.getElementById("loadingMessages").style.display = "none";
+  document.getElementById("loading-messages").style.display = "none";
   var xhr = new XMLHttpRequest();
   xhr.open("GET","loadMessagesAjax.php?id="+id+"&page="+page,true);
   xhr.onload = function(){
     if(this.status = 200){
       document.querySelector(".chat-messages").innerHTML = this.responseText + document.querySelector(".chat-messages").innerHTML;
-      document.getElementById("loadingMessages").style.display = 'block';
+      document.getElementById("loading-messages").style.display = 'block';
     }
     if(document.getElementById("noMoreMessages").value == "true")
-      document.getElementById("loadingMessages").innerHTML = 'No More Messages To Show';
+      document.getElementById("loading-messages").innerHTML = 'No More Messages To Show';
   }
   xhr.send();
 } 

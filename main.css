@@ -6,6 +6,9 @@
   display: visible;
 }
 
+.green{
+
+}
 * {
   margin: 0;
   padding: 0;
@@ -345,6 +348,15 @@ body {
   left: 105%;
   margin-left: 5px;
   width: 80px;
+}
+
+.tooltip-left{
+  position: absolute;
+  z-index: 1;
+  top:  -2px;
+  right: 105%;
+  margin-left: 5px;
+  width: 60px;
 }
 
 .tooltip-container:hover .tooltip {
@@ -737,7 +749,7 @@ body {
 .user-cover-area {
   position: relative;
   height: 500px;
-  margin: 30px 100px;
+  margin: 30px 100px 0;
   border-radius: 5px 5px 0px 0px;
   border-radius: 5px;
   background-color: #fff;
@@ -778,6 +790,35 @@ body {
   height: 150px;
 }
 
+.friend-button{
+  display: inline-block;
+  background: #ff763a;
+  color: #fff;
+  padding: 10px;
+}
+
+.friend-button input{
+  padding: 10px;
+  border: none;
+  background: none;
+  color : #fff;
+  cursor : pointer;
+}
+
+.friend-button input:focus{
+  outline : 0;
+}
+
+
+.timeline-message-button{
+  color : #000;
+  text-decoration : none;
+  padding: 15px;
+  border: 2px solid #000;
+  border-radius: 5px;
+  background-color: #fff;
+}
+
 .user-info-area {
   flex: 1;
   border-radius: 5px;
@@ -793,8 +834,13 @@ body {
 
 /* User attributes */
 .user-attributes-area{
-  background: #ccc;
   margin: 30px 100px;
+}
+
+.user-friend-button{
+  display: flex;
+  justify-content: space-evenly;
+  align-items : center
 }
 
 .see-more {
@@ -895,6 +941,10 @@ body {
   font-size: 12px;
 }
 
+.recent-message-info{
+  width: 80%;
+}
+
 .recent-message-time {
   color: #90949c;
   display: inline-block;
@@ -952,6 +1002,21 @@ body {
   background-color: #fff;
 }
 
+.loading-messages,.loading-messages *{
+  text-align: center;
+  font-size: 12px;
+  color: black;
+  text-decoration: none;
+  padding : 8px;
+}
+
+.loading-messages a:hover{
+  background-color: #f6f6f6; 
+}
+
+
+
+
 .convo-area {
   
   margin: 10px;
@@ -960,9 +1025,10 @@ body {
 }
 
 .chat-user {
+  display :flex;
+  align-items : center;
   padding: 10px;
-  font-weight: bold;
-  
+  border-bottom: 1px solid #dedddd;
   margin: 10px;
 }
 
@@ -1015,11 +1081,18 @@ body {
 }
 
 .message-time{
-  color: #90949c;
+    color: #90949c;
     display: inline-block;
     font-size: 10px;
     margin: 5px;
     width: 120px;
+}
+
+.time-display{
+  font-size : 10px;
+  display: inline-block;
+  margin-left : 10px;
+
 }
 .my-message .message-time{
   text-align: right;

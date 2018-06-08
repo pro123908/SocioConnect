@@ -36,7 +36,7 @@ else{
         <!-- If you are comming here through searching or by clicking on your profile button -->
         <?php $flag ? showFriendButton(0) : showFriendButton($_GET['visitingUserID']) ?>
         <?php if (isset($_GET['visitingUserID']) && $_GET['visitingUserID']!=$_SESSION['user_id']){?>
-        <a href="messages.php?id=<?php echo $_GET['visitingUserID']; ?>">Message</a>
+        <a class='timeline-message-button' href="messages.php?id=<?php echo $_GET['visitingUserID']; ?>">Message</a>
         <?php } ?>
     </div>
     </div>
@@ -73,7 +73,7 @@ else{
             }
             if ($show) {
                 $showMoreButton = <<<MSG
-                <div id='loading'><a href="javascript:showNextPage('{$user}')">Show More Posts</a></div>
+                <div id='loading' class='loading-messages'><a href="javascript:showNextPage('{$user}')">Show More Posts</a></div>
 MSG;
                 echo $showMoreButton;
             }

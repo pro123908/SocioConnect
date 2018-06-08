@@ -818,16 +818,16 @@ function checkUserState($id)
 {
     if (isFriend($id)) {
         // If person is already your friend
-        $state = "<input type = 'Submit' name='remove_friend' value='Remove Friend'>";
+        $state = "<i class='fas fa-user-friends'></i><input type = 'Submit' name='remove_friend' value='Remove Friend'>";
     } elseif (reqSent($id)) {
         // If person hasn't accepted your request :(
-        $state = "<input type = 'Submit' name='cancel_req' value='Friend Request Sent'>";
+        $state = "<i class='fas fa-reply'></i><input type = 'Submit' name='cancel_req' value='Friend Request Sent'>";
     } elseif (reqRecieved($id)) {
         //  If you haven't responded to the person's friend request xD
         $state = "<input type = 'Submit' name='respond_to_request' value='Respond to Friend Request'>";
     } else {
         // And if all above conditions fails, then people have no connection xD
-        $state = "<input type = 'Submit' name='add_friend' value='Add Friend'>";
+        $state = "<i class='fas fa-user-plus'></i><input type = 'Submit' name='add_friend' value='Add Friend'>";
     }
     return $state;
 }
@@ -837,7 +837,7 @@ function showFriendButton($id)
     if ($id > 0 && $id != $_SESSION['user_id']) {
         // 2nd condition - You have not come to your profile through searching
 
-        $button = "<form action = 'timeline.php?visitingUserID=$id' method='POST'>";
+        $button = "<form class='friend-button' action = 'timeline.php?visitingUserID=$id' method='POST'>";
         $button .= checkUserState($id);
         $button .= "</form>";
         echo $button;
@@ -904,7 +904,7 @@ function ignoreReq($id)
     $friend = queryFunc("delete from friend_requests where to_id =".$_SESSION['user_id']." and from_id = ".$id);
 }
 
-function displayFriends($count)
+function displayFriends($count=null)
 {
     // Displaying all friends of current user
 
@@ -915,13 +915,21 @@ function displayFriends($count)
     
     // Breaking the friends list in array
     $friendsListSeparated = explode(',', $friendsList['friends_array']);
+    $friendsCount = sizeof($friendsListSeparated);
 
-    if (sizeof($friendsListSeparated) > 1) {
-        if ($count == 2) {
-            $expression = 2; // for friends area
-        } else {
-            $expression = sizeof($friendsListSeparated)-1; //For request.php page
+    if ($friendsCount >= 1 ) {
+        // if ($count == 10) {
+        //     $expression = 10; // for friends area
+        // } else {
+        //     $expression = sizeof($friendsListSeparated)-1; //For request.php page
+        // }
+        
+        if($friendsCount >= $count){
+            $expression = $count ? $count : sizeof($friendsListSeparated)-1;
+        }else{
+            $expression = $friendsCount;
         }
+
 
         for ($i = 0; $i< $expression;$i++) {
             $friend_id = $friendsListSeparated[$i]; // friend
@@ -930,14 +938,23 @@ function displayFriends($count)
                 $queryFriends = queryFunc("SELECT *,CONCAT(first_name,' ',last_name) as name FROM users WHERE user_id='$friend_id'");
 
                 $friend = isRecord($queryFriends);
-            
-                if ($friend['online'] == 0) {
-                    $state = "Offline";
-                    $stateClass = 'state-off';
-                } else {
-                    $state = "Online";
+
+                $time = activeAgo($friend_id);
+
+                $stateClass = 'state-off';
+
+                if($time == 'Just Now'){
+                    $time = 'Now';
                     $stateClass = 'state-on';
                 }
+            
+                // if ($friend['online'] == 0) {
+                //     $state = "Offline";
+                //     $stateClass = 'state-off';
+                // } else {
+                //     $state = "Online";
+                //     $stateClass = 'state-on';
+                // }
 
                 $content = <<<FRIEND
             <div class='friend-container'>
@@ -948,7 +965,7 @@ function displayFriends($count)
                 
                 <div class='friend-info'>
                     <a href="timeline.php?visitingUserID={$friend['user_id']}" class='friend-text'>{$friend['name']}</a> 
-                    <span class='{$stateClass}'>{$state}</span>           
+                    <span class='{$stateClass}'>{$time}</span>           
                 </div>
                 <div class='friend-action'>
                 <div>
@@ -1045,7 +1062,7 @@ MESSAGE;
     if ($count > $limitMsg) {
         $infoForNextTime = "<input type='hidden' id='noMoreMessages' value='false'><input type='hidden' id='nextPageMessages' value='".($page+1)."' >";
     } else {
-        $infoForNextTime = "<input type='hidden' id='noMoreMessages' value='true'>";
+        $infoForNextTime = "<input  type='hidden' id='noMoreMessages' value='true'>";
     }
     echo $infoForNextTime;
 }
@@ -1138,7 +1155,8 @@ function showRecentChats()
             $msg = $lastMessageDetails['body'];
             $at =  timeString(differenceInTime($lastMessageDetails['dateTime']));
             $user = <<<DELIMETER
-            <a href='messages.php?id={$recentUserIds[$counter]}' class='recent-user 'recent-user-{$recentUserIds[$counter]}' '>
+            <a href='messages.php?id={$recentUserIds[$counter]}' class='recent-user recent-user-{$recentUserIds[$counter]}'>
+            
                 <span class='recent-user-image'>
                     <img src='{$recentProfilePics[$counter]}' class='post-avatar post-avatar-40' />
                 </span>
@@ -1147,7 +1165,9 @@ function showRecentChats()
                     <span class='recent-message-text'>{$from}{$msg}</span>
                     <span class='recent-message-time'>{$at}</span>
                 </span>
-                <i class='tooltip-container far fa-trash-alt  comment-delete' onclick='javascript:deleteConvo({$recentUserIds[$counter]})'><span class='tooltip tooltip-right'>Delete</span></i>
+                <span>
+                <i class='tooltip-container far fa-trash-alt  comment-delete' onclick='javascript:deleteConvo({$recentUserIds[$counter]})'><span class='tooltip tooltip-left'>Delete</span></i>
+                </span>
             </a> 
 DELIMETER;
             echo $user;
@@ -1306,9 +1326,20 @@ PROFILE;
 function turnOnline($id)
 {
     queryFunc("update users set online = 1 where user_id =".$id);
+    queryFunc("UPDATE users set active_ago=0 WHERE user_id={$id}");
 }
 
 function turnOffline($id)
 {
     queryFunc("update users set online = 0 where user_id =".$id);
+    queryFunc("UPDATE users set active_ago=now() WHERE user_id={$id}");
+}
+
+function activeAgo($id){
+    $queryResult = queryfunc("SELECT active_ago from users WHERE user_id={$id}");
+    $timeResult = isRecord($queryResult);
+
+    $time = getTime($timeResult['active_ago']);
+    
+    return $time;
 }

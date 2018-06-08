@@ -42,7 +42,7 @@ DELIMETER;
         // Displaying friends
         $friend_req .= '<div class="friends-list"><h1>Friends</h1><div class="friends-list-elements">';
         echo $friend_req;  
-        displayFriends('All');
+        displayFriends();
         echo "</div></div></div>";
         
     ?>

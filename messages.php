@@ -12,7 +12,7 @@ if (isset($_GET['id'])) {
     }
     $partnerID = $_GET['id'];
     $_SESSION['partner'] = $partnerID;
-    $partner = queryFunc("select first_name from users where user_id =".$partnerID);
+    $partner = queryFunc("SELECT CONCAT(first_name,' ',last_name) as name from users where user_id ={$partnerID}");
     $partner = isRecord($partner);
 } else {
     // If user comes to messages page just by clicking on messages
@@ -33,33 +33,49 @@ if (isset($_GET['id'])) {
 <div class="chat-box">
 <div class='chat-user'>
     <?php if (isset($_GET['id'])) {
-    ?>
-                <span class='chat-username'><?php echo $partner['first_name'] ?></span>
-    <?php
-}?>
+        $pic = getUserProfilePic($_GET['id']);
+        $time = activeAgo($_GET['id']);
+        $state = 'state-off';
+
+        if($time == 'Just Now'){
+            $time = 'Now';
+            $state = 'state-on';
+        }
+
+        $content =<<<CONTENT
+        <span class='chat-user-image'><img src='{$pic}' class='post-avatar post-avatar-40'/></span>
+        <span class='chat-username'>{$partner['name']}</span>
+        <div class='time-display {$state}'>{$time}</div>
+CONTENT;
+
+        echo $content;
+    }
+?>
+  
     
 </div>
     <div class="convo-area">
         <?php 
         if (isset($_GET['id'])) {
             $userID = $_SESSION['user_id'];
-            $profilePicMe = getUserProfilePic($userID);
-            ?>
-            <div id='loadingMessages'><a href="javascript:showNextPageMessages('<?php echo $_GET['id']?>')">Show More Messages</a></div> 
+            $profilePicMe = getUserProfilePic($userID); ?>
+            <div class='loading-message-container'>
+            <div id='loading-messages' class='loading-messages'><a href="javascript:showNextPageMessages('<?php echo $_GET['id']?>')">Show More Messages</a></div></div>
             <?php
             $message =<<<MESSAGE
-            
             <div class='chat-messages'>
 MESSAGE;
             echo $message;
-            showMessages($partnerID,1,10);
+            showMessages($partnerID, 1, 10);
 
             $message = '</div>';
             echo $message; ?>
             
             <script> 
                 var last = document.getElementById("noMoreMessages").previousSibling;
-                last.scrollIntoView();
+                if (last != null) {
+                    last.scrollIntoView();
+                }
             </script>
             <?php
         } else {

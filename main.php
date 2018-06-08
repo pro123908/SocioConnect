@@ -42,12 +42,12 @@ addPost(true,"");
   showPosts('a',1,10);
 ?>
 </div>
-<div id='loading'><a href="javascript:showNextPage('a')">Show More Posts</a></div>
+<div id='loading' class='loading-messages'><a href="javascript:showNextPage('a')">Show More Posts</a></div>
 </div>
 
 <div class="friends-area">
     <div class='friend-heading'>Friends</div>
-      <?php displayFriends(2); ?>
+      <?php displayFriends(10); ?>
       <a href='requests.php' class='see-more'>
         <span>See more</span>
       </a>
