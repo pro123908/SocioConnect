@@ -42,7 +42,7 @@ addPost(true,"");
   showPosts('a',1,10);
 ?>
 </div>
-<div id='loading' class='loading-messages'><a href="javascript:showNextPage('a')">Show More Posts</a></div>
+<div id='loading' class='loading-messages'></div>
 </div>
 
 <div class="friends-area">

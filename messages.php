@@ -60,7 +60,7 @@ CONTENT;
             $userID = $_SESSION['user_id'];
             $profilePicMe = getUserProfilePic($userID); ?>
             <div class='loading-message-container'>
-            <div id='loading-messages' class='loading-messages'><a href="javascript:showNextPageMessages('<?php echo $_GET['id']?>')">Show More Messages</a></div></div>
+            <div id='loading-messages' class='loading-messages'></div></div>
             <?php
             $message =<<<MESSAGE
             <div class='chat-messages'>

@@ -1,16 +1,35 @@
 function setUserId(id) {
   var url = window.location.href;
   if(url == 'http://localhost/socioConnect/main.php' || url == 'http://localhost/socioConnect/timeline.php' || url.slice(0,42) == 'http://localhost/socioConnect/timeline.php'){
-    
     var post = document.querySelectorAll(".post");
+    //If there are no posts
     if(post.length == 0)
-      document.getElementById("loading").innerHTML = 'No Posts To Show';    
+      document.getElementById("loading").innerHTML = 'No Posts To Show'; 
+    //If there are less than 10 posts     
     else if(post.length < 10)
-      document.getElementById("loading").innerHTML = 'No More Posts To Show';    
+      document.getElementById("loading").innerHTML = 'No More Posts To Show';
+    //If there are 10 posts       
     else{
       var flag = document.getElementById("noMorePosts");
+      //if no more flag is true
       if(flag.value == "true")
           document.getElementById("loading").innerHTML = 'No More Posts To Show';
+      //if there are more posts present    
+      else{
+        if(url == 'http://localhost/socioConnect/timeline.php'){
+           var loading = `<a href="javascript:showNextPage('b')">Show More Posts</a>`; 
+        }
+        else if(url.slice(0,42) == 'http://localhost/socioConnect/timeline.php'){
+          var id = url.slice(58)
+          var loading = `<a href="javascript:showNextPage('${id}')">Show More Posts</a>`;
+        }
+        else{
+          var loading = `<a href="javascript:showNextPage('a')">Show More Posts</a>`; 
+        }
+        document.getElementById("loading").innerHTML = loading;
+      }
+
+          // <div id='loading-messages' class='loading-messages'><a href="javascript:showNextPageMessages('<?php echo $_GET['id']?>')">Show More Messages</a></div>
     }    
   }
   else if(url.slice(0,42) == 'http://localhost/socioConnect/messages.php'){
@@ -23,6 +42,12 @@ function setUserId(id) {
       var flag = document.getElementById("noMoreMessages");
       if(flag.value == "true")
           document.getElementById("loading-messages").innerHTML = 'No More Messages To Show';
+      else{
+          var id = url.slice(46)
+          if(id > 0){
+            document.getElementById("loading-messages").innerHTML = `<a href="javascript:showNextPageMessages('${id}')">Show More Messages</a>`
+          }
+      }    
     }
   }
   session_user_id = id;

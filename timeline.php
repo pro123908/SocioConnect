@@ -73,7 +73,7 @@ else{
             }
             if ($show) {
                 $showMoreButton = <<<MSG
-                <div id='loading' class='loading-messages'><a href="javascript:showNextPage('{$user}')">Show More Posts</a></div>
+                <div id='loading' class='loading-messages'></div>
 MSG;
                 echo $showMoreButton;
             }
