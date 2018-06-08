@@ -42,33 +42,15 @@
   }
 ?>
 
+<div class='header-links'>
+        <a href="index.php" class="header-btn mr-1">Login</a>
+      </div>
+      
+    </div>
 
-
- <!-- <h1>Sign Up</h1>
-<form action="signUp.php" method='POST'>
-  <input type="text" id="fname"  name='fname' placeholder='First Name' maxlength="20" minlength='3' required value=<?php  if (isset($_SESSION['s_first_name'])) {
-    echo $_SESSION['s_first_name'];
-}?> ><br><br>
-  <input type="text" id="lname" name='lname' placeholder='Last Name' maxlength="20" minlength='3' required value=<?php  if (isset($_SESSION['s_last_name'])) {
-    echo $_SESSION['s_last_name'];
-}?>><br><br>
-  <input type="email" id="email" name='email' placeholder='Email' required value=<?php  if (isset($_SESSION['s_email'])) {
-    echo $_SESSION['s_email'];
-}?>><br><?php if (isset($_SESSION['s_email_error'])) {
-    echo $_SESSION['s_email_error'];
-}?><br>
-  <input type="password" id="pass" name='password' placeholder='Password' maxlength="20" minlength='8' required ><br><br>
-  <input type="password" id="rPass" name='repeatPassword' placeholder='Confirm Password' maxlength="20" minlength='8' required><br><?php if (isset($_SESSION['s_pass_error'])) {
-    echo $_SESSION['s_pass_error'];
-}?><br>
-  <input type="number" name='age' placeholder='Age' required value=<?php  if (isset($_SESSION['s_age'])) {
-    echo $_SESSION['s_age'];
-}?>><br><br>
-  
-
-
+    
     <div class="login-container">
-      <!-- <h1 class="login-heading"></h1> -->
+      <h1 class="login-heading"></h1>
       <form action="signUp.php" method='POST' class="login-form">
       <input type="text" id="fname"  class='login-input' name='fname' placeholder='First Name' maxlength="20" minlength='3' required value=<?php  if (isset($_SESSION['s_first_name'])) {
     echo $_SESSION['s_first_name'];

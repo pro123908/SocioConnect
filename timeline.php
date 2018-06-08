@@ -1,21 +1,14 @@
 
 <?php require_once('header.php');
-<<<<<<< HEAD
- 
-if (isset($_GET['visitingUserID']) && isset($_SESSION['user_id'])) {
-    // If both conditions are satisfied then you have come to this page by searching or by clicking of user
-    $flag = false;
-    if (isset($_POST['add_friend'])) {
-=======
    $_SESSION['no_of_posts_changed'] = 0;
+    
 if(isset($_GET['visitingUserID']) && isset($_SESSION['user_id'])){
 // If both conditions are satisfied then you have come to this page by searching
     if($_GET['visitingUserID'] == $_SESSION['user_id'])
         $flag = true;
     else    
         $flag = false;
-    if(isset($_POST['add_friend']))
->>>>>>> 88497c4b5d4a7d855779e52f39f93c2072969cd2
+    if(isset($_POST['add_friend'])){
         addFriend($_GET['visitingUserID']);
     } elseif (isset($_POST['cancel_req'])) {
         cancelReq($_GET['visitingUserID']);
@@ -23,17 +16,12 @@ if(isset($_GET['visitingUserID']) && isset($_SESSION['user_id'])){
         redirection("requests.php");
     } elseif (isset($_POST['remove_friend'])) {
         removeFriend($_GET['visitingUserID']);
-    }
+    } 
 } elseif (isset($_SESSION['user_id'])) {
     // If this condition is true then you have come to the page by clicking on profile button on your profile - So you ain't searching anybody xD
     $flag = true;
-<<<<<<< HEAD
-    $_SESSION['no_of_posts_changed'] = 0;
-} else {
-=======
 }
 else{
->>>>>>> 88497c4b5d4a7d855779e52f39f93c2072969cd2
     // Not authorized dude,go back to login page xD
     redirection("index.php"); // previously it was set to main.php
 }
@@ -59,19 +47,12 @@ else{
             <div class='new-post'>
             <?php 
             // Add post functionality
-<<<<<<< HEAD
             if (isset($_GET['visitingUserID'])) {
                 addPost(false, $_GET['visitingUserID']);
             } else {
                 addPost(true, "abc");
             }
 
-=======
-            if(isset($_GET['visitingUserID']))
-                addPost(false,$_GET['visitingUserID']); 
-            else
-                addPost(true,"abc");
->>>>>>> 88497c4b5d4a7d855779e52f39f93c2072969cd2
             ?>
             </div>
 

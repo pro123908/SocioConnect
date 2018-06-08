@@ -37,5 +37,10 @@
         <a href="logout.php" class="header-btn mr-1" id="logout_id"><i class="fas fa-sign-out-alt fa-lg"></i><span  id="logout_desc">Logout</span></a>
       </div>
   </div>
-      <?php
-  } ?>
+  <?php
+  } else{  ?>
+    <!-- to complete the header on sign up and login page -->
+    
+  <?php
+  } 
+  ?>
