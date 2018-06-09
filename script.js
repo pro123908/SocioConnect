@@ -86,11 +86,20 @@ function like(postID) {
 
 function addRecentActivity(activity){
   var activitiesDiv = document.querySelector(".activities-content");
-  alert(activitiesDiv.childNodes.length);
-  if(activitiesDiv.childNodes.length == 21){
+  if(findChildNodes(activitiesDiv) == 10){
     //Here write the code to remove the last child in the div
+    //activitiesDiv.removeChild(activitiesDiv.lastChild);  this is not working
   }
   activitiesDiv.innerHTML = activity + activitiesDiv.innerHTML;
+}
+
+function findChildNodes(div){
+  var count = 0;
+  for(i = 0 ; i < div.childNodes.length ; i++){
+    if(div.childNodes[i].nodeType == 1)
+      count++;
+  }
+  return count;
 }
 
 // function ajaxFetchCalls(url, data = {}) {
