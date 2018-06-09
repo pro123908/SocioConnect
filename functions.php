@@ -354,7 +354,6 @@ function showPosts($flag, $page, $limit)
                     $count++;
                 }
 
-
                 $postID = $row['post_id'];
                 // $userID = $_SESSION['user_id'];
                 $user = $_SESSION['user'];
@@ -525,9 +524,6 @@ POST;
 
     return $post;
 }
-
-
-
 
 function logout()
 {
@@ -781,15 +777,11 @@ function isFriend($id)
 {
     // Checking if specified user your friend or not?
     $userLoggedIn = $_SESSION['user_id'];
-    $friend = queryFunc("SELECT friends_array  FROM users WHERE user_id='$userLoggedIn,'");
-    $friend = isRecord($friend);
-
-    // Extracting the user if there
-    if (strstr($friend['friends_array'], $id.",")) {
+    $friend = queryFunc("SELECT friend_id FROM friends WHERE user1='".$userLoggedIn."' and user2 = '".$id."'");
+    if(isData($friend))
         return true;
-    } else {
+    else 
         return false;
-    }
 }
 
 function reqSent($id)
@@ -866,33 +858,33 @@ function removeFriend($id, $redirection = "")
 {
     // When remove friend button is clicked
     // Removing friends and from both's records
-    updateFriendList($id, $_SESSION['user_id']);
-    updateFriendList($_SESSION['user_id'], $id);
+    $userLoggedIn = $_SESSION['user_id'];
+    queryFunc("delete from friends where (user1 = '$id' and user2 = '$userLoggedIn') OR (user1 = '$userLoggedIn' and user2 = '$id')");
     if ($redirection == "") {
         redirection("timeline.php?visitingUserID=".$id);
     }
 }
 
-function updateFriendList($user, $friend)
-{
-    $friendArray = queryFunc("select friends_array from users where user_id =".$user);
-    $friendArray = isRecord($friendArray);
-    $friendArray = $friendArray['friends_array'];
-    // 1st -> search for this
-    // 2nd -> replace with this
-    // 3rd -> search in this
-    $newFriendsArray = str_replace($friend.",", "", $friendArray);
+// function updateFriendList($user, $friend)
+// {
+//     $friendArray = queryFunc("select friends_array from users where user_id =".$user);
+//     $friendArray = isRecord($friendArray);
+//     $friendArray = $friendArray['friends_array'];
+//     // 1st -> search for this
+//     // 2nd -> replace with this
+//     // 3rd -> search in this
+//     $newFriendsArray = str_replace($friend.",", "", $friendArray);
     
-    queryFunc("update users set friends_array ='". $newFriendsArray ."' where user_id =".$user);
-}
+//     queryFunc("update users set friends_array ='". $newFriendsArray ."' where user_id =".$user);
+// }
 
 function acceptReq($id)
 {
     // When you have accepted the friend request
     // $id of the user of whom you are accepting the request
     // Updating both users records
-    $friend = queryFunc("update users set friends_array = concat (friends_array,".$id ." ,',') where user_id = ".$_SESSION['user_id']);
-    $friend = queryFunc("update users set friends_array = concat (friends_array,".$_SESSION['user_id'] ." ,',') where user_id = ".$id);
+    $userLoggedIn = $_SESSION['user_id'];
+    $friend = queryFunc("insert into friends (user1,user2,become_friends_at) VALUES ('$id','$userLoggedIn',now())");
 
     // Deleting request from the person record  who sent you the request,bcoz it is accepted
     ignoreReq($id);
@@ -910,30 +902,32 @@ function displayFriends($count=null)
 
     $userID = $_SESSION['user_id'];
 
-    $queryResult = queryFunc("SELECT friends_array from users WHERE user_id='$userID'");
-    $friendsList = isRecord($queryResult);
+    $queryResult = queryFunc("SELECT * from friends WHERE user1='$userID' OR  user2='$userID'");
     
     // Breaking the friends list in array
-    $friendsListSeparated = explode(',', $friendsList['friends_array']);
-    $friendsCount = sizeof($friendsListSeparated);
-
-    if ($friendsCount >= 1 ) {
+    
+    //if ($friendsCount >= 1 ) {
         // if ($count == 10) {
         //     $expression = 10; // for friends area
         // } else {
         //     $expression = sizeof($friendsListSeparated)-1; //For request.php page
         // }
         
-        if($friendsCount >= $count){
-            $expression = $count ? $count : sizeof($friendsListSeparated)-1;
-        }else{
-            $expression = $friendsCount;
-        }
-
-
-        for ($i = 0; $i< $expression;$i++) {
-            $friend_id = $friendsListSeparated[$i]; // friend
-            if ($friend_id) {
+        // if($friendsCount >= $count){
+        //     $expression = $count ? $count : sizeof($friendsListSeparated)-1;
+        // }else{
+        //     $expression = $friendsCount;
+        // }
+        $numberOfIteration = 0;   
+    if(isData($queryResult)){     
+        while($row = isRecord($queryResult)){
+            if(isset($count)){
+                if($numberOfIteration++ >= $count){
+                    $_SESSION['more_friends'] = 1;
+                    break;
+                }    
+            }
+            $friend_id = ($_SESSION['user_id'] == $row['user1']) ? $row['user2'] : $row['user1'] ;  // friend
                 // Getting name of that friend
                 $queryFriends = queryFunc("SELECT *,CONCAT(first_name,' ',last_name) as name FROM users WHERE user_id='$friend_id'");
 
@@ -978,11 +972,14 @@ function displayFriends($count=null)
             </div>
 FRIEND;
                 echo $content;
-            }
         }
     }
+    if($numberOfIteration == 0){
+        $_SESSION['more_friends'] = 0;
+    }
+    else
+        $_SESSION['more_friends'] = 2;
 }
-
 //Message Functions
 function sendMessage($user_to, $message_body)
 {
@@ -1065,6 +1062,10 @@ MESSAGE;
         $infoForNextTime = "<input  type='hidden' id='noMoreMessages' value='true'>";
     }
     echo $infoForNextTime;
+}
+
+function showRecentActivities(){
+    echo "LOL";
 }
 
 function getRecentChatsUserIds()
@@ -1343,3 +1344,4 @@ function activeAgo($id){
     
     return $time;
 }
+

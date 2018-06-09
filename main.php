@@ -16,16 +16,27 @@
 <!-- Notification Area of the page -->
 
 <div class="content-area">
-      <div class="notification-area">
+      <!-- <div class="notification-area">
         <div class='notifications'>
           <div class='notification-heading'>Notifications</div>
-          <?php showNotifications(10);?>
+          <?php //showNotifications(10);?>
+          <a href='allNotification.php' class='see-more'>
+        <span>See more</span>
+      </a>
+        </div>
+      </div> -->
+
+
+      <div class="notification-area">
+        <div class='notifications'>
+          <div class='notification-heading'>Recent Activities</div>
+          <?php showRecentActivities(10);
+          ?>
           <a href='allNotification.php' class='see-more'>
         <span>See more</span>
       </a>
         </div>
       </div>
-
 
 <div class='post-area'>
   <div class='new-post'>
@@ -49,8 +60,13 @@ addPost(true,"");
     <div class='friend-heading'>Friends</div>
       <?php displayFriends(10); ?>
       <a href='requests.php' class='see-more'>
-        <span>See more</span>
+        <span><?php if($_SESSION['more_friends'] == 1) 
+                      echo "See more";
+              ?></span>
       </a>
+      <?php if($_SESSION['more_friends'] == 0) 
+                echo "No Friends to Show";
+      ?>
 </div>
 
 </body>
