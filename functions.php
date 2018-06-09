@@ -781,7 +781,7 @@ function isFriend($id)
 {
     // Checking if specified user your friend or not?
     $userLoggedIn = $_SESSION['user_id'];
-    $friend = queryFunc("SELECT friend_id FROM friends WHERE user1='".$userLoggedIn."' and user2 = '".$id."'");
+    $friend = queryFunc("SELECT friend_id FROM friends WHERE (user1='".$userLoggedIn."' and user2 = '".$id."') OR (user2='".$userLoggedIn."' and user1 = '".$id."') ");
     if(isData($friend))
         return true;
     else 
