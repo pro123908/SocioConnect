@@ -78,7 +78,14 @@ function like(postID) {
 }
 
 function addRecentActivity(activity){
-  document.getElementById("recent_activities").innerHTML = activity + document.getElementById("recent_activities").innerHTML;
+  var activitiesDiv = document.querySelector(".activities-content");
+  alert(activitiesDiv.childNodes.length);
+  if(activitiesDiv.childNodes.length == 21){
+    alert("true");
+    activitiesDiv.removeChild(activitiesDiv.lastChild)
+  }
+  alert(activitiesDiv.lastChild)    
+  activitiesDiv.innerHTML = activity + activitiesDiv.innerHTML;
 }
 
 // function ajaxFetchCalls(url, data = {}) {

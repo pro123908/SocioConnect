@@ -31,8 +31,10 @@
       <div class="notification-area">
         <div class='notifications' id="recent_activities">
           <div class='notification-heading'>Recent Activities</div>
+          <div class='activities-content'>
           <?php showRecentActivities(10);
           ?>
+          </div>
           <a href='allActivities.php' class='see-more'>
         <span>See more</span>
       </a>
