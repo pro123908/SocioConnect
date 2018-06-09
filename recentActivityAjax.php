@@ -22,30 +22,6 @@ else{
 }
 
 queryFunc("insert into recent_activities (activity_type, activity_at_id, user_id) values ('$activity_type','$target_id','$userLoggedIn')");
-//To decide the noti incon
-// if ($type=='post') {
-//     $conflict = 'posted';
-//     $notiIcon = 'far fa-user';
-// } elseif ($type=='commented') {
-//     $conflict = 'commented on your post';
-//     $notiIcon = 'far fa-comment-dots';
-// } elseif($type == 'request') {
-//     $conflict = 'sent you a request';
-//     $notiIcon = 'fas fa-user-plus';
-//     $notiLink = "requests.php?notiID=$notiID";
-// }
-// else{ 
-//     $conflict = 'liked your post';
-//     $notiIcon = 'far fa-thumbs-up';
-// }
 
-// $noti = <<<NOTI
-//     <a href={$notiLink} class='notification recent_activity'>
-//         <span class='notification-info'>
-//             <span class='notification-text'>You {$conflict}</span><i class='noti-icon {$notiIcon}'></i><span class='noti-time'>{$time}</span>
-//         </span>
-//     </a>
-// NOTI;
-// echo $noti;
-
+addActivity($activity_type,$target_id,$userLoggedIn);
 ?>

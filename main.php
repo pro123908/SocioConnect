@@ -33,7 +33,7 @@
           <div class='notification-heading'>Recent Activities</div>
           <?php showRecentActivities(10);
           ?>
-          <a href='allNotification.php' class='see-more'>
+          <a href='allActivities.php' class='see-more'>
         <span>See more</span>
       </a>
         </div>

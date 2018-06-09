@@ -1075,8 +1075,16 @@ MESSAGE;
     echo $infoForNextTime;
 }
 
-function showRecentActivities(){
-    echo "LOL";
+function showRecentActivities($limit = null){
+    if(isset($limit)){
+        $activities = queryFunc("select * from recent_activities order by activity_id desc limit 10");
+    }
+    else{
+        $activities = queryFunc("select * from recent_activities order by activity_id desc");
+    }
+    while($row = isRecord($activities)){
+        addActivity($row['activity_type'],$row['activity_at_id'],$row['user_id']);
+    }
 }
 
 function getRecentChatsUserIds()
@@ -1356,3 +1364,71 @@ function activeAgo($id){
     return $time;
 }
 
+function addActivity($activity_type,$target_id,$userLoggedIn){
+    $userLoggedIn = $_SESSION['user_id'];
+    $flag = true;
+    //To decide the noti incon
+    if ($activity_type == 0) {
+        $conflict = 'liked a post';
+        $notiIcon = 'far fa-thumbs-up';
+        $notiLink = "notification.php?postID=$target_id&type=liked&notiID=0";
+        $time = queryFunc("select createdAt from likes where post_id = $target_id and user_id = $userLoggedIn");
+        if(isData($time)){
+            $time = isRecord($time);
+            $time = $time['createdAt'];
+        }
+        else
+            $flag = false;
+    } 
+    elseif ($activity_type == 1) {
+        $conflict = 'commented on a post';
+        $notiIcon = 'far fa-comment-dots';
+        $notiLink = "notification.php?postID=$target_id&type=commented&notiID=0";
+        $time = queryFunc("select createdAt from comments where post_id = $target_id and user_id = $userLoggedIn order by comment_id desc limit 1");
+        if(isData($time)){
+            $time = isRecord($time);
+            $time = $time['createdAt'];
+        }
+        else
+            $flag = false;
+    }
+    elseif($activity_type == 2) {
+        $conflict = 'added a post';
+        $notiIcon = 'fas fa-pencil-alt';
+        $notiLink = "notification.php?postID=$target_id&type=post&notiID=0";
+        $time = queryFunc("select createdAt from posts where post_id = $target_id");
+        if(isData($time)){
+            $time = isRecord($time);
+            $time = $time['createdAt'];
+        }
+        else
+            $flag = false;
+    }
+    else{ 
+        $conflict = 'become friend with';
+        $notiIcon = 'fas fa-user-plus';
+        $notiLink = "timeline.php?visitingUserID=$target_id";
+        $time = queryFunc("select become_friends_at from friends where (user1 = $target_id and user2 = $userLoggedIn) or (user2 = $target_id and user1 = $userLoggedIn)");
+        if(isData($time)){
+            $time = isRecord($time);
+            $time = $time['become_friends_at'];
+        }
+        else
+            $flag = false;
+    }
+    if($flag)
+        $time = getTime($time);
+    else{
+        $time = "Deleted";  
+        $notiLink = "javascript:void(0)";
+    }  
+    $noti = <<<NOTI
+        <a href={$notiLink} class='notification recent_activity'>
+            <span class='notification-info'>
+                <span class='notification-text'>You {$conflict}</span><i class='noti-icon {$notiIcon}'></i><span class='noti-time'>{$time}</span>
+            </span>
+        </a>
+NOTI;
+    echo $noti;
+
+}    
