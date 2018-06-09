@@ -66,7 +66,19 @@ function like(postID) {
     ).innerHTML = `<i class='like-count-icon fas fa-thumbs-up'></i> ${value}`;
     let icon = document.querySelector(`.post-${postID} .like-btn i`);
     icon.classList.toggle("blue");
+    //Adding in recent activities if liked 
+    if(icon.classList[2]){
+      var activity_type = 0;
+      param = `target_id=${postID}&activity_type=${activity_type}`;
+      ajaxCalls("POST", `recentActivityAjax.php`,param).then(function(result) {
+        addRecentActivity(result);
+      });    
+    }
   });
+}
+
+function addRecentActivity(activity){
+  document.getElementById("recent_activities").innerHTML = activity + document.getElementById("recent_activities").innerHTML;
 }
 
 // function ajaxFetchCalls(url, data = {}) {
@@ -152,6 +164,13 @@ function comment(postID) {
 
     comment.value = "";
     console.log(document.querySelector(`.comment-count-${postID}`));
+
+    //Adding in recent activities
+    var activity_type = 1;
+    param = `target_id=${postID}&activity_type=${activity_type}`;
+    ajaxCalls("POST", `recentActivityAjax.php`,param).then(function(result) {
+      addRecentActivity(result);
+    });
   });
 
   // Pain in the ass xD
@@ -181,6 +200,13 @@ function addPost(user_id) {
     document.querySelector(".posts").innerHTML =
       result + document.querySelector(".posts").innerHTML;
     document.querySelector("textarea[name='post']").value = " ";
+
+    //Adding in recent activities
+    var activity_type = 2;
+    param = `activity_type=${activity_type}`;
+    ajaxCalls("POST", `recentActivityAjax.php`,param).then(function(result) {
+      addRecentActivity(result);
+    });
   });
 }
 
@@ -604,3 +630,5 @@ function notificationDropdown(){
     document.querySelector('.noti-dropdown').style.display = 'block';
   }
 }
+
+

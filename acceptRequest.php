@@ -14,6 +14,10 @@ if(!isset($_SESSION['user_id'])){
 if(isset($_POST['accept'])){
     // If request is accepted
     acceptReq($_POST['id']);   
+
+    $activity_type = 3;
+    $target_id = $_POST['id'];
+    queryFunc("insert into recent_activities (activity_type, activity_at_id, user_id) values ('$activity_type','$target_id','$userID')");
 }
 else if(isset($_POST['ignore'])){
     // If request is rejected

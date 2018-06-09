@@ -29,7 +29,7 @@
 
 
       <div class="notification-area">
-        <div class='notifications'>
+        <div class='notifications' id="recent_activities">
           <div class='notification-heading'>Recent Activities</div>
           <?php showRecentActivities(10);
           ?>
