@@ -7,10 +7,11 @@
   }
 
   // Main file of the website
-
+  $_SESSION['no_of_posts_changed'] = 0;
+  $_SESSION['last_msg_id'] = 0;
+  $_SESSION['last_message_retrieved_for_recent_convos'] = 0;
   // Getting current user name
-    $_SESSION['no_of_posts_changed'] = 0;
-    $user = $_SESSION['user'];
+   
 ?>
 
 <!-- Notification Area of the page -->
