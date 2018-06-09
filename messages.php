@@ -1,6 +1,6 @@
 <?php
 
-require_once('header.php');
+require_once('functions.php');
 
 if (!isset($_SESSION['user_id'])) {
     redirection('index.php');
@@ -18,6 +18,7 @@ if (isset($_GET['id'])) {
     // If user comes to messages page just by clicking on messages
     getRecentConvo();
 }
+require_once('header.php');
 ?>
 <div class='message-area'>
 <div class="recent-chat-area">
@@ -102,10 +103,10 @@ MESSAGE;
             $messageInput = <<<DELIMETER
             <div class='message-input-form'>
             <form method="post" name='messageForm' action="javascript:message()">
-            <input autocomplete='off' name="message_body" placeholder="Type your message here"  class='message-input'></input>
+            <input autocomplete='off' name="message_body" placeholder="Type your message here"  class='message-input'/>
             <input type='hidden' name='partner' value='$partnerID'>
             <input type='hidden' name='pic' value='$profilePicMe'>
-            <input type="submit" name="send_message" id="message_submit" value="send" style='display:none'>
+            <input type="submit" name="send_message" id="message_submit" value="send" style='display:none;' >
             </form>
             </div>
 DELIMETER;
@@ -117,4 +118,6 @@ DELIMETER;
 </div>
 </div>
 <!-- <div style='height:200px;'></div> -->
-<script src="script.js" ></script>
+<script src="script.js" >
+    
+</script>

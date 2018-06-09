@@ -1,4 +1,4 @@
-<?php  include "functions.php"; ?>
+<?php  require_once('functions.php'); ?>
 <!-- Dont remove this comment-->
 
 <!-- Header Section of the website. Will be included in every page  -->
@@ -23,6 +23,11 @@
       <?php
   // Displaying this navbar if user is logged in
   if (isset($_SESSION['user_id'])) {
+    
+    $user = $_SESSION['user'];
+
+    $pic = getUserProfilePic($_SESSION['user_id']);
+    $image = "<img src='{$pic}' class='post-avatar post-avatar-40' />";
       ?>
       <div class="header-search-bar">
         <input type="text" class="search-input" placeholder="Search" onkeyup="getUsers(this.value,1)" name="q" autocomplete = "off" id="search_text_input">
@@ -30,11 +35,25 @@
       </div>
       
       <div class="header-links">
-        <a href="allNotification.php" class="header-btn mr-1" id="noti_id" ><i class="fas fa-bell fa-lg"></i> <span  id="noti_desc">Notifications</span></a>
-        <a href="messages.php" class="header-btn mr-1" id="msg_id"><i class="fas fa-envelope fa-lg"></i><span  id="msg_desc">Messages</span></a>
-        <a href="requests.php" class="header-btn mr-1" id="req_id"><i class="fas fa-user-plus fa-lg"></i><span  id="req_desc">Friend Requests</span></a>
-        <a href="timeline.php" class="header-btn mr-1" id="timeline_id"><i class="fas fa-user-circle fa-lg"></i><span  id="timeline_desc">Timeline</span></a>
-        <a href="logout.php" class="header-btn mr-1" id="logout_id"><i class="fas fa-sign-out-alt fa-lg"></i><span  id="logout_desc">Logout</span></a>
+        <div class='notification-dropdown'>
+        <a href="javascript:notificationDropdown();" class="header-btn mr-1 "><i class="fas fa-bell fa-lg"></i></a>
+          
+          <div class='noti-dropdown'>
+          <h3>Notifications</h3>  
+          <?php showNotifications(10)?>
+          <a href="allNotification.php" class='see-more'>
+            <span>See more</span>
+          </a>
+        </div>
+  </div>
+        <a href="messages.php" class="header-btn mr-1" id="msg_id"><i class="fas fa-envelope fa-lg"></i></a>
+        <a href="requests.php" class="header-btn mr-1" id="req_id"><i class="fas fa-user-plus fa-lg"></i></a>
+        <!-- <a href="timeline.php" class="header-btn mr-1" id="timeline_id"><i class="fas fa-user-circle fa-lg"></i></a> -->
+        <a href="logout.php" class="header-btn mr-1" id="logout_id"><i class="fas fa-sign-out-alt fa-lg"></i></a>
+        <a class='logged-user' href='timeline.php'>
+          <?php echo $image ?>
+          <span><?php echo $user ?></span>
+        </a>
       </div>
   </div>
   <?php

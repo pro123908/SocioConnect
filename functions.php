@@ -732,8 +732,7 @@ function showNotifications($flag)
             $postID = $row['post_id'];
             $type = $row['typeC'];
             $notiID = $row['noti_id'];
-            $diffTime = differenceInTime($row['createdAt']);
-            $time = timeString($diffTime);
+            $time = getTime($row['createdAt']);
             $colorNoti = '';
 
             if ($notiCounter == 0) {
@@ -748,7 +747,7 @@ function showNotifications($flag)
             // Selecting name of the user who generated the notification
             $personQuery = queryFunc("SELECT profile_pic,CONCAT(first_name,' ',last_name) as name FROM users WHERE user_id='$sUser'");
             $sPerson = isRecord($personQuery);
-                
+            $notiLink = "notification.php?postID=$postID&type=$type&notiID=$notiID";
                 
             if ($type=='post') {
                 $conflict = 'posted';
@@ -756,13 +755,18 @@ function showNotifications($flag)
             } elseif ($type=='commented') {
                 $conflict = 'commented on your post';
                 $notiIcon = 'far fa-comment-dots';
-            } else {
+            } elseif($type == 'request') {
+                $conflict = 'sent you a request';
+                $notiIcon = 'fas fa-user-plus';
+                $notiLink = "requests.php?notiID=$notiID";
+            }
+            else{ 
                 $conflict = 'liked your post';
                 $notiIcon = 'far fa-thumbs-up';
             }
 
             $noti = <<<NOTI
-                <a href='notification.php?postID={$postID}&type={$type}&notiID={$notiID}' class='notification  {$colorNoti}'>
+                <a href={$notiLink} class='notification  {$colorNoti}'>
                 <span class='notification-image'>
                 <img src='{$sPerson['profile_pic']}' class='post-avatar $postAvatar' />
                 </span>
@@ -851,14 +855,21 @@ function addFriend($id)
     // When add friend button is clicked
     // $id -> the person you are sending request too xD
     $friend = queryFunc("INSERT INTO friend_requests (to_id, from_id) values(".$id.",".$_SESSION['user_id'].")");
+    
+    notification($_SESSION['user_id'],$id,0,'request');
+
     redirection("timeline.php?visitingUserID=".$id);
+    
+
 }
 
 function cancelReq($id)
 {
+    $userID = $_SESSION['user_id'];
     // When cancel request button is clicked
     // Deleting friend request from database
     $friend = queryFunc("DELETE FROM friend_requests WHERE to_id =".$id." AND from_id =".$_SESSION['user_id']);
+    queryFunc("DELETE from notifications where s_user_id='$userID' AND d_user_id='$id' AND typeC='request'");
     redirection("timeline.php?visitingUserID=".$id);
 }
 

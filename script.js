@@ -369,6 +369,11 @@ function message() {
   let partner = document.messageForm.partner;
   let pic = document.messageForm.pic;
   
+  var width = document.querySelector('.chat-messages').offsetWidth;
+  var widthX = document.querySelector('.chat-messages .message');
+
+  console.log('width : ' + width*0.8);
+  console.log(messageBody.value.length);
   if(messageBody.value.length > 0){
     let param = `partner=${partner.value}&messageBody=${messageBody.value}`;
 
@@ -403,6 +408,8 @@ function messageRefresh() {
   var id = url.substring(url.lastIndexOf("=") + 1);
 
   ajaxCalls("GET", `messageAjax.php?id=${id}`).then(function(response) {
+    
+
     let messageResponse = JSON.parse(response);
 
     for (i = 0; i < messageResponse.length; i++) {
@@ -426,9 +433,10 @@ function messageRefresh() {
 
 function refreshRecentConvos() {
   ajaxCalls("GET", "recentConvoAjax.php").then(function(result) {
-    var data = JSON.parse(result);
+     var data = JSON.parse(result);
+    
     if (!(data.notEmpty == "Bilal")) {
-      console.log(data);
+      // console.log(data);
       for (i = data.length - 1; i >= 0; i--) {
         var obj = data[i];
         if (document.querySelector(".recent-user-" + obj.fromID)){
@@ -445,11 +453,13 @@ function refreshRecentConvos() {
             <span class='recent-message-text'>${obj.from} ${obj.msg}</span>
             <span class='recent-message-time'>${obj.at}</span>
           </span>
-          <i class='tooltip-container far fa-trash-alt  comment-delete' onclick='javascript:deleteConvo(${obj.fromID})'><span class='tooltip tooltip-right'>Delete</span></i>
+          <i class='tooltip-container far fa-trash-alt  comment-delete' onclick='javascript:deleteConvo(${obj.fromID})'><span class='tooltip tooltip-left'>Delete</span></i>
         </a>
         `;
+        if(document.querySelector(".recent-chats")){
         document.querySelector(".recent-chats").innerHTML =
           recentMessage + document.querySelector(".recent-chats").innerHTML;
+        }
       }
     }
   });
@@ -581,4 +591,16 @@ function showNextPage(flag) {
 
 function hello(){
   alert("hello");
+}
+
+
+function notificationDropdown(){
+  
+  let display = document.querySelector('.noti-dropdown').style.display;
+
+  if(display == 'block'){
+    document.querySelector('.noti-dropdown').style.display = 'none';
+  }else{
+    document.querySelector('.noti-dropdown').style.display = 'block';
+  }
 }
