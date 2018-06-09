@@ -1383,8 +1383,9 @@ function addActivity($activity_type,$target_id,$userLoggedIn){
     elseif ($activity_type == 1) {
         $conflict = 'commented on a post';
         $notiIcon = 'far fa-comment-dots';
-        $notiLink = "notification.php?postID=$target_id&type=commented&notiID=0";
-        $time = queryFunc("select createdAt from comments where post_id = $target_id and user_id = $userLoggedIn order by comment_id desc limit 1");
+        $commentDetails = explode(" ",$target_id);
+        $notiLink = "notification.php?postID=$commentDetails[0]&type=commented&notiID=0";
+        $time = queryFunc("select createdAt from comments where comment_id = '$commentDetails[1]'");
         if(isData($time)){
             $time = isRecord($time);
             $time = $time['createdAt'];
@@ -1404,11 +1405,13 @@ function addActivity($activity_type,$target_id,$userLoggedIn){
         else
             $flag = false;
     }
-    else{ 
-        $conflict = 'become friend with';
+    elseif($activity_type == 3){ 
+        $conflict = 'made a new friend';
         $notiIcon = 'fas fa-user-plus';
-        $notiLink = "timeline.php?visitingUserID=$target_id";
-        $time = queryFunc("select become_friends_at from friends where (user1 = $target_id and user2 = $userLoggedIn) or (user2 = $target_id and user1 = $userLoggedIn)");
+        $users = explode(" ",$target_id);
+        $visitId = ( $users[0] == $_SESSION['user_id']) ? $users[1] : $users[0] ;
+        $notiLink = "timeline.php?visitingUserID=$visitId";
+        $time = queryFunc("select become_friends_at from friends where (user1 = '$users[0]' AND user2 = '$users[1]') OR (user2 = '$users[1]' AND user1 = '$users[0]') ");
         if(isData($time)){
             $time = isRecord($time);
             $time = $time['become_friends_at'];

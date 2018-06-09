@@ -74,6 +74,13 @@ function like(postID) {
         addRecentActivity(result);
       });    
     }
+    else{
+      var activity_type = 4;
+      param = `target_id=${postID}&activity_type=${activity_type}`;
+      ajaxCalls("POST", `recentActivityAjax.php`,param).then(function(result) {
+        document.querySelector(".activities-content").innerHTML = result;
+      });
+    }
   });
 }
 
@@ -81,10 +88,8 @@ function addRecentActivity(activity){
   var activitiesDiv = document.querySelector(".activities-content");
   alert(activitiesDiv.childNodes.length);
   if(activitiesDiv.childNodes.length == 21){
-    alert("true");
-    activitiesDiv.removeChild(activitiesDiv.lastChild)
+    //Here write the code to remove the last child in the div
   }
-  alert(activitiesDiv.lastChild)    
   activitiesDiv.innerHTML = activity + activitiesDiv.innerHTML;
 }
 
@@ -174,7 +179,8 @@ function comment(postID) {
 
     //Adding in recent activities
     var activity_type = 1;
-    param = `target_id=${postID}&activity_type=${activity_type}`;
+    var commentDetails = postID + " " + commentID;
+    param = `target_id=${commentDetails}&activity_type=${activity_type}`;
     ajaxCalls("POST", `recentActivityAjax.php`,param).then(function(result) {
       addRecentActivity(result);
     });
