@@ -569,6 +569,7 @@ function removeFriend(id) {
     for (i = 0; i < data.length; i++) {
       var obj = data[i];
       var friend = `
+      <div class='friend-container'>
         <div class='friend'>
           <div class='friend-image'>
             <img class='post-avatar post-avatar-30' src='${obj.profile_pic}'  >
@@ -576,14 +577,16 @@ function removeFriend(id) {
           <div class='friend-info'>
             <a href="timeline.php?visitingUserID=${
               obj.user_id
-            }" class='friend-text'>${obj.name}</a>            
+            }" class='friend-text'>${obj.name}</a>   
+            <span class='state-off'>${obj.time}</span>         
           </div>
-          <div class='friend-action'>&nbsp&nbsp&nbsp
-            <a href="javascript:removeFriend(${
-              obj.user_id
-            })" class='remove-friend'><i class="fas fa-times"></i></a>
+          <div class='friend-action'>
+          <div>
+            <a href="javascript:removeFriend(${obj.user_id})" class='remove-friend'><i class="fas fa-times tooltip-container"><span class='tooltip tooltip-right'>Remove Friend</span></i></a>
+            </div>
           </div>
         </div>  
+        </div>
       `;
       document.querySelector(".friends-list-elements").innerHTML += friend;
     }

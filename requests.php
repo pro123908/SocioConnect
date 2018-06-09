@@ -31,7 +31,7 @@ else if(isset($_POST['remove_friend']))
                 <form action ="acceptRequest.php" method="post">
                     <input type="submit" name="accept" value="Confirm"> <input type="submit" name="ignore" value="Ignore">
                     <input type = "hidden" name = "id" value="{$from_user['user_id']}">
-                </form>
+                </form></div>
 DELIMETER;
                       
             }    
