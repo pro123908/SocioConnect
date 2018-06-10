@@ -43,6 +43,10 @@
             <span>See more</span>
           </a>
         </div>
+
+        <div class='noti-count'>
+          <span>25</span>
+        </div>
   </div>
         <div class='message-dropdown'>
         <a href="javascript:messageDropdown()" class="header-btn mr-1"><i class="fas fa-envelope fa-lg"></i></a>
@@ -58,6 +62,10 @@
             <span>See more</span>
           </a>
         </div>
+
+        <div class='msg-count'>
+          <span>25</span>
+        </div>
   </div>  
         
 
@@ -72,6 +80,10 @@
           <a href="requests.php" class='see-more'>
             <span>See more</span>
           </a>
+        </div>
+
+        <div class='req-count'>
+          <span>25</span>
         </div>
   </div>
         <a href="logout.php" class="header-btn mr-1" id="logout_id"><i class="fas fa-sign-out-alt fa-lg"></i></a>

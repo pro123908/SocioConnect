@@ -57,6 +57,20 @@ body {
   position: relative;
 }
 
+.noti-count,.msg-count,.req-count{
+     display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: -14px;
+    left: 22px;
+    background-color: red;
+    font-size: 12px;
+    border-radius: 100%;
+    width: 20px;
+    height: 20px;
+}
+
 .notification-dropdown .noti-dropdown,.message-dropdown .msg-dropdown ,.request-dropdown .req-dropdown {
   background-color: #fff;
   position: absolute;
