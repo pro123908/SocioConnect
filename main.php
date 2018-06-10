@@ -42,7 +42,6 @@
                 echo "<p class='see-more'>No Activities to Show</p>";
               else if($_SESSION['more_activities'] == 2)   
                 echo "<p class='see-more'>No More Activities to Show</p>";
-              unset($_SESSION['more_activities']);   
             ?>
           </div>
         </div>

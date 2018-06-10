@@ -1157,7 +1157,7 @@ MESSAGE;
 function showRecentActivities($page,$limit,$flag = null){
     $userLoggedIn = $_SESSION['user_id'];
     if(isset($flag)){
-        $activities = queryFunc("select * from recent_activities where user_id = '$userLoggedIn' order by activity_id desc limit 10");
+        $activities = queryFunc("select * from recent_activities where user_id = '$userLoggedIn' order by activity_id desc limit 11");
     }
     else{
         $activities = queryFunc("select * from recent_activities where user_id = '$userLoggedIn' order by activity_id desc");
@@ -1169,6 +1169,7 @@ function showRecentActivities($page,$limit,$flag = null){
         $start = ($page - 1) * $limit;
     }
     $numberOfIteration = 0; // //Number of results checked - once it reaches to value of start we start rendering posts.
+    $_SESSION['more_activities'] = 3;
     if(isData($activities)){
         $count = 1; // To keep track of no of posts rendered
 
@@ -1189,14 +1190,16 @@ function showRecentActivities($page,$limit,$flag = null){
             }    
             addActivity($row['activity_type'], $row['activity_at_id'], $row['user_id']);
         }
-        if ($count > $limit) {
-            $infoForNextTime = "<input type='hidden' id='noMoreActivities' value='false'><input type='hidden' id='nextPageActivities' value='".($page+1)."' >";
-        } else {
-            $infoForNextTime = "<input type='hidden' id='noMoreActivities' value='true'>";
+        if(!(isset($flag))){
+            if ($count > $limit) {
+                $infoForNextTime = "<input type='hidden' id='noMoreActivities' value='false'><input type='hidden' id='nextPageActivities' value='".($page+1)."' >";
+            } else {
+                $infoForNextTime = "<input type='hidden' id='noMoreActivities' value='true'>";
+            }
+            echo $infoForNextTime;
         }
-        echo $infoForNextTime;
     }
-    if(!isset($_SESSION['more_activities'])){
+    if($_SESSION['more_activities'] == 3){
         if ($numberOfIteration == 0) {
             $_SESSION['more_activities'] = 0;
         } else {

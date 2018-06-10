@@ -120,14 +120,14 @@ function like(postID) {
 function addRecentActivity(activity){
   var activitiesDiv = document.querySelector(".activities-content");
   activitiesDiv.innerHTML = activity + activitiesDiv.innerHTML;
-  if(findChildNodes(activitiesDiv) == 12){
+  if(findChildNodes(activitiesDiv) == 11){
     document.querySelector(".show-more-activities").innerHTML = "<a href='allActivities.php' class='see-more'><span>See more</span></a>";    
     var lastChild = activitiesDiv.getElementsByTagName('a')[10];
     var removed = activitiesDiv.removeChild(lastChild);
   }
   else if(findChildNodes(activitiesDiv) > 0)
-  document.querySelector(".show-more-activities").innerHTML = "<p class='see-more'>No More Activities to Show</p>";
-  
+    document.querySelector(".show-more-activities").innerHTML = "<p class='see-more'>No More Activities to Show</p>";
+    
 }
 
 function findChildNodes(div){
