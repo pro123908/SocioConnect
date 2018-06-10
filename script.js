@@ -86,11 +86,15 @@ function like(postID) {
 
 function addRecentActivity(activity){
   var activitiesDiv = document.querySelector(".activities-content");
-  if(findChildNodes(activitiesDiv) == 10){
+  activitiesDiv.innerHTML = activity + activitiesDiv.innerHTML;
+  if(findChildNodes(activitiesDiv) == 11){
+    var lastChild = activitiesDiv.getElementsByTagName('a')[10];
+    var removed = activitiesDiv.removeChild(lastChild);
     //Here write the code to remove the last child in the div
     //activitiesDiv.removeChild(activitiesDiv.lastChild);  this is not working
+    
   }
-  activitiesDiv.innerHTML = activity + activitiesDiv.innerHTML;
+  
 }
 
 function findChildNodes(div){

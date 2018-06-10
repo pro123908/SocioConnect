@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Look</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+</head>
+<body>
+
+  <div class='content'>
+    <span>Element 1</span>
+    <span>Element 2</span>
+    <span>Element 3</span>
+    <span>Element 4</span>
+    <span>Element 5</span>
+    <span>Element 6</span>
+    <span>Element 7</span>
+  </div>
+  
+
+
+  <script>
+    var div = document.querySelector('.content');
+    var child = div.getElementsByTagName('span')[6];
+    
+    var res = div.removeChild(child);
+    console.log(res);
+  </script>
+
+</body>
+</html>
