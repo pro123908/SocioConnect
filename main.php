@@ -31,13 +31,19 @@
         <div class='notifications' id="recent_activities">
           <div class='notification-heading'>Recent Activities</div>
           <div class='activities-content'>
-          <?php showRecentActivities(1,10,'all');
+          <?php showRecentActivities(1,10,10);
           ?>
           </div>
           <div class="show-more-activities">
-          <a href='allActivities.php' class='see-more'>
-            <span>See more</span>
-          </a>
+            <?php 
+              if($_SESSION['more_activities'] == 1) 
+                echo "<a href='allActivities.php' class='see-more'><span>See more</span></a>";
+              else if($_SESSION['more_activities'] == 0) 
+                echo "<p class='see-more'>No Activities to Show</p>";
+              else if($_SESSION['more_activities'] == 2)   
+                echo "<p class='see-more'>No More Activities to Show</p>";
+              unset($_SESSION['more_activities']);   
+            ?>
           </div>
         </div>
       </div>
@@ -62,21 +68,19 @@ addPost(true,"");
 
 <div class="friends-area">
     <div class='friend-heading'>Friends</div>
-    <div class='friend-container'>
+    <div class='friends-container'>
     <?php displayFriends(10); ?>
     </div>
     <div class="show-more-friends">
-    <a href='requests.php' class='see-more'>
-        <span><?php if($_SESSION['more_friends'] == 1) 
-                      echo "See more";
-              ?></span>
-      </a>
-      <?php if($_SESSION['more_friends'] == 0) 
-                echo "<p class='see-more'>No Friends to Show</p>";
-             else if($_SESSION['more_friends'] == 2)   
-                echo "<p class='see-more'>No More Friends to Show</p>";
-      ?>
-      <?php unset($_SESSION['more_friends']); ?>
+    <?php 
+      if($_SESSION['more_friends'] == 1) 
+        echo "<a href='requests.php' class='see-more'><span>See more</span></a>";
+      else if($_SESSION['more_friends'] == 0) 
+        echo "<p class='see-more'>No Friends to Show</p>";
+      else if($_SESSION['more_friends'] == 2)   
+        echo "<p class='see-more'>No More Friends to Show</p>";
+      unset($_SESSION['more_friends']);   
+    ?>
     </div>  
 </div>
 
