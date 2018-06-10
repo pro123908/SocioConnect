@@ -1038,6 +1038,7 @@ function displayFriends($count=null)
             // }
 
             $content = <<<FRIEND
+            
                 <div class='friend'>
                 <div class='friend-image'>
                 <img class='post-avatar post-avatar-30' src='{$friend['profile_pic']}'  >
@@ -1055,6 +1056,7 @@ function displayFriends($count=null)
                 </div>
             </div>
             </div>
+            
 FRIEND;
             echo $content;
         }

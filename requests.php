@@ -50,7 +50,7 @@ DELIMETER;
         $friend_req .= '<div class="friends-list"><h1>Friends</h1><div class="friends-list-elements"><div class="friend-container">';
         echo $friend_req;  
         displayFriends();
-        echo "</div></div></div></div>";
+        echo "</div></div></div>";
         
     ?>
     <div class='people-you-may-know-area'>People you may know</div>
