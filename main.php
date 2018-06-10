@@ -11,7 +11,7 @@
   $_SESSION['last_msg_id'] = 0;
   $_SESSION['last_message_retrieved_for_recent_convos'] = 0;
   // Getting current user name
-   
+   echo "dsaf";
 ?>
 
 <!-- Notification Area of the page -->

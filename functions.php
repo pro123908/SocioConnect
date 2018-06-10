@@ -702,7 +702,7 @@ function notification($sUser, $dUser, $post, $type)
     }
 }
 
-function showNotifications($flag)
+function showNotifications($flag,$page)
 {
     $user = $_SESSION['user_id'];
 
@@ -717,13 +717,29 @@ function showNotifications($flag)
 
     // flag for user realization
     // $isAny = false;
+    if ($page == 1) { // if you are at first page then starting with post 0
+        $start = 0;
+    } else { // else calculating which post to start from
+        $start = ($page - 1) * $limit + $_SESSION['no_of_posts_changed'];
+    }
 
     if (isData($notiQuery)) {
+        $numberOfIteration = 0; //Number of results checked - once it reaches to value of start we start rendering posts.
+        $count = 1; // To keep track of no of posts rendered
+
         // If there are notifications
         $notiCounter = 0;
         while ($row = isRecord($notiQuery)) {
     
-                // $isAny = true;
+            if ($numberOfIteration++ < $start) {
+                continue;
+            }
+            if ($count > $limit) {
+                break;
+            } else {
+                $count++;
+            }
+            // $isAny = true;
             $sUser = $row['s_user_id'];
             $postID = $row['post_id'];
             $type = $row['typeC'];
@@ -771,6 +787,12 @@ function showNotifications($flag)
 NOTI;
             echo $noti;
         }
+        if ($count > $limit) {
+            $infoForNextTime = "<input type='hidden' id='nextPage' value='".($page+1)."' ><input type='hidden' id='noMorePosts' value='false'>";
+        } else {
+            $infoForNextTime = "<input type='hidden' id='noMorePosts' value='true'>";
+        }
+        echo $infoForNextTime;
     }
 }
 
@@ -1076,11 +1098,12 @@ MESSAGE;
 }
 
 function showRecentActivities($limit = null){
+    $userLoggedIn = $_SESSION['user_id'];
     if(isset($limit)){
-        $activities = queryFunc("select * from recent_activities order by activity_id desc limit 10");
+        $activities = queryFunc("select * from recent_activities where user_id = '$userLoggedIn' order by activity_id desc limit 10");
     }
     else{
-        $activities = queryFunc("select * from recent_activities order by activity_id desc");
+        $activities = queryFunc("select * from recent_activities where user_id = '$userLoggedIn' order by activity_id desc");
     }
     while($row = isRecord($activities)){
         addActivity($row['activity_type'],$row['activity_at_id'],$row['user_id']);

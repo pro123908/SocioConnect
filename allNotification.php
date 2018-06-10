@@ -9,7 +9,7 @@ if(!isset($_SESSION['user_id'])){
 
 
     echo '<div class="notification-display"><h1>Notifications</h1>';
-    showNotifications('all');
+    showNotifications('all',1,10);
     echo '</div>';
 ?>
 <script src="script.js" >
