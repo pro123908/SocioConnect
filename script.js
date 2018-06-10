@@ -87,6 +87,7 @@ function like(postID) {
 function addRecentActivity(activity){
   var activitiesDiv = document.querySelector(".activities-content");
   activitiesDiv.innerHTML = activity + activitiesDiv.innerHTML;
+
   if(findChildNodes(activitiesDiv) == 11){
     var lastChild = activitiesDiv.getElementsByTagName('a')[10];
     var removed = activitiesDiv.removeChild(lastChild);
@@ -343,7 +344,7 @@ function commentsRefresh() {
   });
 }
 
-setInterval(notificationRefresh, 3000);
+//setInterval(notificationRefresh, 3000);
 
 function notificationRefresh() {
   ajaxCalls("GET", "notificationsAjax.php").then(function(result) {
@@ -491,8 +492,8 @@ function refreshRecentConvos() {
       // console.log(data);
       for (i = data.length - 1; i >= 0; i--) {
         var obj = data[i];
-        if (document.querySelector(".recent-user-" + obj.fromID)){
-          document.querySelector(".recent-user-" + obj.fromID).style.display =
+        if (document.querySelector(".recent-chats .recent-user-" + obj.fromID)){
+          document.querySelector(".recent-chats .recent-user-" + obj.fromID).style.display =
             "none";
         }
         var recentMessage = `
@@ -597,11 +598,7 @@ function removeFriend(id) {
   });
 }
 
-window.onclick = function(e) {
-  if (e.srcElement.className != "search-input") {
-    document.querySelector(".search-result").style.display = "none";
-  }
-}
+
 
 function showPage(flag, page) {
   document.getElementById("loading").style.display = "none";
@@ -654,10 +651,55 @@ function notificationDropdown(){
   let display = document.querySelector('.noti-dropdown').style.display;
 
   if(display == 'block'){
+    console.log('block');
     document.querySelector('.noti-dropdown').style.display = 'none';
   }else{
+    console.log('none');
     document.querySelector('.noti-dropdown').style.display = 'block';
   }
 }
 
+function messageDropdown(){
+  
+  let display = document.querySelector('.msg-dropdown').style.display;
 
+  if(display == 'block'){
+    console.log('block');
+    document.querySelector('.msg-dropdown').style.display = 'none';
+  }else{
+    console.log('none');
+    document.querySelector('.msg-dropdown').style.display = 'block';
+  }
+}
+
+function requestDropdown(){
+  
+  let display = document.querySelector('.req-dropdown').style.display;
+
+  if(display == 'block'){
+    console.log('block');
+    document.querySelector('.req-dropdown').style.display = 'none';
+  }else{
+    console.log('none');
+    document.querySelector('.req-dropdown').style.display = 'block';
+  }
+}
+
+
+window.onclick = function(e) {
+  if (e.srcElement.className != "search-input") {
+    document.querySelector(".search-result").style.display = "none";
+  }
+
+  if (e.srcElement.className != "notification-dropdown" && e.srcElement.className != "noti-dropdown") {
+    document.querySelector(".noti-dropdown").style.display = "none";
+  }
+
+  if (e.srcElement.className != "message-dropdown" && e.srcElement.className != "msg-dropdown") {
+    document.querySelector(".msg-dropdown").style.display = "none";
+  }
+
+  if (e.srcElement.className != "request-dropdown" && e.srcElement.className != "req-dropdown") {
+    document.querySelector(".req-dropdown").style.display = "none";
+  }
+}
