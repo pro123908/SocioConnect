@@ -1,7 +1,7 @@
 
 <?php 
 
-require_once('header.php');
+require_once('functions.php');
 
 if(!isset($_SESSION['user_id'])){
     redirection('index.php');
@@ -14,12 +14,19 @@ else if(isset($_POST['respond_to_request']))
     redirection("requests.php");
 else if(isset($_POST['remove_friend']))
     removeFriend($_POST['userId']);
+    
+require_once('header.php');
+
 ?>
+
+
 
 <div class='content'>
     <?php
         // Getting all your requests from database which you have received
-        $reqArray = queryFunc("Select * from friend_requests where to_id = ".$_SESSION['user_id']);
+        $userID = $_SESSION['user_id'];
+
+        $reqArray = queryFunc("SELECT * FROM friend_requests WHERE to_id ={$userID} AND status=0");
         $friend_req = "<div class='friend-request-area'><div class='friend-request'>";
         if (isData($reqArray)) { 
             while ($row = isRecord($reqArray)) {
@@ -31,7 +38,7 @@ else if(isset($_POST['remove_friend']))
                 <form action ="acceptRequest.php" method="post">
                     <input type="submit" name="accept" value="Confirm"> <input type="submit" name="ignore" value="Ignore">
                     <input type = "hidden" name = "id" value="{$from_user['user_id']}">
-                </form>
+                </form></div>
 DELIMETER;
                       
             }    

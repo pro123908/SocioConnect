@@ -1,6 +1,6 @@
 <?php 
 
-  require_once('header.php');
+  include('header.php');
 
   if(!isset($_SESSION['user_id'])){
     redirection('index.php');
@@ -11,7 +11,6 @@
   $_SESSION['last_msg_id'] = 0;
   $_SESSION['last_message_retrieved_for_recent_convos'] = 0;
   // Getting current user name
-   echo "dsaf";
 ?>
 
 <!-- Notification Area of the page -->
@@ -32,7 +31,7 @@
         <div class='notifications' id="recent_activities">
           <div class='notification-heading'>Recent Activities</div>
           <div class='activities-content'>
-          <?php showRecentActivities(10);
+          <?php showRecentActivities(1,10,'all');
           ?>
           </div>
           <a href='allActivities.php' class='see-more'>

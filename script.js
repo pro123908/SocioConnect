@@ -28,8 +28,6 @@ function setUserId(id) {
         }
         document.getElementById("loading").innerHTML = loading;
       }
-
-          // <div id='loading-messages' class='loading-messages'><a href="javascript:showNextPageMessages('<?php echo $_GET['id']?>')">Show More Messages</a></div>
     }    
   }
   else if(url.slice(0,42) == 'http://localhost/socioConnect/messages.php'){
@@ -50,6 +48,36 @@ function setUserId(id) {
       }    
     }
   }
+  else if(url == "http://localhost/socioConnect/allNotification.php"){
+    var notis = document.querySelectorAll(".notification");
+    if(notis.length == 0)
+      document.getElementById("loading-notis").innerHTML = 'No Notifications To Show';
+    else if(notis.length < 10)
+      document.getElementById("loading-notis").innerHTML = 'No More Notifications To Show';    
+    else{
+      var flag = document.getElementById("noMoreNotis");
+      if(flag.value == "true")
+          document.getElementById("loading-notis").innerHTML = 'No More Messages To Show';
+      else{
+            document.getElementById("loading-notis").innerHTML = `<a href="javascript:showNextPageNotis()">Show More Notifications</a>`
+          }
+      }    
+    }
+    else if(url == "http://localhost/socioConnect/allActivities.php"){
+      var notis = document.querySelectorAll(".recent_activity ");
+      if(notis.length == 0)
+        document.getElementById("loading-activities").innerHTML = 'No Activities To Show';
+      else if(notis.length < 10)
+        document.getElementById("loading-activities").innerHTML = 'No More Activities To Show';    
+      else{
+        var flag = document.getElementById("noMoreActivities");
+        if(flag.value == "true")
+            document.getElementById("loading-activities").innerHTML = 'No More Activities To Show';
+        else{
+              document.getElementById("loading-activities").innerHTML = `<a href="javascript:showNextPageActivities()">Show More Activities</a>`
+            }
+        }    
+      }
   session_user_id = id;
 }
 
@@ -86,11 +114,13 @@ function like(postID) {
 
 function addRecentActivity(activity){
   var activitiesDiv = document.querySelector(".activities-content");
-  if(findChildNodes(activitiesDiv) == 10){
-    //Here write the code to remove the last child in the div
-    //activitiesDiv.removeChild(activitiesDiv.lastChild);  this is not working
-  }
   activitiesDiv.innerHTML = activity + activitiesDiv.innerHTML;
+  if(findChildNodes(activitiesDiv) == 12){
+    alert("ziada")
+    var lastChild = activitiesDiv.getElementsByTagName('a')[10];
+    var removed = activitiesDiv.removeChild(lastChild);
+  }
+  
 }
 
 function findChildNodes(div){
@@ -339,7 +369,7 @@ function commentsRefresh() {
   });
 }
 
-setInterval(notificationRefresh, 3000);
+//setInterval(notificationRefresh, 3000);
 
 function notificationRefresh() {
   ajaxCalls("GET", "notificationsAjax.php").then(function(result) {
@@ -487,8 +517,8 @@ function refreshRecentConvos() {
       // console.log(data);
       for (i = data.length - 1; i >= 0; i--) {
         var obj = data[i];
-        if (document.querySelector(".recent-user-" + obj.fromID)){
-          document.querySelector(".recent-user-" + obj.fromID).style.display =
+        if (document.querySelector(".recent-chats .recent-user-" + obj.fromID)){
+          document.querySelector(".recent-chats .recent-user-" + obj.fromID).style.display =
             "none";
         }
         var recentMessage = `
@@ -569,6 +599,7 @@ function removeFriend(id) {
     for (i = 0; i < data.length; i++) {
       var obj = data[i];
       var friend = `
+      <div class='friend-container'>
         <div class='friend'>
           <div class='friend-image'>
             <img class='post-avatar post-avatar-30' src='${obj.profile_pic}'  >
@@ -576,25 +607,23 @@ function removeFriend(id) {
           <div class='friend-info'>
             <a href="timeline.php?visitingUserID=${
               obj.user_id
-            }" class='friend-text'>${obj.name}</a>            
+            }" class='friend-text'>${obj.name}</a>   
+            <span class='state-off'>${obj.time}</span>         
           </div>
-          <div class='friend-action'>&nbsp&nbsp&nbsp
-            <a href="javascript:removeFriend(${
-              obj.user_id
-            })" class='remove-friend'><i class="fas fa-times"></i></a>
+          <div class='friend-action'>
+          <div>
+            <a href="javascript:removeFriend(${obj.user_id})" class='remove-friend'><i class="fas fa-times tooltip-container"><span class='tooltip tooltip-right'>Remove Friend</span></i></a>
+            </div>
           </div>
         </div>  
+        </div>
       `;
       document.querySelector(".friends-list-elements").innerHTML += friend;
     }
   });
 }
 
-window.onclick = function(e) {
-  if (e.srcElement.className != "search-input") {
-    document.querySelector(".search-result").style.display = "none";
-  }
-}
+
 
 function showPage(flag, page) {
   document.getElementById("loading").style.display = "none";
@@ -641,16 +670,120 @@ function hello(){
   alert("hello");
 }
 
+function showPageNotis(page){
+  document.getElementById("loading-notis").style.display = "none";
+  var xhr = new XMLHttpRequest();
+  xhr.open("GET","loadNotificationsAjax.php?page="+page,true);
+  xhr.onload = function(){
+    if(this.status = 200){
+      document.querySelector(".notifications").innerHTML = document.querySelector(".notifications").innerHTML + this.responseText ;
+      document.getElementById("loading-notis").style.display = 'block';
+    }
+    if(document.getElementById("noMoreNotis").value == "true")
+      document.getElementById("loading-notis").innerHTML = 'No More Notifications To Show';
+  }
+  xhr.send();
+} 
+
+function showNextPageNotis(){
+  var noMorePosts = document.getElementById("noMoreNotis");
+  var page = document.getElementById("nextPageNotis");
+  if (noMorePosts.value == "false") {
+    //deleting previous data
+    var div = document.querySelector(".notifications");
+    div.removeChild(page);
+    div.removeChild(noMorePosts);
+    showPageNotis(page.value);
+  } 
+  else {
+    alert("khtm");
+  }
+}
+
+function showPageActivities(page){
+  document.getElementById("loading-activities").style.display = "none";
+  var xhr = new XMLHttpRequest();
+  xhr.open("GET","loadRecentActivitiesAjax.php?page="+page,true);
+  xhr.onload = function(){
+    if(this.status = 200){
+      document.querySelector(".activities").innerHTML = document.querySelector(".activities").innerHTML + this.responseText ;
+      document.getElementById("loading-activities").style.display = 'block';
+    }
+    if(document.getElementById("noMoreActivities").value == "true")
+      document.getElementById("loading-activities").innerHTML = 'No More Activities To Show';
+  }
+  xhr.send();
+} 
+
+function showNextPageActivities(){
+  var noMorePosts = document.getElementById("noMoreActivities");
+  var page = document.getElementById("nextPageActivities");
+  if (noMorePosts.value == "false") {
+    //deleting previous data
+    var div = document.querySelector(".activities");
+    div.removeChild(page);
+    div.removeChild(noMorePosts);
+    showPageActivities(page.value);
+  } 
+  else {
+    alert("khtm");
+  }
+}
 
 function notificationDropdown(){
   
   let display = document.querySelector('.noti-dropdown').style.display;
 
   if(display == 'block'){
+    console.log('block');
     document.querySelector('.noti-dropdown').style.display = 'none';
   }else{
+    console.log('none');
     document.querySelector('.noti-dropdown').style.display = 'block';
   }
 }
 
+function messageDropdown(){
+  
+  let display = document.querySelector('.msg-dropdown').style.display;
 
+  if(display == 'block'){
+    console.log('block');
+    document.querySelector('.msg-dropdown').style.display = 'none';
+  }else{
+    console.log('none');
+    document.querySelector('.msg-dropdown').style.display = 'block';
+  }
+}
+
+function requestDropdown(){
+  
+  let display = document.querySelector('.req-dropdown').style.display;
+
+  if(display == 'block'){
+    console.log('block');
+    document.querySelector('.req-dropdown').style.display = 'none';
+  }else{
+    console.log('none');
+    document.querySelector('.req-dropdown').style.display = 'block';
+  }
+}
+
+
+window.onclick = function(e) {
+  if (e.srcElement.className != "search-input") {
+    document.querySelector(".search-result").style.display = "none";
+  }
+
+  if (e.srcElement.className != "notification-dropdown" && e.srcElement.className != "noti-dropdown") {
+    document.querySelector(".noti-dropdown").style.display = "none";
+  }
+
+  if (e.srcElement.className != "message-dropdown" && e.srcElement.className != "msg-dropdown") {
+    document.querySelector(".msg-dropdown").style.display = "none";
+  }
+
+  if (e.srcElement.className != "request-dropdown" && e.srcElement.className != "req-dropdown") {
+    document.querySelector(".req-dropdown").style.display = "none";
+  }
+}

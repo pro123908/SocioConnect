@@ -6,6 +6,11 @@
   display: visible;
 }
 
+.center{
+  text-align: center;
+  display: block;
+}
+
 .green {}
 
 * {
@@ -48,11 +53,11 @@ body {
 
 /* Notification Dropdown */
 
-.notification-dropdown {
+.notification-dropdown,.message-dropdown,.request-dropdown{
   position: relative;
 }
 
-.notification-dropdown .noti-dropdown {
+.notification-dropdown .noti-dropdown,.message-dropdown .msg-dropdown ,.request-dropdown .req-dropdown {
   background-color: #fff;
   position: absolute;
   color: #000;
@@ -69,7 +74,7 @@ body {
   
 }
 
-.noti-dropdown h3{
+.noti-dropdown h3,.msg-dropdown h3,.req-dropdown h3{
   padding: 10px;
   text-align: center;
 }
@@ -674,6 +679,7 @@ body {
   color: #3578e5;
 }
 
+
 /* Notification Page */
 
 .notification-display {
@@ -732,6 +738,19 @@ body {
 .notification-info {
   display: inline-block;
 }
+
+.notification-info .deleted-noti {
+  color: red;
+}
+
+.deleted-noti{
+  cursor: not-allowed;
+}
+
+.deleted-noti:hover{
+  background-color: #fff;
+}
+
 
 .noSeen {
   background-color: #f7f380;
