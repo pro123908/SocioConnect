@@ -130,6 +130,7 @@ function newPost($postContent)
         $postID = $queryResult['post_id'];
         $userID = $_SESSION['user_id'];
         $user = $_SESSION['user'];
+        $profilePic = $queryResult['profile_pic'];
         $timeToShow = getTime($queryResult['createdAt']);
         
         $PostDeleteButton = <<<PosDel
@@ -163,8 +164,16 @@ PosDel;
                 <a  class='post-btn comment-btn' href="javascript:showCommentField({$postID})"><i class="far fa-comment-dots"></i> Comment</a>
             </div>    
             <div id="comment-section-{$postID}" class='hidden'>
-                <div class='comment-area-{$postID}'>
-            </div>
+                <div class='comment-area-{$postID}'></div>
+                <div class='comment-form'>
+                    <form onsubmit="return comment({$postID})" method="post" id='commentForm'>
+                        <input name = "comment_{$postID}" type='text' autocomplete = "off">
+                        <input type="text" value="{$postID}" style="display:none" name="post_id_{$postID}">
+                        <input type="text" value="{$user}" style="display:none" name="post_user">
+                        <input type="text" value="{$profilePic}" style="display:none" name="pic_user">
+                        <input style='display:none;' type='submit' id="{$postID}" value="Comment" > 
+                    </form>
+                </div>
         </div>
         </div>
         </div>
