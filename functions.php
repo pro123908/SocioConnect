@@ -348,10 +348,6 @@ function showPosts($flag, $page, $limit)
         while ($row = isRecord($queryResult)) {
             //Wait to reach start value to start rendering posts, because before $start are already rendered
 
-            //If defined number of posts are rendered then break
-            if ($start + $limit == mysqli_num_rows($queryResult)) {
-                $count = 0;
-            }
             if ($row['user_id'] == $_SESSION['user_id'] || isFriend($row['user_id'])) {
                 //once it reaches to value of $start we start rendering posts.
                 if ($numberOfIteration++ < $start) {
@@ -475,15 +471,28 @@ function renderPost($row)
 
 
     // Getting likes count for the current post
-    $likesResult = queryFunc("SELECT user_id,count(*) as count from likes where post_id='$postID'");
-    $likes = isRecord($likesResult);
+    $NoOflikes = queryFunc("SELECT count(*) as count from likes where post_id='$postID'");
+    $likes = isRecord($NoOflikes);
+
 
     // Getting number of comments for post
     $commentCountResult = queryFunc("SELECT count(*) as count from comments where post_id='$postID'");
     $commentsCount = isRecord($commentCountResult);
 
+    //Getting liker's IDs
+    $likers = queryFunc("SELECT user_id from likes where post_id='$postID'");
+    $flag = false;
+    if(isData($likers)){
+        while($liker = isRecord($likers)){
+            if($liker['user_id'] == $_SESSION['user_id']){
+                $flag = true;
+                break;
+            }
+        }
+    }
+
     //Checking if you have liked the post?
-    if ($likes['user_id'] == $_SESSION['user_id']) {
+    if ($flag) {
         $likeIcon = "<i class='blue far fa-thumbs-up'></i>";
     } else {
         $likeIcon = "<i class='far fa-thumbs-up'></i>";
