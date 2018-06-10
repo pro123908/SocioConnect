@@ -34,9 +34,11 @@
           <?php showRecentActivities(1,10,'all');
           ?>
           </div>
+          <div class="show-more-activities">
           <a href='allActivities.php' class='see-more'>
-        <span>See more</span>
-      </a>
+            <span>See more</span>
+          </a>
+          </div>
         </div>
       </div>
 
@@ -60,15 +62,22 @@ addPost(true,"");
 
 <div class="friends-area">
     <div class='friend-heading'>Friends</div>
-      <?php displayFriends(10); ?>
-      <a href='requests.php' class='see-more'>
+    <div class='friend-container'>
+    <?php displayFriends(10); ?>
+    </div>
+    <div class="show-more-friends">
+    <a href='requests.php' class='see-more'>
         <span><?php if($_SESSION['more_friends'] == 1) 
                       echo "See more";
               ?></span>
       </a>
       <?php if($_SESSION['more_friends'] == 0) 
-                echo "No Friends to Show";
+                echo "<p class='see-more'>No Friends to Show</p>";
+             else if($_SESSION['more_friends'] == 2)   
+                echo "<p class='see-more'>No More Friends to Show</p>";
       ?>
+      <?php unset($_SESSION['more_friends']); ?>
+    </div>  
 </div>
 
 </body>

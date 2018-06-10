@@ -1038,7 +1038,6 @@ function displayFriends($count=null)
             // }
 
             $content = <<<FRIEND
-            <div class='friend-container'>
                 <div class='friend'>
                 <div class='friend-image'>
                 <img class='post-avatar post-avatar-30' src='{$friend['profile_pic']}'  >
@@ -1056,16 +1055,18 @@ function displayFriends($count=null)
                 </div>
             </div>
             </div>
-            </div>
 FRIEND;
             echo $content;
         }
     }
-    if ($numberOfIteration == 0) {
-        $_SESSION['more_friends'] = 0;
-    } else {
-        $_SESSION['more_friends'] = 2;
+    if(!isset($_SESSION['more_friends'])){
+        if ($numberOfIteration == 0) {
+            $_SESSION['more_friends'] = 0;
+        } else {
+            $_SESSION['more_friends'] = 2;
+        }
     }
+    
 }
 //Message Functions
 function sendMessage($user_to, $message_body)

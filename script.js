@@ -25,6 +25,11 @@ function setUserId(id) {
         }
         else{
           var loading = `<a href="javascript:showNextPage('a')">Show More Posts</a>`; 
+          // if(){
+          //   var seeMoreActivites = "<a href='allActivities.php' class='see-more'><span>See more</span></a>";
+          // }else{
+          //   var seeMoreActivites = "<p class='see-more'>No Recent Activities</p>";
+          // }
         }
         document.getElementById("loading").innerHTML = loading;
       }
@@ -591,35 +596,43 @@ function showNextPageMessages(id){
 
 function removeFriend(id) {
   let param = `friendId=${id}`;
-  ajaxCalls("POST", "removeFriendAjax.php", param).then(function(result) {
+  ajaxCalls("POST", "removeFriendAjax.php", param).then(function(result) {  
     var data = JSON.parse(result);
-    console.log("Response messageSimple : " + data);
-    document.querySelector(".friends-list-elements").innerHTML = "";
-    console.log(data.length);
-    for (i = 0; i < data.length; i++) {
-      var obj = data[i];
-      var friend = `
-      <div class='friend-container'>
-        <div class='friend'>
-          <div class='friend-image'>
-            <img class='post-avatar post-avatar-30' src='${obj.profile_pic}'  >
-          </div>
-          <div class='friend-info'>
-            <a href="timeline.php?visitingUserID=${
-              obj.user_id
-            }" class='friend-text'>${obj.name}</a>   
-            <span class='state-off'>${obj.time}</span>         
-          </div>
-          <div class='friend-action'>
-          <div>
-            <a href="javascript:removeFriend(${obj.user_id})" class='remove-friend'><i class="fas fa-times tooltip-container"><span class='tooltip tooltip-right'>Remove Friend</span></i></a>
+    // if(data.length == 0){
+    //   document.querySelector(".friends-list-elements").innerHTML = "";
+    // }
+    // else{
+      console.log("Response messageSimple : " + data[0]);
+      document.querySelector(".friend-container").innerHTML = "";
+      var flag = 0
+      console.log(data.length);
+      for (i = 0; i < data.length; i++) {
+        flag = 1;
+        var obj = data[i];
+        var friend = `
+          <div class='friend'>
+            <div class='friend-image'>
+              <img class='post-avatar post-avatar-30' src='${obj.profile_pic}'  >
             </div>
-          </div>
-        </div>  
-        </div>
-      `;
-      document.querySelector(".friends-list-elements").innerHTML += friend;
-    }
+            <div class='friend-info'>
+              <a href="timeline.php?visitingUserID=${
+                obj.user_id
+              }" class='friend-text'>${obj.name}</a>   
+              <span class='state-off'>${obj.time}</span>         
+            </div>
+            <div class='friend-action'>
+            <div>
+              <a href="javascript:removeFriend(${obj.user_id})" class='remove-friend'><i class="fas fa-times tooltip-container"><span class='tooltip tooltip-right'>Remove Friend</span></i></a>
+              </div>
+            </div>
+          </div>  
+        `;
+        document.querySelector(".friend-container").innerHTML += friend;
+      }
+      if(flag == 0 ){
+        document.querySelector(".show-more-friends").innerHTML = "<p class='see-more'>No Friends To Show</p>";
+      }
+   // }
   });
 }
 
