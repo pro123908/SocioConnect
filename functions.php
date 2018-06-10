@@ -1008,8 +1008,8 @@ function displayFriends($count=null)
     $numberOfIteration = 0;
     if (isData($queryResult)) {
         while ($row = isRecord($queryResult)) {
-            if (isset($count)) {
-                if ($numberOfIteration++ >= $count) {
+            if(isset($count)){
+                if(++$numberOfIteration > $count){
                     $_SESSION['more_friends'] = 1;
                     break;
                 }
@@ -1038,7 +1038,7 @@ function displayFriends($count=null)
             // }
 
             $content = <<<FRIEND
-            
+                <div class="friend-container">
                 <div class='friend'>
                 <div class='friend-image'>
                 <img class='post-avatar post-avatar-30' src='{$friend['profile_pic']}'  >
@@ -1056,7 +1056,7 @@ function displayFriends($count=null)
                 </div>
             </div>
             </div>
-            
+            </div>
 FRIEND;
             echo $content;
         }
@@ -1068,7 +1068,7 @@ FRIEND;
             $_SESSION['more_friends'] = 2;
         }
     }
-    
+
 }
 //Message Functions
 function sendMessage($user_to, $message_body)
@@ -1168,12 +1168,12 @@ function showRecentActivities($page,$limit,$flag = null){
     else { // else calculating which post to start from
         $start = ($page - 1) * $limit;
     }
-
+    $numberOfIteration = 0; // //Number of results checked - once it reaches to value of start we start rendering posts.
     if(isData($activities)){
-        $numberOfIteration = 0; //Number of results checked - once it reaches to value of start we start rendering posts.
         $count = 1; // To keep track of no of posts rendered
 
         while ($row = isRecord($activities)) {
+                
              //Wait to reach start value to start rendering posts, because before $start are already rendered
 
             //If defined number of posts are rendered then break
@@ -1181,10 +1181,8 @@ function showRecentActivities($page,$limit,$flag = null){
             if ($numberOfIteration++ < $start) {
                 continue;
             }
-            if ($start + $limit == mysqli_num_rows($activities)) {
-                $count = 0;
-            }
             if ($count > $limit) {
+                $_SESSION['more_activities'] = 1;
                 break;
             } else {
                 $count++;
@@ -1197,6 +1195,13 @@ function showRecentActivities($page,$limit,$flag = null){
             $infoForNextTime = "<input type='hidden' id='noMoreActivities' value='true'>";
         }
         echo $infoForNextTime;
+    }
+    if(!isset($_SESSION['more_activities'])){
+        if ($numberOfIteration == 0) {
+            $_SESSION['more_activities'] = 0;
+        } else {
+            $_SESSION['more_activities'] = 2;
+        }
     }
 }
 

@@ -15,7 +15,7 @@ $activity_type = $_POST['activity_type'];
 if($activity_type == 4){
     $target_id = $_POST['target_id'];
     queryFunc("delete from recent_activities where activity_at_id = '$target_id' AND user_id = '$userLoggedIn'");
-    showRecentActivities(10);
+    showRecentActivities(1,10,10);
 }
 else{
     if($activity_type == 2){
