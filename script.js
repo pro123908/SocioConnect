@@ -121,12 +121,10 @@ function addRecentActivity(activity){
   var activitiesDiv = document.querySelector(".activities-content");
   activitiesDiv.innerHTML = activity + activitiesDiv.innerHTML;
   if(findChildNodes(activitiesDiv) == 12){
-    document.querySelector(".show-more-activities").innerHTML = "<a href='allActivities.php' class='see-more'><span>See more</span></a>";    
+    alert("ziada")
     var lastChild = activitiesDiv.getElementsByTagName('a')[10];
     var removed = activitiesDiv.removeChild(lastChild);
   }
-  else if(findChildNodes(activitiesDiv) > 0)
-  document.querySelector(".show-more-activities").innerHTML = "<p class='see-more'>No More Activities to Show</p>";
   
 }
 
@@ -605,15 +603,13 @@ function removeFriend(id) {
     // }
     // else{
       console.log("Response messageSimple : " + data[0]);
-      document.querySelector(".friends-container").innerHTML = "";
-      var flag = 0;
+      document.querySelector(".friend-container").innerHTML = "";
+      var flag = 0
       console.log(data.length);
-      var url = window.location.href;
       for (i = 0; i < data.length; i++) {
-        flag++ ;
+        flag = 1;
         var obj = data[i];
         var friend = `
-        <div class="friend-container">
           <div class='friend'>
             <div class='friend-image'>
               <img class='post-avatar post-avatar-30' src='${obj.profile_pic}'  >
@@ -629,21 +625,12 @@ function removeFriend(id) {
               <a href="javascript:removeFriend(${obj.user_id})" class='remove-friend'><i class="fas fa-times tooltip-container"><span class='tooltip tooltip-right'>Remove Friend</span></i></a>
               </div>
             </div>
-          </div> 
           </div>  
         `;
-        document.querySelector(".friends-container").innerHTML += friend;
-        if(flag == 10 && url != "http://localhost/socioConnect/requests.php")
-              break;
+        document.querySelector(".friend-container").innerHTML += friend;
       }
       if(flag == 0 ){
         document.querySelector(".show-more-friends").innerHTML = "<p class='see-more'>No Friends To Show</p>";
-      }
-      else if(flag == 10){
-        document.querySelector(".show-more-friends").innerHTML = "<a href='requests.php' class='see-more'><span>See more</span></a>";
-      }
-      else{
-        document.querySelector(".show-more-friends").innerHTML = "<p class='see-more'>No More Friends To Show</p>";
       }
    // }
   });

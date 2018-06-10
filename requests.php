@@ -47,7 +47,7 @@ DELIMETER;
             $friend_req .= "<p>No Friend Requests</p></div>";
         }
         // Displaying friends
-        $friend_req .= '<div class="friends-list"><h1>Friends</h1><div class="friends-list-elements"><div class="friends-container">';
+        $friend_req .= '<div class="friends-list"><h1>Friends</h1><div class="friends-list-elements">';
         echo $friend_req;  
         displayFriends();
         echo "</div></div></div>";
