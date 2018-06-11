@@ -1,4 +1,6 @@
-<?php  require_once('functions.php'); ?>
+<?php  require_once('functions.php'); 
+  ob_start();
+?>
 <!-- Dont remove this comment-->
 
 <!-- Header Section of the website. Will be included in every page  -->

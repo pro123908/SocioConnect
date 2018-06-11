@@ -148,7 +148,7 @@ function findChildNodes(div){
 // }
 
 // Function for making all ajax calls using promise
-function ajaxCalls(method, pathString, postParam = "") {
+function ajaxCalls(method, pathString, postParam = "",pic='') {
   // Creating promise
   return new Promise(function(resolve, reject) {
     // Creating XHR object for AJAX Call
@@ -170,8 +170,8 @@ function ajaxCalls(method, pathString, postParam = "") {
 
     // Preparing request with method and filename
     xmlhttp.open(method, pathString, true);
-
-    if (postParam) {
+    
+    if (postParam && pic == '') {
       // Setting up headers to be send in POST request
       xmlhttp.setRequestHeader(
         "Content-type",
@@ -244,16 +244,35 @@ function deletePost(postID) {
   });
 }
 
+
+function postPicSelected(){
+  var postPic = document.querySelector("input[name='post-pic']").files[0];
+  document.querySelector('.pic-name').innerHTML = postPic.name;
+  console.log(postPic.name);
+}
+
+
+
 function addPost(user_id) {
   // Again the name suggests xD
 
   // Getting post content
   var post = document.querySelector("textarea[name='post']");
+  var postPicData = document.querySelector("input[name='post-pic']");
+  var postPic = postPicData.files[0];
+
+
+  console.log(postPic);
+
+  var formData = new FormData();
+  formData.append('file',postPic);
+  formData.append('post',post.value);
+
 
   // Setting paramters for POST request
-  var param = `post=${post.value}&user_id=${user_id}`;
+  // var param = `post=${post.value}&user_id=${user_id}`;
 
-  ajaxCalls("POST", "post.php", param).then(function(result) {
+  ajaxCalls("POST", "post.php", formData,'pic').then(function(result) {
     // Adding new post to post Area
     // Adding post to the top not bottom. Clue xD
     document.querySelector(".posts").innerHTML =
@@ -267,6 +286,7 @@ function addPost(user_id) {
       addRecentActivity(result);
     });
   });
+  postPicData.value = '';
 }
 
 function deleteComment(commentID) {
