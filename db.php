@@ -2,7 +2,7 @@
   
   $db['db_host'] = 'localhost'; // Database host
   $db['db_user'] = 'root';  // Database User
-  $db['db_pass'] = ''; // Database Password
+  $db['db_pass'] = 'home123'; // Database Password
   $db['db_name'] = 'socioconnect';  // Database Name
 
   // Defining elements of db array as constants
