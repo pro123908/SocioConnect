@@ -498,9 +498,6 @@ function renderPost($row)
         $likeIcon = "<i class='far fa-thumbs-up'></i>";
     }
 
-
-
-
     // Enabling delete option for post if it is current user's post else disabling
     if ($row['user_id'] == $_SESSION['user_id']) {
         $PostDeleteButton = <<<PosDel
