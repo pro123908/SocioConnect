@@ -914,7 +914,7 @@ function isFriend($id)
 function reqSent($id)
 {
     // Checking if request is already sent?
-    $request = queryFunc("SELECT id from friend_requests where to_id ='".$id."' and from_id='" . $_SESSION['user_id'] ."'");
+    $request = queryFunc("SELECT id from friend_requests where to_id ='".$id."' and from_id='" . $_SESSION['user_id'] ."' and status = 0");
     if (isRecord($request)) {
         return true;
     } else {
@@ -925,7 +925,7 @@ function reqSent($id)
 function reqRecieved($id)
 {
     // Checking if you have received the request from that person?
-    $request = queryFunc("SELECT id from friend_requests where to_id ='".$_SESSION['user_id']."' and from_id='". $id ."'");
+    $request = queryFunc("SELECT id from friend_requests where to_id ='".$_SESSION['user_id']."' and from_id='". $id ."' and status = 0");
     if (isRecord($request)) {
         return true;
     } else {
