@@ -1,30 +1,34 @@
 function setUserId(id) {
   var url = window.location.href;
-  if(url == 'http://localhost/socioConnect/main.php' || url == 'http://localhost/socioConnect/timeline.php' || url.slice(0,42) == 'http://localhost/socioConnect/timeline.php'){
+  if (
+    url == "http://localhost/socioConnect/main.php" ||
+    url == "http://localhost/socioConnect/timeline.php" ||
+    url.slice(0, 42) == "http://localhost/socioConnect/timeline.php"
+  ) {
     var post = document.querySelectorAll(".post");
     //If there are no posts
-    if(post.length == 0)
-      document.getElementById("loading").innerHTML = 'No Posts To Show'; 
-    //If there are less than 10 posts     
-    else if(post.length < 10)
-      document.getElementById("loading").innerHTML = 'No More Posts To Show';
-    //If there are 10 posts       
-    else{
+    if (post.length == 0)
+      document.getElementById("loading").innerHTML = "No Posts To Show";
+    //If there are less than 10 posts
+    else if (post.length < 10)
+      document.getElementById("loading").innerHTML = "No More Posts To Show";
+    //If there are 10 posts
+    else {
       var flag = document.getElementById("noMorePosts");
       //if no more flag is true
-      if(flag.value == "true")
-          document.getElementById("loading").innerHTML = 'No More Posts To Show';
-      //if there are more posts present    
-      else{
-        if(url == 'http://localhost/socioConnect/timeline.php'){
-           var loading = `<a href="javascript:showNextPage('b')">Show More Posts</a>`; 
-        }
-        else if(url.slice(0,42) == 'http://localhost/socioConnect/timeline.php'){
-          var id = url.slice(58)
+      if (flag.value == "true")
+        document.getElementById("loading").innerHTML = "No More Posts To Show";
+      //if there are more posts present
+      else {
+        if (url == "http://localhost/socioConnect/timeline.php") {
+          var loading = `<a href="javascript:showNextPage('b')">Show More Posts</a>`;
+        } else if (
+          url.slice(0, 42) == "http://localhost/socioConnect/timeline.php"
+        ) {
+          var id = url.slice(58);
           var loading = `<a href="javascript:showNextPage('${id}')">Show More Posts</a>`;
-        }
-        else{
-          var loading = `<a href="javascript:showNextPage('a')">Show More Posts</a>`; 
+        } else {
+          var loading = `<a href="javascript:showNextPage('a')">Show More Posts</a>`;
           // if(){
           //   var seeMoreActivites = "<a href='allActivities.php' class='see-more'><span>See more</span></a>";
           // }else{
@@ -33,56 +37,68 @@ function setUserId(id) {
         }
         document.getElementById("loading").innerHTML = loading;
       }
-    }    
-  }
-  else if(url.slice(0,42) == 'http://localhost/socioConnect/messages.php'){
+    }
+  } else if (url.slice(0, 42) == "http://localhost/socioConnect/messages.php") {
     var msgs = document.querySelectorAll(".chat-message");
-    if(msgs.length == 0)
-      document.getElementById("loading-messages").innerHTML = 'No Messages To Show';
-    else if(msgs.length < 10)
-      document.getElementById("loading-messages").innerHTML = 'No More Messages To Show';    
-    else{
+    if (msgs.length == 0)
+      document.getElementById("loading-messages").innerHTML =
+        "No Messages To Show";
+    else if (msgs.length < 10)
+      document.getElementById("loading-messages").innerHTML =
+        "No More Messages To Show";
+    else {
       var flag = document.getElementById("noMoreMessages");
-      if(flag.value == "true")
-          document.getElementById("loading-messages").innerHTML = 'No More Messages To Show';
-      else{
-          var id = url.slice(46)
-          if(id > 0){
-            document.getElementById("loading-messages").innerHTML = `<a href="javascript:showNextPageMessages('${id}')">Show More Messages</a>`
-          }
-      }    
+      if (flag.value == "true")
+        document.getElementById("loading-messages").innerHTML =
+          "No More Messages To Show";
+      else {
+        var id = url.slice(46);
+        if (id > 0) {
+          document.getElementById(
+            "loading-messages"
+          ).innerHTML = `<a href="javascript:showNextPageMessages('${id}')">Show More Messages</a>`;
+        }
+      }
+    }
+  } else if (url == "http://localhost/socioConnect/allNotification.php") {
+    var notis = document.querySelectorAll(".notification");
+    if (notis.length == 0)
+      document.getElementById("loading-notis").innerHTML =
+        "No Notifications To Show";
+    else if (notis.length < 10)
+      document.getElementById("loading-notis").innerHTML =
+        "No More Notifications To Show";
+    else {
+      var flag = document.getElementById("noMoreNotis");
+      if (flag.value == "true")
+        document.getElementById("loading-notis").innerHTML =
+          "No More Messages To Show";
+      else {
+        document.getElementById(
+          "loading-notis"
+        ).innerHTML = `<a href="javascript:showNextPageNotis()">Show More Notifications</a>`;
+      }
+    }
+  } else if (url == "http://localhost/socioConnect/allActivities.php") {
+    var notis = document.querySelectorAll(".recent_activity ");
+    if (notis.length == 0)
+      document.getElementById("loading-activities").innerHTML =
+        "No Activities To Show";
+    else if (notis.length < 10)
+      document.getElementById("loading-activities").innerHTML =
+        "No More Activities To Show";
+    else {
+      var flag = document.getElementById("noMoreActivities");
+      if (flag.value == "true")
+        document.getElementById("loading-activities").innerHTML =
+          "No More Activities To Show";
+      else {
+        document.getElementById(
+          "loading-activities"
+        ).innerHTML = `<a href="javascript:showNextPageActivities()">Show More Activities</a>`;
+      }
     }
   }
-  else if(url == "http://localhost/socioConnect/allNotification.php"){
-    var notis = document.querySelectorAll(".notification");
-    if(notis.length == 0)
-      document.getElementById("loading-notis").innerHTML = 'No Notifications To Show';
-    else if(notis.length < 10)
-      document.getElementById("loading-notis").innerHTML = 'No More Notifications To Show';    
-    else{
-      var flag = document.getElementById("noMoreNotis");
-      if(flag.value == "true")
-          document.getElementById("loading-notis").innerHTML = 'No More Messages To Show';
-      else{
-            document.getElementById("loading-notis").innerHTML = `<a href="javascript:showNextPageNotis()">Show More Notifications</a>`
-          }
-      }    
-    }
-    else if(url == "http://localhost/socioConnect/allActivities.php"){
-      var notis = document.querySelectorAll(".recent_activity ");
-      if(notis.length == 0)
-        document.getElementById("loading-activities").innerHTML = 'No Activities To Show';
-      else if(notis.length < 10)
-        document.getElementById("loading-activities").innerHTML = 'No More Activities To Show';    
-      else{
-        var flag = document.getElementById("noMoreActivities");
-        if(flag.value == "true")
-            document.getElementById("loading-activities").innerHTML = 'No More Activities To Show';
-        else{
-              document.getElementById("loading-activities").innerHTML = `<a href="javascript:showNextPageActivities()">Show More Activities</a>`
-            }
-        }    
-      }
   session_user_id = id;
 }
 
@@ -99,42 +115,40 @@ function like(postID) {
     ).innerHTML = `<i class='like-count-icon fas fa-thumbs-up'></i> ${value}`;
     let icon = document.querySelector(`.post-${postID} .like-btn i`);
     icon.classList.toggle("blue");
-    //Adding in recent activities if liked 
-    if(icon.classList[2]){
+    //Adding in recent activities if liked
+    if (icon.classList[2]) {
       var activity_type = 0;
       param = `target_id=${postID}&activity_type=${activity_type}`;
-      ajaxCalls("POST", `recentActivityAjax.php`,param).then(function(result) {
+      ajaxCalls("POST", `recentActivityAjax.php`, param).then(function(result) {
         addRecentActivity(result);
-      });    
-    }
-    else{
+      });
+    } else {
       var activity_type = 4;
       param = `target_id=${postID}&activity_type=${activity_type}`;
-      ajaxCalls("POST", `recentActivityAjax.php`,param).then(function(result) {
+      ajaxCalls("POST", `recentActivityAjax.php`, param).then(function(result) {
         document.querySelector(".activities-content").innerHTML = result;
       });
     }
   });
 }
 
-function addRecentActivity(activity){
+function addRecentActivity(activity) {
   var activitiesDiv = document.querySelector(".activities-content");
   activitiesDiv.innerHTML = activity + activitiesDiv.innerHTML;
-  if(findChildNodes(activitiesDiv) == 11){
-    document.querySelector(".show-more-activities").innerHTML = "<a href='allActivities.php' class='see-more'><span>See more</span></a>";    
-    var lastChild = activitiesDiv.getElementsByTagName('a')[10];
+  if (findChildNodes(activitiesDiv) == 11) {
+    document.querySelector(".show-more-activities").innerHTML =
+      "<a href='allActivities.php' class='see-more'><span>See more</span></a>";
+    var lastChild = activitiesDiv.getElementsByTagName("a")[10];
     var removed = activitiesDiv.removeChild(lastChild);
-  }
-  else if(findChildNodes(activitiesDiv) > 0)
-    document.querySelector(".show-more-activities").innerHTML = "<p class='see-more'>No More Activities to Show</p>";
-    
+  } else if (findChildNodes(activitiesDiv) > 0)
+    document.querySelector(".show-more-activities").innerHTML =
+      "<p class='see-more'>No More Activities to Show</p>";
 }
 
-function findChildNodes(div){
+function findChildNodes(div) {
   var count = 0;
-  for(i = 0 ; i < div.childNodes.length ; i++){
-    if(div.childNodes[i].nodeType == 1)
-      count++;
+  for (i = 0; i < div.childNodes.length; i++) {
+    if (div.childNodes[i].nodeType == 1) count++;
   }
   return count;
 }
@@ -148,7 +162,7 @@ function findChildNodes(div){
 // }
 
 // Function for making all ajax calls using promise
-function ajaxCalls(method, pathString, postParam = "",pic='') {
+function ajaxCalls(method, pathString, postParam = "", pic = "") {
   // Creating promise
   return new Promise(function(resolve, reject) {
     // Creating XHR object for AJAX Call
@@ -170,8 +184,8 @@ function ajaxCalls(method, pathString, postParam = "",pic='') {
 
     // Preparing request with method and filename
     xmlhttp.open(method, pathString, true);
-    
-    if (postParam && pic == '') {
+
+    if (postParam && pic == "") {
       // Setting up headers to be send in POST request
       xmlhttp.setRequestHeader(
         "Content-type",
@@ -193,15 +207,20 @@ function comment(postID) {
   var user = document.querySelector('input[name="post_user"]');
   var profilePic = document.querySelector('input[name="pic_user"]');
 
-  // Setting up parameters for POST request to the file
-  var param = `comment=${comment.value}&post_id=${post.value}`;
+  var commentValue = comment.value;
 
-  ajaxCalls("POST", "comment.php", param).then(function(result) {
-    // Added Comment ID is returned in response
-    commentID = result.trim();
+  console.log(comment.value);
 
-    console.log(profilePic.value);
-    document.querySelector(`.comment-area-${post.value}`).innerHTML += `
+  if (!(commentValue.trim() == '')) {
+    // Setting up parameters for POST request to the file
+    var param = `comment=${comment.value}&post_id=${post.value}`;
+
+    ajaxCalls("POST", "comment.php", param).then(function(result) {
+      // Added Comment ID is returned in response
+      commentID = result.trim();
+
+      console.log(profilePic.value);
+      document.querySelector(`.comment-area-${post.value}`).innerHTML += `
   <div class='comment comment-${commentID}'>
                 
   <div class='user-image'>
@@ -220,18 +239,18 @@ function comment(postID) {
 </div>
   `;
 
-    comment.value = "";
-    console.log(document.querySelector(`.comment-count-${postID}`));
+      comment.value = "";
+      console.log(document.querySelector(`.comment-count-${postID}`));
 
-    //Adding in recent activities
-    var activity_type = 1;
-    var commentDetails = postID + " " + commentID;
-    param = `target_id=${commentDetails}&activity_type=${activity_type}`;
-    ajaxCalls("POST", `recentActivityAjax.php`,param).then(function(result) {
-      addRecentActivity(result);
+      //Adding in recent activities
+      var activity_type = 1;
+      var commentDetails = postID + " " + commentID;
+      param = `target_id=${commentDetails}&activity_type=${activity_type}`;
+      ajaxCalls("POST", `recentActivityAjax.php`, param).then(function(result) {
+        addRecentActivity(result);
+      });
     });
-  });
-
+  }
   // Pain in the ass xD
   return false;
 }
@@ -244,14 +263,11 @@ function deletePost(postID) {
   });
 }
 
-
-function postPicSelected(){
+function postPicSelected() {
   var postPic = document.querySelector("input[name='post-pic']").files[0];
-  document.querySelector('.pic-name').innerHTML = postPic.name;
+  document.querySelector(".pic-name").innerHTML = postPic.name;
   console.log(postPic.name);
 }
-
-
 
 function addPost(user_id) {
   // Again the name suggests xD
@@ -261,18 +277,19 @@ function addPost(user_id) {
   var postPicData = document.querySelector("input[name='post-pic']");
   var postPic = postPicData.files[0];
 
+  var postContent = post.value;
 
   console.log(postPic);
-
+  
+  if(!(postContent.trim() == '') || (postPic !== undefined)){
   var formData = new FormData();
-  formData.append('file',postPic);
-  formData.append('post',post.value);
-
+  formData.append("file", postPic);
+  formData.append("post", post.value);
 
   // Setting paramters for POST request
   // var param = `post=${post.value}&user_id=${user_id}`;
 
-  ajaxCalls("POST", "post.php", formData,'pic').then(function(result) {
+  ajaxCalls("POST", "post.php", formData, "pic").then(function(result) {
     // Adding new post to post Area
     // Adding post to the top not bottom. Clue xD
     document.querySelector(".posts").innerHTML =
@@ -282,11 +299,13 @@ function addPost(user_id) {
     //Adding in recent activities
     var activity_type = 2;
     param = `activity_type=${activity_type}`;
-    ajaxCalls("POST", `recentActivityAjax.php`,param).then(function(result) {
+    ajaxCalls("POST", `recentActivityAjax.php`, param).then(function(result) {
       addRecentActivity(result);
     });
   });
-  postPicData.value = '';
+}
+  // postPicData.value = '';
+  document.querySelector(".pic-name").innerHTML = "";
 }
 
 function deleteComment(commentID) {
@@ -473,13 +492,13 @@ function message() {
   let messageBody = document.messageForm.message_body;
   let partner = document.messageForm.partner;
   let pic = document.messageForm.pic;
-  
-  var width = document.querySelector('.chat-messages').offsetWidth;
-  var widthX = document.querySelector('.chat-messages .message');
 
-  console.log('width : ' + width*0.8);
+  var width = document.querySelector(".chat-messages").offsetWidth;
+  var widthX = document.querySelector(".chat-messages .message");
+
+  console.log("width : " + width * 0.8);
   console.log(messageBody.value.length);
-  if(messageBody.value.length > 0){
+  if (messageBody.value.length > 0) {
     let param = `partner=${partner.value}&messageBody=${messageBody.value}`;
 
     document.querySelector(".chat-messages").innerHTML += `
@@ -493,8 +512,12 @@ function message() {
     ajaxCalls("POST", "messageAjax.php", param).then(function(response) {
       console.log("Response messageSimple : " + response);
       var msgs = document.querySelectorAll(".chat-message");
-      if(document.getElementById("loading-messages").innerHTML == 'No Messages To Show')
-        document.getElementById("loading-messages").innerHTML = 'No More Messages To Show';    
+      if (
+        document.getElementById("loading-messages").innerHTML ==
+        "No Messages To Show"
+      )
+        document.getElementById("loading-messages").innerHTML =
+          "No More Messages To Show";
     });
 
     messageBody.value = "";
@@ -503,7 +526,7 @@ function message() {
     // var last = nodes[nodes.length - 1];
 
     last.scrollIntoView();
-  }  
+  }
 }
 
 setInterval(messageRefresh, 1000);
@@ -513,8 +536,6 @@ function messageRefresh() {
   var id = url.substring(url.lastIndexOf("=") + 1);
 
   ajaxCalls("GET", `messageAjax.php?id=${id}`).then(function(response) {
-    
-
     let messageResponse = JSON.parse(response);
 
     for (i = 0; i < messageResponse.length; i++) {
@@ -538,18 +559,24 @@ function messageRefresh() {
 
 function refreshRecentConvos() {
   ajaxCalls("GET", "recentConvoAjax.php").then(function(result) {
-     var data = JSON.parse(result);
-    
+    var data = JSON.parse(result);
+
     if (!(data.notEmpty == "Bilal")) {
       // console.log(data);
       for (i = data.length - 1; i >= 0; i--) {
         var obj = data[i];
-        if (document.querySelector(".recent-chats .recent-user-" + obj.fromID)){
-          document.querySelector(".recent-chats .recent-user-" + obj.fromID).style.display =
+        if (
+          document.querySelector(".recent-chats .recent-user-" + obj.fromID)
+        ) {
+          document.querySelector(
+            ".recent-chats .recent-user-" + obj.fromID
+          ).style.display =
             "none";
         }
         var recentMessage = `
-        <a href='messages.php?id=${obj.fromID}' class='recent-user recent-user-${obj.fromID}'>
+        <a href='messages.php?id=${
+          obj.fromID
+        }' class='recent-user recent-user-${obj.fromID}'>
           <span class='recent-user-image'>
             <img src='${obj.pic}' class='post-avatar post-avatar-40' />
           </span>
@@ -558,12 +585,14 @@ function refreshRecentConvos() {
             <span class='recent-message-text'>${obj.from} ${obj.msg}</span>
             <span class='recent-message-time'>${obj.at}</span>
           </span>
-          <i class='tooltip-container far fa-trash-alt  comment-delete' onclick='javascript:deleteConvo(${obj.fromID})'><span class='tooltip tooltip-left'>Delete</span></i>
+          <i class='tooltip-container far fa-trash-alt  comment-delete' onclick='javascript:deleteConvo(${
+            obj.fromID
+          })'><span class='tooltip tooltip-left'>Delete</span></i>
         </a>
         `;
-        if(document.querySelector(".recent-chats")){
-        document.querySelector(".recent-chats").innerHTML =
-          recentMessage + document.querySelector(".recent-chats").innerHTML;
+        if (document.querySelector(".recent-chats")) {
+          document.querySelector(".recent-chats").innerHTML =
+            recentMessage + document.querySelector(".recent-chats").innerHTML;
         }
       }
     }
@@ -571,36 +600,36 @@ function refreshRecentConvos() {
 }
 setInterval(refreshRecentConvos, 1000);
 
-function deleteConvo(id){
+function deleteConvo(id) {
   var url = window.location.href;
-  var openConvoId =  url.slice(46);
-  let param = `id=${id}&urlID=${openConvoId}`;  
-  ajaxCalls("POST", `deleteConvoAjax.php`,param).then(function(response) {
+  var openConvoId = url.slice(46);
+  let param = `id=${id}&urlID=${openConvoId}`;
+  ajaxCalls("POST", `deleteConvoAjax.php`, param).then(function(response) {
     console.log(response);
-      //If response is not a redirection, this would be changed if this comment is removed from messags.php
-      if(response == "Reload the page")
-        window.location = "messages.php";
-      else
-        document.querySelector(".recent-chats").innerHTML = response;
+    //If response is not a redirection, this would be changed if this comment is removed from messags.php
+    if (response == "Reload the page") window.location = "messages.php";
+    else document.querySelector(".recent-chats").innerHTML = response;
   });
 }
 
-function showPageMessages(id,page){
+function showPageMessages(id, page) {
   document.getElementById("loading-messages").style.display = "none";
   var xhr = new XMLHttpRequest();
-  xhr.open("GET","loadMessagesAjax.php?id="+id+"&page="+page,true);
-  xhr.onload = function(){
-    if(this.status = 200){
-      document.querySelector(".chat-messages").innerHTML = this.responseText + document.querySelector(".chat-messages").innerHTML;
-      document.getElementById("loading-messages").style.display = 'block';
+  xhr.open("GET", "loadMessagesAjax.php?id=" + id + "&page=" + page, true);
+  xhr.onload = function() {
+    if ((this.status = 200)) {
+      document.querySelector(".chat-messages").innerHTML =
+        this.responseText + document.querySelector(".chat-messages").innerHTML;
+      document.getElementById("loading-messages").style.display = "block";
     }
-    if(document.getElementById("noMoreMessages").value == "true")
-      document.getElementById("loading-messages").innerHTML = 'No More Messages To Show';
-  }
+    if (document.getElementById("noMoreMessages").value == "true")
+      document.getElementById("loading-messages").innerHTML =
+        "No More Messages To Show";
+  };
   xhr.send();
-} 
+}
 
-function showNextPageMessages(id){
+function showNextPageMessages(id) {
   var noMorePosts = document.getElementById("noMoreMessages");
   var page = document.getElementById("nextPageMessages");
   if (noMorePosts.value == "false") {
@@ -610,33 +639,34 @@ function showNextPageMessages(id){
     div.removeChild(noMorePosts);
 
     showPageMessages(id, page.value);
-  } 
-  else {
+  } else {
     alert("khtm");
   }
 }
 
 function removeFriend(id) {
   let param = `friendId=${id}`;
-  ajaxCalls("POST", "removeFriendAjax.php", param).then(function(result) {  
+  ajaxCalls("POST", "removeFriendAjax.php", param).then(function(result) {
     var data = JSON.parse(result);
     // if(data.length == 0){
     //   document.querySelector(".friends-list-elements").innerHTML = "";
     // }
     // else{
-      console.log("Response messageSimple : " + data[0]);
-      document.querySelector(".friends-container").innerHTML = "";
-      var flag = 0;
-      console.log(data.length);
-      var url = window.location.href;
-      for (i = 0; i < data.length; i++) {
-        flag++ ;
-        var obj = data[i];
-        var friend = `
+    console.log("Response messageSimple : " + data[0]);
+    document.querySelector(".friends-container").innerHTML = "";
+    var flag = 0;
+    console.log(data.length);
+    var url = window.location.href;
+    for (i = 0; i < data.length; i++) {
+      flag++;
+      var obj = data[i];
+      var friend = `
         <div class="friend-container">
           <div class='friend'>
             <div class='friend-image'>
-              <img class='post-avatar post-avatar-30' src='${obj.profile_pic}'  >
+              <img class='post-avatar post-avatar-30' src='${
+                obj.profile_pic
+              }'  >
             </div>
             <div class='friend-info'>
               <a href="timeline.php?visitingUserID=${
@@ -646,43 +676,44 @@ function removeFriend(id) {
             </div>
             <div class='friend-action'>
             <div>
-              <a href="javascript:removeFriend(${obj.user_id})" class='remove-friend'><i class="fas fa-times tooltip-container"><span class='tooltip tooltip-right'>Remove Friend</span></i></a>
+              <a href="javascript:removeFriend(${
+                obj.user_id
+              })" class='remove-friend'><i class="fas fa-times tooltip-container"><span class='tooltip tooltip-right'>Remove Friend</span></i></a>
               </div>
             </div>
           </div> 
           </div>  
         `;
-        document.querySelector(".friends-container").innerHTML += friend;
-        if(flag == 10 && url != "http://localhost/socioConnect/requests.php")
-              break;
-      }
-      if(flag == 0 ){
-        document.querySelector(".show-more-friends").innerHTML = "<p class='see-more'>No Friends To Show</p>";
-      }
-      else if(flag == 10){
-        document.querySelector(".show-more-friends").innerHTML = "<a href='requests.php' class='see-more'><span>See more</span></a>";
-      }
-      else{
-        document.querySelector(".show-more-friends").innerHTML = "<p class='see-more'>No More Friends To Show</p>";
-      }
-   // }
+      document.querySelector(".friends-container").innerHTML += friend;
+      if (flag == 10 && url != "http://localhost/socioConnect/requests.php")
+        break;
+    }
+    if (flag == 0) {
+      document.querySelector(".show-more-friends").innerHTML =
+        "<p class='see-more'>No Friends To Show</p>";
+    } else if (flag == 10) {
+      document.querySelector(".show-more-friends").innerHTML =
+        "<a href='requests.php' class='see-more'><span>See more</span></a>";
+    } else {
+      document.querySelector(".show-more-friends").innerHTML =
+        "<p class='see-more'>No More Friends To Show</p>";
+    }
+    // }
   });
 }
-
-
 
 function showPage(flag, page) {
   document.getElementById("loading").style.display = "none";
   var xhr = new XMLHttpRequest();
-  xhr.open("GET",`loadPostsAjax.php?flag=${flag}&page=${page}`,true);
-  xhr.onload = function(){
-    if(this.status = 200){
+  xhr.open("GET", `loadPostsAjax.php?flag=${flag}&page=${page}`, true);
+  xhr.onload = function() {
+    if ((this.status = 200)) {
       document.querySelector(".posts").innerHTML += this.responseText;
-      document.getElementById("loading").style.display = 'block';
+      document.getElementById("loading").style.display = "block";
     }
-    if(document.getElementById("noMorePosts").value == "true")
-      document.getElementById("loading").innerHTML = 'No More Posts To Show';
-  }
+    if (document.getElementById("noMorePosts").value == "true")
+      document.getElementById("loading").innerHTML = "No More Posts To Show";
+  };
   xhr.send();
 }
 
@@ -709,29 +740,31 @@ function showNextPage(flag) {
     div.removeChild(noMorePosts);
 
     showPage(flag, page.value);
-  } 
+  }
 }
 
-function hello(){
+function hello() {
   alert("hello");
 }
 
-function showPageNotis(page){
+function showPageNotis(page) {
   document.getElementById("loading-notis").style.display = "none";
   var xhr = new XMLHttpRequest();
-  xhr.open("GET","loadNotificationsAjax.php?page="+page,true);
-  xhr.onload = function(){
-    if(this.status = 200){
-      document.querySelector(".notifications").innerHTML = document.querySelector(".notifications").innerHTML + this.responseText ;
-      document.getElementById("loading-notis").style.display = 'block';
+  xhr.open("GET", "loadNotificationsAjax.php?page=" + page, true);
+  xhr.onload = function() {
+    if ((this.status = 200)) {
+      document.querySelector(".notifications").innerHTML =
+        document.querySelector(".notifications").innerHTML + this.responseText;
+      document.getElementById("loading-notis").style.display = "block";
     }
-    if(document.getElementById("noMoreNotis").value == "true")
-      document.getElementById("loading-notis").innerHTML = 'No More Notifications To Show';
-  }
+    if (document.getElementById("noMoreNotis").value == "true")
+      document.getElementById("loading-notis").innerHTML =
+        "No More Notifications To Show";
+  };
   xhr.send();
-} 
+}
 
-function showNextPageNotis(){
+function showNextPageNotis() {
   var noMorePosts = document.getElementById("noMoreNotis");
   var page = document.getElementById("nextPageNotis");
   if (noMorePosts.value == "false") {
@@ -740,28 +773,29 @@ function showNextPageNotis(){
     div.removeChild(page);
     div.removeChild(noMorePosts);
     showPageNotis(page.value);
-  } 
-  else {
+  } else {
     alert("khtm");
   }
 }
 
-function showPageActivities(page){
+function showPageActivities(page) {
   document.getElementById("loading-activities").style.display = "none";
   var xhr = new XMLHttpRequest();
-  xhr.open("GET","loadRecentActivitiesAjax.php?page="+page,true);
-  xhr.onload = function(){
-    if(this.status = 200){
-      document.querySelector(".activities").innerHTML = document.querySelector(".activities").innerHTML + this.responseText ;
-      document.getElementById("loading-activities").style.display = 'block';
+  xhr.open("GET", "loadRecentActivitiesAjax.php?page=" + page, true);
+  xhr.onload = function() {
+    if ((this.status = 200)) {
+      document.querySelector(".activities").innerHTML =
+        document.querySelector(".activities").innerHTML + this.responseText;
+      document.getElementById("loading-activities").style.display = "block";
     }
-    if(document.getElementById("noMoreActivities").value == "true")
-      document.getElementById("loading-activities").innerHTML = 'No More Activities To Show';
-  }
+    if (document.getElementById("noMoreActivities").value == "true")
+      document.getElementById("loading-activities").innerHTML =
+        "No More Activities To Show";
+  };
   xhr.send();
-} 
+}
 
-function showNextPageActivities(){
+function showNextPageActivities() {
   var noMorePosts = document.getElementById("noMoreActivities");
   var page = document.getElementById("nextPageActivities");
   if (noMorePosts.value == "false") {
@@ -770,21 +804,20 @@ function showNextPageActivities(){
     div.removeChild(page);
     div.removeChild(noMorePosts);
     showPageActivities(page.value);
-  } 
-  else {
+  } else {
     alert("khtm");
   }
 }
 
-function toggleDropdown($type){
-   let display = document.querySelector($type).style.display;
+function toggleDropdown($type) {
+  let display = document.querySelector($type).style.display;
 
-  if(display == 'block'){
-    console.log('block');
-    document.querySelector($type).style.display = 'none';
-  }else{
-    console.log('none');
-    document.querySelector($type).style.display = 'block';
+  if (display == "block") {
+    console.log("block");
+    document.querySelector($type).style.display = "none";
+  } else {
+    console.log("none");
+    document.querySelector($type).style.display = "block";
   }
 }
 
@@ -793,15 +826,24 @@ window.onclick = function(e) {
     document.querySelector(".search-result").style.display = "none";
   }
 
-  if (e.srcElement.className != "notification-dropdown" && e.srcElement.className != "noti-dropdown") {
+  if (
+    e.srcElement.className != "notification-dropdown" &&
+    e.srcElement.className != "noti-dropdown"
+  ) {
     document.querySelector(".noti-dropdown").style.display = "none";
   }
 
-  if (e.srcElement.className != "message-dropdown" && e.srcElement.className != "msg-dropdown") {
+  if (
+    e.srcElement.className != "message-dropdown" &&
+    e.srcElement.className != "msg-dropdown"
+  ) {
     document.querySelector(".msg-dropdown").style.display = "none";
   }
 
-  if (e.srcElement.className != "request-dropdown" && e.srcElement.className != "req-dropdown") {
+  if (
+    e.srcElement.className != "request-dropdown" &&
+    e.srcElement.className != "req-dropdown"
+  ) {
     document.querySelector(".req-dropdown").style.display = "none";
   }
-}
+};
