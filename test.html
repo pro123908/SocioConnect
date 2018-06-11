@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Pic</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+ 
+  </style>
+</head>
+<body>
+
+  <form action="javascript:submitPic();"  method='POST' >
+    <input type="file" name='file' class='pic' onchange='test();'>
+    <input type="text" name='te' class='txt'>
+    <input type="submit">
+  </form>
+
+  <div class='data'></div>
+  
+
+  <script>
+
+    function test(){
+      console.log("Changed");
+      var pic = document.querySelector('.pic').files[0];
+      console.log(pic.name);
+    }
+    function submitPic(){
+      var xml = new XMLHttpRequest();
+    var pic = document.querySelector('.pic').files[0];
+    var text = document.querySelector('.txt').value;
+
+    var formData = new FormData();
+    formData.append('file',pic);
+    formData.append('post',text);
+
+
+    // var param = `file=${pic}`;
+
+      console.log(pic);
+
+
+      // document.querySelector('.data').innerHTML = `
+      //   <img src='${pic.name}' width='100' />
+      // `;
+
+xml.onreadystatechange = function() {
+      if (xml.readyState == XMLHttpRequest.DONE) {
+        // XMLHttpRequest.DONE == 4
+        if (xml.status == 200) {
+          // Return the response
+          console.log(this.responseText);
+          document.querySelector('.data').innerHTML = this.responseText;
+          
+        } else if (xml.status == 400) {
+          console.log("Rejected");
+        } else {
+        }
+      }
+    };
+    
+    xml.open('POST','test.php',true);
+    //xml.setRequestHeader('mimeType','multipart/form-data');
+    
+
+    xml.send(formData);
+    }    
+  </script>
+</body>
+</html>

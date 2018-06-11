@@ -43,6 +43,17 @@
             <span>See more</span>
           </a>
         </div>
+
+        <div class='noti-count'>
+        <?php  $value = CountDropdown(1); 
+               if($value == 0){
+                 echo "<script>document.querySelector('.noti-count').style.backgroundColor='transparent';</script>";
+               }else{
+                echo "<script>document.querySelector('.noti-count').style.backgroundColor='red';</script>";
+                echo $value;
+               }
+        ?>
+        </div>
   </div>
         <div class='message-dropdown'>
         <a href="javascript:messageDropdown()" class="header-btn mr-1"><i class="fas fa-envelope fa-lg"></i></a>
@@ -58,6 +69,17 @@
             <span>See more</span>
           </a>
         </div>
+
+        <div class='msg-count'>
+        <?php  $value = CountDropdown(2); 
+               if($value == 0){
+                 echo "<script>document.querySelector('.msg-count').style.backgroundColor='transparent';</script>";
+               }else{
+                echo "<script>document.querySelector('.msg-count').style.backgroundColor='red';</script>";
+                echo $value;
+               }
+        ?>
+        </div>
   </div>  
         
 
@@ -72,6 +94,17 @@
           <a href="requests.php" class='see-more'>
             <span>See more</span>
           </a>
+        </div>
+
+        <div class='req-count'>
+        <?php  $value = CountDropdown(3); 
+               if($value == 0){
+                 echo "<script>document.querySelector('.req-count').style.backgroundColor='transparent';</script>";
+               }else{
+                echo "<script>document.querySelector('.req-count').style.backgroundColor='red';</script>";
+                echo $value;
+               }
+        ?>
         </div>
   </div>
         <a href="logout.php" class="header-btn mr-1" id="logout_id"><i class="fas fa-sign-out-alt fa-lg"></i></a>

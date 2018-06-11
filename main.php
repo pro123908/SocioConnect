@@ -15,6 +15,7 @@
 
 <!-- Notification Area of the page -->
 
+
 <div class="content-area">
       <!-- <div class="notification-area">
         <div class='notifications'>
@@ -92,7 +93,6 @@ addPost(true,"");
 //   showNextPageCaller('a')
 // });
 </script>
-
 
 
 

@@ -57,6 +57,20 @@ body {
   position: relative;
 }
 
+.noti-count,.msg-count,.req-count{
+     display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: -14px;
+    left: 22px;
+    /* background-color: red; */
+    font-size: 12px;
+    border-radius: 100%;
+    width: 20px;
+    height: 20px;
+}
+
 .notification-dropdown .noti-dropdown,.message-dropdown .msg-dropdown ,.request-dropdown .req-dropdown {
   background-color: #fff;
   position: absolute;
@@ -331,8 +345,8 @@ body {
 }
 
 .post-area {
-  flex: 2;
-  text-align: center;
+  flex: 2.5;
+  
   margin: 0px 40px;
   /* background-color: #edf2f6; */
 }
@@ -487,6 +501,41 @@ body {
   color: darkgray;
 }
 
+/* Post Pic Button */
+.upload-btn-wrapper {
+  position : relative;
+  overflow: hidden;
+  display: inline-block;
+  text-align : left;
+}
+
+.pic-upload-btn {
+  border: none;
+  /* border: 2px solid gray; */
+  /* color: gray; */
+  background-color: white;
+  padding: 8px 20px;
+  /* border-radius: 8px; */
+  font-size: 30px;
+  /* font-weight: bold; */ 
+}
+
+.pic-upload-btn:hover{
+  cursor : pointer;
+}
+input[type="file"]:hover {
+  cursor: pointer !important;
+}
+
+
+.upload-btn-wrapper input[type=file] {
+  font-size: 40px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+}
+
 /* Posts */
 
 .posts {
@@ -499,6 +548,15 @@ body {
   padding: 20px;
   border-radius: 5px;
   border: 1px solid #e6ecf5;
+}
+
+/* Post Image */
+.post-image-container{
+  margin : 0 0 10px 0;
+}
+
+.post-image-container .post-image{
+  width : 100%;
 }
 
 .post .post-header {
@@ -514,7 +572,7 @@ body {
 }
 
 .post p {
-  margin: 40px 10px 30px 10px;
+  margin: 40px 10px 10px 10px;
 }
 
 .post-btn {

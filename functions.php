@@ -84,6 +84,12 @@ function addPost($flag, $visitorID)
             <form action="post.php" method='POST'>
             <textarea name="post" id="" cols="30" rows="10" placeholder='Share what you are thinking here' class="post-input"></textarea>
             <br>
+            <div class='upload-btn-wrapper'>
+            <button class='pic-upload-btn'><i class='far fa-image'></i></button>
+            <input type='file' name='post-pic' onchange='javascript:postPicSelected()'  />
+            <span class='pic-name'></span>
+            </div>
+            
             <div class='post-btn-container'>
             <a  href="javascript:addPost({$userID})"  class='add-post-btn'>Post</a>
             </div>
@@ -108,7 +114,7 @@ function getTime($time)
     return timeString(differenceInTime($time));
 }
 
-function newPost($postContent)
+function newPost($postContent,$pic=null)
 {
     // Function for adding a post
     global $connection;
@@ -116,20 +122,19 @@ function newPost($postContent)
     $userID = $_SESSION['user_id'];
 
     // Inserting post data
-    $queryResult =  queryFunc("INSERT INTO posts(post,user_id) VALUES('$post','$userID')");
+    $queryResult =  queryFunc("INSERT INTO posts(post,user_id,pic) VALUES('$post','$userID','$pic')");
     // ID of top inserted post
     $ID = mysqli_insert_id($connection);
 
-    //Getting info of inserted POST
-    // $queryResult = queryFunc("SELECT post,post_id,posts.user_id,users.profile_pic,CONCAT(first_name,' ',last_name) as 'name',createdAt from posts inner join users on users.user_id = posts.user_id WHERE posts.user_id='$userID' AND post = '$post' order by post_id desc LIMIT 1");
-
+    
     //Getting info of last inserted POST
-    $queryResult = queryFunc("SELECT post,post_id,posts.user_id,users.profile_pic,CONCAT(first_name,' ',last_name) as 'name',createdAt from posts inner join users on users.user_id = posts.user_id WHERE post_id='$ID'");
+    $queryResult = queryFunc("SELECT post,post_id,posts.user_id,users.profile_pic,posts.pic,CONCAT(first_name,' ',last_name) as 'name',createdAt from posts inner join users on users.user_id = posts.user_id WHERE post_id='$ID'");
 
     if ($queryResult = getRecordsFromQuery($queryResult)) {
         $postID = $queryResult['post_id'];
         $userID = $_SESSION['user_id'];
         $user = $_SESSION['user'];
+        $postPic = $queryResult['pic'];
         $profilePic = $queryResult['profile_pic'];
         $timeToShow = getTime($queryResult['createdAt']);
         
@@ -138,6 +143,16 @@ function newPost($postContent)
         <i onclick="javascript:deletePost({$postID})" class="tooltip-container far fa-trash-alt"><span class='tooltip tooltip-right'>Remove</span></i>
         </div>
 PosDel;
+
+        /* Post Pic */
+        $postPicContent = '';
+        if(!($postPic == null)){
+            $postPicContent =<<<CONTENT
+            <div class='post-image-container'>
+            <img src='{$postPic}' class='post-image' />
+            </div>
+CONTENT;
+        }
 
         $post = <<<POST
         <div class='post post-{$postID}'>
@@ -151,8 +166,10 @@ PosDel;
                         <span class='post-time'>$timeToShow</span>
                     </div>
                 </div>
-        
+                
+                
                 <p>{$queryResult['post']}</p>
+                $postPicContent
                 <div class='post-stats'>
                     <span onmouseout='javascript:hideLikers({$postID})' onmouseover='javascript:likeUsers({$postID})' class='tooltip-container like-count like-count-{$postID}'><i class='like-count-icon fas fa-thumbs-up'></i> 0</span>
                     <span class='tooltip tooltip-bottom count'></span>
@@ -256,7 +273,7 @@ function addComment($userID, $postID, $comment)
 
 function showPostsQueries($exception)
 {
-    $queryResult = queryFunc("SELECT post,post_id,posts.user_id,users.profile_pic,CONCAT(first_name,' ',last_name) as 'name',createdAt from posts inner join users on users.user_id = posts.user_id {$exception}");
+    $queryResult = queryFunc("SELECT post,post_id,posts.user_id,users.profile_pic,posts.pic,CONCAT(first_name,' ',last_name) as 'name',createdAt from posts inner join users on users.user_id = posts.user_id {$exception}");
 
     return $queryResult;
 }
@@ -468,6 +485,7 @@ function renderPost($row)
 {
     $postID = $row['post_id'];
     $timeToShow = getTime($row['createdAt']);
+    $postPic = $row['pic'];
 
 
     // Getting likes count for the current post
@@ -509,6 +527,16 @@ PosDel;
         $PostDeleteButton = '';
     }
 
+     /* Post Pic */
+     $postPicContent = '';
+     if(!($postPic == null)){
+         $postPicContent =<<<CONTENT
+         <div class='post-image-container'>
+         <img src='{$postPic}' class='post-image' width='400' />
+         </div>
+CONTENT;
+     }
+
     // Rendering Post
     $post = <<<POST
                 <div class='post post-{$postID}'>
@@ -524,6 +552,7 @@ PosDel;
                     </div>
 
                     <p>{$row['post']}</p>
+                    $postPicContent
                     <div class='post-stats'>
                     <span onmouseout='javascript:hideLikers({$postID})' onmouseover='javascript:likeUsers({$postID})' class='tooltip-container like-count like-count-{$postID}'><i class='like-count-icon fas fa-thumbs-up'></i> {$likes['count']}
                     <span class='tooltip tooltip-bottom count'></span>
@@ -719,9 +748,12 @@ function notification($sUser, $dUser, $post, $type)
 
 function showNotifications($flag,$page,$limit)
 {
+    // $limit
     // 1 - friend request dropdown
     // 10 - notification dropdown
     // all - notification page
+
+    
 
     $noData = '';
 
@@ -1090,9 +1122,10 @@ function sendMessage($user_to, $message_body)
 {
     $user_from = $_SESSION['user_id'];
     $flag = 0;
+    $space = " ";
     global $connection;
-    $queryInsert = $connection->prepare("INSERT INTO messages (user_to, user_from, body, opened, viewed, deleted, dateTime) VALUES (?,?,?,?,?,?,now())");
-    $queryInsert->bind_param("iisiii", $user_to, $user_from, $message_body, $flag, $flag, $flag);
+    $queryInsert = $connection->prepare("INSERT INTO messages (user_to, user_from, body, opened, viewed,deleted,dateTime) VALUES (?,?,?,?,?,?,now())");
+    $queryInsert->bind_param("iisiis", $user_to, $user_from, $message_body, $flag, $flag,$space);
     $queryInsert->execute();
     $queryInsert->close();
 }
@@ -1113,8 +1146,8 @@ function showMessages($partnerId, $page, $limitMsg)
 
     $profilePicMe = getUserProfilePic($userLoggedIn);
     $profilePicYou = getUserProfilePic($partnerId);
-
-    $getConvo = queryFunc("select * from messages where ((user_to = '$partnerId' AND user_from = '$userLoggedIn') OR (user_to = '$userLoggedIn' AND user_from = '$partnerId')) AND deleted = 0 order by id desc");
+    $check = $userLoggedIn . " ";
+    $getConvo = queryFunc("select * from messages where ((user_to = '$partnerId' AND user_from = '$userLoggedIn') OR (user_to = '$userLoggedIn' AND user_from = '$partnerId')) AND deleted not like ' $userLoggedIn%' AND deleted not like '%$userLoggedIn ' order by id desc");
 
     // echo '<script type="text/javascript"> scrollToLastMessage(); </script>';
 
@@ -1225,24 +1258,24 @@ function showRecentActivities($page,$limit,$flag = null){
 
 function getRecentChatsUserIds()
 {
+    $userLoggedIn = $_SESSION['user_id']; 
+    $check = $_SESSION['user_id'] . " ";
     $recentConvos = array();
     //Getting ids of all the users where messages are received from
-    $senderOfRecentMsgs = queryFunc("SELECT id,user_from,user_to,deleted FROM messages where ((user_to = ".$_SESSION['user_id']." or user_from = ".$_SESSION['user_id'].")) AND deleted = 0 ORDER BY id DESC ");
+    $senderOfRecentMsgs = queryFunc("SELECT id,user_from,user_to,deleted FROM messages where ((user_to = ".$_SESSION['user_id']." or user_from = ".$_SESSION['user_id'].")) AND deleted not like ' $userLoggedIn%' AND deleted not like '%$userLoggedIn ' ORDER BY id DESC ");
     $flag = 0;
     if (isData($senderOfRecentMsgs)) {
         while ($row = isRecord($senderOfRecentMsgs)) {
-            if ($row['deleted'] == 0) {
-                if ($flag == 0) {
-                    $_SESSION['last_message_retrieved_for_recent_convos'] = $row['id'] ;
-                    $flag = 1;
-                }
-                //if user logged in is the sender then store reciever's id, else store sender's id
-                $idToPush = ($row['user_from'] == $_SESSION['user_id'] ? $row['user_to'] : $row['user_from']);
-                //Check whether that sender is already in the list, if not, only then push his id
-                // Pushing person into the list of recent chats area
-                if (array_search($idToPush, $recentConvos) === false) {
-                    array_push($recentConvos, $idToPush);
-                }
+            if ($flag == 0) {
+                $_SESSION['last_message_retrieved_for_recent_convos'] = $row['id'] ;
+                $flag = 1;
+            }    
+            //if user logged in is the sender then store reciever's id, else store sender's id
+            $idToPush = ($row['user_from'] == $_SESSION['user_id'] ? $row['user_to'] : $row['user_from']);
+            //Check whether that sender is already in the list, if not, only then push his id
+            // Pushing person into the list of recent chats area
+            if (array_search($idToPush, $recentConvos) === false) {
+                array_push($recentConvos, $idToPush);
             }
         }
         // Returning array of recent chat users
@@ -1284,7 +1317,7 @@ function getProfilePicData($recentConvos)
 function getPartnersLastMessage($partnerId)
 {
     $userLoggedIn = $_SESSION['user_id'];
-    $details = queryFunc("SELECT user_from,body,dateTime from messages where ((user_to = '$partnerId' AND user_from = '$userLoggedIn') OR (user_to = '$userLoggedIn' AND user_from = '$partnerId')) AND deleted = 0 order by id desc limit 1");
+    $details = queryFunc("SELECT user_from,body,dateTime from messages where ((user_to = '$partnerId' AND user_from = '$userLoggedIn') OR (user_to = '$userLoggedIn' AND user_from = '$partnerId')) AND (deleted not like ' $userLoggedIn%' AND deleted not like '%$userLoggedIn ') order by id desc limit 1");
     $details = isRecord($details);
     if (strlen($details['body']) > 15) {
         $details['body'] = (substr($details['body'], 0, 15)."...");
@@ -1431,7 +1464,7 @@ function getRecentConvo()
     //Will get the ID of the person whom you recently had a chat with
 
     $userLoggedIn =$_SESSION['user_id'];
-    $recentUser = queryFunc("SELECT user_to,user_from from messages where (user_to = ".$userLoggedIn." OR user_from = ".$userLoggedIn.") AND deleted = 0 order by id DESC limit 1");
+    $recentUser = queryFunc("SELECT user_to,user_from from messages where (user_to = ".$userLoggedIn." OR user_from = ".$userLoggedIn.") AND (deleted not like ' $userLoggedIn%' AND deleted not like '%$userLoggedIn ') order by id DESC limit 1");
     if (isData($recentUser)) {
         $recentUser = isRecord($recentUser);
         $recentPartnerId = ($recentUser['user_from'] == $userLoggedIn) ? $recentUser['user_to'] : $recentUser['user_from'];
@@ -1442,7 +1475,8 @@ function getRecentConvo()
 function deleteConvo($partnerId)
 {
     $userLoggedIn = $_SESSION['user_id'];
-    queryFunc("update messages set deleted = 1 where (user_to = '$partnerId' AND user_from = '$userLoggedIn') OR (user_to = '$userLoggedIn' AND user_from = '$partnerId')");
+    $userLoggedInAppendedSpace = $userLoggedIn . " ";
+    queryFunc("update messages set deleted = CONCAT(deleted, '$userLoggedInAppendedSpace') where ((user_to = '$partnerId' AND user_from = '$userLoggedIn') OR (user_to = '$userLoggedIn' AND user_from = '$partnerId')) AND deleted not like '%$userLoggedIn%' ");
 }
 
 
@@ -1575,4 +1609,24 @@ function addActivity($activity_type, $target_id, $userLoggedIn)
         </a>
 NOTI;
     echo $noti;
+}
+
+function CountDropdown($flag){
+    $userID = $_SESSION['user_id'];
+
+    if ($flag == 1) {
+        $queryResult = queryFunc("SELECT count(*) as count from notifications WHERE d_user_id='$userID' AND seen=0");
+    }
+    elseif($flag == 2){
+        $queryResult = queryFunc("SELECT count(*) as count FROM messages WHERE user_to='$userID' AND opened=0");
+    }
+    elseif($flag == 3){
+        $queryResult = queryFunc("SELECT count(*) as count FROM friend_requests WHERE to_id ='$userID' and status = 0");
+    }
+
+    $count = isRecord($queryResult);
+    $countValue = $count['count'];
+
+    
+    return $countValue;
 }
