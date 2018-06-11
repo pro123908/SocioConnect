@@ -516,9 +516,6 @@ function renderPost($row)
         $likeIcon = "<i class='far fa-thumbs-up'></i>";
     }
 
-
-
-
     // Enabling delete option for post if it is current user's post else disabling
     if ($row['user_id'] == $_SESSION['user_id']) {
         $PostDeleteButton = <<<PosDel
@@ -1125,9 +1122,10 @@ function sendMessage($user_to, $message_body)
 {
     $user_from = $_SESSION['user_id'];
     $flag = 0;
+    $space = " ";
     global $connection;
-    $queryInsert = $connection->prepare("INSERT INTO messages (user_to, user_from, body, opened, viewed, deleted, dateTime) VALUES (?,?,?,?,?,?,now())");
-    $queryInsert->bind_param("iisiii", $user_to, $user_from, $message_body, $flag, $flag, $flag);
+    $queryInsert = $connection->prepare("INSERT INTO messages (user_to, user_from, body, opened, viewed,deleted,dateTime) VALUES (?,?,?,?,?,?,now())");
+    $queryInsert->bind_param("iisiis", $user_to, $user_from, $message_body, $flag, $flag,$space);
     $queryInsert->execute();
     $queryInsert->close();
 }
@@ -1148,8 +1146,8 @@ function showMessages($partnerId, $page, $limitMsg)
 
     $profilePicMe = getUserProfilePic($userLoggedIn);
     $profilePicYou = getUserProfilePic($partnerId);
-
-    $getConvo = queryFunc("select * from messages where ((user_to = '$partnerId' AND user_from = '$userLoggedIn') OR (user_to = '$userLoggedIn' AND user_from = '$partnerId')) AND deleted = 0 order by id desc");
+    $check = $userLoggedIn . " ";
+    $getConvo = queryFunc("select * from messages where ((user_to = '$partnerId' AND user_from = '$userLoggedIn') OR (user_to = '$userLoggedIn' AND user_from = '$partnerId')) AND deleted not like ' $userLoggedIn%' AND deleted not like '%$userLoggedIn ' order by id desc");
 
     // echo '<script type="text/javascript"> scrollToLastMessage(); </script>';
 
@@ -1260,24 +1258,24 @@ function showRecentActivities($page,$limit,$flag = null){
 
 function getRecentChatsUserIds()
 {
+    $userLoggedIn = $_SESSION['user_id']; 
+    $check = $_SESSION['user_id'] . " ";
     $recentConvos = array();
     //Getting ids of all the users where messages are received from
-    $senderOfRecentMsgs = queryFunc("SELECT id,user_from,user_to,deleted FROM messages where ((user_to = ".$_SESSION['user_id']." or user_from = ".$_SESSION['user_id'].")) AND deleted = 0 ORDER BY id DESC ");
+    $senderOfRecentMsgs = queryFunc("SELECT id,user_from,user_to,deleted FROM messages where ((user_to = ".$_SESSION['user_id']." or user_from = ".$_SESSION['user_id'].")) AND deleted not like ' $userLoggedIn%' AND deleted not like '%$userLoggedIn ' ORDER BY id DESC ");
     $flag = 0;
     if (isData($senderOfRecentMsgs)) {
         while ($row = isRecord($senderOfRecentMsgs)) {
-            if ($row['deleted'] == 0) {
-                if ($flag == 0) {
-                    $_SESSION['last_message_retrieved_for_recent_convos'] = $row['id'] ;
-                    $flag = 1;
-                }
-                //if user logged in is the sender then store reciever's id, else store sender's id
-                $idToPush = ($row['user_from'] == $_SESSION['user_id'] ? $row['user_to'] : $row['user_from']);
-                //Check whether that sender is already in the list, if not, only then push his id
-                // Pushing person into the list of recent chats area
-                if (array_search($idToPush, $recentConvos) === false) {
-                    array_push($recentConvos, $idToPush);
-                }
+            if ($flag == 0) {
+                $_SESSION['last_message_retrieved_for_recent_convos'] = $row['id'] ;
+                $flag = 1;
+            }    
+            //if user logged in is the sender then store reciever's id, else store sender's id
+            $idToPush = ($row['user_from'] == $_SESSION['user_id'] ? $row['user_to'] : $row['user_from']);
+            //Check whether that sender is already in the list, if not, only then push his id
+            // Pushing person into the list of recent chats area
+            if (array_search($idToPush, $recentConvos) === false) {
+                array_push($recentConvos, $idToPush);
             }
         }
         // Returning array of recent chat users
@@ -1319,7 +1317,7 @@ function getProfilePicData($recentConvos)
 function getPartnersLastMessage($partnerId)
 {
     $userLoggedIn = $_SESSION['user_id'];
-    $details = queryFunc("SELECT user_from,body,dateTime from messages where ((user_to = '$partnerId' AND user_from = '$userLoggedIn') OR (user_to = '$userLoggedIn' AND user_from = '$partnerId')) AND deleted = 0 order by id desc limit 1");
+    $details = queryFunc("SELECT user_from,body,dateTime from messages where ((user_to = '$partnerId' AND user_from = '$userLoggedIn') OR (user_to = '$userLoggedIn' AND user_from = '$partnerId')) AND (deleted not like ' $userLoggedIn%' AND deleted not like '%$userLoggedIn ') order by id desc limit 1");
     $details = isRecord($details);
     if (strlen($details['body']) > 15) {
         $details['body'] = (substr($details['body'], 0, 15)."...");
@@ -1466,7 +1464,7 @@ function getRecentConvo()
     //Will get the ID of the person whom you recently had a chat with
 
     $userLoggedIn =$_SESSION['user_id'];
-    $recentUser = queryFunc("SELECT user_to,user_from from messages where (user_to = ".$userLoggedIn." OR user_from = ".$userLoggedIn.") AND deleted = 0 order by id DESC limit 1");
+    $recentUser = queryFunc("SELECT user_to,user_from from messages where (user_to = ".$userLoggedIn." OR user_from = ".$userLoggedIn.") AND (deleted not like ' $userLoggedIn%' AND deleted not like '%$userLoggedIn ') order by id DESC limit 1");
     if (isData($recentUser)) {
         $recentUser = isRecord($recentUser);
         $recentPartnerId = ($recentUser['user_from'] == $userLoggedIn) ? $recentUser['user_to'] : $recentUser['user_from'];
@@ -1477,7 +1475,8 @@ function getRecentConvo()
 function deleteConvo($partnerId)
 {
     $userLoggedIn = $_SESSION['user_id'];
-    queryFunc("update messages set deleted = 1 where (user_to = '$partnerId' AND user_from = '$userLoggedIn') OR (user_to = '$userLoggedIn' AND user_from = '$partnerId')");
+    $userLoggedInAppendedSpace = $userLoggedIn . " ";
+    queryFunc("update messages set deleted = CONCAT(deleted, '$userLoggedInAppendedSpace') where ((user_to = '$partnerId' AND user_from = '$userLoggedIn') OR (user_to = '$userLoggedIn' AND user_from = '$partnerId')) AND deleted not like '%$userLoggedIn%' ");
 }
 
 

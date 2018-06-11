@@ -14,7 +14,6 @@ function setUserId(id) {
       //if no more flag is true
       if(flag.value == "true")
           document.getElementById("loading").innerHTML = 'No More Posts To Show';
-          
       //if there are more posts present    
       else{
         if(url == 'http://localhost/socioConnect/timeline.php'){
@@ -149,7 +148,7 @@ function findChildNodes(div){
 // }
 
 // Function for making all ajax calls using promise
-function ajaxCalls(method, pathString, postParam = "",pic='') {
+function ajaxCalls(method, pathString, postParam = "") {
   // Creating promise
   return new Promise(function(resolve, reject) {
     // Creating XHR object for AJAX Call
@@ -172,7 +171,7 @@ function ajaxCalls(method, pathString, postParam = "",pic='') {
     // Preparing request with method and filename
     xmlhttp.open(method, pathString, true);
 
-    if (postParam && pic == '') {
+    if (postParam) {
       // Setting up headers to be send in POST request
       xmlhttp.setRequestHeader(
         "Content-type",
@@ -245,32 +244,16 @@ function deletePost(postID) {
   });
 }
 
-function postPicSelected(){
-  var postPic = document.querySelector("input[name='post-pic']").files[0];
-  document.querySelector('.pic-name').innerHTML = postPic.name;
-  console.log(postPic.name);
-}
-
 function addPost(user_id) {
   // Again the name suggests xD
 
   // Getting post content
   var post = document.querySelector("textarea[name='post']");
-  var postPicData = document.querySelector("input[name='post-pic']");
-  var postPic = postPicData.files[0];
-
-
-  console.log(postPic);
-
-  var formData = new FormData();
-  formData.append('file',postPic);
-  formData.append('post',post.value);
-
 
   // Setting paramters for POST request
-  // var param = `post=${post.value}&user_id=${user_id}`;
+  var param = `post=${post.value}&user_id=${user_id}`;
 
-  ajaxCalls("POST", "post.php", formData,'pic').then(function(result) {
+  ajaxCalls("POST", "post.php", param).then(function(result) {
     // Adding new post to post Area
     // Adding post to the top not bottom. Clue xD
     document.querySelector(".posts").innerHTML =
@@ -284,7 +267,6 @@ function addPost(user_id) {
       addRecentActivity(result);
     });
   });
-  postPicData.value = '';
 }
 
 function deleteComment(commentID) {
@@ -623,13 +605,15 @@ function removeFriend(id) {
     // }
     // else{
       console.log("Response messageSimple : " + data[0]);
-      document.querySelector(".friend-container").innerHTML = "";
-      var flag = 0
+      document.querySelector(".friends-container").innerHTML = "";
+      var flag = 0;
       console.log(data.length);
+      var url = window.location.href;
       for (i = 0; i < data.length; i++) {
-        flag = 1;
+        flag++ ;
         var obj = data[i];
         var friend = `
+        <div class="friend-container">
           <div class='friend'>
             <div class='friend-image'>
               <img class='post-avatar post-avatar-30' src='${obj.profile_pic}'  >
@@ -645,12 +629,21 @@ function removeFriend(id) {
               <a href="javascript:removeFriend(${obj.user_id})" class='remove-friend'><i class="fas fa-times tooltip-container"><span class='tooltip tooltip-right'>Remove Friend</span></i></a>
               </div>
             </div>
+          </div> 
           </div>  
         `;
-        document.querySelector(".friend-container").innerHTML += friend;
+        document.querySelector(".friends-container").innerHTML += friend;
+        if(flag == 10 && url != "http://localhost/socioConnect/requests.php")
+              break;
       }
       if(flag == 0 ){
         document.querySelector(".show-more-friends").innerHTML = "<p class='see-more'>No Friends To Show</p>";
+      }
+      else if(flag == 10){
+        document.querySelector(".show-more-friends").innerHTML = "<a href='requests.php' class='see-more'><span>See more</span></a>";
+      }
+      else{
+        document.querySelector(".show-more-friends").innerHTML = "<p class='see-more'>No More Friends To Show</p>";
       }
    // }
   });
