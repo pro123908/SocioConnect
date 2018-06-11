@@ -26,6 +26,7 @@ html {
 body {
   box-sizing: border-box;
   font-family: 'Open Sans', sans-serif;
+  
 }
 
 .main-container {
@@ -345,7 +346,7 @@ body {
 }
 
 .post-area {
-  flex: 2.5;
+  flex: 2;
   
   margin: 0px 40px;
   /* background-color: #edf2f6; */

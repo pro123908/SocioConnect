@@ -34,7 +34,7 @@
       
       <div class="header-links">
         <div class='notification-dropdown'>
-        <a href="javascript:notificationDropdown();" class="test header-btn mr-1 "><i class="fas fa-bell fa-lg"></i></a>
+        <a href="javascript:toggleDropdown('.noti-dropdown');" class="test header-btn mr-1 "><i class="fas fa-bell fa-lg"></i></a>
           
           <div class='noti-dropdown'>
           <h3>Notifications</h3>  
@@ -56,7 +56,7 @@
         </div>
   </div>
         <div class='message-dropdown'>
-        <a href="javascript:messageDropdown()" class="header-btn mr-1"><i class="fas fa-envelope fa-lg"></i></a>
+        <a href="javascript:toggleDropdown('.msg-dropdown');" class="header-btn mr-1"><i class="fas fa-envelope fa-lg"></i></a>
 
         <div class='msg-dropdown'>
         
@@ -84,7 +84,7 @@
         
 
     <div class='request-dropdown'>
-        <a href="javascript:requestDropdown();" class="header-btn mr-1"><i class="fas fa-user-plus fa-lg"></i></a>
+        <a href="javascript:toggleDropdown('.req-dropdown');" class="header-btn mr-1"><i class="fas fa-user-plus fa-lg"></i></a>
 
         <div class='req-dropdown'>
           <h3>Friend Requests</h3> 
