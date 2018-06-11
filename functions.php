@@ -446,7 +446,7 @@ POST;
     while ($comments = isRecord($commentResult)) {
         $timeToShow = getTime($comments['createdAt']);
         $commentID = $comments['comment_id'];
-
+        $DP = $comments['profile_pic'];
         // Enabling delete option for comment if it is user's post or his comment else disabling
         if ($comments['user_id'] == $_SESSION['user_id'] || $_SESSION['user_id'] == $fUser) {
             $commentDeleteButton = <<<ComDel
@@ -456,6 +456,15 @@ ComDel;
             $commentDeleteButton = '';
         }
 
+        // Enabling edit option for comment if it is his comment else disabling
+        if ($comments['user_id'] == $_SESSION['user_id']) {
+            $commentEditButton = <<<ComEdit
+            <i class="tooltip-container fas fa-edit" onclick="javascript:editComment({$commentID},{$postID},'{$DP}')"><span class='tooltip tooltip-right'>Edit</span></i>
+ComEdit;
+        } else {
+            $commentEditButton = '';
+        }
+        
         // Rendering comment
         $post .= <<<POST
                     <div class='comment comment-{$commentID}'>
@@ -466,6 +475,7 @@ ComDel;
                         
                         <div class='comment-info'>
                         {$commentDeleteButton}
+                        {$commentEditButton}
                         <div class='comment-body'>
                         <a href='timeline.php?visitingUserID={$comments['user_id']}' class='comment-user'>{$comments['name']} : </a>
                         <span class='comment-text'>{$comments['comment']}</span>
@@ -519,9 +529,9 @@ function renderPost($row)
     // Enabling delete option for post if it is current user's post else disabling
     if ($row['user_id'] == $_SESSION['user_id']) {
         $PostDeleteButton = <<<PosDel
-                            <div class='post-delete-icon'>
-                                <i onclick="javascript:deletePost({$postID})" class="tooltip-container far fa-trash-alt"><span class='tooltip tooltip-right'>Remove</span></i>
-                            </div>
+            <div class='post-delete-icon'>
+                <i onclick="javascript:deletePost({$postID})" class="tooltip-container far fa-trash-alt"><span class='tooltip tooltip-right'>Remove</span></i>
+            </div>
 PosDel;
     } else {
         $PostDeleteButton = '';

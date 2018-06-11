@@ -209,7 +209,8 @@ function comment(postID) {
   </div>
   
   <div class='comment-info'>
-  <i class='far fa-trash-alt comment-delete' onclick="javascript:deleteComment(${commentID})"></i>
+  <i class="tooltip-container fas fa-edit" onclick="javascript:editComment(${commentID},${post.value},'${profilePic.value}')"><span class='tooltip tooltip-right'>Edit</span></i>
+  <i class='tooltip-container far fa-trash-alt comment-delete' onclick='javascript:deleteComment(${commentID})'><span class='tooltip tooltip-right'>Remove</span></i>
   <div class='comment-body'>
   <span class='comment-user'>${user.value} : </span>
   <span class='comment-text'>${comment.value}</span>
@@ -295,6 +296,54 @@ function deleteComment(commentID) {
   ajaxCalls("GET", `commentDelete.php?id=${commentID}`).then(function(result) {
     document.querySelector(`.comment-${commentID}`).style.display = "none";
   });
+}
+
+function editComment(commentID,postID,profilePic){
+  var comment = document.querySelector(".comment-"+commentID);
+  var user = comment.querySelector('.comment-user').innerHTML;
+  user = user.slice(0,user.length-3);
+  var commentValue = comment.querySelector(".comment-text").innerHTML; 
+  comment.innerHTML = `
+    <div class='comment-form'>
+      <form onsubmit=" saveEditComment(${postID},${commentID},${user},'${profilePic}')" method="post" id='commentFormEdit_${commentID}'>
+          <input name = "comment_edit_${commentID}" type='text' autocomplete = "off" value = "${commentValue}">
+          <input style='display:none;' type='submit' id="${postID}" value="Comment" > 
+      </form>
+    </div>`;  
+}
+
+function saveEditComment(postID,commentID,user,profilePic){
+
+  // Adding comment to post
+  // Getting post ID,content and user who posted comment from form
+  var comment = document.querySelector(`input[name='comment_edit_${commentID}']`);
+  // Setting up parameters for POST request to the file
+  var param = `comment=${comment.value}&comment_id=${commentID}`;
+
+  ajaxCalls("POST", "commentEdit.php", param).then(function(result) {
+    // Added Comment ID is returned in response
+    document.querySelector(`.comment-${commentID}`).innerHTML = `
+  <div class='comment comment-${commentID}'>
+                
+    <div class='user-image'>
+      <img src='${profilePic}' class='post-avatar post-avatar-30' />
+    </div>
+  
+    <div class='comment-info'>
+      <i class='tooltip-container far fa-trash-alt comment-delete' onclick='javascript:deleteComment(${commentID})'><span class='tooltip tooltip-right'>Remove</span></i>
+      <i class="tooltip-container fas fa-edit" onclick="javascript:editComment(${commentID},${postID},'${profilePic}')"><span class='tooltip tooltip-right'>Edit</span></i>
+      <div class='comment-body'>
+        <span class='comment-user'>${user} : </span>
+        <span class='comment-text'>${comment.value}</span>
+        <span class='comment-time'>Just now</span>
+      </div>
+    </div>
+  </div>
+  `;
+});
+
+  //Pain in the ass xD
+  return false;
 }
 
 //DP Animation Functions
