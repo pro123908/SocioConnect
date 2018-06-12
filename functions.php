@@ -161,7 +161,8 @@ CONTENT;
         
                     <div class='post-info'>
                         <a href='timeline.php?visitingUserID={$userID}' class='user'>{$queryResult['name']}</a>
-                        <span class='post-time'>$timeToShow</span><span class='post-edited-{$postID}'></span>
+                        <span class='post-time'>$timeToShow</span>
+                        <span class='post-edited post-edited-{$postID}'></span>
                     </div>
                 </div>
                 
@@ -458,7 +459,7 @@ ComDel;
         // Enabling edit option for comment if it is his comment else disabling
         if ($comments['user_id'] == $_SESSION['user_id']) {
             $commentEditButton = <<<ComEdit
-            <i class="tooltip-container fas fa-edit" onclick="javascript:editComment({$commentID},{$postID},'{$DP}','{$timeToShow}')"><span class='tooltip tooltip-right'>Edit</span></i>
+            <i class="tooltip-container fas fa-edit comment-edit" onclick="javascript:editComment({$commentID},{$postID},'{$DP}','{$timeToShow}')"><span class='tooltip tooltip-right'>Edit</span></i>
 ComEdit;
         } else {
             $commentEditButton = '';
@@ -483,7 +484,8 @@ ComEdit;
                         <div class='comment-body'>
                         <a href='timeline.php?visitingUserID={$comments['user_id']}' class='comment-user'>{$comments['name']} : </a>
                         <span class='comment-text'>{$comments['comment']}</span>
-                        <span class='comment-time'>$timeToShow</span><span class='comment-edit'>$edited</span>
+                        <span class='comment-time'>$timeToShow</span>
+                        <span class='comment-edit-text'>$edited</span>
                         </div>
                         
                         </div>
@@ -567,7 +569,8 @@ CONTENT;
 
                     <div class='post-info'>
                     <a href='timeline.php?visitingUserID={$row['user_id']}' class='user'>{$row['name']}</a>
-                    <span class='post-time'>$timeToShow</span><span class='post-edited-{$postID}'>$edited</span>
+                    <span class='post-time'>$timeToShow</span>
+                    <span class='post-edited post-edited-{$postID}'>$edited</span>
                     </div>
                     </div>
                     <div class='actual-post-{$postID}'>    

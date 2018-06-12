@@ -607,10 +607,14 @@ input[type="file"]:hover {
   align-items: center;
 }
 
-.post .post-header .post-time {
+.post .post-header .post-time,.post-edited {
   color: #90949c;
   display: inline-block;
   font-size: 10px;
+}
+.post-edited{
+  color: #360505;
+  font-weight: bold;
 }
 
 .post p {
@@ -750,7 +754,7 @@ input[type="file"]:hover {
   font-size: 16px;
 }
 
-.comment-delete {
+.comment-delete,.comment-edit {
   float: right;
   text-decoration: none;
   color: red;
@@ -760,12 +764,16 @@ input[type="file"]:hover {
   cursor: pointer;
 }
 
-.comment-time {
-  font-size: 10px;
+.comment-time,.comment-edit-text {
   font-size: 10px;
   color: #90949c;
   display: inline-block;
   width: 100%;
+}
+
+.comment-edit-text{
+  color: #360505;
+  font-weight: bold;
 }
 
 .comment-form {
