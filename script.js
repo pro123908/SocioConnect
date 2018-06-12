@@ -267,11 +267,13 @@ function deletePost(postID) {
   });
 }
 
-function postPicSelected() {
+function postPicSelected(container) {
   var postPic = document.querySelector("input[name='post-pic']").files[0];
   document.querySelector(".pic-name").innerHTML = postPic.name;
   console.log(postPic.name);
 }
+
+
 
 function addPost(user_id) {
   // Again the name suggests xD
@@ -321,10 +323,18 @@ function editPost(postID){
     var div = document.createElement("div");
     div.setAttribute("class","edit-post-"+postID)
     div.innerHTML = 
-      `<form action="post.php" method='POST'>
+      `<form action="editPost.php" method='POST'>
         <textarea name="post" id="" cols="30" rows="10" class="post-input post-edit-${postID}">${postContent.innerHTML}</textarea>
         <br>
-                    
+        <input type="radio" name="edit-post-pic" value="remove" onclick="hideFileUpload(${postID})"> Remove Older Pic<br>
+        <input type="radio" name="edit-post-pic" value="keep" onclick="hideFileUpload(${postID})"> Keep Older Pic<br>
+        <input type="radio" name="edit-post-pic" value="new" onclick="showFileUpload(${postID})"> Upload New<br>
+        
+        <div class='upload-btn-wrapper' style="display:none;">
+          <button class='pic-upload-btn'><i class='far fa-image'></i></button>
+          <input type='file' name='post-pic' onchange='javascript:editedPostPicSelected(${postID})'  />
+          <span class='pic-name'></span>
+        </div>               
         <div class='post-btn-container'>
           <a  href="javascript:saveEditPost(${postID})"  class='edit-post-btn'>Save</a>
         </div>
@@ -341,20 +351,80 @@ function editPost(postID){
 
 }
 
+//Copied this function from above postPicSelected, just to check right now, in future both will be merged
+function editedPostPicSelected(postID) {
+  var editForm = document.querySelector(".edit-post-"+postID);  
+  var postPic = editForm.querySelector("input[name='post-pic']").files[0];
+  editForm.querySelector(".pic-name").innerHTML = postPic.name;
+  console.log(postPic.name);
+}
+
+function showFileUpload(postID){
+  var editForm = document.querySelector(".edit-post-"+postID);
+  editForm.querySelector(".upload-btn-wrapper").style.display = "inline-block";
+}
+
+function hideFileUpload(postID){
+  var editForm = document.querySelector(".edit-post-"+postID);
+  editForm.querySelector(".upload-btn-wrapper").style.display = "none";
+}
+
 function saveEditPost(postID){
-  //Getting post text area value
+
+  //Getting post text
   var postContent = document.querySelector(".post-edit-"+postID);
 
-  var param = `postID=${postID}&postContent=${postContent.value}`;
-  
-  ajaxCalls("POST", "postEdit.php", param).then(function(result) {
+  //Getting div in which edited values are present
+  var editForm = document.querySelector(".edit-post-"+postID);  
 
-    var post = document.querySelector(".actual-post-"+postID);
-    post.style.display = "block";
-    post.getElementsByTagName("p")[0].innerHTML = postContent.value;
-    document.querySelector(".edit-post-"+postID).style.display = "none";
-    document.querySelector(".post-edited-"+postID).innerHTML = "Edited"
-  }); 
+  //Inside that div, getting pic name
+  var picPath = editForm.querySelector(".pic-name").innerHTML;
+  
+  var postPicData = editForm.querySelector("input[name='post-pic']");
+  var postPic = postPicData.files[0];
+  if(!(postContent.value.trim() == '') || (postPic !== undefined)){
+    var formData = new FormData();
+    formData.append("file", postPic);
+    formData.append("postID", postID);
+    formData.append("postContent", postContent.value);
+
+    var action = editForm.querySelector('input[name="edit-post-pic"]:checked').value;
+    formData.append("action", action);
+
+    if(editForm.querySelector('input[name="edit-post-pic"]:checked')){
+      if(action == "new" && editForm.querySelector(".pic-name").innerHTML == ""){
+          alert("Select Image to change image")
+          return 0;
+        }
+        ajaxCalls("POST", "postEdit.php", formData,"pic").then(function(result) {
+          var post = document.querySelector(".actual-post-"+postID);
+          post.style.display = "block";
+          post.getElementsByTagName("p")[0].innerHTML = postContent.value;
+          if(result.trim() != ""){
+            if(action == "keep" || action == "new"){
+              if(post.querySelector(".post-image")){
+                post.querySelector(".post-image").src = result;
+              }
+              else{
+                  var imgParentDiv = document.querySelector(".actual-post-"+postID);
+                  imgParentDiv.innerHTML += `<div class='post-image-container'><img src='${result}' class='post-image' /></div>`
+              }
+            }
+          }  
+          else{
+            if(post.querySelector(".post-image"))
+              post.querySelector(".post-image").style.display = "none";
+          }
+          document.querySelector(".edit-post-"+postID).style.display = "none";
+          document.querySelector(".post-edited-"+postID).innerHTML = "Edited"
+        });
+    }
+    else
+      alert("Select Action to do on the image");  
+  }
+  else{
+      alert("Enter either a text or an image");  
+  }
 }
 
 function deleteComment(commentID) {

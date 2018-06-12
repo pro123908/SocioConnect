@@ -18,5 +18,43 @@
 
   //        echo "<img src='$path' />";
   //    }
+  function addPost(user_id) {
+    // Again the name suggests xD
+  
+    // Getting post content
+    var post = document.querySelector("textarea[name='post']");
+    var postPicData = document.querySelector("input[name='post-pic']");
+    var postPic = postPicData.files[0];
+  
+    var postContent = post.value;
+  
+    console.log(postPic);
+    
+    if(!(postContent.trim() == '') || (postPic !== undefined)){
+    var formData = new FormData();
+    formData.append("file", postPic);
+    formData.append("post", post.value);
+  
+    // Setting paramters for POST request
+    // var param = `post=${post.value}&user_id=${user_id}`;
+  
+    ajaxCalls("POST", "post.php", formData, "pic").then(function(result) {
+      // Adding new post to post Area
+      // Adding post to the top not bottom. Clue xD
+      document.querySelector(".posts").innerHTML =
+        result + document.querySelector(".posts").innerHTML;
+      document.querySelector("textarea[name='post']").value = " ";
+  
+      //Adding in recent activities
+      var activity_type = 2;
+      param = `activity_type=${activity_type}`;
+      ajaxCalls("POST", `recentActivityAjax.php`, param).then(function(result) {
+        addRecentActivity(result);
+      });
+    });
+  }
+    // postPicData.value = '';
+    document.querySelector(".pic-name").innerHTML = "";
+  }
     
 ?>

@@ -36,11 +36,7 @@ if (isset($_POST['post'])) {
     
     else{
       newPost($_POST['post']);
-    }
-
-    
-
-    
+    }  
 }
 
 
