@@ -697,6 +697,18 @@ input[type="file"]:hover {
   margin-bottom: 10px;
 }
 
+.edit-post-btn{
+  display: inline-block;
+  width: 100px;
+  text-align: center;
+  margin: 10px 20px 10px 200px;
+  text-decoration: none;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 5px;
+  background-color: #ff763a;
+}
+
 .post .like-count-icon {}
 
 /* Comment section */

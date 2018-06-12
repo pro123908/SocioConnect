@@ -312,6 +312,52 @@ function addPost(user_id) {
   document.querySelector(".pic-name").innerHTML = "";
 }
 
+function editPost(postID){
+  if(!(document.querySelector(".edit-post-"+postID))){
+    var post = document.querySelector(".actual-post-"+postID);
+    var postPic = post.querySelector(".post-image-container");
+    var postContent = post.getElementsByTagName("p")[0];
+    post.style.display = "none";
+    var div = document.createElement("div");
+    div.setAttribute("class","edit-post-"+postID)
+    div.innerHTML = 
+      `<form action="post.php" method='POST'>
+        <textarea name="post" id="" cols="30" rows="10" class="post-input post-edit-${postID}">${postContent.innerHTML}</textarea>
+        <br>
+                    
+        <div class='post-btn-container'>
+          <a  href="javascript:saveEditPost(${postID})"  class='edit-post-btn'>Save</a>
+        </div>
+      </form>`;
+
+    var pos = document.querySelector(".post-content-"+postID);
+    pos.insertBefore(div,post)
+  }
+  edit-post-221  
+//   <div class='upload-btn-wrapper'>
+//   <button class='pic-upload-btn'><i class='far fa-image'></i></button>
+//   <input type='file' name='post-pic' onchange='javascript:postPicSelected()'  />
+//   <span class='pic-name'></span>
+// </div>
+
+}
+
+function saveEditPost(postID){
+  //Getting post text area value
+  var postContent = document.querySelector(".post-edit-"+postID);
+
+  var param = `postID=${postID}&postContent=${postContent.value}`;
+  
+  ajaxCalls("POST", "postEdit.php", param).then(function(result) {
+
+    var post = document.querySelector(".actual-post-"+postID);
+    post.style.display = "block";
+    post.getElementsByTagName("p")[0].innerHTML = postContent.value;
+    document.querySelector(".edit-post-"+postID).style.display = "none";
+    
+  }); 
+}
+
 function deleteComment(commentID) {
   // Deleting Comment specified by comment ID
 
@@ -321,7 +367,7 @@ function deleteComment(commentID) {
 }
 
 
-function saveEditComment(postID,commentID,user,profilePic){
+function saveEditComment(postID,commentID,user,profilePic,time){
   
 
   // Adding comment to post
@@ -343,11 +389,12 @@ function saveEditComment(postID,commentID,user,profilePic){
   
     <div class='comment-info'>
       <i class='tooltip-container far fa-trash-alt comment-delete' onclick='javascript:deleteComment(${commentID})'><span class='tooltip tooltip-right'>Remove</span></i>
-      <i class="tooltip-container fas fa-edit" onclick="javascript:editComment(${commentID},${postID},'${profilePic}')"><span class='tooltip tooltip-right'>Edit</span></i>
+      <i class="tooltip-container fas fa-edit" onclick="javascript:editComment(${commentID},${postID},'${profilePic}',${time})"><span class='tooltip tooltip-right'>Edit</span></i>
       <div class='comment-body'>
         <span class='comment-user'>${user} : </span>
         <span class='comment-text'>${comment.value}</span>
-        <span class='comment-time'>Just now</span>
+        <span class='comment-time'>${time}</span>
+        <span class='comment-time'>Edited</span>   
       </div>
     </div>
   </div>
@@ -360,23 +407,19 @@ function saveEditComment(postID,commentID,user,profilePic){
   return false;
 }
 
-function editComment(commentID,postID,profilePic){
+function editComment(commentID,postID,profilePic,time){
   var comment = document.querySelector(".comment-"+commentID);
   var user = comment.querySelector('.comment-user').innerHTML;
   user = user.slice(0,user.length-3);
   var commentValue = comment.querySelector(".comment-text").innerHTML; 
   comment.innerHTML = `
     <div class='comment-form'>
-      <form onsubmit ="return saveEditComment(${postID},${commentID},'${user}','${profilePic}')"  method="post" id='commentFormEdit_${commentID}'>
+      <form onsubmit ="return saveEditComment(${postID},${commentID},'${user}','${profilePic}','${time}')"  method="post" id='commentFormEdit_${commentID}'>
           <input name = "comment_edit_${commentID}" type='text' autocomplete = "off" value = "${commentValue}">
           <input style='display:none;' type="submit" id="${postID}" value="Comment" > 
       </form>
     </div>`;  
-
-    
 }
-
-
 
 //DP Animation Functions
 function onClosedImagModal() {

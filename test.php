@@ -19,12 +19,4 @@
   //        echo "<img src='$path' />";
   //    }
     
-    $str = " 12 ";
-    $array = explode(" ",$str);
-    echo $array[0];
-    echo " khtm ";
-    echo $array[1];
-    echo " khtm ";
-    echo $array[2];
-    echo " khtm ";
 ?>

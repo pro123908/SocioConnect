@@ -80,23 +80,20 @@ function addPost($flag, $visitorID)
         $addPost = "<div class='hidden'>";
     }
     $addPost .= <<<DELIMETER
-            <div class='post-options'></div>
+        <div class='post-options'></div>
             <form action="post.php" method='POST'>
-            <textarea name="post" id="" cols="30" rows="10" placeholder='Share what you are thinking here' class="post-input"></textarea>
-            <br>
-            <div class='upload-btn-wrapper'>
-            <button class='pic-upload-btn'><i class='far fa-image'></i></button>
-            <input type='file' name='post-pic' onchange='javascript:postPicSelected()'  />
-            <span class='pic-name'></span>
-            </div>
-            
-            <div class='post-btn-container'>
-            <a  href="javascript:addPost({$userID})"  class='add-post-btn'>Post</a>
-            </div>
-        </form>
-        
+                <textarea name="post" id="" cols="30" rows="10" placeholder='Share what you are thinking here' class="post-input"></textarea>
+                <br>
+                <div class='upload-btn-wrapper'>
+                    <button class='pic-upload-btn'><i class='far fa-image'></i></button>
+                    <input type='file' name='post-pic' onchange='javascript:postPicSelected()'  />
+                    <span class='pic-name'></span>
+                </div>             
+                <div class='post-btn-container'>
+                    <a  href="javascript:addPost({$userID})"  class='add-post-btn'>Post</a>
+                </div>
+            </form>
         </div>
-
         
 DELIMETER;
     echo $addPost;
@@ -140,6 +137,7 @@ function newPost($postContent,$pic=null)
         
         $PostDeleteButton = <<<PosDel
         <div class='post-delete-icon'>
+        <i class="tooltip-container fas fa-edit" onclick="javascript:editPost({$postID})"><span class='tooltip tooltip-right'>Edit</span></i>
         <i onclick="javascript:deletePost({$postID})" class="tooltip-container far fa-trash-alt"><span class='tooltip tooltip-right'>Remove</span></i>
         </div>
 PosDel;
@@ -156,7 +154,7 @@ CONTENT;
 
         $post = <<<POST
         <div class='post post-{$postID}'>
-            <div class='post-content'>
+            <div class='post-content post-content-{$postID}'>
                 {$PostDeleteButton}
                 <div class='post-header'>
                     <a href='timeline.php?visitingUserID={$userID}'><img src='{$queryResult['profile_pic']}' class='post-avatar post-avatar-40'/></a>
@@ -167,9 +165,10 @@ CONTENT;
                     </div>
                 </div>
                 
-                
-                <p>{$queryResult['post']}</p>
-                $postPicContent
+                <div class='actual-post-{$postID}'> 
+                    <p>{$queryResult['post']}</p>
+                    $postPicContent
+                </div>
                 <div class='post-stats'>
                     <span onmouseout='javascript:hideLikers({$postID})' onmouseover='javascript:likeUsers({$postID})' class='tooltip-container like-count like-count-{$postID}'><i class='like-count-icon fas fa-thumbs-up'></i> 0</span>
                     <span class='tooltip tooltip-bottom count'></span>
@@ -441,7 +440,7 @@ function renderPostComments($flag, $postID, $fUser)
 POST;
 
     // Querying database for the current post comments if any
-    $commentResult = queryFunc("SELECT comments.user_id,comment_id,comment,CONCAT(first_name,' ',last_name) as 'name',createdAt,users.profile_pic from comments inner join users on users.user_id = comments.user_id where comments.post_id ='$postID'");
+    $commentResult = queryFunc("SELECT comments.user_id,comment_id,comment,CONCAT(first_name,' ',last_name) as 'name',createdAt,users.profile_pic,edited from comments inner join users on users.user_id = comments.user_id where comments.post_id ='$postID'");
 
     while ($comments = isRecord($commentResult)) {
         $timeToShow = getTime($comments['createdAt']);
@@ -459,11 +458,16 @@ ComDel;
         // Enabling edit option for comment if it is his comment else disabling
         if ($comments['user_id'] == $_SESSION['user_id']) {
             $commentEditButton = <<<ComEdit
-            <i class="tooltip-container fas fa-edit" onclick="javascript:editComment({$commentID},{$postID},'{$DP}')"><span class='tooltip tooltip-right'>Edit</span></i>
+            <i class="tooltip-container fas fa-edit" onclick="javascript:editComment({$commentID},{$postID},'{$DP}','{$timeToShow}')"><span class='tooltip tooltip-right'>Edit</span></i>
 ComEdit;
         } else {
             $commentEditButton = '';
         }
+
+        if($comments['edited'] == 1)
+            $edited = "Edited";
+        else
+            $edited = "";
         
         // Rendering comment
         $post .= <<<POST
@@ -479,7 +483,7 @@ ComEdit;
                         <div class='comment-body'>
                         <a href='timeline.php?visitingUserID={$comments['user_id']}' class='comment-user'>{$comments['name']} : </a>
                         <span class='comment-text'>{$comments['comment']}</span>
-                        <span class='comment-time'>$timeToShow</span>
+                        <span class='comment-time'>$timeToShow</span><span class='comment-time'>$edited</span>
                         </div>
                         
                         </div>
@@ -530,6 +534,7 @@ function renderPost($row)
     if ($row['user_id'] == $_SESSION['user_id']) {
         $PostDeleteButton = <<<PosDel
             <div class='post-delete-icon'>
+                <i class="tooltip-container fas fa-edit" onclick="javascript:editPost({$postID})"><span class='tooltip tooltip-right'>Edit</span></i>
                 <i onclick="javascript:deletePost({$postID})" class="tooltip-container far fa-trash-alt"><span class='tooltip tooltip-right'>Remove</span></i>
             </div>
 PosDel;
@@ -550,7 +555,7 @@ CONTENT;
     // Rendering Post
     $post = <<<POST
                 <div class='post post-{$postID}'>
-                    <div class='post-content'>
+                    <div class='post-content post-content-{$postID}'>
                     {$PostDeleteButton}
                     <div class='post-header'>
                     <a href='timeline.php?visitingUserID={$row['user_id']}'><img src='{$row['profile_pic']}' class='post-avatar post-avatar-40'/></a>
@@ -560,9 +565,10 @@ CONTENT;
                     <span class='post-time'>$timeToShow</span>
                     </div>
                     </div>
-
-                    <p>{$row['post']}</p>
-                    $postPicContent
+                    <div class='actual-post-{$postID}'>    
+                        <p>{$row['post']}</p>
+                        $postPicContent
+                    </div>    
                     <div class='post-stats'>
                     <span onmouseout='javascript:hideLikers({$postID})' onmouseover='javascript:likeUsers({$postID})' class='tooltip-container like-count like-count-{$postID}'><i class='like-count-icon fas fa-thumbs-up'></i> {$likes['count']}
                     <span class='tooltip tooltip-bottom count'></span>
