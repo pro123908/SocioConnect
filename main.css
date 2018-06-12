@@ -712,6 +712,11 @@ input[type="file"]:hover {
   margin: 15px 5px 10px 120px;
 }
 
+.radio-buttons-edit{
+  margin-top:10px;
+  margin-left: 5px;
+}
+
 .post .like-count-icon {}
 
 /* Comment section */

@@ -314,46 +314,6 @@ function addPost(user_id) {
   document.querySelector(".pic-name").innerHTML = "";
 }
 
-function editPost(postID){
-  if(!(document.querySelector(".edit-post-"+postID))){
-    //Current Post
-    var post = document.querySelector(".actual-post-"+postID);
-
-    //Current Post and picture
-    var postPic = post.querySelector(".post-image-container");
-    var postContent = post.getElementsByTagName("p")[0];
-
-    //Hiding current post
-    post.style.display = "none";
-
-    //Creating a new div to display and get the edit input and inserting it in the same parent div, just before the div where text and pic were shown
-    var div = document.createElement("div");
-    div.setAttribute("class","edit-post-"+postID)
-    div.innerHTML = 
-      `<form action="editPost.php" method='POST'>
-        <textarea name="post" id="" cols="30" rows="10" class="post-input post-edit-${postID}">${postContent.innerHTML}</textarea>
-        <br>
-        <input type="radio" name="edit-post-pic" value="remove" onclick="hideFileUpload(${postID})"> Remove Older Pic<br>
-        <input type="radio" name="edit-post-pic" value="keep" onclick="hideFileUpload(${postID})"> Keep Older Pic<br>
-        <input type="radio" name="edit-post-pic" value="new" onclick="showFileUpload(${postID})"> Upload New<br>
-        
-        <div class='upload-btn-wrapper' style="display:none;">
-          <button class='pic-upload-btn'><i class='far fa-image'></i></button>
-          <input type='file' name='post-pic' onchange='javascript:editedPostPicSelected(${postID})'  />
-          <span class='pic-name'></span>
-        </div>               
-        <div class='post-btn-container'>
-          <a  href="javascript:hideEditDiv(${postID},false)"  class='edit-post-cancel-btn'>Cancel</a>
-          <a  href="javascript:saveEditPost(${postID})"  class='edit-post-save-btn'>Save</a>
-        </div>
-      </form>`;
-      
-    var parentDivForEditingArea = document.querySelector(".post-content-"+postID);
-    parentDivForEditingArea.insertBefore(div,post)
-  } 
-
-}
-
 function hideEditDiv(postID,flag){
   document.querySelector(".actual-post-"+postID).style.display = "block"; 
   document.querySelector(".edit-post-"+postID).style.display = "none";
@@ -379,6 +339,45 @@ function hideFileUpload(postID){
   editForm.querySelector(".upload-btn-wrapper").style.display = "none";
 }
 
+function editPost(postID){
+  if(!(document.querySelector(".edit-post-"+postID))){
+    //Current Post
+    var post = document.querySelector(".actual-post-"+postID);
+
+    //Current Post and picture
+    var postPic = post.querySelector(".post-image-container");
+    var postContent = post.getElementsByTagName("p")[0];
+
+    //Hiding current post
+    post.style.display = "none";
+
+    //Creating a new div to display and get the edit input and inserting it in the same parent div, just before the div where text and pic were shown
+    var div = document.createElement("div");
+    div.setAttribute("class","edit-post-"+postID)
+    div.innerHTML = 
+      `<form action="editPost.php" method='POST'>
+        <textarea name="post" id="" cols="30" rows="10" class="post-input post-edit-${postID}">${postContent.innerHTML}</textarea>
+        <br>
+        <div class ="radio-buttons-edit">
+          <label><input type="radio" name="edit-post-pic" value="remove" onclick="hideFileUpload(${postID})"> Remove Current Photo</label><br>
+          <label><input type="radio" name="edit-post-pic" value="keep" onclick="hideFileUpload(${postID})"> Keep Current Pic</label><br>
+          <label><input type="radio" name="edit-post-pic" value="new" onclick="showFileUpload(${postID})"> Upload New Photo</label><br>
+        </div> 
+        <div class='upload-btn-wrapper' style="display:none;">
+          <button class='pic-upload-btn'><i class='far fa-image'></i></button>
+          <input type='file' name='post-pic' onchange='javascript:editedPostPicSelected(${postID})'  />
+          <span class='pic-name'></span>
+        </div>               
+        <div class='post-btn-container'>
+          <a  href="javascript:hideEditDiv(${postID},false)"  class='edit-post-cancel-btn'>Cancel</a>
+          <a  href="javascript:saveEditPost(${postID})"  class='edit-post-save-btn'>Save</a>
+        </div>
+      </form>`;
+      
+    var parentDivForEditingArea = document.querySelector(".post-content-"+postID);
+    parentDivForEditingArea.insertBefore(div,post)
+  } 
+}
 function saveEditPost(postID){
 
   //Getting post edit text
@@ -471,27 +470,10 @@ function saveEditComment(postID,commentID,user,profilePic,time){
   console.log('PARAMS' +param);
 
   ajaxCalls("POST", "commentEdit.php", param).then(function(result) {
-    console.log("AXA");
+
     // Added Comment ID is returned in response
-    document.querySelector(`.comment-${commentID}`).innerHTML = `
-  <div class='comment comment-${commentID}'>
-                
-    <div class='user-image'>
-      <img src='${profilePic}' class='post-avatar post-avatar-30' />
-    </div>
-  
-    <div class='comment-info'>
-      <i class='tooltip-container far fa-trash-alt comment-delete' onclick='javascript:deleteComment(${commentID})'><span class='tooltip tooltip-right'>Remove</span></i>
-      <i class="tooltip-container fas fa-edit" onclick="javascript:editComment(${commentID},${postID},'${profilePic}',${time})"><span class='tooltip tooltip-right'>Edit</span></i>
-      <div class='comment-body'>
-        <span class='comment-user'>${user} : </span>
-        <span class='comment-text'>${comment.value}</span>
-        <span class='comment-time'>${time}</span>
-        <span class='comment-time'>Edited</span>   
-      </div>
-    </div>
-  </div>
-  `;
+    showComment(user,commentID,postID,profilePic,time,comment.value);
+
 }).catch(function(reject){
   console.log("REJECTED");
 });
@@ -505,15 +487,39 @@ function editComment(commentID,postID,profilePic,time){
   var user = comment.querySelector('.comment-user').innerHTML;
   user = user.slice(0,user.length-3);
   var commentValue = comment.querySelector(".comment-text").innerHTML; 
+  var currentComment = comment.innerHTML;
+  console.log(currentComment);
   comment.innerHTML = `
     <div class='comment-form'>
       <form onsubmit ="return saveEditComment(${postID},${commentID},'${user}','${profilePic}','${time}')"  method="post" id='commentFormEdit_${commentID}'>
-          <input name = "comment_edit_${commentID}" type='text' autocomplete = "off" value = "${commentValue}">
+          <input name = "comment_edit_${commentID}" type='text' autocomplete = "off" value = "${commentValue}" style="width:500px">
+          <i class='tooltip-container fas fa-times comment-delete' onclick="javascript:showComment('${user}',${commentID},'${postID}','${profilePic}','${time}','${commentValue}')"><span class='tooltip tooltip-right'>Cancel</span></i>
           <input style='display:none;' type="submit" id="${postID}" value="Comment" > 
       </form>
     </div>`;  
 }
 
+function showComment(user,commentID,postID,profilePic,time,comment){
+  document.querySelector(`.comment-${commentID}`).innerHTML = `
+  <div class='comment comment-${commentID}'>
+                
+    <div class='user-image'>
+      <img src='${profilePic}' class='post-avatar post-avatar-30' />
+    </div>
+  
+    <div class='comment-info'>
+      <i class='tooltip-container far fa-trash-alt comment-delete' onclick='javascript:deleteComment(${commentID})'><span class='tooltip tooltip-right'>Remove</span></i>
+      <i class="tooltip-container fas fa-edit" onclick="javascript:editComment(${commentID},${postID},'${profilePic}',${time})"><span class='tooltip tooltip-right'>Edit</span></i>
+      <div class='comment-body'>
+        <span class='comment-user'>${user} : </span>
+        <span class='comment-text'>${comment}</span>
+        <span class='comment-time'>${time}</span>
+        <span class='comment-time'>Edited</span>   
+      </div>
+    </div>
+  </div>
+  `;
+}
 //DP Animation Functions
 function onClosedImagModal() {
   // When model is closed
