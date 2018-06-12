@@ -5,7 +5,6 @@
         redirection('index.php');
     }
 
-    
     //Passing input value and flag to the search functiom
     getSearchedUsers($_POST['query'],$_POST['flag']);
     

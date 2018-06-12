@@ -409,13 +409,19 @@ function changePic() {
 }
 
 //Search Function
-
 function getUsers(value, flag) {
+ 
+  // flag values :
+  // 0 - Searching in messages
+  // 1 - Normal Searching
+
   // Setting paramters for POST request
   var param = `query=${value}&flag=${flag}`;
   var searchFooter;
+
   ajaxCalls("POST", "search.php", param).then(function(result) {
     if (result == "No") {
+      // If no user found against search
       document.querySelector(".search-result").style.display = "none";
     } else {
       // Displaying search results for normal search
@@ -427,11 +433,6 @@ function getUsers(value, flag) {
           document.querySelector(".search-result").style.display = "none";
           searchFooter = "";
         } else {
-          //   searchFooter = `<form method="GET" action="allSearchResults.php"><input type="hidden" name="query" value=${value}><input type="submit" value="View All Results For ${value}"></form>`;
-          // document.querySelector(
-          //   ".search-result"
-          // ).innerHTML += searchFooter;
-
           searchFooter = `<a class='see-more' href='allSearchResults.php?query=${value}'>See more</a>`;
           document.querySelector(".search-result").innerHTML += searchFooter;
         }

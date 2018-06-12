@@ -1,7 +1,8 @@
 <?php 
 
-  include('header.php');
+  require_once('header.php');
 
+  // If user is not logged in then redirect user to login page
   if(!isset($_SESSION['user_id'])){
     redirection('index.php');
   }

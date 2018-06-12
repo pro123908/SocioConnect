@@ -1,5 +1,11 @@
 <?php
-  include "functions.php";
+
+  // Checked 
+
+
+  require_once('functions.php');
+
+  
 
   // POST request made to this file
   // Passed login information with the request
@@ -13,8 +19,9 @@
       // Checking if user exists or getting that user from database
       $queryResult = queryFunc("SELECT * FROM users WHERE email = '$email'");
 
-      // If user doesn't exist
+      
       if (!isData($queryResult)) {
+          // If user doesn't exist
           echo "User doesn't exist";
       } else {
           $row = isRecord($queryResult);
@@ -32,10 +39,11 @@
   }
   //If user has already logged In and coming from another page to here
   elseif (isset($_SESSION['user_id'])) {
+      redirection('main.php');
   }
   // If user is coming directly to this page without authentication
   else {
-      redirect("index.php");
+      redirection("index.php");
   }
 
 

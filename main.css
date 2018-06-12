@@ -6,9 +6,21 @@
   display: visible;
 }
 
-.center{
+.center {
   text-align: center;
   display: block;
+}
+
+.mt-50 {
+  margin-top: 50px;
+}
+
+.mt-20 {
+  margin-top: 20px;
+}
+
+.mr-1 {
+  margin-right: 10px;
 }
 
 .green {}
@@ -26,7 +38,6 @@ html {
 body {
   box-sizing: border-box;
   font-family: 'Open Sans', sans-serif;
-  
 }
 
 .main-container {
@@ -35,16 +46,18 @@ body {
   background-repeat: no-repeat; */
 }
 
+/* ------------------------- Header Section of website ------------------------ */
+
 .header {
   /* background: linear-gradient(to right bottom, #243337, #638a8c) no-repeat center center fixed; */
   background-color: #000;
   display: flex;
   justify-content: space-between;
-  /* align-items: center; */
   height: 80px;
-  /* color: #ced7d7; */
   color: #fff;
 }
+
+/* Header links or buttons on header */
 
 .header-links {
   flex: 0 0 45%;
@@ -52,79 +65,31 @@ body {
   align-items: center;
 }
 
-/* Notification Dropdown */
+/* Header-links on login page */
 
-.notification-dropdown,.message-dropdown,.request-dropdown{
-  position: relative;
+.header-links-login {
+  justify-content: flex-end;
 }
 
-.noti-count,.msg-count,.req-count{
-     display: flex;
-    align-items: center;
-    justify-content: center;
-    position: absolute;
-    top: -14px;
-    left: 22px;
-    /* background-color: red; */
-    font-size: 12px;
-    border-radius: 100%;
-    width: 20px;
-    height: 20px;
-}
+/*  Main Heading of website present on header */
 
-.notification-dropdown .noti-dropdown,.message-dropdown .msg-dropdown ,.request-dropdown .req-dropdown {
-  background-color: #fff;
-  position: absolute;
-  color: #000;
-  display: none;
-  top: 50px;
-  width: 350px;
-  /* height: 200px;  */
-  right: -140px;
-  border: 1px solid rgba(0, 0, 0, .15);
-  box-shadow: 0 4px 6px 2px rgba(0, 0, 0, .10);
-  z-index: 1;
-  height: 375px;
-  overflow-y: scroll;
-  
-}
-
-.noti-dropdown h3,.msg-dropdown h3,.req-dropdown h3{
-  padding: 10px;
-  text-align: center;
-}
-
-/* .notification-dropdown:hover .noti-dropdown{
-  display: block;
-} */
-
-.logged-user {
-  /* flex: 0 0 50%; */
-  margin-left: 50px;
-  display: flex;
-  align-items: center;
-  height: 100%;
-  color: #fff;
+.heading_link {
   text-decoration: none;
-  padding: 0px 30px;
+  color: #fff;
 }
 
-.logged-user:hover {
-  background-color: #353535;
-}
+/* Main header heaing container */
 
 .header-heading {
   margin-left: 10px;
   margin-top: 15px;
 }
 
-.header-text {
+/* .header-text {
   flex: 0 0 10%;
-}
+} */
 
-.mr-1 {
-  margin-right: 10px;
-}
+/* Buttons Present on header */
 
 .header-btn {
   flex: 0 0 5%;
@@ -134,81 +99,18 @@ body {
   padding: 10px;
   margin-top: 5px;
   text-align: center;
-  border-radius: 5px;
+  /* border-radius: 5px; */
 }
 
-.header-btn:hover {
-  /* background-color: #ffffff;
-  color: #000000;
-  border-color: #ffffff; */
+/* header buttons on login Page and Sign up page */
+
+.header-links-login .header-btn {
+  flex: 0 0 10%;
 }
 
-.login-container {
-  background: linear-gradient(to right bottom, #243337, #638a8c) no-repeat center center fixed;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: 91vh;
-}
 
-.mt-50 {
-  margin-top: 50px;
-}
 
-.mt-20 {
-  margin-top: 20px;
-}
-
-.login-heading {
-  flex: 0 0 20%;
-}
-
-.login-form {
-  flex: 0 0 40%;
-  width: 50%;
-  text-align: center;
-}
-
-.login-input {
-  border: none;
-  padding: 10px;
-  width: 60%;
-  background-color: transparent;
-  border-bottom: 1px solid #a0aeaf;
-  margin-bottom: 20px;
-  border-radius: 10px;
-  color: #ced7d7;
-}
-
-.login-input::placeholder {
-  color: #ced7d7;
-}
-
-.login-input:focus {
-  outline: 0;
-  border-width: 3px;
-  font-weight: 900;
-  letter-spacing: 2px;
-}
-
-.login-submit {
-  width: 40%;
-  background-color: transparent;
-  border: 1px solid #a0aeaf;
-  padding: 10px;
-  border-radius: 10px;
-  color: #ced7d7;
-  cursor: pointer;
-}
-
-.login-submit:hover {
-  background-color: #ffffff;
-  color: #000000;
-  border-color: #ffffff;
-}
-
-/* Search input */
+/* Header Search Bar */
 
 .header-search-bar {
   flex: 0 0 35%;
@@ -216,11 +118,11 @@ body {
   background-color: #272222;
 }
 
+/* Search Result Dropdown */
 .search-result {
   position: absolute;
   display: none;
   background-color: #fff;
-  border: 5px solid #000;
   width: 100%;
   border: 1px solid rgba(0, 0, 0, .15);
   box-shadow: 0 4px 6px 2px rgba(0, 0, 0, .10);
@@ -228,6 +130,7 @@ body {
   z-index: 1;
 }
 
+/* search result person */
 .search-person {
   display: flex;
   align-items: center;
@@ -239,6 +142,7 @@ body {
 .search-person:hover {
   background-color: #f6f6f6;
 }
+
 
 .search-person-info {
   flex: 1;
@@ -257,7 +161,6 @@ body {
 .header-search-bar .search-input {
   border: none;
   background: transparent;
-  border-bottom: 1px solid #a0aeaf;
   height: 100%;
   width: 100%;
   padding: 10px;
@@ -268,6 +171,148 @@ body {
 .header-search-bar .search-input:focus {
   outline: 0;
 }
+
+
+
+
+/* ------- Header Dropdowns ----------- */
+
+/* Notification Dropdown */
+/* Message Dropdown */
+/* Request Dropdown */
+.notification-dropdown, .message-dropdown, .request-dropdown {
+  position: relative;
+}
+
+/* Number of notification circle positioning */
+.noti-count, .msg-count, .req-count {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: -14px;
+  left: 22px;
+  font-size: 12px;
+  border-radius: 100%;
+  width: 20px;
+  height: 20px;
+}
+
+/* Dropdown Content  Styling for Dropdowns */
+.noti-dropdown, .msg-dropdown, .req-dropdown {
+  background-color: #fff;
+  position: absolute;
+  color: #000;
+  display: none;
+  top: 50px;
+  width: 350px;
+  /* height: 200px;  */
+  right: -140px;
+  border: 1px solid rgba(0, 0, 0, .15);
+  box-shadow: 0 4px 6px 2px rgba(0, 0, 0, .10);
+  z-index: 1;
+  height: 375px;
+  overflow-y: scroll;
+}
+
+.noti-dropdown h3, .msg-dropdown h3, .req-dropdown h3 {
+  padding: 10px;
+  text-align: center;
+}
+
+/* Displaying Current User */
+.logged-user {
+  /* flex: 0 0 50%; */
+  margin-left: 50px;
+  display: flex;
+  align-items: center;
+  height: 100%;
+  color: #fff;
+  text-decoration: none;
+  padding: 0px 30px;
+}
+
+.logged-user:hover {
+  background-color: #353535;
+}
+
+/* ------------------------ Header Ended ------------------------- */
+
+/* ------------------ Login Page Styling ----------------------- */
+
+.login-container {
+  background: linear-gradient(to right bottom, #243337, #638a8c) no-repeat center center fixed;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 91vh;
+}
+
+/* Login Page Heading */
+
+.login-heading {
+  flex: 0 0 20%;
+}
+
+/* Login Page Form */
+
+.login-form {
+  flex: 0 0 40%;
+  width: 50%;
+  text-align: center;
+}
+
+/* Login Page Inputs */
+
+.login-input {
+  border: none;
+  padding: 10px;
+  width: 60%;
+  background-color: transparent;
+  border-bottom: 1px solid #a0aeaf;
+  margin-bottom: 20px;
+  border-radius: 10px;
+  color: #ced7d7;
+}
+
+/* Login Page inputs placeholder text */
+
+.login-input::placeholder {
+  color: #ced7d7;
+}
+
+/* When inputs are focused */
+
+.login-input:focus {
+  outline: 0;
+  border-width: 3px;
+  font-weight: 900;
+  letter-spacing: 2px;
+}
+
+/* Login Page submit button */
+
+.login-submit {
+  width: 40%;
+  background-color: transparent;
+  border: 1px solid #a0aeaf;
+  padding: 10px;
+  border-radius: 10px;
+  color: #ced7d7;
+  cursor: pointer;
+}
+
+/* Submit button hover */
+
+.login-submit:hover {
+  background-color: #ffffff;
+  color: #000000;
+  border-color: #ffffff;
+}
+
+/* ---------------------------------------------------------------------- */
+
 
 /* #noti_id:hover #noti_desc {
   display: block;
@@ -323,11 +368,6 @@ body {
   margin-left: 100px;
 }
 
-#heading_link {
-  text-decoration: none;
-  color: #fff;
-}
-
 /* Content Area */
 
 .content-area {
@@ -347,7 +387,6 @@ body {
 
 .post-area {
   flex: 2;
-  
   margin: 0px 40px;
   /* background-color: #edf2f6; */
 }
@@ -503,11 +542,12 @@ body {
 }
 
 /* Post Pic Button */
+
 .upload-btn-wrapper {
-  position : relative;
+  position: relative;
   overflow: hidden;
   display: inline-block;
-  text-align : left;
+  text-align: left;
 }
 
 .pic-upload-btn {
@@ -518,16 +558,16 @@ body {
   padding: 8px 20px;
   /* border-radius: 8px; */
   font-size: 30px;
-  /* font-weight: bold; */ 
+  /* font-weight: bold; */
 }
 
-.pic-upload-btn:hover{
-  cursor : pointer;
+.pic-upload-btn:hover {
+  cursor: pointer;
 }
+
 input[type="file"]:hover {
   cursor: pointer !important;
 }
-
 
 .upload-btn-wrapper input[type=file] {
   font-size: 40px;
@@ -552,12 +592,13 @@ input[type="file"]:hover {
 }
 
 /* Post Image */
-.post-image-container{
-  margin : 0 0 10px 0;
+
+.post-image-container {
+  margin: 0 0 10px 0;
 }
 
-.post-image-container .post-image{
-  width : 100%;
+.post-image-container .post-image {
+  width: 100%;
 }
 
 .post .post-header {
@@ -738,7 +779,6 @@ input[type="file"]:hover {
   color: #3578e5;
 }
 
-
 /* Notification Page */
 
 .notification-display {
@@ -802,14 +842,13 @@ input[type="file"]:hover {
   color: red;
 }
 
-.deleted-noti{
+.deleted-noti {
   cursor: not-allowed;
 }
 
-.deleted-noti:hover{
+.deleted-noti:hover {
   background-color: #fff;
 }
-
 
 .noSeen {
   background-color: #f7f380;

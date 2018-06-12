@@ -777,7 +777,7 @@ function showNotifications($flag,$page,$limit)
     
     elseif ($flag==10) {
         // Selecting notifications for the current User
-        $notiQuery = queryFunc("SELECT * from notifications WHERE d_user_id='$user' OR (s_user_id='$user' AND typeC='request') order by noti_id desc LIMIT 10");
+        $notiQuery = queryFunc("SELECT * from notifications WHERE d_user_id='$user' OR (s_user_id='$user' AND typeC='request') order by noti_id desc LIMIT $flag");
         $postAvatar = 'post-avatar-30'; // For notification Area
     } else {
         $notiQuery = queryFunc("SELECT * from notifications WHERE d_user_id='$user' OR (s_user_id='$user' AND typeC='request')  order by noti_id desc");
@@ -1399,7 +1399,9 @@ function getSearchedUsers($value, $flag)
     //flag == 0 ==> called from search in messages.php
     //flag == 1 ==> called from normal search
     //flag == 2 ==> called from allSearchResults.php
+
     if (strlen($value) == 0) {
+        // If search input field is empty
         echo " ";
     } else {
         $value = strtolower($value);
@@ -1421,6 +1423,8 @@ function getSearchedUsers($value, $flag)
                 $users = queryFunc("SELECT CONCAT(first_name,' ',last_name) as name,profile_pic,username,user_id from users where lower(first_name) like '$names[0]%' OR lower(last_name) like '$names[0]%' limit 5");
             }
         }
+
+        // If any user is found against search
         if (isData($users)) {
             if ($flag == 1 || $flag == 2) {
                 while ($row = isRecord($users)) {
@@ -1433,6 +1437,7 @@ function getSearchedUsers($value, $flag)
                 <span class='person-name'>{$row['name']}</span>
                 </a>
 DELIMETER;
+                // Not displaying message icon if loggedIn user appear in search results
                     if ($row['user_id'] != $_SESSION['user_id']) {
                         $user .= <<<DELIMETER
                     <div class='person-message'>
@@ -1441,8 +1446,10 @@ DELIMETER;
                 </div>
 DELIMETER;
                     } else {
+                        // Ending the opened div
                         $user .= '</div>';
                     }
+                    // Passing the response back
                     echo $user;
                 }
             } else {
@@ -1464,6 +1471,7 @@ DELIMETER;
                 }
             }
         } else {
+            // If no user was found against the search
             echo 'No';
         }
     }
