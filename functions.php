@@ -150,7 +150,7 @@ PosDel;
             <img src='{$postPic}' class='post-image' />
             </div>
 CONTENT;
-        }
+        } 
 
         $post = <<<POST
         <div class='post post-{$postID}'>
@@ -161,7 +161,7 @@ CONTENT;
         
                     <div class='post-info'>
                         <a href='timeline.php?visitingUserID={$userID}' class='user'>{$queryResult['name']}</a>
-                        <span class='post-time'>$timeToShow</span>
+                        <span class='post-time'>$timeToShow</span><span class='post-edited-{$postID}'></span>
                     </div>
                 </div>
                 
@@ -272,7 +272,7 @@ function addComment($userID, $postID, $comment)
 
 function showPostsQueries($exception)
 {
-    $queryResult = queryFunc("SELECT post,post_id,posts.user_id,users.profile_pic,posts.pic,CONCAT(first_name,' ',last_name) as 'name',createdAt from posts inner join users on users.user_id = posts.user_id {$exception}");
+    $queryResult = queryFunc("SELECT post,post_id,posts.user_id,users.profile_pic,posts.pic,edited,CONCAT(first_name,' ',last_name) as 'name',createdAt from posts inner join users on users.user_id = posts.user_id {$exception}");
 
     return $queryResult;
 }
@@ -483,7 +483,7 @@ ComEdit;
                         <div class='comment-body'>
                         <a href='timeline.php?visitingUserID={$comments['user_id']}' class='comment-user'>{$comments['name']} : </a>
                         <span class='comment-text'>{$comments['comment']}</span>
-                        <span class='comment-time'>$timeToShow</span><span class='comment-time'>$edited</span>
+                        <span class='comment-time'>$timeToShow</span><span class='comment-edit'>$edited</span>
                         </div>
                         
                         </div>
@@ -552,6 +552,11 @@ PosDel;
 CONTENT;
      }
 
+     if($row['edited'] == 1)
+         $edited = "Edited";
+     else    
+        $edited = "";    
+
     // Rendering Post
     $post = <<<POST
                 <div class='post post-{$postID}'>
@@ -562,7 +567,7 @@ CONTENT;
 
                     <div class='post-info'>
                     <a href='timeline.php?visitingUserID={$row['user_id']}' class='user'>{$row['name']}</a>
-                    <span class='post-time'>$timeToShow</span>
+                    <span class='post-time'>$timeToShow</span><span class='post-edited-{$postID}'>$edited</span>
                     </div>
                     </div>
                     <div class='actual-post-{$postID}'>    

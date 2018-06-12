@@ -332,8 +332,7 @@ function editPost(postID){
 
     var pos = document.querySelector(".post-content-"+postID);
     pos.insertBefore(div,post)
-  }
-  edit-post-221  
+  } 
 //   <div class='upload-btn-wrapper'>
 //   <button class='pic-upload-btn'><i class='far fa-image'></i></button>
 //   <input type='file' name='post-pic' onchange='javascript:postPicSelected()'  />
@@ -354,7 +353,7 @@ function saveEditPost(postID){
     post.style.display = "block";
     post.getElementsByTagName("p")[0].innerHTML = postContent.value;
     document.querySelector(".edit-post-"+postID).style.display = "none";
-    
+    document.querySelector(".post-edited-"+postID).innerHTML = "Edited"
   }); 
 }
 
