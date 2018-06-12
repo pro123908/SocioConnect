@@ -343,7 +343,8 @@ function editPost(postID){
           <span class='pic-name'></span>
         </div>               
         <div class='post-btn-container'>
-          <a  href="javascript:saveEditPost(${postID})"  class='edit-post-btn'>Save</a>
+          <a  href="javascript:hideEditDiv(${postID},false)"  class='edit-post-cancel-btn'>Cancel</a>
+          <a  href="javascript:saveEditPost(${postID})"  class='edit-post-save-btn'>Save</a>
         </div>
       </form>`;
       
@@ -351,6 +352,13 @@ function editPost(postID){
     parentDivForEditingArea.insertBefore(div,post)
   } 
 
+}
+
+function hideEditDiv(postID,flag){
+  document.querySelector(".actual-post-"+postID).style.display = "block"; 
+  document.querySelector(".edit-post-"+postID).style.display = "none";
+  if(flag)
+    document.querySelector(".post-edited-"+postID).innerHTML = "Edited"; 
 }
 
 //Copied this function from above postPicSelected, just to check right now, in future both will be merged
@@ -408,8 +416,6 @@ function saveEditPost(postID){
 
         //Displaying original post div which was made hidden in previous function
         var post = document.querySelector(".actual-post-"+postID);
-        post.style.display = "block";
-
         //Storing edited status in the p tag
         post.getElementsByTagName("p")[0].innerHTML = postContent.value;
 
@@ -434,8 +440,7 @@ function saveEditPost(postID){
         }
 
         //Now hide the editing div and write Edited in the header section of the post
-        document.querySelector(".edit-post-"+postID).style.display = "none";
-        document.querySelector(".post-edited-"+postID).innerHTML = "Edited"
+        hideEditDiv(postID,true);
       });
     }
     else

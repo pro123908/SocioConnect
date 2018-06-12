@@ -697,16 +697,19 @@ input[type="file"]:hover {
   margin-bottom: 10px;
 }
 
-.edit-post-btn{
+.edit-post-save-btn,.edit-post-cancel-btn{
   display: inline-block;
   width: 100px;
   text-align: center;
-  margin: 10px 20px 10px 200px;
+  margin: 15px 100px 10px 5px;
   text-decoration: none;
   color: #fff;
   padding: 10px 20px;
   border-radius: 5px;
   background-color: #ff763a;
+}
+.edit-post-cancel-btn{
+  margin: 15px 5px 10px 120px;
 }
 
 .post .like-count-icon {}
