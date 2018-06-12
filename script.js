@@ -316,10 +316,17 @@ function addPost(user_id) {
 
 function editPost(postID){
   if(!(document.querySelector(".edit-post-"+postID))){
+    //Current Post
     var post = document.querySelector(".actual-post-"+postID);
+
+    //Current Post and picture
     var postPic = post.querySelector(".post-image-container");
     var postContent = post.getElementsByTagName("p")[0];
+
+    //Hiding current post
     post.style.display = "none";
+
+    //Creating a new div to display and get the edit input and inserting it in the same parent div, just before the div where text and pic were shown
     var div = document.createElement("div");
     div.setAttribute("class","edit-post-"+postID)
     div.innerHTML = 
@@ -339,15 +346,10 @@ function editPost(postID){
           <a  href="javascript:saveEditPost(${postID})"  class='edit-post-btn'>Save</a>
         </div>
       </form>`;
-
-    var pos = document.querySelector(".post-content-"+postID);
-    pos.insertBefore(div,post)
+      
+    var parentDivForEditingArea = document.querySelector(".post-content-"+postID);
+    parentDivForEditingArea.insertBefore(div,post)
   } 
-//   <div class='upload-btn-wrapper'>
-//   <button class='pic-upload-btn'><i class='far fa-image'></i></button>
-//   <input type='file' name='post-pic' onchange='javascript:postPicSelected()'  />
-//   <span class='pic-name'></span>
-// </div>
 
 }
 
@@ -371,53 +373,70 @@ function hideFileUpload(postID){
 
 function saveEditPost(postID){
 
-  //Getting post text
+  //Getting post edit text
   var postContent = document.querySelector(".post-edit-"+postID);
 
   //Getting div in which edited values are present
   var editForm = document.querySelector(".edit-post-"+postID);  
-
-  //Inside that div, getting pic name
-  var picPath = editForm.querySelector(".pic-name").innerHTML;
   
+  //Getting picutre file 
   var postPicData = editForm.querySelector("input[name='post-pic']");
   var postPic = postPicData.files[0];
-  if(!(postContent.value.trim() == '') || (postPic !== undefined)){
-    var formData = new FormData();
-    formData.append("file", postPic);
-    formData.append("postID", postID);
-    formData.append("postContent", postContent.value);
 
-    var action = editForm.querySelector('input[name="edit-post-pic"]:checked').value;
-    formData.append("action", action);
+  //If niether text nor pic are inserted
+  if(!(postContent.value.trim() == '') || (postPic !== undefined)){
 
     if(editForm.querySelector('input[name="edit-post-pic"]:checked')){
+
+      //Getting radio button value
+      var action = editForm.querySelector('input[name="edit-post-pic"]:checked').value;
+
+      //If new is selected by no path is given for image
       if(action == "new" && editForm.querySelector(".pic-name").innerHTML == ""){
           alert("Select Image to change image")
           return 0;
         }
-        ajaxCalls("POST", "postEdit.php", formData,"pic").then(function(result) {
-          var post = document.querySelector(".actual-post-"+postID);
-          post.style.display = "block";
-          post.getElementsByTagName("p")[0].innerHTML = postContent.value;
-          if(result.trim() != ""){
-            if(action == "keep" || action == "new"){
-              if(post.querySelector(".post-image")){
-                post.querySelector(".post-image").src = result;
-              }
-              else{
-                  var imgParentDiv = document.querySelector(".actual-post-"+postID);
-                  imgParentDiv.innerHTML += `<div class='post-image-container'><img src='${result}' class='post-image' /></div>`
-              }
+
+      //Preparing formData for ajax call
+      var formData = new FormData();
+      formData.append("file", postPic);
+      formData.append("postID", postID);
+      formData.append("postContent", postContent.value);
+      formData.append("action", action);
+            
+      ajaxCalls("POST", "postEdit.php", formData,"pic").then(function(result) {
+
+        //Displaying original post div which was made hidden in previous function
+        var post = document.querySelector(".actual-post-"+postID);
+        post.style.display = "block";
+
+        //Storing edited status in the p tag
+        post.getElementsByTagName("p")[0].innerHTML = postContent.value;
+
+        //result CONTAINS THE PATH OF IMAGE
+        //checking if the response path is empty, i.e no image is to be shown
+        if(result.trim() != ""){
+            // div for image is already present then only updating its src
+            if(post.querySelector(".post-image")){
+              post.querySelector(".post-image").src = result;
             }
-          }  
-          else{
+
+            //if div isn't present then creating it from scratch
+            else{
+                var imgParentDiv = document.querySelector(".actual-post-"+postID);
+                imgParentDiv.innerHTML += `<div class='post-image-container'><img src='${result}' class='post-image' /></div>`
+            }
+        }  
+        else{
+            //response was empty this means that there is no picture to show, so first check, if div for images is present then hide it
             if(post.querySelector(".post-image"))
-              post.querySelector(".post-image").style.display = "none";
-          }
-          document.querySelector(".edit-post-"+postID).style.display = "none";
-          document.querySelector(".post-edited-"+postID).innerHTML = "Edited"
-        });
+                post.querySelector(".post-image").style.display = "none";
+        }
+
+        //Now hide the editing div and write Edited in the header section of the post
+        document.querySelector(".edit-post-"+postID).style.display = "none";
+        document.querySelector(".post-edited-"+postID).innerHTML = "Edited"
+      });
     }
     else
       alert("Select Action to do on the image");  
