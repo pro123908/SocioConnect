@@ -475,6 +475,7 @@ function saveEditComment(postID,commentID,user,profilePic,time){
   ajaxCalls("POST", "commentEdit.php", param).then(function(result) {
 
     // Added Comment ID is returned in response
+    alert(time);
     showComment(user,commentID,postID,profilePic,time,comment.value);
 
 }).catch(function(reject){
@@ -491,6 +492,7 @@ function editComment(commentID,postID,profilePic,time){
   user = user.slice(0,user.length-3);
   var commentValue = comment.querySelector(".comment-text").innerHTML; 
   var currentComment = comment.innerHTML;
+  console.log(time);
   console.log(currentComment);
   comment.innerHTML = `
     <div class='comment-form'>
@@ -503,6 +505,7 @@ function editComment(commentID,postID,profilePic,time){
 }
 
 function showComment(user,commentID,postID,profilePic,time,comment){
+  console.log(time);
   document.querySelector(`.comment-${commentID}`).innerHTML = `
   <div class='comment comment-${commentID}'>
                 
@@ -512,7 +515,7 @@ function showComment(user,commentID,postID,profilePic,time,comment){
   
     <div class='comment-info'>
       <i class='tooltip-container far fa-trash-alt comment-delete' onclick='javascript:deleteComment(${commentID})'><span class='tooltip tooltip-right'>Remove</span></i>
-      <i class="tooltip-container fas fa-edit" onclick="javascript:editComment(${commentID},${postID},'${profilePic}',${time})"><span class='tooltip tooltip-right'>Edit</span></i>
+      <i class="tooltip-container fas fa-edit" onclick="javascript:editComment(${commentID},${postID},'${profilePic}','${time}')"><span class='tooltip tooltip-right'>Edit</span></i>
       <div class='comment-body'>
         <span class='comment-user'>${user} : </span>
         <span class='comment-text'>${comment}</span>
