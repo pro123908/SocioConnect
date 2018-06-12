@@ -39,9 +39,7 @@
             queryFunc("UPDATE posts set post = '{$post_body}', edited = 1, pic='{$path}' where post_id ={$post_id}");
         }
         echo $path;
-   } 
-    else
-        echo "abcd";   
+   }  
 ?>
 
 
