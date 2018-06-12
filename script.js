@@ -211,7 +211,7 @@ function comment(postID,user,profilePic) {
   // var profilePic = document.querySelector('input[name="pic_user"]');
 
   var commentValue = comment.value;
-
+  var timeToShow = "Just Now";
   console.log(comment.value);
 
   if (!(commentValue.trim() == '')) {
@@ -231,12 +231,12 @@ function comment(postID,user,profilePic) {
   </div>
   
   <div class='comment-info'>
-  <i class="tooltip-container fas fa-edit" onclick="javascript:editComment(${commentID},${postID},'${profilePic}')"><span class='tooltip tooltip-right'>Edit</span></i>
+  <i class="tooltip-container fas fa-edit" onclick="javascript:editComment(${commentID},${postID},'${profilePic}','${timeToShow}')"><span class='tooltip tooltip-right'>Edit</span></i>
   <i class='tooltip-container far fa-trash-alt comment-delete' onclick='javascript:deleteComment(${commentID})'><span class='tooltip tooltip-right'>Remove</span></i>
   <div class='comment-body'>
   <span class='comment-user'>${user} : </span>
   <span class='comment-text'>${comment.value}</span>
-  <span class='comment-time'>Just now</span>
+  <span class='comment-time'>${timeToShow}</span>
   </div>
   
   </div>
@@ -493,7 +493,6 @@ function editComment(commentID,postID,profilePic,time){
   var commentValue = comment.querySelector(".comment-text").innerHTML; 
   var currentComment = comment.innerHTML;
   console.log(time);
-  console.log(currentComment);
   comment.innerHTML = `
     <div class='comment-form'>
       <form onsubmit ="return saveEditComment(${postID},${commentID},'${user}','${profilePic}','${time}')"  method="post" id='commentFormEdit_${commentID}'>
