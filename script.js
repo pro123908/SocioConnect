@@ -315,8 +315,9 @@ function addPost(user_id) {
 }
 
 function hideEditDiv(postID,flag){
+  var parentDiv = document.querySelector(".post-content-"+postID)
   document.querySelector(".actual-post-"+postID).style.display = "block"; 
-  document.querySelector(".edit-post-"+postID).style.display = "none";
+  parentDiv.removeChild(document.querySelector(".edit-post-"+postID))
   if(flag)
     document.querySelector(".post-edited-"+postID).innerHTML = "Edited"; 
 }
@@ -351,31 +352,33 @@ function editPost(postID){
     //Hiding current post
     post.style.display = "none";
 
-    //Creating a new div to display and get the edit input and inserting it in the same parent div, just before the div where text and pic were shown
-    var div = document.createElement("div");
-    div.setAttribute("class","edit-post-"+postID)
-    div.innerHTML = 
-      `<form action="editPost.php" method='POST'>
-        <textarea name="post" id="" cols="30" rows="10" class="post-input post-edit-${postID}">${postContent.innerHTML}</textarea>
-        <br>
-        <div class ="radio-buttons-edit">
-          <label><input type="radio" name="edit-post-pic" value="remove" onclick="hideFileUpload(${postID})"> Remove Current Photo</label><br>
-          <label><input type="radio" name="edit-post-pic" value="keep" onclick="hideFileUpload(${postID})"> Keep Current Pic</label><br>
-          <label><input type="radio" name="edit-post-pic" value="new" onclick="showFileUpload(${postID})"> Upload New Photo</label><br>
-        </div> 
-        <div class='upload-btn-wrapper' style="display:none;">
-          <button class='pic-upload-btn'><i class='far fa-image'></i></button>
-          <input type='file' name='post-pic' onchange='javascript:editedPostPicSelected(${postID})'  />
-          <span class='pic-name'></span>
-        </div>               
-        <div class='post-btn-container'>
-          <a  href="javascript:hideEditDiv(${postID},false)"  class='edit-post-cancel-btn'>Cancel</a>
-          <a  href="javascript:saveEditPost(${postID})"  class='edit-post-save-btn'>Save</a>
-        </div>
-      </form>`;
-      
-    var parentDivForEditingArea = document.querySelector(".post-content-"+postID);
-    parentDivForEditingArea.insertBefore(div,post)
+    //Creating a new div to display if it doesn't exist and get the edit input and inserting it in the same parent div, just before the div where text and pic were shown
+    if(!(document.querySelector(".edit-post-"+postID))){
+      var div = document.createElement("div");
+      div.setAttribute("class","edit-post-"+postID)
+      div.innerHTML = 
+        `<form action="editPost.php" method='POST'>
+          <textarea name="post" id="" cols="30" rows="10" class="post-input post-edit-${postID}">${postContent.innerHTML}</textarea>
+          <br>
+          <div class ="radio-buttons-edit">
+            <label><input type="radio" name="edit-post-pic" value="remove" onclick="hideFileUpload(${postID})"> Remove Current Photo</label><br>
+            <label><input type="radio" name="edit-post-pic" value="keep" onclick="hideFileUpload(${postID})"> Keep Current Pic</label><br>
+            <label><input type="radio" name="edit-post-pic" value="new" onclick="showFileUpload(${postID})"> Upload New Photo</label><br>
+          </div> 
+          <div class='upload-btn-wrapper' style="display:none;">
+            <button class='pic-upload-btn'><i class='far fa-image'></i></button>
+            <input type='file' name='post-pic' onchange='javascript:editedPostPicSelected(${postID})'  />
+            <span class='pic-name'></span>
+          </div>               
+          <div class='post-btn-container'>
+            <a  href="javascript:hideEditDiv(${postID},false)"  class='edit-post-cancel-btn'>Cancel</a>
+            <a  href="javascript:saveEditPost(${postID})"  class='edit-post-save-btn'>Save</a>
+          </div>
+        </form>`;
+        
+      var parentDivForEditingArea = document.querySelector(".post-content-"+postID);
+      parentDivForEditingArea.insertBefore(div,post)
+    }
   } 
 }
 function saveEditPost(postID){
@@ -420,10 +423,12 @@ function saveEditPost(postID){
 
         //result CONTAINS THE PATH OF IMAGE
         //checking if the response path is empty, i.e no image is to be shown
+        var imgDiv = post.querySelector(".post-image");
         if(result.trim() != ""){
-            // div for image is already present then only updating its src
-            if(post.querySelector(".post-image")){
-              post.querySelector(".post-image").src = result;
+            // div for image is already present then only updating its src, making display block bcozit might be made none due to line 443 (See if condition in the else block)
+            if(imgDiv){
+              imgDiv.style.display = "block";
+              imgDiv.src = result;
             }
 
             //if div isn't present then creating it from scratch
@@ -434,8 +439,8 @@ function saveEditPost(postID){
         }  
         else{
             //response was empty this means that there is no picture to show, so first check, if div for images is present then hide it
-            if(post.querySelector(".post-image"))
-                post.querySelector(".post-image").style.display = "none";
+            if(imgDiv)
+              imgDiv.style.display = "none"; 
         }
 
         //Now hide the editing div and write Edited in the header section of the post
@@ -460,8 +465,6 @@ function deleteComment(commentID) {
 
 
 function saveEditComment(postID,commentID,user,profilePic,time){
-  
-
   // Adding comment to post
   // Getting post ID,content and user who posted comment from form
   var comment = document.querySelector(`input[name='comment_edit_${commentID}']`);
