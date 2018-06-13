@@ -495,7 +495,7 @@ function saveEditComment(postID, commentID, user, profilePic, time) {
   ajaxCalls("POST", "commentEdit.php", param)
     .then(function(result) {
       // Added Comment ID is returned in response
-      showComment(user, commentID, postID, profilePic, time, comment.value);
+      showComment(user, commentID, postID, profilePic, time, comment.value,true);
     })
     .catch(function(reject) {
       console.log("REJECTED");
@@ -516,14 +516,18 @@ function editComment(commentID, postID, profilePic, time) {
     <div class='comment-form'>
       <form onsubmit ="return saveEditComment(${postID},${commentID},'${user}','${profilePic}','${time}')"  method="post" id='commentFormEdit_${commentID}'>
           <input name = "comment_edit_${commentID}" type='text' autocomplete = "off" value = "${commentValue}" style="width:500px">
-          <i class='tooltip-container fas fa-times comment-delete' onclick="javascript:showComment('${user}',${commentID},'${postID}','${profilePic}','${time}','${commentValue}')"><span class='tooltip tooltip-right'>Cancel</span></i>
+          <i class='tooltip-container fas fa-times comment-delete' onclick="javascript:showComment('${user}',${commentID},'${postID}','${profilePic}','${time}','${commentValue}',false)"><span class='tooltip tooltip-right'>Cancel</span></i>
           <input style='display:none;' type="submit" id="${postID}" value="Comment" > 
       </form>
     </div>`;
 }
 
-function showComment(user, commentID, postID, profilePic, time, comment) {
+function showComment(user, commentID, postID, profilePic, time, comment,flag) {
   console.log(time);
+  if(flag)
+    var edited = "Edited";
+  else
+    var edited = "";   
   document.querySelector(`.comment-${commentID}`).innerHTML = `
   <div class='comment comment-${commentID}'>
                 
@@ -538,7 +542,7 @@ function showComment(user, commentID, postID, profilePic, time, comment) {
         <span class='comment-user'>${user} : </span>
         <span class='comment-text'>${comment}</span>
         <span class='comment-time'>${time}</span>
-        <span class='comment-edit-text'>Edited</span>   
+        <span class='comment-edit-text'>${edited}</span>   
       </div>
     </div>
   </div>
