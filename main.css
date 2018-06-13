@@ -772,6 +772,7 @@ input[type="file"]:hover {
 }
 
 .comment-edit-text{
+  width:50%;
   color: #360505;
   font-weight: bold;
 }
