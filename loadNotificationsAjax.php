@@ -1,5 +1,5 @@
 <?php
     require_once('functions.php');
     $limit = 10;
-    showNotifications('all',$_GET['page'],$limit);
+    showNotifications(3,$_GET['page'],$limit);
 ?>

@@ -9,7 +9,7 @@ if(!isset($_SESSION['user_id'])){
 
 
     echo '<div class="notification-display"><h1>Notifications</h1><div class="notifications">';
-    showNotifications('all',1,10);
+    showNotifications(3,1,10);
     echo '</div></div>';
     echo "<div id='loading-notis' class='loading-messages'>Show More Notifications</div>";
 ?>
