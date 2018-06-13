@@ -1,5 +1,7 @@
 <?php 
+// Main file of the website
 
+  // Including header
   require_once('header.php');
 
   // If user is not logged in then redirect user to login page
@@ -7,37 +9,30 @@
     redirection('index.php');
   }
 
-  // Main file of the website
+  // Declaring session variables
   $_SESSION['no_of_posts_changed'] = 0;
   $_SESSION['last_msg_id'] = 0;
   $_SESSION['last_message_retrieved_for_recent_convos'] = 0;
-  // Getting current user name
+
 ?>
 
-<!-- Notification Area of the page -->
-
-
+  <!-- Content Area - Where all the content of the page lies -->
 <div class="content-area">
-      <!-- <div class="notification-area">
-        <div class='notifications'>
-          <div class='notification-heading'>Notifications</div>
-          <?php //showNotifications(10);?>
-          <a href='allNotification.php' class='see-more'>
-        <span>See more</span>
-      </a>
-        </div>
-      </div> -->
+     
 
 
-      <div class="notification-area">
-        <div class='notifications' id="recent_activities">
-          <div class='notification-heading'>Recent Activities</div>
+    <!-- ******************** Recent activities ***************** -->
+
+      <div class="recent-activities-area">
+        <div class='recent-activities' id="recent_activities">
+          <div class='recent-activities-heading'>Recent Activities</div>
           <div class='activities-content'>
-          <?php showRecentActivities(1,10,10);
+          <?php showRecentActivities(1,10,1);
           ?>
           </div>
           <div class="show-more-activities">
             <?php 
+              // Displaying relevant message according to the criteria
               if($_SESSION['more_activities'] == 1) 
                 echo "<a href='allActivities.php' class='see-more'><span>See more</span></a>";
               else if($_SESSION['more_activities'] == 0) 
@@ -48,6 +43,10 @@
           </div>
         </div>
       </div>
+
+  <!-- *********************** Recent Activities Ended ****************** -->
+
+
 
 <div class='post-area'>
   <div class='new-post'>

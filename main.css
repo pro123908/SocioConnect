@@ -377,7 +377,7 @@ body {
   padding: 20px;
 }
 
-.notification-area {
+.notification-area,.recent-activities-area {
   flex: 1;
   border-radius: 5px;
   border: 1px solid #e6ecf5;
@@ -772,7 +772,7 @@ input[type="file"]:hover {
 }
 
 .comment-edit-text{
-  width:50%;
+
   color: #360505;
   font-weight: bold;
 }
@@ -819,25 +819,25 @@ input[type="file"]:hover {
   margin-bottom: 30px;
 }
 
-.notification-text {
+.notification-text,.recent-activity-text {
   text-decoration: none;
   color: black;
   display: block;
 }
 
-.noti-icon {
+.noti-icon,.recent-activity-icon {
   display: inline-block;
   margin-right: 5px;
   color: #000;
 }
 
-.noti-time {
+.noti-time,.recent-activity-time  {
   font-size: 12px;
   color: #90949c;
   display: inline-block;
 }
 
-.notification {
+.notification,.recent-activity{
   margin-bottom: 15px;
   padding: 10px;
   cursor: pointer;
@@ -847,11 +847,11 @@ input[type="file"]:hover {
 
 .notifications {}
 
-.notification-image {
+.notification-image,.recent-activity-image {
   float: left;
 }
 
-.notification-area .notification-heading {
+.notification-area .notification-heading, .recent-activities .recent-activities-heading {
   padding: 10px;
   text-align: center;
   font-weight: bold;
@@ -859,7 +859,7 @@ input[type="file"]:hover {
   color: #fff;
 }
 
-.notification:hover {
+.notification:hover,.recent-activity:hover{
   background-color: #f6f6f6;
 }
 
@@ -867,15 +867,15 @@ input[type="file"]:hover {
   display: inline-block;
 }
 
-.notification-info .deleted-noti {
+.notification-info .deleted-noti,.recent-activity-info .deleted-activity{
   color: red;
 }
 
-.deleted-noti {
+.deleted-noti,.deleted-activity {
   cursor: not-allowed;
 }
 
-.deleted-noti:hover {
+.deleted-noti:hover,.deleted-activity:hover {
   background-color: #fff;
 }
 

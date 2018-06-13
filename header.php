@@ -28,8 +28,8 @@
   if (isset($_SESSION['user_id'])) {
       $user = $_SESSION['user'];  // loggedIn username
 
-      $pic = getUserProfilePic($_SESSION['user_id']); // Getting user pic
-
+      // Getting user pic
+      $pic = getUserProfilePic($_SESSION['user_id']);
       $image = "<img src='{$pic}' class='post-avatar post-avatar-40' />"; ?>
 
 
@@ -45,93 +45,83 @@
       <div class="header-links">
         
         
-        <!-- Notification Dropdown -->
+        <!--************************* Notification Dropdown ****************************-->
         <div class='notification-dropdown'>
-        <a href="javascript:toggleDropdown('.noti-dropdown');" class="header-btn mr-1 "><i class="fas fa-bell fa-lg"></i></a>
+          <a href="javascript:toggleDropdown('.noti-dropdown');" class="header-btn mr-1 "><i class="noti-click fas fa-bell fa-lg"></i></a>
           
+          <!-- Dropdown Content -->
           <div class='noti-dropdown'>
-          <h3>Notifications</h3>  
-          <?php showNotifications(10,0,10)?>
-          <a href="allNotification.php" class='see-more'>
-            <span>See more</span>
-          </a>
+            <h3>Notifications</h3>  
+            <?php showNotifications(2,1,20)?>
+            <a href="allNotification.php" class='see-more'>
+              <span>See more</span>
+            </a>
+          </div>
+        
+          <div class='noti-count'>
+            <?php  $value = CountDropdown(1); 
+              countDropdownDisplay($value,'noti');
+            ?>
+          </div>
         </div>
 
-        <div class='noti-count'>
-        <?php  $value = CountDropdown(1); 
-               if($value == 0){
-                 echo "<script>document.querySelector('.noti-count').style.backgroundColor='transparent';</script>";
-               }else{
-                echo "<script>document.querySelector('.noti-count').style.backgroundColor='red';</script>";
-                echo $value;
-               }
-        ?>
-        </div>
-  </div>
+        <!-- ********************************************************** -->
+
+        <!-- ********** Message Dropdown ************** -->
         <div class='message-dropdown'>
-        <a href="javascript:toggleDropdown('.msg-dropdown');" class="header-btn mr-1"><i class="fas fa-envelope fa-lg"></i></a>
+          <a href="javascript:toggleDropdown('.msg-dropdown');" class="header-btn mr-1"><i class="msg-click fas fa-envelope fa-lg"></i></a>
 
-        <div class='msg-dropdown'>
-        
-          <h3>Messages</h3> 
-          <div class='recent-chats-dropdown'>
-          <?php showRecentChats(); ?>
+          <div class='msg-dropdown'>
+            <h3>Messages</h3> 
+            <div class='recent-chats-dropdown'>
+              <?php showRecentChats(); ?>
+            </div>
+            <a href="messages.php" class='see-more'>
+              <span>See more</span>
+            </a>
+          </div>
 
-  </div>
-          <a href="messages.php" class='see-more'>
-            <span>See more</span>
-          </a>
+          <div class='msg-count'>
+            <?php  $value = CountDropdown(2); 
+              countDropdownDisplay($value,'msg');
+            ?>
+          </div>
+        </div>  
+        <!-- ********************************************************** -->
+
+        <!-- ********** Request Dropdown ************** -->
+        <div class='request-dropdown'>
+          <a href="javascript:toggleDropdown('.req-dropdown');" class="header-btn mr-1"><i class="req-click fas fa-user-plus fa-lg"></i></a>
+
+          <div class='req-dropdown'>
+            <h3>Friend Requests</h3> 
+            <?php showNotifications(1,0,10); ?>
+            <a href="requests.php" class='see-more'>
+              <span>See more</span>
+            </a>
+          </div>
+
+          <div class='req-count'>
+            <?php 
+              $value = CountDropdown(3); 
+              countDropdownDisplay($value,'req');
+            ?>
+          </div>
         </div>
+        <!-- ********************************************************** -->
 
-        <div class='msg-count'>
-        <?php  $value = CountDropdown(2); 
-               if($value == 0){
-                 echo "<script>document.querySelector('.msg-count').style.backgroundColor='transparent';</script>";
-               }else{
-                echo "<script>document.querySelector('.msg-count').style.backgroundColor='red';</script>";
-                echo $value;
-               }
-        ?>
-        </div>
-  </div>  
-        
+         <!-- log out button -->
+        <a href="logout.php" class="header-btn mr-1"><i class="fas fa-sign-out-alt fa-lg"></i></a>
 
-    <div class='request-dropdown'>
-        <a href="javascript:toggleDropdown('.req-dropdown');" class="header-btn mr-1"><i class="fas fa-user-plus fa-lg"></i></a>
-
-        <div class='req-dropdown'>
-          <h3>Friend Requests</h3> 
-          
-          <?php showNotifications(1,0,10); ?>
-  
-          <a href="requests.php" class='see-more'>
-            <span>See more</span>
-          </a>
-        </div>
-
-        <div class='req-count'>
-        <?php  $value = CountDropdown(3); 
-               if($value == 0){
-                 echo "<script>document.querySelector('.req-count').style.backgroundColor='transparent';</script>";
-               }else{
-                echo "<script>document.querySelector('.req-count').style.backgroundColor='red';</script>";
-                echo $value;
-               }
-        ?>
-        </div>
-  </div>
-        <a href="logout.php" class="header-btn mr-1" id="logout_id"><i class="fas fa-sign-out-alt fa-lg"></i></a>
+        <!--  Login User Name -->
         <a class='logged-user' href='timeline.php'>
           <?php echo $image ?>
           <span><?php echo $user ?></span>
         </a>
       </div>
-  </div>
+        <!-- ********************* Header Links **********************  -->
+    </div>
+    <!-- ***************************** Header *************************** -->
   <?php
-  } else {
-      ?>
-    
-    
-  <?php
-  }
+  } 
   ?>

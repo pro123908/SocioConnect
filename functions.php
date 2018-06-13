@@ -595,10 +595,27 @@ POST;
 
 function logout()
 {
-    //Closing the session and destroying all the session variables
-    // session_start();
     turnOffline($_SESSION['user_id']);
-    session_destroy();
+    
+    session_start();
+
+    // Unset all of the session variables.
+    $_SESSION = array();
+
+    // If it's desired to kill the session, also delete the session cookie.
+    // Note: This will destroy the session, and not just the session data!
+    if (ini_get("session.use_cookies")) {
+        $params = session_get_cookie_params();
+        setcookie(session_name(), '', time() - 42000,
+            $params["path"], $params["domain"],
+            $params["secure"], $params["httponly"]
+        );
+    }
+
+// Finally, destroy the session.
+session_destroy();
+    
+    //session_destroy();
     // Redirecting to the login page
     redirection('index.php');
 }
@@ -770,33 +787,55 @@ function notification($sUser, $dUser, $post, $type)
     }
 }
 
-function showNotifications($flag,$page,$limit)
+function notificationQuery($conflict,$limit=0){
+    $isLimit = '';
+    if($limit != 0)
+    {
+        $isLimit = "LIMIT $limit";
+    }
+    $notiQuery = queryFunc("SELECT * from notifications WHERE $conflict order by noti_id desc $isLimit ");
+
+    return $notiQuery;
+}
+
+
+function showNotifications($place,$page,$limit)
 {
-    // $limit
+    // $limit - Number of notifications 
+
+    // $page - Notification Page Number -> on which page you are
+
+    // $place
     // 1 - friend request dropdown
-    // 10 - notification dropdown
-    // all - notification page
-
-    
-
-    $noData = '';
+    // 2 - notification dropdown
+    // 3 - notification page
 
     $user = $_SESSION['user_id'];
 
-    if ($flag == 1) {
-        $notiQuery = queryFunc("SELECT * from notifications WHERE (d_user_id='$user' or s_user_id='$user') AND typeC='request' order by noti_id desc");
-        $postAvatar = 'post-avatar-30';
-        $noData = 'No Friend Request';
+    // If no notifications are found then to display a message
+   $ifNoData  = '';
+
+
+    
+    if ($place == 1) {
+        // Getting all the requests from database
+       $notiQuery = notificationQuery("(d_user_id='$user' or s_user_id='$user') AND typeC='request'",$limit);
+       $postAvatar = 'post-avatar-30';
+       $ifNoData = 'No Friend Request';
     } 
     
-    elseif ($flag==10) {
+    elseif ($place==2) {
         // Selecting notifications for the current User
-        $notiQuery = queryFunc("SELECT * from notifications WHERE d_user_id='$user' OR (s_user_id='$user' AND typeC='request') order by noti_id desc LIMIT $flag");
+        $notiQuery = notificationQuery("d_user_id={$user} OR (s_user_id={$user} AND typeC='request')",$limit);
         $postAvatar = 'post-avatar-30'; // For notification Area
-    } else {
-        $notiQuery = queryFunc("SELECT * from notifications WHERE d_user_id='$user' OR (s_user_id='$user' AND typeC='request')  order by noti_id desc");
+        $ifNoData = 'No Notifications';
+
+    } elseif($place == 3) {
+        $notiQuery = notificationQuery("d_user_id={$user} OR (s_user_id={$user} AND typeC='request')");
         $postAvatar = 'post-avatar-40'; // For notification Page
+        $ifNoData = 'No Notifications';
     }
+
 
     if ($page == 1) { // if you are at first page then starting with post 0
         $start = 0;
@@ -805,8 +844,6 @@ function showNotifications($flag,$page,$limit)
         $start = ($page - 1) * $limit;
     }
 
-    // flag for user realization
-    // $isAny = false;
     
     if (isData($notiQuery)) {
         
@@ -834,8 +871,6 @@ function showNotifications($flag,$page,$limit)
                 $count++;
             }
 
-            $render = true;
-                // $isAny = true;
             $sUser = $row['s_user_id'];
             $dUser = $row['d_user_id'];
             $postID = $row['post_id'];
@@ -843,36 +878,32 @@ function showNotifications($flag,$page,$limit)
             $notiID = $row['noti_id'];
             $time = getTime($row['createdAt']);
             $colorNoti = '';
-
             $conflict = '';
             $notiIcon = '';
 
+            // Keeping ID of last notification so we can load latest notifications through AJAX
             if ($notiCounter == 0) {
                 $_SESSION['last_noti_id'] = $notiID;
                 $notiCounter = 1;
             }
 
+            // Changing notification color if it hasn't been seen
             if ($row['seen'] == 0) {
                 $colorNoti = 'noSeen';
             }
 
+            // for selecting user pic
+            $queryID = $sUser;
     
-        
-            // Selecting name of the user who generated the notification
-            $personQuery = queryFunc("SELECT profile_pic,CONCAT(first_name,' ',last_name) as name FROM users WHERE user_id='$sUser'");
-            $sPerson = isRecord($personQuery);
-            $notiLink = "notification.php?postID=$postID&type=$type&notiID=$notiID";
-                
-            if($sUser == $user && $type=='request'){
-                if($row['seen'] == 1 && $flag == 1){
+            // Checking for request(accepted) notifications
+            if($sUser == $user){
+                if ($row['seen'] == 1 && ($place == 1 || $place==2 || $place == 3)) {
                     $conflict = 'accepted your request';
                     $notiIcon = 'fas fa-check-circle';
-                    $personQuery = queryFunc("SELECT profile_pic,CONCAT(first_name,' ',last_name) as name FROM users WHERE user_id='$dUser'");
-                    $sPerson = isRecord($personQuery);
-                    
-                }
-                if($row['seen'] == 1 && $flag == 10){
-                    $render = false;
+                    //Modifying queryID because we are selecing different user's pic this time
+                    $queryID = $dUser;
+                    // $personQuery = queryFunc("SELECT profile_pic,CONCAT(first_name,' ',last_name) as name FROM users WHERE user_id='$dUser'");
+                    // $sPerson = isRecord($personQuery);
                 }
             }
              else if ($type=='post') {
@@ -890,10 +921,10 @@ function showNotifications($flag,$page,$limit)
                 $notiIcon = 'far fa-thumbs-up';
             }
 
-            if($user != $sUser){
-                // $personQuery = queryFunc("SELECT profile_pic,CONCAT(first_name,' ',last_name) as name FROM users WHERE user_id='$sUser'");
-                // $sPerson = isRecord($personQuery);
-            }
+            // Selecting name of the user who generated the notification
+            $personQuery = queryFunc("SELECT profile_pic,CONCAT(first_name,' ',last_name) as name FROM users WHERE user_id='$queryID'");
+            $sPerson = isRecord($personQuery);
+            $notiLink = "notification.php?postID=$postID&type=$type&notiID=$notiID";
 
             $noti = <<<NOTI
                 <a href={$notiLink} class='notification  {$colorNoti}'>
@@ -903,20 +934,23 @@ function showNotifications($flag,$page,$limit)
                 <span class='notification-info'>
             <span class='notification-text'>{$sPerson['name']} has {$conflict}</span><i class='noti-icon {$notiIcon}'></i><span class='noti-time'>{$time}</span></span></a>
 NOTI;
-            if($render)
+            
                 echo $noti;
         }
-        if($flag == 'all'){
+        if($place == 3){
+            // If page is full with notification limit
             if ($count > $limit) {
                 $infoForNextTime = "<input type='hidden' id='noMoreNotis' value='false'><input type='hidden' id='nextPageNotis' value='".($page+1)."' >";
             } else {
+                // If there were no more records
                 $infoForNextTime = "<input type='hidden' id='noMoreNotis' value='true'>";
             }
             echo $infoForNextTime;
             }   
     }
+    // If no records are there to render
     else{
-        echo "<span class='center'>No Friend Request</span>";
+        echo "<span class='center'>{$ifNoData}</span>";
     }
 }
 
@@ -1156,7 +1190,7 @@ function sendMessage($user_to, $message_body)
 
 function getUserProfilePic($userID)
 {
-    $profilePicQuery= queryFunc("SELECT profile_pic from users where user_id='$userID'");
+    $profilePicQuery= queryFunc("SELECT profile_pic from users where user_id=$userID");
     $profilePicQueryResult = isRecord($profilePicQuery);
     return $profilePicQueryResult['profile_pic'];
 }
@@ -1226,27 +1260,41 @@ MESSAGE;
     echo $infoForNextTime;
 }
 
-function showRecentActivities($page,$limit,$flag = null){
+function showRecentActivities($page,$limit,$place = null){
+    // Show recent activities
+
+    // limit - number of activites to render
+
+    // place 
+    // 1 - main.php area
+    // 2 - recent activities page
+
     $userLoggedIn = $_SESSION['user_id'];
-    if(isset($flag)){
-        $activities = queryFunc("select * from recent_activities where user_id = '$userLoggedIn' order by activity_id desc limit 11");
+    $limitRecords = $limit + 1;
+
+    if($place == 1){
+        $activities = queryFunc("SELECT * from recent_activities where user_id = '$userLoggedIn' order by activity_id desc limit $limitRecords");
     }
-    else{
-        $activities = queryFunc("select * from recent_activities where user_id = '$userLoggedIn' order by activity_id desc");
+    elseif($place == 2){
+        $activities = queryFunc("SELECT * from recent_activities where user_id = '$userLoggedIn' order by activity_id desc");
     }
+
     if ($page == 1) { // if you are at first page then starting with post 0
         $start = 0;
     } 
-    else { // else calculating which post to start from
+    else { 
+        // else calculating which post to start from
         $start = ($page - 1) * $limit;
     }
     $numberOfIteration = 0; // //Number of results checked - once it reaches to value of start we start rendering posts.
+    
+    // Initial value of this variable
     $_SESSION['more_activities'] = 3;
+
     if(isData($activities)){
         $count = 1; // To keep track of no of posts rendered
 
         while ($row = isRecord($activities)) {
-                
              //Wait to reach start value to start rendering posts, because before $start are already rendered
 
             //If defined number of posts are rendered then break
@@ -1255,6 +1303,7 @@ function showRecentActivities($page,$limit,$flag = null){
                 continue;
             }
             if ($count > $limit) {
+                // Limit has been reached - shift to next page now xD
                 $_SESSION['more_activities'] = 1;
                 break;
             } else {
@@ -1262,7 +1311,9 @@ function showRecentActivities($page,$limit,$flag = null){
             }    
             addActivity($row['activity_type'], $row['activity_at_id'], $row['user_id']);
         }
-        if(!(isset($flag))){
+        // If it is a recent activity page
+        if($place == 2){
+                // If limit was reached
             if ($count > $limit) {
                 $infoForNextTime = "<input type='hidden' id='noMoreActivities' value='false'><input type='hidden' id='nextPageActivities' value='".($page+1)."' >";
             } else {
@@ -1271,22 +1322,27 @@ function showRecentActivities($page,$limit,$flag = null){
             echo $infoForNextTime;
         }
     }
-    if($_SESSION['more_activities'] == 3){
-        if ($numberOfIteration == 0) {
+    // Displaying message depending on variable value
+    if($_SESSION['more_activities'] == 3){ // If limit was not reached in rendering activities 
+        if ($numberOfIteration == 0) {  // If no activity was there to render
             $_SESSION['more_activities'] = 0;
         } else {
-            $_SESSION['more_activities'] = 2;
+            $_SESSION['more_activities'] = 2; // if some activities were rendered
         }
     }
 }
 
 function getRecentChatsUserIds()
 {
+    // Getting IDS of users you recently chat with
     $userLoggedIn = $_SESSION['user_id']; 
     $check = $_SESSION['user_id'] . " ";
     $recentConvos = array();
+
     //Getting ids of all the users where messages are received from
-    $senderOfRecentMsgs = queryFunc("SELECT id,user_from,user_to,deleted FROM messages where ((user_to = ".$_SESSION['user_id']." or user_from = ".$_SESSION['user_id'].")) AND deleted not like ' $userLoggedIn%' AND deleted not like '%$userLoggedIn ' ORDER BY id DESC ");
+    $senderOfRecentMsgs = queryFunc("SELECT id,user_from,user_to,deleted FROM messages where ((user_to = $userLoggedIn OR user_from = $userLoggedIn)) AND deleted not like ' $userLoggedIn%' AND deleted not like '%$userLoggedIn ' ORDER BY id DESC ");
+
+    // For keeping track of last message
     $flag = 0;
     if (isData($senderOfRecentMsgs)) {
         while ($row = isRecord($senderOfRecentMsgs)) {
@@ -1294,9 +1350,11 @@ function getRecentChatsUserIds()
                 $_SESSION['last_message_retrieved_for_recent_convos'] = $row['id'] ;
                 $flag = 1;
             }    
+
             //if user logged in is the sender then store reciever's id, else store sender's id
             $idToPush = ($row['user_from'] == $_SESSION['user_id'] ? $row['user_to'] : $row['user_from']);
             //Check whether that sender is already in the list, if not, only then push his id
+            // So the array will only have unique IDs
             // Pushing person into the list of recent chats area
             if (array_search($idToPush, $recentConvos) === false) {
                 array_push($recentConvos, $idToPush);
@@ -1311,7 +1369,7 @@ function getRecentChatsUserIds()
 
 function getUserFirstAndLastName($user_id)
 {
-    $user_name = queryFunc("SELECT CONCAT(first_name,' ',last_name) as name FROM users WHERE user_id=".$user_id);
+    $user_name = queryFunc("SELECT CONCAT(first_name,' ',last_name) as name FROM users WHERE user_id=$user_id");
     $user_name = isRecord($user_name);
     return $user_name['name'];
 }
@@ -1340,9 +1398,11 @@ function getProfilePicData($recentConvos)
 
 function getPartnersLastMessage($partnerId)
 {
+    // Getting last message of the conversation
     $userLoggedIn = $_SESSION['user_id'];
-    $details = queryFunc("SELECT user_from,body,dateTime from messages where ((user_to = '$partnerId' AND user_from = '$userLoggedIn') OR (user_to = '$userLoggedIn' AND user_from = '$partnerId')) AND (deleted not like ' $userLoggedIn%' AND deleted not like '%$userLoggedIn ') order by id desc limit 1");
+    $details = queryFunc("SELECT user_from,body,dateTime from messages where ((user_to = $partnerId AND user_from = $userLoggedIn) OR (user_to = $userLoggedIn AND user_from = $partnerId)) AND (deleted not like ' $userLoggedIn%' AND deleted not like '%$userLoggedIn ') order by id desc limit 1");
     $details = isRecord($details);
+    // Only displaying first 15 characters of message
     if (strlen($details['body']) > 15) {
         $details['body'] = (substr($details['body'], 0, 15)."...");
     }
@@ -1351,7 +1411,11 @@ function getPartnersLastMessage($partnerId)
     
 function showRecentChats()
 {
-    $recentUserIds = getRecentChatsUserIds(); //IDS of users
+    // Showing Recents Chats
+    
+    // Getting recent user IDs
+    $recentUserIds = getRecentChatsUserIds(); 
+
     if ($recentUserIds) {
         $recentUsernames = getRecentChatsUsernames($recentUserIds); // Names of users
         $recentProfilePics = getProfilePicData($recentUserIds); // Pics of users
@@ -1359,14 +1423,17 @@ function showRecentChats()
         while ($counter < sizeof($recentUsernames)) {
             $lastMessageDetails = getPartnersLastMessage($recentUserIds[$counter]);
             $from = $lastMessageDetails['user_from'];
+
             if ($from == $_SESSION['user_id']) {
+            // If last message was sent by you
                 $from = "You : ";
             } else {
-                // $from = getUserFirstAndLastName($from);
                 $from = '';
             }
-            $msg = $lastMessageDetails['body'];
-            $at =  getTime($lastMessageDetails['dateTime']);
+
+            $msg = $lastMessageDetails['body']; // Message Body
+            $at =  getTime($lastMessageDetails['dateTime']); // Message Time
+
             $user = <<<DELIMETER
             <a href='messages.php?id={$recentUserIds[$counter]}' class='recent-user recent-user-{$recentUserIds[$counter]}'>
             
@@ -1506,9 +1573,13 @@ function getRecentConvo()
 
 function deleteConvo($partnerId)
 {
+    // Deleting User Chat
+
     $userLoggedIn = $_SESSION['user_id'];
     $userLoggedInAppendedSpace = $userLoggedIn . " ";
-    queryFunc("update messages set deleted = CONCAT(deleted, '$userLoggedInAppendedSpace') where ((user_to = '$partnerId' AND user_from = '$userLoggedIn') OR (user_to = '$userLoggedIn' AND user_from = '$partnerId')) AND deleted not like '%$userLoggedIn%' ");
+
+    //Deleting messages from one side that is deleted by loggedIn user
+    queryFunc("UPDATE messages set deleted = CONCAT(deleted, '$userLoggedInAppendedSpace') where ((user_to = '$partnerId' AND user_from = '$userLoggedIn') OR (user_to = '$userLoggedIn' AND user_from = '$partnerId')) AND deleted not like '%$userLoggedIn%' ");
 }
 
 
@@ -1569,17 +1640,31 @@ function activeAgo($id)
 
 function addActivity($activity_type, $target_id, $userLoggedIn)
 {
+    // Activity type
+    // activity_type == 0 ==> Like
+    // activity_type == 1 ==> Comment
+    // activity_type == 2 ==> Post
+    // activity_type == 3 ==> Added Friend
+    // activity_type == 4 ==> Unlike
+
+    //Target_id
+    // target content post etc
+
     $userLoggedIn = $_SESSION['user_id'];
     $profilePic = getUserProfilePic($userLoggedIn);
-    $deletedNoti = '';
+    $deletedActivity = '';
 
+    // To keep track of activity,whether it was deleted or not?
     $flag = true;
-    //To decide the noti incon
+    
     if ($activity_type == 0) {
+        // If like activity
         $conflict = 'liked a post';
-        $notiIcon = 'far fa-thumbs-up';
-        $notiLink = "notification.php?postID={$target_id}&type=liked&notiID=0";
-        $time = queryFunc("select createdAt from likes where post_id = $target_id and user_id = $userLoggedIn");
+        $activityIcon = 'far fa-thumbs-up';
+        $activityLink = "notification.php?postID={$target_id}&type=liked&notiID=0";
+        $time = queryFunc("SELECT createdAt from likes where post_id = $target_id and user_id = $userLoggedIn");
+
+        // is activity deleted?
         if (isData($time)) {
             $time = isRecord($time);
             $time = $time['createdAt'];
@@ -1587,35 +1672,52 @@ function addActivity($activity_type, $target_id, $userLoggedIn)
             $flag = false;
         }
     } elseif ($activity_type == 1) {
+
+        // If comment activity
         $conflict = 'commented on a post';
-        $notiIcon = 'far fa-comment-dots';
+        $activityIcon = 'far fa-comment-dots';
+
+        // targetID will have two IDS i.e postID and comment ID
         $commentDetails = explode(" ", $target_id);
-        $notiLink = "notification.php?postID=$commentDetails[0]&type=commented&notiID=0";
-        $time = queryFunc("select createdAt from comments where comment_id = '$commentDetails[1]'");
+        $activityLink = "notification.php?postID=$commentDetails[0]&type=commented&notiID=0";
+        $time = queryFunc("SELECT createdAt from comments where comment_id = '$commentDetails[1]'");
+
+        // is activity deleted?
         if (isData($time)) {
             $time = isRecord($time);
             $time = $time['createdAt'];
         } else {
             $flag = false;
         }
+
     } elseif ($activity_type == 2) {
+        // If post activity
         $conflict = 'added a post';
-        $notiIcon = 'fas fa-pencil-alt';
-        $notiLink = "notification.php?postID=$target_id&type=post&notiID=0";
-        $time = queryFunc("select createdAt from posts where post_id = $target_id");
+        $activityIcon = 'fas fa-pencil-alt';
+        $activityLink = "notification.php?postID=$target_id&type=post&notiID=0";
+        $time = queryFunc("SELECT createdAt from posts where post_id = $target_id");
+
+        // is activity deleted?
         if (isData($time)) {
             $time = isRecord($time);
             $time = $time['createdAt'];
         } else {
             $flag = false;
         }
+
     } elseif ($activity_type == 3) {
+
+        // If friend Activity
         $conflict = 'made a new friend';
-        $notiIcon = 'fas fa-user-plus';
+        $activityIcon = 'fas fa-user-plus';
+
+        // Will have IDs of two users 
         $users = explode(" ", $target_id);
         $visitId = ($users[0] == $_SESSION['user_id']) ? $users[1] : $users[0] ;
-        $notiLink = "timeline.php?visitingUserID=$visitId";
-        $time = queryFunc("select become_friends_at from friends where (user1 = '$users[0]' AND user2 = '$users[1]') OR (user2 = '$users[1]' AND user1 = '$users[0]') ");
+        $activityLink = "timeline.php?visitingUserID=$visitId";
+        $time = queryFunc("SELECT become_friends_at from friends where (user1 = '$users[0]' AND user2 = '$users[1]') OR (user2 = '$users[1]' AND user1 = '$users[0]') ");
+
+        // is activity deleted?
         if (isData($time)) {
             $time = isRecord($time);
             $time = $time['become_friends_at'];
@@ -1624,41 +1726,59 @@ function addActivity($activity_type, $target_id, $userLoggedIn)
         }
     }
     if ($flag) {
+        // Activity not deleted, so getting its time
         $time = getTime($time);
     } else {
+        // Activity deleted
         $time = "Deleted";
-        $deletedNoti = 'deleted-noti';
-        $notiLink = "javascript:void(0)";
+        $deletedActivity = 'deleted-activity';
+        $activityLink = "javascript:void(0)";
     }
+
     $noti = <<<NOTI
-        <a href={$notiLink} class='notification recent_activity {$deletedNoti}'>
-            <span class='notification-image'>
+        <a href={$activityLink} class='recent-activity recent_activity {$deletedActivity}'>
+            <span class='recent-activity-image'>
                 <img src='{$profilePic}' class='post-avatar post-avatar-30' />
             </span>
-            <span class='notification-info'>
-                <span class='notification-text'>You {$conflict}</span><i class='noti-icon {$notiIcon}'></i><span class='noti-time {$deletedNoti}'>{$time}</span>
+            <span class='recent-activity-info'>
+                <span class='recent-activity-text'>You {$conflict}</span><i class='recent-activity-icon {$activityIcon}'></i><span class='recent-activity-time {$deletedActivity}'>{$time}</span>
             </span>
         </a>
 NOTI;
     echo $noti;
 }
 
-function CountDropdown($flag){
+function CountDropdown($place){
+
+    // For displaying number of unseen notifications
+    // place
+    // 1 -> Notification
+    // 2 -> Messages
+    // 3 -> Requests
+
     $userID = $_SESSION['user_id'];
 
-    if ($flag == 1) {
+    if ($place == 1) {
         $queryResult = queryFunc("SELECT count(*) as count from notifications WHERE d_user_id='$userID' AND seen=0");
     }
-    elseif($flag == 2){
+    elseif($place == 2){
         $queryResult = queryFunc("SELECT count(*) as count FROM messages WHERE user_to='$userID' AND opened=0");
     }
-    elseif($flag == 3){
+    elseif($place == 3){
         $queryResult = queryFunc("SELECT count(*) as count FROM friend_requests WHERE to_id ='$userID' and status = 0");
     }
 
     $count = isRecord($queryResult);
     $countValue = $count['count'];
-
     
     return $countValue;
+}
+
+function countDropdownDisplay($value,$place){
+    if($value == 0){
+        echo "<script>document.querySelector('.$place-count').style.backgroundColor='transparent';</script>";
+      }else{
+       echo "<script>document.querySelector('.$place-count').style.backgroundColor='red';</script>";
+       echo $value;
+      }
 }

@@ -113,18 +113,25 @@ function like(postID) {
     document.querySelector(
       `.like-count-${postID}`
     ).innerHTML = `<i class='like-count-icon fas fa-thumbs-up'></i> ${value}`;
+
     let icon = document.querySelector(`.post-${postID} .like-btn i`);
     icon.classList.toggle("blue");
     //Adding in recent activities if liked
-    if (icon.classList[2]) {
-      var activity_type = 0;
+
+    if (icon.classList[2]) { // If it has a class blue xD
+      var activity_type = 0; // Activity - like
+
       param = `target_id=${postID}&activity_type=${activity_type}`;
       ajaxCalls("POST", `recentActivityAjax.php`, param).then(function(result) {
+        // Adding to the view
         addRecentActivity(result);
       });
     } else {
-      var activity_type = 4;
+
+      // Means post has been disliked
+      var activity_type = 4; // Unlike
       param = `target_id=${postID}&activity_type=${activity_type}`;
+      
       ajaxCalls("POST", `recentActivityAjax.php`, param).then(function(result) {
         document.querySelector(".activities-content").innerHTML = result;
       });
@@ -133,23 +140,38 @@ function like(postID) {
 }
 
 function addRecentActivity(activity) {
+  //Adding recent activity to the activity area
+  // Getting the area
   var activitiesDiv = document.querySelector(".activities-content");
+
+  // Inserting the new activity at the top
   activitiesDiv.innerHTML = activity + activitiesDiv.innerHTML;
+  
+  // If activities have become more than 10,then just delete the bottom one
   if (findChildNodes(activitiesDiv) == 11) {
+
     document.querySelector(".show-more-activities").innerHTML =
       "<a href='allActivities.php' class='see-more'><span>See more</span></a>";
+
+    //Removing bottom activity from the list
     var lastChild = activitiesDiv.getElementsByTagName("a")[10];
     var removed = activitiesDiv.removeChild(lastChild);
-  } else if (findChildNodes(activitiesDiv) > 0)
+
+  } else if (findChildNodes(activitiesDiv) > 0){
+    // If activities were not more than 10
     document.querySelector(".show-more-activities").innerHTML =
       "<p class='see-more'>No More Activities to Show</p>";
+  }
 }
 
 function findChildNodes(div) {
+  // Count Child nodes the passed element
   var count = 0;
   for (i = 0; i < div.childNodes.length; i++) {
     if (div.childNodes[i].nodeType == 1) count++;
   }
+
+  // Returning number of child nodes
   return count;
 }
 
@@ -200,21 +222,21 @@ function ajaxCalls(method, pathString, postParam = "", pic = "") {
   });
 }
 
-function comment(postID,user,profilePic) {
+function comment(postID, user, profilePic) {
   // Adding comment to post
 
-  // Getting post ID,content and user who posted comment from form
-  // var post = document.querySelector(`input[name='post_id_${postID}']`);
-  // var comment = document.querySelector(`input[name='comment_${post.value}']`);
+  // Getting targeted comemnt field
   var comment = document.querySelector(`input[name='comment_${postID}']`);
-  // var user = document.querySelector('input[name="post_user"]');
-  // var profilePic = document.querySelector('input[name="pic_user"]');
+  
 
+  // Extracting Value
   var commentValue = comment.value;
-  var timeToShow = "Just Now";
-  console.log(comment.value);
 
-  if (!(commentValue.trim() == '')) {
+  var timeToShow = "Just Now";
+  
+
+  // Validating input to not to be empty
+  if (!(commentValue.trim() == "")) {
     // Setting up parameters for POST request to the file
     var param = `comment=${comment.value}&post_id=${postID}`;
 
@@ -222,7 +244,7 @@ function comment(postID,user,profilePic) {
       // Added Comment ID is returned in response
       commentID = result.trim();
 
-      console.log(profilePic);
+      
       document.querySelector(`.comment-area-${postID}`).innerHTML += `
   <div class='comment comment-${commentID}'>
                 
@@ -248,6 +270,7 @@ function comment(postID,user,profilePic) {
 
       //Adding in recent activities
       var activity_type = 1;
+      // targeted Content
       var commentDetails = postID + " " + commentID;
       param = `target_id=${commentDetails}&activity_type=${activity_type}`;
       ajaxCalls("POST", `recentActivityAjax.php`, param).then(function(result) {
@@ -273,8 +296,6 @@ function postPicSelected(container) {
   console.log(postPic.name);
 }
 
-
-
 function addPost(user_id) {
   // Again the name suggests xD
 
@@ -286,64 +307,64 @@ function addPost(user_id) {
   var postContent = post.value;
 
   console.log(postPic);
-  
-  if(!(postContent.trim() == '') || (postPic !== undefined)){
-  var formData = new FormData();
-  formData.append("file", postPic);
-  formData.append("post", post.value);
 
-  // Setting paramters for POST request
-  // var param = `post=${post.value}&user_id=${user_id}`;
+  if (!(postContent.trim() == "") || postPic !== undefined) {
+    var formData = new FormData();
+    formData.append("file", postPic);
+    formData.append("post", post.value);
 
-  ajaxCalls("POST", "post.php", formData, "pic").then(function(result) {
-    // Adding new post to post Area
-    // Adding post to the top not bottom. Clue xD
-    document.querySelector(".posts").innerHTML =
-      result + document.querySelector(".posts").innerHTML;
-    document.querySelector("textarea[name='post']").value = " ";
+    // Setting paramters for POST request
+    // var param = `post=${post.value}&user_id=${user_id}`;
 
-    //Adding in recent activities
-    var activity_type = 2;
-    param = `activity_type=${activity_type}`;
-    ajaxCalls("POST", `recentActivityAjax.php`, param).then(function(result) {
-      addRecentActivity(result);
+    ajaxCalls("POST", "post.php", formData, "pic").then(function(result) {
+      // Adding new post to post Area
+      // Adding post to the top not bottom. Clue xD
+      document.querySelector(".posts").innerHTML =
+        result + document.querySelector(".posts").innerHTML;
+      document.querySelector("textarea[name='post']").value = " ";
+
+      //Adding in recent activities
+      var activity_type = 2;
+      param = `activity_type=${activity_type}`;
+      ajaxCalls("POST", `recentActivityAjax.php`, param).then(function(result) {
+        addRecentActivity(result);
+      });
     });
-  });
-}
+  }
   // postPicData.value = '';
   document.querySelector(".pic-name").innerHTML = "";
 }
 
-function hideEditDiv(postID,flag){
-  var parentDiv = document.querySelector(".post-content-"+postID)
-  document.querySelector(".actual-post-"+postID).style.display = "block"; 
-  parentDiv.removeChild(document.querySelector(".edit-post-"+postID))
-  if(flag)
-    document.querySelector(".post-edited-"+postID).innerHTML = "Edited"; 
+function hideEditDiv(postID, flag) {
+  var parentDiv = document.querySelector(".post-content-" + postID);
+  document.querySelector(".actual-post-" + postID).style.display = "block";
+  parentDiv.removeChild(document.querySelector(".edit-post-" + postID));
+  if (flag)
+    document.querySelector(".post-edited-" + postID).innerHTML = "Edited";
 }
 
 //Copied this function from above postPicSelected, just to check right now, in future both will be merged
 function editedPostPicSelected(postID) {
-  var editForm = document.querySelector(".edit-post-"+postID);  
+  var editForm = document.querySelector(".edit-post-" + postID);
   var postPic = editForm.querySelector("input[name='post-pic']").files[0];
   editForm.querySelector(".pic-name").innerHTML = postPic.name;
   console.log(postPic.name);
 }
 
-function showFileUpload(postID){
-  var editForm = document.querySelector(".edit-post-"+postID);
+function showFileUpload(postID) {
+  var editForm = document.querySelector(".edit-post-" + postID);
   editForm.querySelector(".upload-btn-wrapper").style.display = "inline-block";
 }
 
-function hideFileUpload(postID){
-  var editForm = document.querySelector(".edit-post-"+postID);
+function hideFileUpload(postID) {
+  var editForm = document.querySelector(".edit-post-" + postID);
   editForm.querySelector(".upload-btn-wrapper").style.display = "none";
 }
 
-function editPost(postID){
-  if(!(document.querySelector(".edit-post-"+postID))){
+function editPost(postID) {
+  if (!document.querySelector(".edit-post-" + postID)) {
     //Current Post
-    var post = document.querySelector(".actual-post-"+postID);
+    var post = document.querySelector(".actual-post-" + postID);
 
     //Current Post and picture
     var postPic = post.querySelector(".post-image-container");
@@ -353,12 +374,13 @@ function editPost(postID){
     post.style.display = "none";
 
     //Creating a new div to display if it doesn't exist and get the edit input and inserting it in the same parent div, just before the div where text and pic were shown
-    if(!(document.querySelector(".edit-post-"+postID))){
+    if (!document.querySelector(".edit-post-" + postID)) {
       var div = document.createElement("div");
-      div.setAttribute("class","edit-post-"+postID)
-      div.innerHTML = 
-        `<form action="editPost.php" method='POST'>
-          <textarea name="post" id="" cols="30" rows="10" class="post-input post-edit-${postID}">${postContent.innerHTML}</textarea>
+      div.setAttribute("class", "edit-post-" + postID);
+      div.innerHTML = `<form action="editPost.php" method='POST'>
+          <textarea name="post" id="" cols="30" rows="10" class="post-input post-edit-${postID}">${
+        postContent.innerHTML
+      }</textarea>
           <br>
           <div class ="radio-buttons-edit">
             <label><input type="radio" name="edit-post-pic" value="remove" onclick="hideFileUpload(${postID})"> Remove Current Photo</label><br>
@@ -375,37 +397,40 @@ function editPost(postID){
             <a  href="javascript:saveEditPost(${postID})"  class='edit-post-save-btn'>Save</a>
           </div>
         </form>`;
-        
-      var parentDivForEditingArea = document.querySelector(".post-content-"+postID);
-      parentDivForEditingArea.insertBefore(div,post)
-    }
-  } 
-}
-function saveEditPost(postID){
 
+      var parentDivForEditingArea = document.querySelector(
+        ".post-content-" + postID
+      );
+      parentDivForEditingArea.insertBefore(div, post);
+    }
+  }
+}
+function saveEditPost(postID) {
   //Getting post edit text
-  var postContent = document.querySelector(".post-edit-"+postID);
+  var postContent = document.querySelector(".post-edit-" + postID);
 
   //Getting div in which edited values are present
-  var editForm = document.querySelector(".edit-post-"+postID);  
-  
-  //Getting picutre file 
+  var editForm = document.querySelector(".edit-post-" + postID);
+
+  //Getting picutre file
   var postPicData = editForm.querySelector("input[name='post-pic']");
   var postPic = postPicData.files[0];
 
   //If niether text nor pic are inserted
-  if(!(postContent.value.trim() == '') || (postPic !== undefined)){
-
-    if(editForm.querySelector('input[name="edit-post-pic"]:checked')){
-
+  if (!(postContent.value.trim() == "") || postPic !== undefined) {
+    if (editForm.querySelector('input[name="edit-post-pic"]:checked')) {
       //Getting radio button value
-      var action = editForm.querySelector('input[name="edit-post-pic"]:checked').value;
+      var action = editForm.querySelector('input[name="edit-post-pic"]:checked')
+        .value;
 
       //If new is selected by no path is given for image
-      if(action == "new" && editForm.querySelector(".pic-name").innerHTML == ""){
-          alert("Select Image to change image")
-          return 0;
-        }
+      if (
+        action == "new" &&
+        editForm.querySelector(".pic-name").innerHTML == ""
+      ) {
+        alert("Select Image to change image");
+        return 0;
+      }
 
       //Preparing formData for ajax call
       var formData = new FormData();
@@ -413,45 +438,39 @@ function saveEditPost(postID){
       formData.append("postID", postID);
       formData.append("postContent", postContent.value);
       formData.append("action", action);
-            
-      ajaxCalls("POST", "postEdit.php", formData,"pic").then(function(result) {
 
+      ajaxCalls("POST", "postEdit.php", formData, "pic").then(function(result) {
         //Displaying original post div which was made hidden in previous function
-        var post = document.querySelector(".actual-post-"+postID);
+        var post = document.querySelector(".actual-post-" + postID);
         //Storing edited status in the p tag
         post.getElementsByTagName("p")[0].innerHTML = postContent.value;
-
+        
         //result CONTAINS THE PATH OF IMAGE
         //checking if the response path is empty, i.e no image is to be shown
         var imgDiv = post.querySelector(".post-image");
-        if(result.trim() != ""){
-            // div for image is already present then only updating its src, making display block bcozit might be made none due to line 443 (See if condition in the else block)
-            if(imgDiv){
-              imgDiv.style.display = "block";
-              imgDiv.src = result;
-            }
+        if (result.trim() != "") {
+          // div for image is already present then only updating its src, making display block bcozit might be made none due to line 443 (See if condition in the else block)
+          if (imgDiv) {
+            imgDiv.style.display = "block";
+            imgDiv.src = result;
+          }
 
-            //if div isn't present then creating it from scratch
-            else{
-                var imgParentDiv = document.querySelector(".actual-post-"+postID);
-                imgParentDiv.innerHTML += `<div class='post-image-container'><img src='${result}' class='post-image' /></div>`
-            }
-        }  
-        else{
-            //response was empty this means that there is no picture to show, so first check, if div for images is present then hide it
-            if(imgDiv)
-              imgDiv.style.display = "none"; 
+          //if div isn't present then creating it from scratch
+          else {
+            var imgParentDiv = document.querySelector(".actual-post-" + postID);
+            imgParentDiv.innerHTML += `<div class='post-image-container'><img src='${result}' class='post-image' /></div>`;
+          }
+        } else {
+          //response was empty this means that there is no picture to show, so first check, if div for images is present then hide it
+          if (imgDiv) imgDiv.style.display = "none";
         }
 
         //Now hide the editing div and write Edited in the header section of the post
-        hideEditDiv(postID,true);
+        hideEditDiv(postID, true);
       });
-    }
-    else
-      alert("Select Action to do on the image");  
-  }
-  else{
-      alert("Enter either a text or an image");  
+    } else alert("Select Action to do on the image");
+  } else {
+    alert("Enter either a text or an image");
   }
 }
 
@@ -463,34 +482,34 @@ function deleteComment(commentID) {
   });
 }
 
-
-function saveEditComment(postID,commentID,user,profilePic,time){
+function saveEditComment(postID, commentID, user, profilePic, time) {
   // Adding comment to post
   // Getting post ID,content and user who posted comment from form
-  var comment = document.querySelector(`input[name='comment_edit_${commentID}']`);
+  var comment = document.querySelector(
+    `input[name='comment_edit_${commentID}']`
+  );
   // Setting up parameters for POST request to the file
   var param = `comment=${comment.value}&comment_id=${commentID}`;
-  console.log('PARAMS' +param);
+  console.log("PARAMS" + param);
 
-  ajaxCalls("POST", "commentEdit.php", param).then(function(result) {
+  ajaxCalls("POST", "commentEdit.php", param)
+    .then(function(result) {
+      // Added Comment ID is returned in response
+      showComment(user, commentID, postID, profilePic, time, comment.value);
+    })
+    .catch(function(reject) {
+      console.log("REJECTED");
+    });
 
-    // Added Comment ID is returned in response
-    alert(time);
-    showComment(user,commentID,postID,profilePic,time,comment.value);
-
-}).catch(function(reject){
-  console.log("REJECTED");
-});
-
-  console.log(postID,commentID,user,profilePic);
+  console.log(postID, commentID, user, profilePic);
   return false;
 }
 
-function editComment(commentID,postID,profilePic,time){
-  var comment = document.querySelector(".comment-"+commentID);
-  var user = comment.querySelector('.comment-user').innerHTML;
-  user = user.slice(0,user.length-3);
-  var commentValue = comment.querySelector(".comment-text").innerHTML; 
+function editComment(commentID, postID, profilePic, time) {
+  var comment = document.querySelector(".comment-" + commentID);
+  var user = comment.querySelector(".comment-user").innerHTML;
+  user = user.slice(0, user.length - 3);
+  var commentValue = comment.querySelector(".comment-text").innerHTML;
   var currentComment = comment.innerHTML;
   console.log(time);
   comment.innerHTML = `
@@ -500,10 +519,10 @@ function editComment(commentID,postID,profilePic,time){
           <i class='tooltip-container fas fa-times comment-delete' onclick="javascript:showComment('${user}',${commentID},'${postID}','${profilePic}','${time}','${commentValue}')"><span class='tooltip tooltip-right'>Cancel</span></i>
           <input style='display:none;' type="submit" id="${postID}" value="Comment" > 
       </form>
-    </div>`;  
+    </div>`;
 }
 
-function showComment(user,commentID,postID,profilePic,time,comment){
+function showComment(user, commentID, postID, profilePic, time, comment) {
   console.log(time);
   document.querySelector(`.comment-${commentID}`).innerHTML = `
   <div class='comment comment-${commentID}'>
@@ -557,7 +576,6 @@ function changePic() {
 
 //Search Function
 function getUsers(value, flag) {
- 
   // flag values :
   // 0 - Searching in messages
   // 1 - Normal Searching
@@ -811,14 +829,21 @@ function refreshRecentConvos() {
 setInterval(refreshRecentConvos, 1000);
 
 function deleteConvo(id) {
-  var url = window.location.href;
-  var openConvoId = url.slice(46);
+  // For deleting User Chat
+  // id - loggedIn userID
+
+  var url = window.location.href; // URL of the current window
+  var openConvoId = url.slice(46); // Will give the ID of the user whom you are chatting with
+
   let param = `id=${id}&urlID=${openConvoId}`;
+
   ajaxCalls("POST", `deleteConvoAjax.php`, param).then(function(response) {
-    console.log(response);
     //If response is not a redirection, this would be changed if this comment is removed from messags.php
-    if (response == "Reload the page") window.location = "messages.php";
-    else document.querySelector(".recent-chats").innerHTML = response;
+    if (response == "Reload the page") {
+      window.location = "messages.php"; // Redirect the user to message Page
+    } else {
+      document.querySelector(".recent-chats").innerHTML = response;
+    }
   });
 }
 
@@ -1019,41 +1044,37 @@ function showNextPageActivities() {
   }
 }
 
-function toggleDropdown($type) {
-  let display = document.querySelector($type).style.display;
+// Function for controlling dropdowns
+function toggleDropdown(type) {
+  // type:
+  // Notification,Message,Request
+
+  // Getting the Dropdown
+  let display = document.querySelector(type).style.display;
 
   if (display == "block") {
-    console.log("block");
-    document.querySelector($type).style.display = "none";
+    document.querySelector(type).style.display = "none";
   } else {
-    console.log("none");
-    document.querySelector($type).style.display = "block";
+    document.querySelector(type).style.display = "block";
   }
 }
 
+/*  --------------- Closing Dropdowns when other areas are clicked ------------------ */
 window.onclick = function(e) {
   if (e.srcElement.className != "search-input") {
     document.querySelector(".search-result").style.display = "none";
   }
 
-  if (
-    e.srcElement.className != "notification-dropdown" &&
-    e.srcElement.className != "noti-dropdown"
-  ) {
-    document.querySelector(".noti-dropdown").style.display = "none";
-  }
-
-  if (
-    e.srcElement.className != "message-dropdown" &&
-    e.srcElement.className != "msg-dropdown"
-  ) {
-    document.querySelector(".msg-dropdown").style.display = "none";
-  }
-
-  if (
-    e.srcElement.className != "request-dropdown" &&
-    e.srcElement.className != "req-dropdown"
-  ) {
-    document.querySelector(".req-dropdown").style.display = "none";
-  }
+  // Will loop through the array of dropdowns
+  let arr = ["noti", "msg", "req"];
+  arr.forEach(function(value) {
+    if (
+      !e.srcElement.classList.contains(`${value}-click`) &&
+      !e.srcElement.classList.contains(`${value}-dropdown`)
+    ) {
+      document.querySelector(`.${value}-dropdown`).style.display = "none";
+    }
+  });
 };
+
+/* ------------------------------------------------------------------------------ */
