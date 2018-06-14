@@ -612,10 +612,9 @@ function logout()
         );
     }
 
-// Finally, destroy the session.
-session_destroy();
-    
-    //session_destroy();
+    // Finally, destroy the session.
+    session_destroy();
+
     // Redirecting to the login page
     redirection('index.php');
 }
