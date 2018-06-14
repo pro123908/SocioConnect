@@ -1,3 +1,5 @@
+/* Edited By Bilal */
+
 .hidden {
   display: none;
 }
@@ -84,10 +86,6 @@ body {
   margin-left: 10px;
   margin-top: 15px;
 }
-
-/* .header-text {
-  flex: 0 0 10%;
-} */
 
 /* Buttons Present on header */
 
@@ -311,65 +309,13 @@ body {
   border-color: #ffffff;
 }
 
-/* ---------------------------------------------------------------------- */
+/* ------------------------- Login Page Ended ------------------------------ */
 
 
-/* #noti_id:hover #noti_desc {
-  display: block;
-}
 
-#msg_id:hover #msg_desc {
-  display: block;
-}
 
-#req_id:hover #req_desc {
-  display: block;
-}
-
-#newsfeed_id:hover #newsfeed_desc {
-  display: block;
-}
-
-#timeline_id:hover #timeline_desc {
-  display: block;
-}
-
-#logout_id:hover #logout_desc {
-  display: block;
-} */
-
-/* #noti_desc, #logout_desc, #timeline_desc, #newsfeed_desc, #req_desc, #msg_desc {
-  display: none;
-  background-color: black;
-  color: white;
-  margin-left: -60px;
-  margin-top: 15px;
-  padding: 2px;
-  position: absolute;
-  z-index: 2;
-  width: 160px;
-  height: 22px;
-  border-radius: 5px;
-} */
-
-#logout_desc {
-  margin-left: 150px;
-}
-
-#msg_desc {
-  margin-left: -10px;
-}
-
-#req_desc {
-  margin-left: 40px
-}
-
-#timeline_desc {
-  margin-left: 100px;
-}
 
 /* Content Area */
-
 .content-area {
   display: flex;
   /* justify-content: space-between; */
@@ -377,13 +323,7 @@ body {
   padding: 20px;
 }
 
-.notification-area,.recent-activities-area {
-  flex: 1;
-  border-radius: 5px;
-  border: 1px solid #e6ecf5;
-  background-color: #fff;
-  height: max-content;
-}
+
 
 .post-area {
   flex: 2;
@@ -772,7 +712,7 @@ input[type="file"]:hover {
 }
 
 .comment-edit-text{
-
+  width : 50%;
   color: #360505;
   font-weight: bold;
 }
@@ -808,36 +748,29 @@ input[type="file"]:hover {
   color: #3578e5;
 }
 
-/* Notification Page */
+/* --------------------- Notification and Recent Activity Styling ------------------- */
 
-.notification-display {
+
+.notification-area,.recent-activities-area {
+  flex: 1;
+  border-radius: 5px;
+  border: 1px solid #e6ecf5;
+  background-color: #fff;
+  height: max-content;
+}
+
+.notification-display,.recent-activities-display {
   padding: 50px;
   background-color: #fff;
 }
 
-.notification-display h1 {
+.notification-display h1,.recent-activities-display h1{
   margin-bottom: 30px;
 }
 
-.notification-text,.recent-activity-text {
-  text-decoration: none;
-  color: black;
-  display: block;
-}
-
-.noti-icon,.recent-activity-icon {
-  display: inline-block;
-  margin-right: 5px;
-  color: #000;
-}
-
-.noti-time,.recent-activity-time  {
-  font-size: 12px;
-  color: #90949c;
-  display: inline-block;
-}
-
 .notification,.recent-activity{
+  display: flex;
+  align-items: center;
   margin-bottom: 15px;
   padding: 10px;
   cursor: pointer;
@@ -845,13 +778,11 @@ input[type="file"]:hover {
   display: block;
 }
 
-.notifications {}
-
-.notification-image,.recent-activity-image {
+.notification-image , .recent-activity-image{
   float: left;
 }
 
-.notification-area .notification-heading, .recent-activities .recent-activities-heading {
+.notification-heading,.recent-activities-heading {
   padding: 10px;
   text-align: center;
   font-weight: bold;
@@ -859,23 +790,23 @@ input[type="file"]:hover {
   color: #fff;
 }
 
-.notification:hover,.recent-activity:hover{
+.notification:hover,.recent-activity:hover {
   background-color: #f6f6f6;
 }
 
-.notification-info {
+.notification-info,.recent-activity-info{
   display: inline-block;
 }
 
-.notification-info .deleted-noti,.recent-activity-info .deleted-activity{
+.notification-info .deleted-noti,.recent-activity-info .deleted-activity {
   color: red;
 }
 
-.deleted-noti,.deleted-activity {
+.deleted-noti,.deleted-activity{
   cursor: not-allowed;
 }
 
-.deleted-noti:hover,.deleted-activity:hover {
+.deleted-noti:hover ,.deleted-activity:hover{
   background-color: #fff;
 }
 
@@ -883,27 +814,31 @@ input[type="file"]:hover {
   background-color: #f7f380;
 }
 
-.notification-text {
+.notification-text,.recent-activity-text {
   font-size: 11px;
+  text-decoration: none;
+  color: black;
+  display: block;
 }
 
-.noti-icon {
+.noti-icon,.recent-activity-icon  {
   font-size: 10px;
   color: #000;
+  display: inline-block;
+  margin-right: 5px;
 }
 
-.noti-time {
+.noti-time,.recent-activity-time {
   font-size: 10px;
+  color: #90949c;
+  display: inline-block;
 }
 
-.notification-info {
+.notification-info,.recent-activity-info {
   max-width: 80%;
 }
 
-.notification {
-  display: flex;
-  align-items: center;
-}
+/* ---------------- Notification and Recent Activity Ended ------------------- */
 
 .content {
   display: flex;
