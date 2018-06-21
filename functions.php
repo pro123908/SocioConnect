@@ -1111,6 +1111,8 @@ function displayFriends($count=null)
     // }
     $numberOfIteration = 0;
     if (isData($queryResult)) {
+    
+        $friends = array();
         while ($row = isRecord($queryResult)) {
             if(isset($count)){
                 if(++$numberOfIteration > $count){
@@ -1124,46 +1126,10 @@ function displayFriends($count=null)
 
             $friend = isRecord($queryFriends);
 
-            $time = activeAgo($friend_id);
-
-            $stateClass = 'state-off';
-
-            if ($time == 'Just Now') {
-                $time = 'Now';
-                $stateClass = 'state-on';
-            }
-            
-            // if ($friend['online'] == 0) {
-            //     $state = "Offline";
-            //     $stateClass = 'state-off';
-            // } else {
-            //     $state = "Online";
-            //     $stateClass = 'state-on';
-            // }
-
-            $content = <<<FRIEND
-                <div class="friend-container">
-                <div class='friend'>
-                <div class='friend-image'>
-                <img class='post-avatar post-avatar-30' src='{$friend['profile_pic']}'  >
-                </div>
-                
-                <div class='friend-info'>
-                    <a href="timeline.php?visitingUserID={$friend['user_id']}" class='friend-text'>{$friend['name']}</a> 
-                    <span class='{$stateClass}'>{$time}</span>           
-                </div>
-                <div class='friend-action'>
-                <div>
-                <a href="javascript:removeFriend({$friend['user_id']})" class='remove-friend'><i class="tooltip-container fas fa-times">
-                <span class='tooltip tooltip-right'>Remove Friend</span>
-                </i></a>
-                </div>
-            </div>
-            </div>
-            </div>
-FRIEND;
-            echo $content;
+            array_push($friends,$friend);
         }
+        sortArrayByKey($friends,true);
+        printFriendsList($friends);
     }
     if(!isset($_SESSION['more_friends'])){
         if ($numberOfIteration == 0) {
@@ -1174,6 +1140,69 @@ FRIEND;
     }
 
 }
+
+function printFriendsList($friends){
+    
+    foreach ($friends as $friend){
+        $time = activeAgo($friend['user_id']);
+        
+        $stateClass = 'state-off';
+
+        if ($time == 'Just Now') {
+            $time = 'Now';
+            $stateClass = 'state-on';
+        }
+        
+        // if ($friend['online'] == 0) {
+        //     $state = "Offline";
+        //     $stateClass = 'state-off';
+        // } else {
+        //     $state = "Online";
+        //     $stateClass = 'state-on';
+        // }
+
+        $content = <<<FRIEND
+            <div class="friend-container">
+            <div class='friend'>
+            <div class='friend-image'>
+            <img class='post-avatar post-avatar-30' src='{$friend['profile_pic']}'  >
+            </div>
+            
+            <div class='friend-info'>
+                <a href="timeline.php?visitingUserID={$friend['user_id']}" class='friend-text'>{$friend['name']}</a> 
+                <span class='{$stateClass}'>{$time}</span>           
+            </div>
+            <div class='friend-action'>
+            <div>
+            <a href="javascript:removeFriend({$friend['user_id']})" class='remove-friend'><i class="tooltip-container fas fa-times">
+            <span class='tooltip tooltip-right'>Remove Friend</span>
+            </i></a>
+            </div>
+        </div>
+        </div>
+        </div>
+FRIEND;
+        echo $content;
+    }
+}
+
+function sortArrayByKey(&$array,$flag){
+    if($flag){
+        usort($array,function ($a, $b){
+            $comparison = strcmp(strtolower($a{'first_name'}), strtolower($b{'first_name'}));
+            if($comparison != 0)
+                return  $comparison;
+            else
+                return strcmp(strtolower($a{'last_name'}), strtolower($b{'last_name'})); 
+        });
+    }
+    else{
+        usort($array,function ($a, $b){
+            return strcmp(strtolower($a{'name'}), strtolower($b{'name'}));           
+        });
+    }
+}    
+
 //Message Functions
 function sendMessage($user_to, $message_body)
 {

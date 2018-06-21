@@ -884,6 +884,8 @@ function showNextPageMessages(id) {
 }
 
 function removeFriend(id) {
+  var url = window.location.href;
+  
   let param = `friendId=${id}`;
   ajaxCalls("POST", "removeFriendAjax.php", param).then(function(result) {
     var data = JSON.parse(result);
@@ -895,7 +897,6 @@ function removeFriend(id) {
     document.querySelector(".friends-container").innerHTML = "";
     var flag = 0;
     console.log(data.length);
-    var url = window.location.href;
     for (i = 0; i < data.length; i++) {
       flag++;
       var obj = data[i];
