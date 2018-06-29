@@ -502,7 +502,7 @@ function renderPost($row)
     $postID = $row['post_id'];
     $timeToShow = getTime($row['createdAt']);
     $postPic = $row['pic'];
-
+    $userLoggedIn = $_SESSION['user_id'];
 
     // Getting likes count for the current post
     $NoOflikes = queryFunc("SELECT count(*) as count from likes where post_id='$postID'");
@@ -514,15 +514,19 @@ function renderPost($row)
     $commentsCount = isRecord($commentCountResult);
 
     //Getting liker's IDs
-    $likers = queryFunc("SELECT user_id from likes where post_id='$postID'");
+    $likers = queryFunc("SELECT user_id from likes where post_id='$postID' and user_id = '$userLoggedIn'");
     $flag = false;
+    // if(isData($likers)){
+    //     while($liker = isRecord($likers)){
+    //         if($liker['user_id'] == $_SESSION['user_id']){
+    //             $flag = true;
+    //             break;
+    //         }
+    //     }
+    // }
+
     if(isData($likers)){
-        while($liker = isRecord($likers)){
-            if($liker['user_id'] == $_SESSION['user_id']){
-                $flag = true;
-                break;
-            }
-        }
+        $flag = true;
     }
 
     //Checking if you have liked the post?
