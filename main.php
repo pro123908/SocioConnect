@@ -47,12 +47,12 @@
   <!-- *********************** Recent Activities Ended ****************** -->
 
 
-
+<!-- ************************** Post Area ************************ -->
 <div class='post-area'>
   <div class='new-post'>
 <?php 
 // Add post functionality
-addPost(true,"");
+addPost(1); // loggedIn User's profile
 
 ?>
 </div>

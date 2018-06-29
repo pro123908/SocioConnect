@@ -12,9 +12,7 @@ if(!isset($_SESSION['user_id'])){
     $commentID = $_GET['id']; // ID of the deleted comment
 
     // Function called to delete the comment with given ID
-    if(deleteComment($commentID)){
-      echo 'Comment Deleted';
-    }
+    deleteComment($commentID);
   }
 
 ?>

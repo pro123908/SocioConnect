@@ -108,11 +108,13 @@ function showCommentField(id) {
 }
 
 function like(postID) {
+  
   ajaxCalls("GET", `like.php?like=${postID}`).then(function(result) {
     let value = result.trim();
     document.querySelector(
       `.like-count-${postID}`
-    ).innerHTML = `<i class='like-count-icon fas fa-thumbs-up'></i> ${value}`;
+    ).innerHTML = `<i class='like-count-icon fas fa-thumbs-up'></i> ${value}
+    <span class='tooltip tooltip-bottom count'></span>`;
 
     let icon = document.querySelector(`.post-${postID} .like-btn i`);
     icon.classList.toggle("blue");
@@ -266,10 +268,10 @@ function comment(postID, user, profilePic) {
   `;
 
       comment.value = "";
-      console.log(document.querySelector(`.comment-count-${postID}`));
+    
 
       //Adding in recent activities
-      var activity_type = 1;
+      var activity_type = 1; // Comment Activity
       // targeted Content
       var commentDetails = postID + " " + commentID;
       param = `target_id=${commentDetails}&activity_type=${activity_type}`;
@@ -290,48 +292,57 @@ function deletePost(postID) {
   });
 }
 
-function postPicSelected(container) {
+function postPicSelectedName() {
+  // Getting the name of pic selected
   var postPic = document.querySelector("input[name='post-pic']").files[0];
+  // Displaying name of selected pic
   document.querySelector(".pic-name").innerHTML = postPic.name;
-  console.log(postPic.name);
+  
 }
 
-function addPost(user_id) {
+function addPost(userID) {
   // Again the name suggests xD
 
-  // Getting post content
+  // Getting post input field
   var post = document.querySelector("textarea[name='post']");
+  // Getting pic input field
   var postPicData = document.querySelector("input[name='post-pic']");
+  // Getting pic uploaded
   var postPic = postPicData.files[0];
 
+  // Post Value
   var postContent = post.value;
 
-  console.log(postPic);
-
+  // Making sure that post is not empty by any means
   if (!(postContent.trim() == "") || postPic !== undefined) {
+
+    // Preparing form data to send
     var formData = new FormData();
+    //Pic Added
     formData.append("file", postPic);
+    // Post Value added
     formData.append("post", post.value);
 
-    // Setting paramters for POST request
-    // var param = `post=${post.value}&user_id=${user_id}`;
-
+    // Sending POST request to post.php
     ajaxCalls("POST", "post.php", formData, "pic").then(function(result) {
       // Adding new post to post Area
       // Adding post to the top not bottom. Clue xD
       document.querySelector(".posts").innerHTML =
         result + document.querySelector(".posts").innerHTML;
+      
+        // Clearing the post input
       document.querySelector("textarea[name='post']").value = " ";
 
       //Adding in recent activities
-      var activity_type = 2;
+      var activity_type = 2; // Post activity
       param = `activity_type=${activity_type}`;
       ajaxCalls("POST", `recentActivityAjax.php`, param).then(function(result) {
         addRecentActivity(result);
       });
     });
   }
-  // postPicData.value = '';
+  
+  // Removing the name of pic selected
   document.querySelector(".pic-name").innerHTML = "";
 }
 
@@ -485,33 +496,39 @@ function deleteComment(commentID) {
 function saveEditComment(postID, commentID, user, profilePic, time) {
   // Adding comment to post
   // Getting post ID,content and user who posted comment from form
+
+  // Getting edited comment
   var comment = document.querySelector(
     `input[name='comment_edit_${commentID}']`
   );
   // Setting up parameters for POST request to the file
   var param = `comment=${comment.value}&comment_id=${commentID}`;
-  console.log("PARAMS" + param);
+  
 
   ajaxCalls("POST", "commentEdit.php", param)
     .then(function(result) {
-      // Added Comment ID is returned in response
+      
       showComment(user, commentID, postID, profilePic, time, comment.value,true);
     })
     .catch(function(reject) {
       console.log("REJECTED");
     });
 
-  console.log(postID, commentID, user, profilePic);
+  
   return false;
 }
 
 function editComment(commentID, postID, profilePic, time) {
+  // Getting comment 
   var comment = document.querySelector(".comment-" + commentID);
+  // Getting user of that comment
   var user = comment.querySelector(".comment-user").innerHTML;
+  // Slicing name "Bilal Ahmad" from "Bilal Ahmad : "
   user = user.slice(0, user.length - 3);
+  // Getting old value of comment
   var commentValue = comment.querySelector(".comment-text").innerHTML;
   var currentComment = comment.innerHTML;
-  console.log(time);
+  
   comment.innerHTML = `
     <div class='comment-form'>
       <form onsubmit ="return saveEditComment(${postID},${commentID},'${user}','${profilePic}','${time}')"  method="post" id='commentFormEdit_${commentID}'>
@@ -523,18 +540,17 @@ function editComment(commentID, postID, profilePic, time) {
 }
 
 function showComment(user, commentID, postID, profilePic, time, comment,flag) {
-  console.log(time);
-  if(flag)
+  
+  if(flag) // Comment is edited
     var edited = "Edited";
   else
     var edited = "";   
+
+  // Inserting the comment
   document.querySelector(`.comment-${commentID}`).innerHTML = `
-  <div class='comment comment-${commentID}'>
-                
     <div class='user-image'>
       <img src='${profilePic}' class='post-avatar post-avatar-30' />
     </div>
-  
     <div class='comment-info'>
       <i class='tooltip-container far fa-trash-alt comment-delete' onclick='javascript:deleteComment(${commentID})'><span class='tooltip tooltip-right'>Remove</span></i>
       <i class="tooltip-container fas fa-edit comment-edit" onclick="javascript:editComment(${commentID},${postID},'${profilePic}','${time}')"><span class='tooltip tooltip-right'>Edit</span></i>
@@ -545,7 +561,7 @@ function showComment(user, commentID, postID, profilePic, time, comment,flag) {
         <span class='comment-edit-text'>${edited}</span>   
       </div>
     </div>
-  </div>
+  
   `;
 }
 //DP Animation Functions
@@ -693,24 +709,33 @@ function likesRefresh() {
 }
 
 function likeUsers(postID) {
+  console.log('Inside like USers');
   ajaxCalls("GET", `likeUsers.php?postID=${postID}`).then(function(result) {
     // Displaying search results
     document.querySelector(`.like-count-${postID} .count`).innerHTML = "";
     var data = JSON.parse(result);
     let flag = true;
 
+    console.log('Inside AJAX success');
+
     for (i = 0; i < data.length; i++) {
+      console.log('Inside loop');
       flag = false;
       var obj = data[i];
-      console.log("In");
+      
       document.querySelector(`.like-count-${postID} .count`).innerHTML += `${
         obj.name
       }<br>`;
     }
     if (flag) {
-      document
-        .querySelector(`.like-count-${postID} .count`)
-        .classList.remove("tooltip");
+      console.log('No records found');
+      // document
+      //   .querySelector(`.like-count-${postID} .count`)
+      //   .classList.remove("tooltip");
+
+        // This will remove all the classes from the element
+        // document.querySelector(`.like-count-${postID} .count`).className = 'count';
+      
     }
   });
 }
