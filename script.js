@@ -589,33 +589,25 @@ function getUsers(value, flag) {
   var searchFooter;
 
   ajaxCalls("POST", "search.php", param).then(function(result) {
+    if(flag == 0)
+      conflict = "-message";
+    else
+      conflict = "";
+
     if (result == "No") {
       // If no user found against search
-      document.querySelector(".search-result").style.display = "none";
+      document.querySelector(".search-result"+conflict).style.display = "none";
     } else {
-      // Displaying search results for normal search
-      if (flag == 1) {
-        document.querySelector(".search-result").style.display = "block";
-        document.querySelector(".search-result").innerHTML = result;
+      // Displaying search results
+      document.querySelector(".search-result"+conflict).style.display = "block";
+      document.querySelector(".search-result"+conflict).innerHTML = result;
 
-        if (value.length == 0) {
-          document.querySelector(".search-result").style.display = "none";
-          searchFooter = "";
-        } else {
-          searchFooter = `<a class='see-more' href='allSearchResults.php?query=${value}'>See more</a>`;
-          document.querySelector(".search-result").innerHTML += searchFooter;
-        }
-      }
-      // Displaying search results for searching in messages.php
-      else if (flag == 0) {
-        document.querySelector(".search-result-message").style.display =
-          "block";
-        document.querySelector(".search-result-message").innerHTML = result;
-
-        if (value.length == 0) {
-          document.querySelector(".search-result-message").style.display =
-            "none";
-        }
+      if (value.length == 0) {
+        document.querySelector(".search-result"+conflict).style.display = "none";
+        searchFooter = "";
+      } else {
+        searchFooter = `<a class='see-more' href='allSearchResults.php?query=${value}'>See more</a>`;
+        document.querySelector(".search-result").innerHTML += searchFooter;
       }
     }
   });
@@ -1066,6 +1058,10 @@ function toggleDropdown(type) {
 window.onclick = function(e) {
   if (e.srcElement.className != "search-input") {
     document.querySelector(".search-result").style.display = "none";
+  }
+
+  if (e.srcElement.className != "search-result-message") {
+    document.querySelector(".search-result-message").style.display = "none";
   }
 
   // Will loop through the array of dropdowns

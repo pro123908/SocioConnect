@@ -1581,7 +1581,9 @@ DELIMETER;
                 </a>
             </div>
 DELIMETER;
-                    echo $user;
+                    //Don't show user logged in, in search results for chats
+                    if($row['user_id'] != $_SESSION['user_id'])
+                        echo $user;
                 }
             }
         } else {
