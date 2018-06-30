@@ -578,6 +578,13 @@ function changePic() {
   formPic.classList.toggle("hidden");
 }
 
+function showEditImageButton(){
+  document.querySelector(".edit-profile-pic").classList.remove("hidden");
+}
+
+function hideEditImageButton(){
+  document.querySelector(".edit-profile-pic").classList.add("hidden");
+}
 //Search Function
 function getUsers(value, flag) {
   // flag values :

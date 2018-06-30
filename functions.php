@@ -1628,8 +1628,12 @@ function profilePic($id)
     <div class='user-cover'>
         <div class='user-pic'>
             <span class='user-pic-container'>
-            <img src='{$queryUser['profile_pic']}' onclick="showImage()" id="profile_picture"/>
+            <img src='{$queryUser['profile_pic']}' onclick="showImage()" onmouseover ="showEditImageButton()" onmouseout ="hideEditImageButton()" id="profile_picture"/>
             <span>
+            <form action="javascript:uploadNewProfilePic()" method="post" class="edit-profile-pic hidden">
+                <input type="file" name="dp">
+                <input type="submit" name="submit" value="submit">
+            </form>
         </div>
 PROFILE;
     if (isFriend($id) || $_SESSION['user_id'] == $id) {
