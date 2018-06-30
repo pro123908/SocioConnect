@@ -1368,7 +1368,6 @@ function getRecentChatsUserIds()
 {
     // Getting IDS of users you recently chat with
     $userLoggedIn = $_SESSION['user_id']; 
-    $check = $_SESSION['user_id'] . " ";
     $recentConvos = array();
 
     //Getting ids of all the users where messages are received from
@@ -1467,7 +1466,8 @@ function showRecentChats()
             $at =  getTime($lastMessageDetails['dateTime']); // Message Time
 
             $user = <<<DELIMETER
-            <a href='messages.php?id={$recentUserIds[$counter]}' class='recent-user recent-user-{$recentUserIds[$counter]}'>
+            <div class='recent-user-div recent-user-{$recentUserIds[$counter]}'>
+            <a href='messages.php?id={$recentUserIds[$counter]}' class='recent-user'>
             
                 <span class='recent-user-image'>
                     <img src='{$recentProfilePics[$counter]}' class='post-avatar post-avatar-40' />
@@ -1477,10 +1477,11 @@ function showRecentChats()
                     <span class='recent-message-text'>{$from}{$msg}</span>
                     <span class='recent-message-time'>{$at}</span>
                 </span>
-                <span>
-                <i class='tooltip-container far fa-trash-alt  comment-delete' onclick='javascript:deleteConvo({$recentUserIds[$counter]})'><span class='tooltip tooltip-left'>Delete</span></i>
-                </span>
             </a> 
+            <span class='chat-del-button'  style="float: right">
+                <i class='tooltip-container far fa-trash-alt  comment-delete' onclick='javascript:deleteConvo({$recentUserIds[$counter]})'><span class='tooltip tooltip-left'>Delete</span></i>
+            </span>
+            </div>
 DELIMETER;
             echo $user;
             $counter++;

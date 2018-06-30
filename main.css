@@ -1051,13 +1051,22 @@ input[type="file"]:hover {
 .recent-user {
   display: flex;
   align-items: center;
-  margin-bottom: 15px;
+
   padding: 10px;
   cursor: pointer;
   text-decoration: none;
+  width: 90%;
 }
 
-.recent-user:hover {
+.recent-user-div {
+  display: flex;
+  /* margin-bottom: 15px; */
+  padding: 10px; 
+  align-items: center;
+ 
+}
+
+.recent-user-div:hover {
   background-color: #f6f6f6;
 }
 
