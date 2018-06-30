@@ -5,10 +5,10 @@
     }
 
     if (isset($_POST['postID'])) {
-
-         $post_body = $_POST['postContent'];
-         $post_id = $_POST['postID'];
-         $action = $_POST['action'];
+        global $connection;
+        $post_body = mysqli_real_escape_string($connection, $_POST['postContent']);
+        $post_id = $_POST['postID'];
+        $action = $_POST['action'];
 
         if($action == "new" ){
             $name = $_FILES['file']['name'];

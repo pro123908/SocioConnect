@@ -12,6 +12,8 @@ require_once('functions.php');
         }
         else{
             showRecentChats();
+            if($_SESSION['last_message_retrieved_for_recent_convos'] == 0)
+                echo "Reload the page";
         }
     }
 

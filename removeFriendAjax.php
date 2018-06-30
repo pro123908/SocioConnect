@@ -10,18 +10,27 @@ $sorted_friends = array();
 $counter = 0;
 removeFriend($_POST['friendId'],"no redirection"); 
 $friends_query = queryFunc("SELECT * from friends where user1 = ".$_SESSION['user_id']." OR user2 = ".$_SESSION['user_id']);
-if(isRecord($friends_query)){
+if(isData($friends_query)){
     while($row = isRecord($friends_query)){
         $friend_id = ($_SESSION['user_id'] == $row['user1']) ? $row['user2'] : $row['user1'] ;
-        $friend = queryFunc("SELECT user_id,profile_pic,CONCAT(first_name,' ',last_name) as name,active_ago FROM users WHERE user_id='$friend_id'");   
+        $friend = queryFunc("SELECT user_id,profile_pic,active_ago ,CONCAT(first_name,' ',last_name) as name FROM users WHERE user_id='$friend_id'");   
         $friend = isRecord($friend);
-        $time = getTime($friend['active_ago']);
-    
+       
         array_push($friends,$friend);
       }
-      sortArrayByKey($friends,false);
+      if(count($friends) > 1)
+        sortArrayByKey($friends,false);
       foreach ($friends as $friend){
-        $sorted_friends[$counter] = array('user_id'=>$friend['user_id'],'name'=>$friend['name'],'profile_pic'=>$friend['profile_pic'],'time' => $time);
+        $time = activeAgo($friend['user_id']);
+
+        $stateClass = 'state-off';
+
+        if ($time == 'Just Now') {
+            $time = 'Now';
+            $stateClass = 'state-on';
+        }
+
+        $sorted_friends[$counter] = array('user_id'=>$friend['user_id'],'name'=>$friend['name'],'profile_pic'=>$friend['profile_pic'],'time' => $time,'state' => $stateClass);
         $counter += 1;
         }
     }

@@ -594,6 +594,13 @@ function changePic() {
   formPic.classList.toggle("hidden");
 }
 
+function showEditImageButton(){
+  document.querySelector(".edit-profile-pic").classList.remove("hidden");
+}
+
+function hideEditImageButton(){
+  document.querySelector(".edit-profile-pic").classList.add("hidden");
+}
 //Search Function
 function getUsers(value, flag) {
   // flag values :
@@ -605,33 +612,25 @@ function getUsers(value, flag) {
   var searchFooter;
 
   ajaxCalls("POST", "search.php", param).then(function(result) {
+    if(flag == 0)
+      conflict = "-message";
+    else
+      conflict = "";
+
     if (result == "No") {
       // If no user found against search
-      document.querySelector(".search-result").style.display = "none";
+      document.querySelector(".search-result"+conflict).style.display = "none";
     } else {
-      // Displaying search results for normal search
-      if (flag == 1) {
-        document.querySelector(".search-result").style.display = "block";
-        document.querySelector(".search-result").innerHTML = result;
+      // Displaying search results
+      document.querySelector(".search-result"+conflict).style.display = "block";
+      document.querySelector(".search-result"+conflict).innerHTML = result;
 
-        if (value.length == 0) {
-          document.querySelector(".search-result").style.display = "none";
-          searchFooter = "";
-        } else {
-          searchFooter = `<a class='see-more' href='allSearchResults.php?query=${value}'>See more</a>`;
-          document.querySelector(".search-result").innerHTML += searchFooter;
-        }
-      }
-      // Displaying search results for searching in messages.php
-      else if (flag == 0) {
-        document.querySelector(".search-result-message").style.display =
-          "block";
-        document.querySelector(".search-result-message").innerHTML = result;
-
-        if (value.length == 0) {
-          document.querySelector(".search-result-message").style.display =
-            "none";
-        }
+      if (value.length == 0) {
+        document.querySelector(".search-result"+conflict).style.display = "none";
+        searchFooter = "";
+      } else {
+        searchFooter = `<a class='see-more' href='allSearchResults.php?query=${value}'>See more</a>`;
+        document.querySelector(".search-result").innerHTML += searchFooter;
       }
     }
   });
@@ -822,30 +821,28 @@ function refreshRecentConvos() {
       // console.log(data);
       for (i = data.length - 1; i >= 0; i--) {
         var obj = data[i];
-        if (
-          document.querySelector(".recent-chats .recent-user-" + obj.fromID)
-        ) {
-          document.querySelector(
-            ".recent-chats .recent-user-" + obj.fromID
-          ).style.display =
-            "none";
+        if (document.querySelector(".recent-chats .recent-user-" + obj.fromID)) {
+          document.querySelector(".recent-chats").removeChild(document.querySelector(".recent-chats .recent-user-" + obj.fromID));
         }
         var recentMessage = `
-        <a href='messages.php?id=${
-          obj.fromID
-        }' class='recent-user recent-user-${obj.fromID}'>
-          <span class='recent-user-image'>
-            <img src='${obj.pic}' class='post-avatar post-avatar-40' />
-          </span>
-          <span class='recent-message-info'>
-            <span class="recent-username">${obj.partner}</span>
-            <span class='recent-message-text'>${obj.from} ${obj.msg}</span>
-            <span class='recent-message-time'>${obj.at}</span>
-          </span>
-          <i class='tooltip-container far fa-trash-alt  comment-delete' onclick='javascript:deleteConvo(${
+        <div class='recent-user-div recent-user-${obj.fromID}'>
+          <a href='messages.php?id=${
             obj.fromID
-          })'><span class='tooltip tooltip-left'>Delete</span></i>
-        </a>
+          }' class='recent-user'>
+            <span class='recent-user-image'>
+              <img src='${obj.pic}' class='post-avatar post-avatar-40' />
+            </span>
+            <span class='recent-message-info'>
+              <span class="recent-username">${obj.partner}</span>
+              <span class='recent-message-text'>${obj.from} ${obj.msg}</span>
+              <span class='recent-message-time'>${obj.at}</span>
+            </span>
+          </a>
+
+          <span class='chat-del-button'  style="float: right">
+            <i class='tooltip-container far fa-trash-alt  comment-delete' onclick='javascript:deleteConvo(${obj.fromID})'><span class='tooltip tooltip-left'>Delete</span></i>
+          </span>
+        </div>
         `;
         if (document.querySelector(".recent-chats")) {
           document.querySelector(".recent-chats").innerHTML =
@@ -863,13 +860,12 @@ function deleteConvo(id) {
 
   var url = window.location.href; // URL of the current window
   var openConvoId = url.slice(46); // Will give the ID of the user whom you are chatting with
-
   let param = `id=${id}&urlID=${openConvoId}`;
-
   ajaxCalls("POST", `deleteConvoAjax.php`, param).then(function(response) {
+    console.log(response);
     //If response is not a redirection, this would be changed if this comment is removed from messags.php
     if (response == "Reload the page") {
-      window.location = "messages.php"; // Redirect the user to message Page
+      window.location.href = "messages.php"; // Redirect the user to message Page
     } else {
       document.querySelector(".recent-chats").innerHTML = response;
     }
@@ -937,7 +933,7 @@ function removeFriend(id) {
               <a href="timeline.php?visitingUserID=${
                 obj.user_id
               }" class='friend-text'>${obj.name}</a>   
-              <span class='state-off'>${obj.time}</span>         
+              <span class='${obj.state}'>${obj.time}</span>         
             </div>
             <div class='friend-action'>
             <div>
@@ -953,17 +949,18 @@ function removeFriend(id) {
       if (flag == 10 && url != "http://localhost/socioConnect/requests.php")
         break;
     }
-    if (flag == 0) {
-      document.querySelector(".show-more-friends").innerHTML =
-        "<p class='see-more'>No Friends To Show</p>";
-    } else if (flag == 10) {
-      document.querySelector(".show-more-friends").innerHTML =
-        "<a href='requests.php' class='see-more'><span>See more</span></a>";
-    } else {
-      document.querySelector(".show-more-friends").innerHTML =
-        "<p class='see-more'>No More Friends To Show</p>";
+    if(url != "http://localhost/socioConnect/requests.php"){
+      if (flag == 0) {
+        document.querySelector(".show-more-friends").innerHTML =
+          "<p class='see-more'>No Friends To Show</p>";
+      } else if (flag == 10) {
+        document.querySelector(".show-more-friends").innerHTML =
+          "<a href='requests.php' class='see-more'><span>See more</span></a>";
+      } else {
+        document.querySelector(".show-more-friends").innerHTML =
+          "<p class='see-more'>No More Friends To Show</p>";
+      }
     }
-    // }
   });
 }
 
@@ -1093,6 +1090,10 @@ function toggleDropdown(type) {
 window.onclick = function(e) {
   if (e.srcElement.className != "search-input") {
     document.querySelector(".search-result").style.display = "none";
+  }
+
+  if (e.srcElement.className != "search-result-message") {
+    document.querySelector(".search-result-message").style.display = "none";
   }
 
   // Will loop through the array of dropdowns

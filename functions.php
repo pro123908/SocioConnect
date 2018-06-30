@@ -513,7 +513,7 @@ function renderPost($row)
     $postID = $row['post_id'];
     $timeToShow = getTime($row['createdAt']);
     $postPic = $row['pic'];
-
+    $userLoggedIn = $_SESSION['user_id'];
 
     // Getting likes count for the current post
     $NoOflikes = queryFunc("SELECT count(*) as count from likes where post_id='$postID'");
@@ -533,15 +533,19 @@ function renderPost($row)
     $commentsCount = isRecord($commentCountResult);
 
     //Getting liker's IDs
-    $likers = queryFunc("SELECT user_id from likes where post_id='$postID'");
+    $likers = queryFunc("SELECT user_id from likes where post_id='$postID' and user_id = '$userLoggedIn'");
     $flag = false;
+    // if(isData($likers)){
+    //     while($liker = isRecord($likers)){
+    //         if($liker['user_id'] == $_SESSION['user_id']){
+    //             $flag = true;
+    //             break;
+    //         }
+    //     }
+    // }
+
     if(isData($likers)){
-        while($liker = isRecord($likers)){
-            if($liker['user_id'] == $_SESSION['user_id']){
-                $flag = true;
-                break;
-            }
-        }
+        $flag = true;
     }
 
     //Checking if you have liked the post?
@@ -1383,7 +1387,6 @@ function getRecentChatsUserIds()
 {
     // Getting IDS of users you recently chat with
     $userLoggedIn = $_SESSION['user_id']; 
-    $check = $_SESSION['user_id'] . " ";
     $recentConvos = array();
 
     //Getting ids of all the users where messages are received from
@@ -1482,7 +1485,8 @@ function showRecentChats()
             $at =  getTime($lastMessageDetails['dateTime']); // Message Time
 
             $user = <<<DELIMETER
-            <a href='messages.php?id={$recentUserIds[$counter]}' class='recent-user recent-user-{$recentUserIds[$counter]}'>
+            <div class='recent-user-div recent-user-{$recentUserIds[$counter]}'>
+            <a href='messages.php?id={$recentUserIds[$counter]}' class='recent-user'>
             
                 <span class='recent-user-image'>
                     <img src='{$recentProfilePics[$counter]}' class='post-avatar post-avatar-40' />
@@ -1492,10 +1496,11 @@ function showRecentChats()
                     <span class='recent-message-text'>{$from}{$msg}</span>
                     <span class='recent-message-time'>{$at}</span>
                 </span>
-                <span>
-                <i class='tooltip-container far fa-trash-alt  comment-delete' onclick='javascript:deleteConvo({$recentUserIds[$counter]})'><span class='tooltip tooltip-left'>Delete</span></i>
-                </span>
             </a> 
+            <span class='chat-del-button'  style="float: right">
+                <i class='tooltip-container far fa-trash-alt  comment-delete' onclick='javascript:deleteConvo({$recentUserIds[$counter]})'><span class='tooltip tooltip-left'>Delete</span></i>
+            </span>
+            </div>
 DELIMETER;
             echo $user;
             $counter++;
@@ -1595,7 +1600,9 @@ DELIMETER;
                 </a>
             </div>
 DELIMETER;
-                    echo $user;
+                    //Don't show user logged in, in search results for chats
+                    if($row['user_id'] != $_SESSION['user_id'])
+                        echo $user;
                 }
             }
         } else {
@@ -1640,8 +1647,12 @@ function profilePic($id)
     <div class='user-cover'>
         <div class='user-pic'>
             <span class='user-pic-container'>
-            <img src='{$queryUser['profile_pic']}' onclick="showImage()" id="profile_picture"/>
+            <img src='{$queryUser['profile_pic']}' onclick="showImage()" onmouseover ="showEditImageButton()" onmouseout ="hideEditImageButton()" id="profile_picture"/>
             <span>
+            <form action="javascript:uploadNewProfilePic()" method="post" class="edit-profile-pic hidden">
+                <input type="file" name="dp">
+                <input type="submit" name="submit" value="submit">
+            </form>
         </div>
 PROFILE;
     if (isFriend($id) || $_SESSION['user_id'] == $id) {
