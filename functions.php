@@ -1640,7 +1640,7 @@ function profilePic($id)
     if($id == $_SESSION['user_id']){
         $editCover =<<<COVER
 
-        <form onchange='return editCoverPicture()'>
+        <form onchange='return editCoverPicture()' class="edit-cover-pic">
         <div class='upload-btn-wrapper'>
         <button class='pic-upload-btn'><i class='far fa-image'></i></button>
         <input type='file' name='cover-pic'/>
@@ -1679,10 +1679,22 @@ PROFILE;
     }
     $content .=<<<PROFILE
     </div>
-    <div class='user-info'>
-    <h3>{$name}</h3>
-    <span>{$queryUser['email']}</span>
+    <div class='user-timeline-tabs'>
+
+    <div class='friends-link'>
+        <a href='requests.php' class='friends-link-button'>Friends</a>
     </div>
+
+        <div class='user-info'>
+        <h3>{$name}</h3>
+        <span>{$queryUser['email']}</span>
+        </div>
+
+        <div class='newsfeed-link'>
+        <a href='main.php' class='newsfeed-link-button'>Newsfeed</a>
+    </div>
+    </div>
+    
 PROFILE;
     
     echo $content;
