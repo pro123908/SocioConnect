@@ -1637,6 +1637,14 @@ function profilePic($id)
     $name = $queryUser['first_name'].' '.$queryUser['last_name'];
     $coverPic = $queryUser['cover_pic'];
 
+    if($coverPic != NULL){
+        $coverStyle =<<<DATA
+        background-image : url({$coverPic})
+DATA;
+    }else{
+        $coverStyle = '';
+    }
+
     if($id == $_SESSION['user_id']){
         $editCover =<<<COVER
 
@@ -1654,7 +1662,7 @@ COVER;
     }
 
     $content =<<<PROFILE
-    <div class='user-cover' style='background-image:url("$coverPic")'>
+    <div class='user-cover' style='$coverStyle'>
         $editCover
         <div class='user-pic'>
             <span class='user-pic-container' onmouseover ="showEditImageButton()" onmouseout ="hideEditImageButton()">

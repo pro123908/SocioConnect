@@ -925,7 +925,7 @@ input[type="file"]:hover {
 }
 
 .user-cover {
-  /* background-color: #3578e5; */
+  background: linear-gradient(to bottom, #083023, #1f4b49);
   background-repeat: no-repeat;
   background-size: cover;
   height: 400px;
