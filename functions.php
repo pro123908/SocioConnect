@@ -672,12 +672,30 @@ function timeString($time)
         }
     }
     // Time in days
-    elseif ($time > 86399) {
+    elseif ($time > 86399 && $time < 604800) {
         // if it is just one day
         if (($time / 86400) < 2) {
             return floor($time / 86400) . " Day Ago";
         } else {
             return floor($time / 86400) . " Days Ago";
+        }
+    }
+    // Time in weeks
+    elseif ($time > 604799 && $time < 2628000) {
+        // if it is just one week
+        if (($time / 604800) < 2) {
+            return floor($time / 604800) . " Week Ago";
+        } else {
+            return floor($time / 604800) . " Weeks Ago";
+        }
+    }
+    // Time in months
+    elseif ($time > 2627999) {
+        // if it is just one month
+        if (($time / 2628000) < 2) {
+            return floor($time / 2628000) . " Month Ago";
+        } else {
+            return floor($time / 2628000) . " Months Ago";
         }
     }
 }
