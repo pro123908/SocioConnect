@@ -603,11 +603,11 @@ function changePic() {
 }
 
 function showEditImageButton() {
-  document.querySelector(".edit-profile-pic").classList.remove("hidden");
+  // document.querySelector(".edit-profile-pic").classList.remove("hidden");
 }
 
 function hideEditImageButton() {
-  document.querySelector(".edit-profile-pic").classList.add("hidden");
+  // document.querySelector(".edit-profile-pic").classList.add("hidden");
 }
 //Search Function
 function getUsers(value, flag) {
@@ -1116,3 +1116,46 @@ window.onclick = function (e) {
 };
 
 /* ------------------------------------------------------------------------------ */
+
+
+function editCoverPicture(){
+  console.log('here');
+
+  var coverPicData = document.querySelector("input[name='cover-pic']");
+
+  var coverPic = coverPicData.files[0];
+
+  console.log(coverPic);
+
+  var formData = new FormData();
+  formData.append("cover_pic", coverPic);
+  
+
+  ajaxCalls('POST','uploadpic.php',formData,'pic').then(function(result){
+    console.log(result);
+      document.querySelector('.user-cover').style.backgroundImage = `url(${result})`;
+    
+  });
+
+}
+
+
+function editProfilePicture(){
+  console.log('Proifle');
+
+  var ProfilePicData = document.querySelector("input[name='profile-pic']");
+
+  var ProfilePic = ProfilePicData.files[0];
+
+  console.log(ProfilePic);
+
+  var formData = new FormData();
+  formData.append("profile_pic", ProfilePic);
+  
+
+  ajaxCalls('POST','uploadpic.php',formData,'pic').then(function(result){
+    console.log(result);
+     document.querySelector('#profile_picture').src = result;
+    
+  });
+}

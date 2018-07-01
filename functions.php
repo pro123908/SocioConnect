@@ -1653,16 +1653,37 @@ function profilePic($id)
     $queryResult = queryFunc("SELECT * FROM users WHERE user_id='$id'");
     $queryUser = isRecord($queryResult);
     $name = $queryUser['first_name'].' '.$queryUser['last_name'];
+    $coverPic = $queryUser['cover_pic'];
+
+    if($id == $_SESSION['user_id']){
+        $editCover =<<<COVER
+
+        <form onchange='return editCoverPicture()' class="edit-cover-pic">
+        <div class='upload-btn-wrapper'>
+        <button class='pic-upload-btn'><i class='far fa-image'></i></button>
+        <input type='file' name='cover-pic'/>
+        <span class='pic-name'></span>
+        </div>   
+        </form>
+
+COVER;
+    }else{
+        $editCover = '';
+    }
 
     $content =<<<PROFILE
-    <div class='user-cover'>
+    <div class='user-cover' style='background-image:url("$coverPic")'>
+        $editCover
         <div class='user-pic'>
-            <span class='user-pic-container'>
-            <img src='{$queryUser['profile_pic']}' onclick="showImage()" onmouseover ="showEditImageButton()" onmouseout ="hideEditImageButton()" id="profile_picture"/>
-            <span>
-            <form action="javascript:uploadNewProfilePic()" method="post" class="edit-profile-pic hidden">
-                <input type="file" name="dp">
-                <input type="submit" name="submit" value="submit">
+            <span class='user-pic-container' onmouseover ="showEditImageButton()" onmouseout ="hideEditImageButton()">
+            <img src='{$queryUser['profile_pic']}' onclick="showImage()"  id="profile_picture"/>
+            </span>
+            <form onchange="return editProfilePicture()" method="post" class="edit-profile-pic">
+                <div class='upload-btn-wrapper'>
+                <button class='pic-upload-btn'><i class='far fa-image'></i></button>
+                <input type='file' name='profile-pic'/>
+                <span class='pic-name'></span>
+            </div>   
             </form>
         </div>
 PROFILE;
@@ -1676,10 +1697,22 @@ PROFILE;
     }
     $content .=<<<PROFILE
     </div>
-    <div class='user-info'>
-    <h3>{$name}</h3>
-    <span>{$queryUser['email']}</span>
+    <div class='user-timeline-tabs'>
+
+    <div class='friends-link'>
+        <a href='requests.php' class='friends-link-button'>Friends</a>
     </div>
+
+        <div class='user-info'>
+        <h3>{$name}</h3>
+        <span>{$queryUser['email']}</span>
+        </div>
+
+        <div class='newsfeed-link'>
+        <a href='main.php' class='newsfeed-link-button'>Newsfeed</a>
+    </div>
+    </div>
+    
 PROFILE;
     
     echo $content;
@@ -1850,4 +1883,16 @@ function countDropdownDisplay($value,$place){
        echo "<script>document.querySelector('.$place-count').style.backgroundColor='red';</script>";
        echo $value;
       }
+}
+
+function coverPicChange($pic){
+
+    $userID = $_SESSION['user_id'];
+    $queryCoverPic = queryFunc("UPDATE users set cover_pic='$pic' where user_id=$userID");
+}
+
+function profilePicChange($pic){
+
+    $userID = $_SESSION['user_id'];
+    $queryCoverPic = queryFunc("UPDATE users set profile_pic='$pic' where user_id=$userID");
 }
