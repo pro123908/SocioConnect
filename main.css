@@ -5,7 +5,7 @@
 }
 
 .show {
-  display: block;
+  /* display: block; */
 }
 
 .center {
@@ -312,6 +312,9 @@ body {
 /* ------------------------- Login Page Ended ------------------------------ */
 
 
+
+
+
 /* Content Area */
 .content-area {
   display: flex;
@@ -321,10 +324,14 @@ body {
 }
 
 
-/* --------------------- Notification and Recent Activity Styling ------------------- */
 
+.post-area {
+  flex: 2;
+  margin: 0px 40px;
+  /* background-color: #edf2f6; */
+}
 
-.notification-area,.recent-activities-area {
+.friends-area {
   flex: 1;
   border-radius: 5px;
   border: 1px solid #e6ecf5;
@@ -332,30 +339,7 @@ body {
   height: max-content;
 }
 
-.notification-display,.recent-activities-display {
-  padding: 50px;
-  background-color: #fff;
-}
-
-.notification-display h1,.recent-activities-display h1{
-  margin-bottom: 30px;
-}
-
-.notification,.recent-activity{
-  /* display: flex;
-  align-items: center; */
-  margin-bottom: 15px;
-  padding: 10px;
-  cursor: pointer;
-  text-decoration: none;
-  display: block;
-}
-
-.notification-image , .recent-activity-image{
-  float: left;
-}
-
-.notification-heading,.recent-activities-heading {
+.friend-heading {
   padding: 10px;
   text-align: center;
   font-weight: bold;
@@ -363,71 +347,93 @@ body {
   color: #fff;
 }
 
-.notification:hover,.recent-activity:hover {
+.friend {
+  display: flex;
+  align-items: center;
+  padding: 5px 10px;
+  margin-bottom: 5px;
+  cursor: pointer;
+}
+
+.friend:hover {
   background-color: #f6f6f6;
 }
 
-.notification-info,.recent-activity-info{
+.friend-image {
+  float: left;
+}
+
+.remove-friend {
+  float: right;
+}
+
+.tooltip-container {
+  position: relative;
   display: inline-block;
 }
 
-/* CSS Precedence Rule here */
-.notification-info .deleted-noti,.recent-activity-info .deleted-activity {
-  color: red;
+.tooltip {
+  visibility: hidden;
+  font-size: 12px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px;
 }
 
-.deleted-noti,.deleted-activity{
-  cursor: not-allowed;
+.tooltip-bottom {
+  position: absolute;
+  z-index: 1;
+  top: 100%;
+  left: 50%;
+  margin-left: -40px;
+  margin-top: 15px;
+  width: 110px;
 }
 
-.deleted-noti:hover ,.deleted-activity:hover{
-  background-color: #fff;
+.tooltip-right {
+  position: absolute;
+  z-index: 1;
+  top: -5px;
+  left: 105%;
+  margin-left: 5px;
+  width: 80px;
 }
 
-.noSeen {
-  background-color: #f7f380;
+.tooltip-left {
+  position: absolute;
+  z-index: 1;
+  top: -2px;
+  right: 105%;
+  margin-left: 5px;
+  width: 60px;
+  text-overflow: clip;
 }
 
-.notification-text,.recent-activity-text {
-  font-size: 11px;
-  text-decoration: none;
-  color: #000;
+.tooltip-container:hover .tooltip {
+  visibility: visible;
+}
+
+.remove-friend i {
+  color: #f97e4d;
+}
+
+.friend-action {
+  flex: 1;
+}
+
+.friend-info {
+  flex: 8;
+}
+
+.friend-text {
+  font-size: 12px;
+  color: black;
   display: block;
+  text-decoration: none;
 }
 
-.noti-icon,.recent-activity-icon  {
-  font-size: 10px;
-  color: #000;
-  display: inline-block;
-  margin-right: 5px;
-}
-
-.noti-time,.recent-activity-time {
-  font-size: 10px;
-  color: #90949c;
-  display: inline-block;
-}
-
-.notification-info,.recent-activity-info {
-  max-width: 80%;
-}
-
-/* ---------------- Notification and Recent Activity Ended ------------------- */
-
-
-
-
-
-/* --------------------- Post Area ------------------------------ */
-
-.post-area {
-  flex: 2;
-  margin: 0px 40px;
-  
-}
-
-
-/* Add Post Form */
 .new-post {
   background-color: #fff;
   border-radius: 5px;
@@ -486,9 +492,13 @@ body {
 
 .pic-upload-btn {
   border: none;
-  background-color: #fff;
+  /* border: 2px solid gray; */
+  /* color: gray; */
+  background-color: white;
   padding: 8px 20px;
+  /* border-radius: 8px; */
   font-size: 30px;
+  /* font-weight: bold; */
 }
 
 .pic-upload-btn:hover {
@@ -515,7 +525,7 @@ input[type="file"]:hover {
 
 .post {
   background-color: #fff;
-  
+  text-align: left;
   padding: 20px;
   border-radius: 5px;
   border: 1px solid #e6ecf5;
@@ -548,10 +558,6 @@ input[type="file"]:hover {
 }
 
 .post p {
-  
-}
-
-.actual-post{
   margin: 40px 10px 10px 10px;
 }
 
@@ -635,19 +641,35 @@ input[type="file"]:hover {
   margin-bottom: 10px;
 }
 
-.edit-post-save-btn,.edit-post-cancel-btn{
-  display: inline-block;
-  width: 100px;
+.edit-post{
+    background-color: #f7f7f7;
+    padding: 20px;
+    margin: 10px;
+}
+
+.edit-post-button-container{
+  margin: 10px;
   text-align: center;
-  margin: 15px 100px 10px 5px;
-  text-decoration: none;
-  color: #fff;
-  padding: 10px 20px;
-  border-radius: 5px;
-  background-color: #ff763a;
+}
+
+.edit-post-save-btn,.edit-post-cancel-btn{
+    display: inline-block;
+    width: 30%;
+    text-align: center;
+    text-decoration: none;
+    color: #000;
+    padding: 10px 20px;
+    border: 1px solid #d6cece;
+    border-radius: 10px;
+    background-color: #ffffff;
+    margin-right: 10px;
+}
+
+.edit-post-save-btn:hover,.edit-post-cancel-btn:hover{
+  background-color: #edf2f6;
 }
 .edit-post-cancel-btn{
-  margin: 15px 5px 10px 120px;
+  
 }
 
 .radio-buttons-edit{
@@ -665,7 +687,7 @@ input[type="file"]:hover {
   display: flex;
 }
 
-.comment .user-image {
+.user-image {
   margin-top: 5px;
 }
 
@@ -713,12 +735,20 @@ input[type="file"]:hover {
 
 .comment-form {
   margin-top: 20px;
+  display: flex;
+}
+.comment-form form{
+  flex: 1;
+}
+
+.edit-comment-form{
+
 }
 
 .comment-form input[type='text'] {
   border: 1px solid #a3afb9;
   padding: 10px;
-  width: 100%;
+  width: 90%;
   border-radius: 10px;
 }
 
@@ -734,114 +764,6 @@ input[type="file"]:hover {
   margin-left: 5px;
 }
 
-
-
-/* --------------------- Post Area Endned ------------------------------ */ 
-
-
-
-.friends-area {
-  flex: 1;
-  border-radius: 5px;
-  border: 1px solid #e6ecf5;
-  background-color: #fff;
-  height: max-content;
-}
-
-.friend-heading {
-  padding: 10px;
-  text-align: center;
-  font-weight: bold;
-  background-color: #ff763a;
-  color: #fff;
-}
-
-.friend {
-  display: flex;
-  align-items: center;
-  padding: 5px 10px;
-  margin-bottom: 5px;
-  cursor: pointer;
-}
-
-.friend:hover {
-  background-color: #f6f6f6;
-}
-
-.friend-image {
-  float: left;
-}
-
-.remove-friend {
-  float: right;
-}
-
-.tooltip-container {
-  position: relative;
-  display: inline-block;
-}
-
-.tooltip {
-  position: absolute;
-  z-index: 1;
-  visibility: hidden;
-  font-size: 12px;
-  background-color: #000;
-  color: #fff;
-  text-align: center;
-  border-radius: 6px;
-  padding: 5px;
-}
-
-.tooltip-bottom {
-  top: 100%;
-  left: 50%;
-  margin-left: -40px;
-  margin-top: 15px;
-  width: 110px;
-}
-
-.tooltip-right {
-  top: -5px;
-  left: 105%;
-  margin-left: 5px;
-  width: 80px;
-}
-
-.tooltip-left {
-  top: -2px;
-  right: 105%;
-  margin-left: 5px;
-  width: 60px;
-  text-overflow: clip;
-}
-
-.tooltip-container:hover .tooltip {
-  visibility: visible;
-}
-
-.remove-friend i {
-  color: #f97e4d;
-}
-
-.friend-action {
-  flex: 1;
-}
-
-.friend-info {
-  flex: 8;
-}
-
-.friend-text {
-  font-size: 12px;
-  color: #000;
-  display: block;
-  text-decoration: none;
-}
-
-
-
-
 .red {
   color: red;
 }
@@ -850,6 +772,97 @@ input[type="file"]:hover {
   color: #3578e5;
 }
 
+/* --------------------- Notification and Recent Activity Styling ------------------- */
+
+
+.notification-area,.recent-activities-area {
+  flex: 1;
+  border-radius: 5px;
+  border: 1px solid #e6ecf5;
+  background-color: #fff;
+  height: max-content;
+}
+
+.notification-display,.recent-activities-display {
+  padding: 50px;
+  background-color: #fff;
+}
+
+.notification-display h1,.recent-activities-display h1{
+  margin-bottom: 30px;
+}
+
+.notification,.recent-activity{
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+  padding: 10px;
+  cursor: pointer;
+  text-decoration: none;
+  display: block;
+}
+
+.notification-image , .recent-activity-image{
+  float: left;
+}
+
+.notification-heading,.recent-activities-heading {
+  padding: 10px;
+  text-align: center;
+  font-weight: bold;
+  background-color: #ff763a;
+  color: #fff;
+}
+
+.notification:hover,.recent-activity:hover {
+  background-color: #f6f6f6;
+}
+
+.notification-info,.recent-activity-info{
+  display: inline-block;
+}
+
+.notification-info .deleted-noti,.recent-activity-info .deleted-activity {
+  color: red;
+}
+
+.deleted-noti,.deleted-activity{
+  cursor: not-allowed;
+}
+
+.deleted-noti:hover ,.deleted-activity:hover{
+  background-color: #fff;
+}
+
+.noSeen {
+  background-color: #f7f380;
+}
+
+.notification-text,.recent-activity-text {
+  font-size: 11px;
+  text-decoration: none;
+  color: black;
+  display: block;
+}
+
+.noti-icon,.recent-activity-icon  {
+  font-size: 10px;
+  color: #000;
+  display: inline-block;
+  margin-right: 5px;
+}
+
+.noti-time,.recent-activity-time {
+  font-size: 10px;
+  color: #90949c;
+  display: inline-block;
+}
+
+.notification-info,.recent-activity-info {
+  max-width: 80%;
+}
+
+/* ---------------- Notification and Recent Activity Ended ------------------- */
 
 .content {
   display: flex;
@@ -1083,14 +1096,14 @@ input[type="file"]:hover {
 
 .recent-username {
   text-decoration: none;
-  color: #000;
+  color: black;
   display: block;
   font-size: 16px;
 }
 
 .recent-message-text {
   display: block;
-  color: #000;
+  color: black;
   font-size: 12px;
 }
 
@@ -1157,7 +1170,7 @@ input[type="file"]:hover {
 .loading-messages, .loading-messages * {
   text-align: center;
   font-size: 12px;
-  color: #000;
+  color: black;
   text-decoration: none;
   padding: 8px;
 }

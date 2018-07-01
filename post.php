@@ -7,30 +7,26 @@ if(!isset($_SESSION['user_id'])){
 }
 
 // Addding new post
+
 if (isset($_POST['post'])) {
-    // Checking if post has pic too?
     if(isset($_FILES['file']['name'])){
     // Calling function to add post
-    $name = $_FILES['file']['name']; // name of file
-    $tmp_name = $_FILES['file']['tmp_name']; // storing at temp location
-    $type = $_FILES['file']['type']; // type of file
-
+    $name = $_FILES['file']['name'];
+    $tmp_name = $_FILES['file']['tmp_name'];
+    $type = $_FILES['file']['type'];
     $extension = strtolower(pathinfo($name,PATHINFO_EXTENSION)); // Getting extension of file
 
-    // Genearting Unique ID for the pic name
+    // $typeImage = explode('/', $type);
     $uniqueID = uniqid();
 
-    if (isset($name)) { // If name is not null
-        if (!empty($name)) { // If variable has value
-
+    if (isset($name)) {
+        if (!empty($name)) {
             // Checking the format of the image uploaded
             if (($extension == "jpg" || $extension == "jpeg" || $extension == "png") && ($type == "image/png" || $type == "image/jpeg")) {
                 // Location where to save the image
                 $location = 'assets/postPics/';
-                //Moving uploaded file to new location
                 if (move_uploaded_file($tmp_name, $location.$uniqueID.'.'.$extension)) {
-                    $path = $location.$uniqueID.'.'.$extension; // Storing path of file
-                    //Calling method with post text and Pic
+                    $path = $location.$uniqueID.'.'.$extension;
                     newPost($_POST['post'],$path);
                 }
             }
@@ -39,7 +35,6 @@ if (isset($_POST['post'])) {
   }
     
     else{
-        //Calling method with post text only
       newPost($_POST['post']);
     }  
 }

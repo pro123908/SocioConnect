@@ -1,5 +1,6 @@
 <?php  require_once('functions.php'); 
       ob_start(); // Turn on ouput buffering
+      
 ?>
 
 <!-- Header Section of the website. Will be included in every page  -->

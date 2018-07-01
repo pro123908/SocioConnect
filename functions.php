@@ -69,34 +69,24 @@ function redirection($path)
     header('Location: '.$path);
 }
 
-function addPost($flag=0, $visitorID=0)
+function addPost($flag, $visitorID)
 {
-
-    // flag 
-    // 0 - not your timeline
-    // 1 - your timeline
-
-    // visitorID - ID of the user you visited
-
     // Adding post form
     $userID = $_SESSION['user_id'];
-
-    // Only show add post button if you are on your profile or newsfeed
     if ($flag || $visitorID == $userID) {
         // 2nd condition - if you came to your profile by searching
         $addPost = "<div class='show'>"; //Showing add post area
     } else {
         $addPost = "<div class='hidden'>";
     }
-    
     $addPost .= <<<DELIMETER
         <div class='post-options'></div>
-            <form>
-                <textarea name="post"  cols="30" rows="10" placeholder='Share what you are thinking here' class="post-input"></textarea>
+            <form action="post.php" method='POST'>
+                <textarea name="post" id="" cols="30" rows="10" placeholder='Share what you are thinking here' class="post-input"></textarea>
                 <br>
                 <div class='upload-btn-wrapper'>
                     <button class='pic-upload-btn'><i class='far fa-image'></i></button>
-                    <input type='file' name='post-pic' onchange='javascript:postPicSelectedName()'  />
+                    <input type='file' name='post-pic' onchange='javascript:postPicSelected()'  />
                     <span class='pic-name'></span>
                 </div>             
                 <div class='post-btn-container'>
@@ -111,7 +101,6 @@ DELIMETER;
 
 function getRecordsFromQuery($queryResult)
 {
-    // Returning a single record - Not used much
     if (isData($queryResult)) {
         return isRecord($queryResult);
     }
@@ -119,13 +108,11 @@ function getRecordsFromQuery($queryResult)
 
 function getTime($time)
 {
-    // returns time in String
     return timeString(differenceInTime($time));
 }
 
 function newPost($postContent,$pic=null)
 {
-
     // Function for adding a post
     global $connection;
     $post = mysqli_real_escape_string($connection, $postContent);
@@ -144,9 +131,8 @@ function newPost($postContent,$pic=null)
         $postID = $queryResult['post_id'];
         $userID = $_SESSION['user_id'];
         $user = $_SESSION['user'];
-        $userFullName = $queryResult['name'];
-        $postPic = $queryResult['pic']; // Post Pic
-        $profilePic = $queryResult['profile_pic']; // User Pic
+        $postPic = $queryResult['pic'];
+        $profilePic = $queryResult['profile_pic'];
         $timeToShow = getTime($queryResult['createdAt']);
         
         $PostDeleteButton = <<<PosDel
@@ -158,7 +144,7 @@ PosDel;
 
         /* Post Pic */
         $postPicContent = '';
-        if(($postPic != null)){
+        if(!($postPic == null)){
             $postPicContent =<<<CONTENT
             <div class='post-image-container'>
             <img src='{$postPic}' class='post-image' />
@@ -171,22 +157,22 @@ CONTENT;
             <div class='post-content post-content-{$postID}'>
                 {$PostDeleteButton}
                 <div class='post-header'>
-                    <a href='timeline.php?visitingUserID={$userID}'><img src='{$profilePic}' class='post-avatar post-avatar-40'/></a>
+                    <a href='timeline.php?visitingUserID={$userID}'><img src='{$queryResult['profile_pic']}' class='post-avatar post-avatar-40'/></a>
         
                     <div class='post-info'>
-                        <a href='timeline.php?visitingUserID={$userID}' class='user'>{$userFullName}</a>
+                        <a href='timeline.php?visitingUserID={$userID}' class='user'>{$queryResult['name']}</a>
                         <span class='post-time'>$timeToShow</span>
                         <span class='post-edited post-edited-{$postID}'></span>
                     </div>
                 </div>
                 
-                <div class='actual-post actual-post-{$postID}'> 
+                <div class='show actual-post-{$postID}'> 
                     <p>{$queryResult['post']}</p>
                     $postPicContent
                 </div>
                 <div class='post-stats'>
                     <span onmouseout='javascript:hideLikers({$postID})' onmouseover='javascript:likeUsers({$postID})' class='tooltip-container like-count like-count-{$postID}'><i class='like-count-icon fas fa-thumbs-up'></i> 0</span>
-                    
+                    <span class='tooltip tooltip-bottom count'></span>
                     <a href="javascript:showCommentField({$postID})" class='comment-count'><i class='fas fa-comment-dots comment-count-{$postID}'></i> 0</a>
                 </div>
             </div>
@@ -196,10 +182,16 @@ CONTENT;
             </div>    
             <div id="comment-section-{$postID}" class='hidden'>
                 <div class='comment-area-{$postID}'></div>
-                <div class='comment-form'>
+                <div class='comment-form comment-form-$postID'>
+                <div class='user-image'>
+                <img src='$profilePic' class='post-avatar post-avatar-30' />
+            </div>
                     <form onsubmit="return comment({$postID},'{$user}','{$profilePic}')" method="post" id='commentForm'>
                         <input name = "comment_{$postID}" type='text' autocomplete = "off">
-                        <input style='display:none;' type='submit'  value="Comment" > 
+                        <input type="text" value="{$postID}" style="display:none" name="post_id_{$postID}">
+                        <input type="text" value="{$user}" style="display:none" name="post_user">
+                        <input type="text" value="{$profilePic}" style="display:none" name="pic_user">
+                        <input style='display:none;' type='submit' id="{$postID}" value="Comment" > 
                     </form>
                 </div>
         </div>
@@ -248,8 +240,8 @@ function deletePost($postID)
 function deleteComment($commentID)
 {
     // Deleting particular comment identified by passed comment ID
-    queryFunc("DELETE from comments WHERE comment_id ='$commentID'");
-    
+    $deleteQuery = queryFunc("DELETE from comments WHERE comment_id ='$commentID'");
+    return $deleteQuery;
 }
 
 function addComment($userID, $postID, $comment)
@@ -419,7 +411,10 @@ function renderPostCommentForm($postID, $user, $profilePic)
                 // Rendering input field for adding comment
     $post = <<<POST
             </div>
-            <div class='comment-form'>
+            <div class='comment-form comment-form-$postID'>
+                <div class='user-image'>
+                    <img src='$profilePic' class='post-avatar post-avatar-30' />
+                </div>
                 <form onsubmit="return comment({$postID},'{$user}','{$profilePic}')" method="post" id='commentForm'>
                     <input name = "comment_{$postID}" type='text' autocomplete = "off">
                     <input type="text" value="{$postID}" style="display:none" name="post_id_{$postID}">
@@ -519,14 +514,6 @@ function renderPost($row)
     $NoOflikes = queryFunc("SELECT count(*) as count from likes where post_id='$postID'");
     $likes = isRecord($NoOflikes);
 
-    // If likes count is 0 
-    // Just to avoid intial display of bottom tooltip. Sort of fix
-    if($likes['count'] > 0){
-        $tooltip = 'tooltip tooltip-bottom';
-    }else{
-        $tooltip = '';
-    }
-
 
     // Getting number of comments for post
     $commentCountResult = queryFunc("SELECT count(*) as count from comments where post_id='$postID'");
@@ -596,13 +583,13 @@ CONTENT;
                     <span class='post-edited post-edited-{$postID}'>$edited</span>
                     </div>
                     </div>
-                    <div class='actual-post actual-post-{$postID}'>    
+                    <div class='show actual-post-{$postID}'>    
                         <p>{$row['post']}</p>
                         $postPicContent
                     </div>    
                     <div class='post-stats'>
                     <span onmouseout='javascript:hideLikers({$postID})' onmouseover='javascript:likeUsers({$postID})' class='tooltip-container like-count like-count-{$postID}'><i class='like-count-icon fas fa-thumbs-up'></i> {$likes['count']}
-                    <span class='{$tooltip} count'></span>
+                    <span class='tooltip tooltip-bottom count'></span>
                     </span>
                     <a href="javascript:showCommentField({$postID})" class='comment-count'><i class='fas fa-comment-dots comment-count-{$postID}'></i> {$commentsCount['count']}</a>
                     </div>
@@ -1450,7 +1437,7 @@ function getPartnersLastMessage($partnerId)
 {
     // Getting last message of the conversation
     $userLoggedIn = $_SESSION['user_id'];
-    $details = queryFunc("SELECT user_from,body,dateTime from messages where ((user_to = $partnerId AND user_from = $userLoggedIn) OR (user_to = $userLoggedIn AND user_from = $partnerId)) AND (deleted not like ' $userLoggedIn%' AND deleted not like '%$userLoggedIn ') order by id desc limit 1");
+    $details = queryFunc("SELECT user_from,user_to,body,dateTime,opened from messages where ((user_to = $partnerId AND user_from = $userLoggedIn) OR (user_to = $userLoggedIn AND user_from = $partnerId)) AND (deleted not like ' $userLoggedIn%' AND deleted not like '%$userLoggedIn ') order by id desc limit 1");
     $details = isRecord($details);
     // Only displaying first 15 characters of message
     if (strlen($details['body']) > 15) {
@@ -1481,11 +1468,17 @@ function showRecentChats()
                 $from = '';
             }
 
+            if($lastMessageDetails['opened'] == 0 && $lastMessageDetails['user_to'] == $_SESSION['user_id'] ){
+                $noSeen = 'noSeen';
+            }else{
+                $noSeen = '';
+            }
+
             $msg = $lastMessageDetails['body']; // Message Body
             $at =  getTime($lastMessageDetails['dateTime']); // Message Time
 
             $user = <<<DELIMETER
-            <div class='recent-user-div recent-user-{$recentUserIds[$counter]}'>
+            <div class='recent-user-div recent-user-{$recentUserIds[$counter]} {$noSeen}'>
             <a href='messages.php?id={$recentUserIds[$counter]}' class='recent-user'>
             
                 <span class='recent-user-image'>

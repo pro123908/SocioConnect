@@ -108,13 +108,11 @@ function showCommentField(id) {
 }
 
 function like(postID) {
-  
-  ajaxCalls("GET", `like.php?like=${postID}`).then(function(result) {
+  ajaxCalls("GET", `like.php?like=${postID}`).then(function (result) {
     let value = result.trim();
     document.querySelector(
       `.like-count-${postID}`
-    ).innerHTML = `<i class='like-count-icon fas fa-thumbs-up'></i> ${value}
-    <span class='tooltip tooltip-bottom count'></span>`;
+    ).innerHTML = `<i class='like-count-icon fas fa-thumbs-up'></i> ${value}`;
 
     let icon = document.querySelector(`.post-${postID} .like-btn i`);
     icon.classList.toggle("blue");
@@ -124,7 +122,7 @@ function like(postID) {
       var activity_type = 0; // Activity - like
 
       param = `target_id=${postID}&activity_type=${activity_type}`;
-      ajaxCalls("POST", `recentActivityAjax.php`, param).then(function(result) {
+      ajaxCalls("POST", `recentActivityAjax.php`, param).then(function (result) {
         // Adding to the view
         addRecentActivity(result);
       });
@@ -133,8 +131,8 @@ function like(postID) {
       // Means post has been disliked
       var activity_type = 4; // Unlike
       param = `target_id=${postID}&activity_type=${activity_type}`;
-      
-      ajaxCalls("POST", `recentActivityAjax.php`, param).then(function(result) {
+
+      ajaxCalls("POST", `recentActivityAjax.php`, param).then(function (result) {
         document.querySelector(".activities-content").innerHTML = result;
       });
     }
@@ -148,7 +146,7 @@ function addRecentActivity(activity) {
 
   // Inserting the new activity at the top
   activitiesDiv.innerHTML = activity + activitiesDiv.innerHTML;
-  
+
   // If activities have become more than 10,then just delete the bottom one
   if (findChildNodes(activitiesDiv) == 11) {
 
@@ -159,7 +157,7 @@ function addRecentActivity(activity) {
     var lastChild = activitiesDiv.getElementsByTagName("a")[10];
     var removed = activitiesDiv.removeChild(lastChild);
 
-  } else if (findChildNodes(activitiesDiv) > 0){
+  } else if (findChildNodes(activitiesDiv) > 0) {
     // If activities were not more than 10
     document.querySelector(".show-more-activities").innerHTML =
       "<p class='see-more'>No More Activities to Show</p>";
@@ -188,12 +186,12 @@ function findChildNodes(div) {
 // Function for making all ajax calls using promise
 function ajaxCalls(method, pathString, postParam = "", pic = "") {
   // Creating promise
-  return new Promise(function(resolve, reject) {
+  return new Promise(function (resolve, reject) {
     // Creating XHR object for AJAX Call
     var xmlhttp = new XMLHttpRequest();
 
     // If response has arrived for request made
-    xmlhttp.onreadystatechange = function() {
+    xmlhttp.onreadystatechange = function () {
       if (xmlhttp.readyState == XMLHttpRequest.DONE) {
         // XMLHttpRequest.DONE == 4
         if (xmlhttp.status == 200) {
@@ -229,24 +227,24 @@ function comment(postID, user, profilePic) {
 
   // Getting targeted comemnt field
   var comment = document.querySelector(`input[name='comment_${postID}']`);
-  
+
 
   // Extracting Value
   var commentValue = comment.value;
 
   var timeToShow = "Just Now";
-  
+
 
   // Validating input to not to be empty
   if (!(commentValue.trim() == "")) {
     // Setting up parameters for POST request to the file
     var param = `comment=${comment.value}&post_id=${postID}`;
 
-    ajaxCalls("POST", "comment.php", param).then(function(result) {
+    ajaxCalls("POST", "comment.php", param).then(function (result) {
       // Added Comment ID is returned in response
       commentID = result.trim();
 
-      
+
       document.querySelector(`.comment-area-${postID}`).innerHTML += `
   <div class='comment comment-${commentID}'>
                 
@@ -268,14 +266,14 @@ function comment(postID, user, profilePic) {
   `;
 
       comment.value = "";
-    
+      console.log(document.querySelector(`.comment-count-${postID}`));
 
       //Adding in recent activities
-      var activity_type = 1; // Comment Activity
+      var activity_type = 1;
       // targeted Content
       var commentDetails = postID + " " + commentID;
       param = `target_id=${commentDetails}&activity_type=${activity_type}`;
-      ajaxCalls("POST", `recentActivityAjax.php`, param).then(function(result) {
+      ajaxCalls("POST", `recentActivityAjax.php`, param).then(function (result) {
         addRecentActivity(result);
       });
     });
@@ -287,62 +285,53 @@ function comment(postID, user, profilePic) {
 function deletePost(postID) {
   // As the name suggests
 
-  ajaxCalls("GET", `delete.php?id=${postID}`).then(function(result) {
+  ajaxCalls("GET", `delete.php?id=${postID}`).then(function (result) {
     document.querySelector(`.post-${postID}`).style.display = "none";
   });
 }
 
-function postPicSelectedName() {
-  // Getting the name of pic selected
+function postPicSelected(container) {
   var postPic = document.querySelector("input[name='post-pic']").files[0];
-  // Displaying name of selected pic
   document.querySelector(".pic-name").innerHTML = postPic.name;
-  
+  console.log(postPic.name);
 }
 
-function addPost(userID) {
+function addPost(user_id) {
   // Again the name suggests xD
 
-  // Getting post input field
+  // Getting post content
   var post = document.querySelector("textarea[name='post']");
-  // Getting pic input field
   var postPicData = document.querySelector("input[name='post-pic']");
-  // Getting pic uploaded
   var postPic = postPicData.files[0];
 
-  // Post Value
   var postContent = post.value;
 
-  // Making sure that post is not empty by any means
-  if (!(postContent.trim() == "") || postPic !== undefined) {
+  console.log(postPic);
 
-    // Preparing form data to send
+  if (!(postContent.trim() == "") || postPic !== undefined) {
     var formData = new FormData();
-    //Pic Added
     formData.append("file", postPic);
-    // Post Value added
     formData.append("post", post.value);
 
-    // Sending POST request to post.php
-    ajaxCalls("POST", "post.php", formData, "pic").then(function(result) {
+    // Setting paramters for POST request
+    // var param = `post=${post.value}&user_id=${user_id}`;
+
+    ajaxCalls("POST", "post.php", formData, "pic").then(function (result) {
       // Adding new post to post Area
       // Adding post to the top not bottom. Clue xD
       document.querySelector(".posts").innerHTML =
         result + document.querySelector(".posts").innerHTML;
-      
-        // Clearing the post input
       document.querySelector("textarea[name='post']").value = " ";
 
       //Adding in recent activities
-      var activity_type = 2; // Post activity
+      var activity_type = 2;
       param = `activity_type=${activity_type}`;
-      ajaxCalls("POST", `recentActivityAjax.php`, param).then(function(result) {
+      ajaxCalls("POST", `recentActivityAjax.php`, param).then(function (result) {
         addRecentActivity(result);
       });
     });
   }
-  
-  // Removing the name of pic selected
+  // postPicData.value = '';
   document.querySelector(".pic-name").innerHTML = "";
 }
 
@@ -382,16 +371,16 @@ function editPost(postID) {
     var postContent = post.getElementsByTagName("p")[0];
 
     //Hiding current post
-    post.style.display = "none";
+    post.classList.toggle('hidden');
 
     //Creating a new div to display if it doesn't exist and get the edit input and inserting it in the same parent div, just before the div where text and pic were shown
     if (!document.querySelector(".edit-post-" + postID)) {
       var div = document.createElement("div");
-      div.setAttribute("class", "edit-post-" + postID);
+      div.setAttribute("class", "show edit-post edit-post-" + postID);
       div.innerHTML = `<form action="editPost.php" method='POST'>
           <textarea name="post" id="" cols="30" rows="10" class="post-input post-edit-${postID}">${
         postContent.innerHTML
-      }</textarea>
+        }</textarea>
           <br>
           <div class ="radio-buttons-edit">
             <label><input type="radio" name="edit-post-pic" value="remove" onclick="hideFileUpload(${postID})"> Remove Current Photo</label><br>
@@ -403,9 +392,9 @@ function editPost(postID) {
             <input type='file' name='post-pic' onchange='javascript:editedPostPicSelected(${postID})'  />
             <span class='pic-name'></span>
           </div>               
-          <div class='post-btn-container'>
-            <a  href="javascript:hideEditDiv(${postID},false)"  class='edit-post-cancel-btn'>Cancel</a>
+          <div class='edit-post-button-container'>
             <a  href="javascript:saveEditPost(${postID})"  class='edit-post-save-btn'>Save</a>
+            <a  href="javascript:hideEditDiv(${postID},false)"  class='edit-post-cancel-btn'>Cancel</a>
           </div>
         </form>`;
 
@@ -415,7 +404,12 @@ function editPost(postID) {
       parentDivForEditingArea.insertBefore(div, post);
     }
   }
+  else{
+    document.querySelector(".edit-post-" + postID).classList.toggle('hidden');
+    document.querySelector(".actual-post-" + postID).classList.toggle('hidden');
+  }
 }
+
 function saveEditPost(postID) {
   //Getting post edit text
   var postContent = document.querySelector(".post-edit-" + postID);
@@ -450,12 +444,12 @@ function saveEditPost(postID) {
       formData.append("postContent", postContent.value);
       formData.append("action", action);
 
-      ajaxCalls("POST", "postEdit.php", formData, "pic").then(function(result) {
+      ajaxCalls("POST", "postEdit.php", formData, "pic").then(function (result) {
         //Displaying original post div which was made hidden in previous function
         var post = document.querySelector(".actual-post-" + postID);
         //Storing edited status in the p tag
         post.getElementsByTagName("p")[0].innerHTML = postContent.value;
-        
+
         //result CONTAINS THE PATH OF IMAGE
         //checking if the response path is empty, i.e no image is to be shown
         var imgDiv = post.querySelector(".post-image");
@@ -488,69 +482,87 @@ function saveEditPost(postID) {
 function deleteComment(commentID) {
   // Deleting Comment specified by comment ID
 
-  ajaxCalls("GET", `commentDelete.php?id=${commentID}`).then(function(result) {
+  ajaxCalls("GET", `commentDelete.php?id=${commentID}`).then(function (result) {
     document.querySelector(`.comment-${commentID}`).style.display = "none";
   });
 }
 
 function saveEditComment(postID, commentID, user, profilePic, time) {
+
   // Adding comment to post
   // Getting post ID,content and user who posted comment from form
-
-  // Getting edited comment
   var comment = document.querySelector(
     `input[name='comment_edit_${commentID}']`
   );
   // Setting up parameters for POST request to the file
   var param = `comment=${comment.value}&comment_id=${commentID}`;
-  
+  console.log("PARAMS" + param);
+
+  //Showing post comment form
+  document.querySelector(`.comment-form-${postID}`).style.display = 'flex';
 
   ajaxCalls("POST", "commentEdit.php", param)
-    .then(function(result) {
-      
-      showComment(user, commentID, postID, profilePic, time, comment.value,true);
+    .then(function (result) {
+      // Added Comment ID is returned in response
+      showComment(user, commentID, postID, profilePic, time, comment.value, true);
     })
-    .catch(function(reject) {
+    .catch(function (reject) {
       console.log("REJECTED");
     });
 
-  
+  console.log(postID, commentID, user, profilePic);
   return false;
 }
 
 function editComment(commentID, postID, profilePic, time) {
-  // Getting comment 
+  if(!document.querySelector(`.edit-comment-form-${postID}`)){
   var comment = document.querySelector(".comment-" + commentID);
-  // Getting user of that comment
+  
+  var commentSection = document.querySelector(`#comment-section-${postID}`);
+  console.log(commentSection);
+
   var user = comment.querySelector(".comment-user").innerHTML;
-  // Slicing name "Bilal Ahmad" from "Bilal Ahmad : "
   user = user.slice(0, user.length - 3);
-  // Getting old value of comment
   var commentValue = comment.querySelector(".comment-text").innerHTML;
   var currentComment = comment.innerHTML;
-  
-  comment.innerHTML = `
-    <div class='comment-form'>
+
+  // Hiding comment form
+  document.querySelector(`.comment-form-${postID}`).style.display = 'none';
+
+  console.log(time);
+  commentSection.innerHTML += `
+    <div class='comment-form comment-form-${postID} edit-comment-form-${postID}'>
+    <div class='user-image'>
+              <img src='${profilePic}' class='post-avatar post-avatar-30' />
+    </div>
       <form onsubmit ="return saveEditComment(${postID},${commentID},'${user}','${profilePic}','${time}')"  method="post" id='commentFormEdit_${commentID}'>
-          <input name = "comment_edit_${commentID}" type='text' autocomplete = "off" value = "${commentValue}" style="width:500px">
-          <i class='tooltip-container fas fa-times comment-delete' onclick="javascript:showComment('${user}',${commentID},'${postID}','${profilePic}','${time}','${commentValue}',false)"><span class='tooltip tooltip-right'>Cancel</span></i>
+      <i class='tooltip-container fas fa-times comment-delete' onclick="javascript:showComment('${user}',${commentID},'${postID}','${profilePic}','${time}','${commentValue}',false)"><span class='tooltip tooltip-right'>Cancel</span></i>
+          <input name = "comment_edit_${commentID}" type='text' autocomplete = "off" value = "${commentValue}" >
+          
           <input style='display:none;' type="submit" id="${postID}" value="Comment" > 
       </form>
     </div>`;
+  }
 }
 
-function showComment(user, commentID, postID, profilePic, time, comment,flag) {
-  
-  if(flag) // Comment is edited
+function showComment(user, commentID, postID, profilePic, time, comment, flag) {
+  console.log(time);
+
+  //Showing post comment form
+  document.querySelector(`.comment-form-${postID}`).style.display = 'flex';
+  document.querySelector(`.edit-comment-form-${postID}`).remove();
+
+  if (flag)
     var edited = "Edited";
   else
-    var edited = "";   
-
-  // Inserting the comment
+    var edited = "";
   document.querySelector(`.comment-${commentID}`).innerHTML = `
+  
+                
     <div class='user-image'>
       <img src='${profilePic}' class='post-avatar post-avatar-30' />
     </div>
+  
     <div class='comment-info'>
       <i class='tooltip-container far fa-trash-alt comment-delete' onclick='javascript:deleteComment(${commentID})'><span class='tooltip tooltip-right'>Remove</span></i>
       <i class="tooltip-container fas fa-edit comment-edit" onclick="javascript:editComment(${commentID},${postID},'${profilePic}','${time}')"><span class='tooltip tooltip-right'>Edit</span></i>
@@ -594,11 +606,11 @@ function changePic() {
   formPic.classList.toggle("hidden");
 }
 
-function showEditImageButton(){
+function showEditImageButton() {
   document.querySelector(".edit-profile-pic").classList.remove("hidden");
 }
 
-function hideEditImageButton(){
+function hideEditImageButton() {
   document.querySelector(".edit-profile-pic").classList.add("hidden");
 }
 //Search Function
@@ -611,22 +623,22 @@ function getUsers(value, flag) {
   var param = `query=${value}&flag=${flag}`;
   var searchFooter;
 
-  ajaxCalls("POST", "search.php", param).then(function(result) {
-    if(flag == 0)
+  ajaxCalls("POST", "search.php", param).then(function (result) {
+    if (flag == 0)
       conflict = "-message";
     else
       conflict = "";
 
     if (result == "No") {
       // If no user found against search
-      document.querySelector(".search-result"+conflict).style.display = "none";
+      document.querySelector(".search-result" + conflict).style.display = "none";
     } else {
       // Displaying search results
-      document.querySelector(".search-result"+conflict).style.display = "block";
-      document.querySelector(".search-result"+conflict).innerHTML = result;
+      document.querySelector(".search-result" + conflict).style.display = "block";
+      document.querySelector(".search-result" + conflict).innerHTML = result;
 
       if (value.length == 0) {
-        document.querySelector(".search-result"+conflict).style.display = "none";
+        document.querySelector(".search-result" + conflict).style.display = "none";
         searchFooter = "";
       } else {
         searchFooter = `<a class='see-more' href='allSearchResults.php?query=${value}'>See more</a>`;
@@ -641,7 +653,7 @@ function getUsers(value, flag) {
 setInterval(commentsRefresh, 1000);
 
 function commentsRefresh() {
-  ajaxCalls("GET", "commentsAjax.php").then(function(result) {
+  ajaxCalls("GET", "commentsAjax.php").then(function (result) {
     // Displaying search results
     var data = JSON.parse(result);
     for (i = 0; i < data.length; i++) {
@@ -665,7 +677,7 @@ function commentsRefresh() {
 //setInterval(notificationRefresh, 3000);
 
 function notificationRefresh() {
-  ajaxCalls("GET", "notificationsAjax.php").then(function(result) {
+  ajaxCalls("GET", "notificationsAjax.php").then(function (result) {
     // Displaying search results
     var data = JSON.parse(result);
     for (i = 0; i < data.length; i++) {
@@ -676,13 +688,13 @@ function notificationRefresh() {
         notification = `
         <a href='notification.php?postID=${obj.postID}&type=${
           obj.type
-        }&notiID=${obj.notiID}'>${obj.name} has posted<br><br></a>
+          }&notiID=${obj.notiID}'>${obj.name} has posted<br><br></a>
          `;
       } else {
         notification = `
        <a href='notification.php?postID=${obj.postID}&type=${obj.type}&notiID=${
           obj.notiID
-        }'>${obj.name} has ${obj.type} your post<br><br></a>
+          }'>${obj.name} has ${obj.type} your post<br><br></a>
         `;
       }
 
@@ -695,7 +707,7 @@ function notificationRefresh() {
 setInterval(likesRefresh, 3000);
 
 function likesRefresh() {
-  ajaxCalls("GET", "likesAjax.php").then(function(result) {
+  ajaxCalls("GET", "likesAjax.php").then(function (result) {
     // Displaying search results
     var data = JSON.parse(result);
 
@@ -708,33 +720,24 @@ function likesRefresh() {
 }
 
 function likeUsers(postID) {
-  console.log('Inside like USers');
-  ajaxCalls("GET", `likeUsers.php?postID=${postID}`).then(function(result) {
+  ajaxCalls("GET", `likeUsers.php?postID=${postID}`).then(function (result) {
     // Displaying search results
     document.querySelector(`.like-count-${postID} .count`).innerHTML = "";
     var data = JSON.parse(result);
     let flag = true;
 
-    console.log('Inside AJAX success');
-
     for (i = 0; i < data.length; i++) {
-      console.log('Inside loop');
       flag = false;
       var obj = data[i];
-      
+      console.log("In");
       document.querySelector(`.like-count-${postID} .count`).innerHTML += `${
         obj.name
-      }<br>`;
+        }<br>`;
     }
     if (flag) {
-      console.log('No records found');
-      // document
-      //   .querySelector(`.like-count-${postID} .count`)
-      //   .classList.remove("tooltip");
-
-        // This will remove all the classes from the element
-        // document.querySelector(`.like-count-${postID} .count`).className = 'count';
-      
+      document
+        .querySelector(`.like-count-${postID} .count`)
+        .classList.remove("tooltip");
     }
   });
 }
@@ -765,7 +768,7 @@ function message() {
       </div>
       `;
 
-    ajaxCalls("POST", "messageAjax.php", param).then(function(response) {
+    ajaxCalls("POST", "messageAjax.php", param).then(function (response) {
       console.log("Response messageSimple : " + response);
       var msgs = document.querySelectorAll(".chat-message");
       if (
@@ -791,7 +794,7 @@ function messageRefresh() {
   var url = window.location.href;
   var id = url.substring(url.lastIndexOf("=") + 1);
 
-  ajaxCalls("GET", `messageAjax.php?id=${id}`).then(function(response) {
+  ajaxCalls("GET", `messageAjax.php?id=${id}`).then(function (response) {
     let messageResponse = JSON.parse(response);
 
     for (i = 0; i < messageResponse.length; i++) {
@@ -814,7 +817,7 @@ function messageRefresh() {
 }
 
 function refreshRecentConvos() {
-  ajaxCalls("GET", "recentConvoAjax.php").then(function(result) {
+  ajaxCalls("GET", "recentConvoAjax.php").then(function (result) {
     var data = JSON.parse(result);
 
     if (!(data.notEmpty == "Bilal")) {
@@ -827,7 +830,7 @@ function refreshRecentConvos() {
         var recentMessage = `
         <div class='recent-user-div recent-user-${obj.fromID}'>
           <a href='messages.php?id=${
-            obj.fromID
+          obj.fromID
           }' class='recent-user'>
             <span class='recent-user-image'>
               <img src='${obj.pic}' class='post-avatar post-avatar-40' />
@@ -861,7 +864,7 @@ function deleteConvo(id) {
   var url = window.location.href; // URL of the current window
   var openConvoId = url.slice(46); // Will give the ID of the user whom you are chatting with
   let param = `id=${id}&urlID=${openConvoId}`;
-  ajaxCalls("POST", `deleteConvoAjax.php`, param).then(function(response) {
+  ajaxCalls("POST", `deleteConvoAjax.php`, param).then(function (response) {
     console.log(response);
     //If response is not a redirection, this would be changed if this comment is removed from messags.php
     if (response == "Reload the page") {
@@ -876,7 +879,7 @@ function showPageMessages(id, page) {
   document.getElementById("loading-messages").style.display = "none";
   var xhr = new XMLHttpRequest();
   xhr.open("GET", "loadMessagesAjax.php?id=" + id + "&page=" + page, true);
-  xhr.onload = function() {
+  xhr.onload = function () {
     if ((this.status = 200)) {
       document.querySelector(".chat-messages").innerHTML =
         this.responseText + document.querySelector(".chat-messages").innerHTML;
@@ -906,9 +909,9 @@ function showNextPageMessages(id) {
 
 function removeFriend(id) {
   var url = window.location.href;
-  
+
   let param = `friendId=${id}`;
-  ajaxCalls("POST", "removeFriendAjax.php", param).then(function(result) {
+  ajaxCalls("POST", "removeFriendAjax.php", param).then(function (result) {
     var data = JSON.parse(result);
     // if(data.length == 0){
     //   document.querySelector(".friends-list-elements").innerHTML = "";
@@ -926,20 +929,20 @@ function removeFriend(id) {
           <div class='friend'>
             <div class='friend-image'>
               <img class='post-avatar post-avatar-30' src='${
-                obj.profile_pic
-              }'  >
+        obj.profile_pic
+        }'  >
             </div>
             <div class='friend-info'>
               <a href="timeline.php?visitingUserID=${
-                obj.user_id
-              }" class='friend-text'>${obj.name}</a>   
+        obj.user_id
+        }" class='friend-text'>${obj.name}</a>   
               <span class='${obj.state}'>${obj.time}</span>         
             </div>
             <div class='friend-action'>
             <div>
               <a href="javascript:removeFriend(${
-                obj.user_id
-              })" class='remove-friend'><i class="fas fa-times tooltip-container"><span class='tooltip tooltip-right'>Remove Friend</span></i></a>
+        obj.user_id
+        })" class='remove-friend'><i class="fas fa-times tooltip-container"><span class='tooltip tooltip-right'>Remove Friend</span></i></a>
               </div>
             </div>
           </div> 
@@ -949,7 +952,7 @@ function removeFriend(id) {
       if (flag == 10 && url != "http://localhost/socioConnect/requests.php")
         break;
     }
-    if(url != "http://localhost/socioConnect/requests.php"){
+    if (url != "http://localhost/socioConnect/requests.php") {
       if (flag == 0) {
         document.querySelector(".show-more-friends").innerHTML =
           "<p class='see-more'>No Friends To Show</p>";
@@ -968,7 +971,7 @@ function showPage(flag, page) {
   document.getElementById("loading").style.display = "none";
   var xhr = new XMLHttpRequest();
   xhr.open("GET", `loadPostsAjax.php?flag=${flag}&page=${page}`, true);
-  xhr.onload = function() {
+  xhr.onload = function () {
     if ((this.status = 200)) {
       document.querySelector(".posts").innerHTML += this.responseText;
       document.getElementById("loading").style.display = "block";
@@ -986,7 +989,7 @@ function showFirstPage(flag) {
 function showNextPageCaller(flag) {
   //if user has scrolled to the bottom of the page
   if (true)
-    setTimeout(function() {
+    setTimeout(function () {
       showNextPage(flag);
     }, 2000);
 }
@@ -1013,7 +1016,7 @@ function showPageNotis(page) {
   document.getElementById("loading-notis").style.display = "none";
   var xhr = new XMLHttpRequest();
   xhr.open("GET", "loadNotificationsAjax.php?page=" + page, true);
-  xhr.onload = function() {
+  xhr.onload = function () {
     if ((this.status = 200)) {
       document.querySelector(".notifications").innerHTML =
         document.querySelector(".notifications").innerHTML + this.responseText;
@@ -1044,7 +1047,7 @@ function showPageActivities(page) {
   document.getElementById("loading-activities").style.display = "none";
   var xhr = new XMLHttpRequest();
   xhr.open("GET", "loadRecentActivitiesAjax.php?page=" + page, true);
-  xhr.onload = function() {
+  xhr.onload = function () {
     if ((this.status = 200)) {
       document.querySelector(".activities").innerHTML =
         document.querySelector(".activities").innerHTML + this.responseText;
@@ -1087,22 +1090,27 @@ function toggleDropdown(type) {
 }
 
 /*  --------------- Closing Dropdowns when other areas are clicked ------------------ */
-window.onclick = function(e) {
+window.onclick = function (e) {
   if (e.srcElement.className != "search-input") {
     document.querySelector(".search-result").style.display = "none";
   }
 
-  if (e.srcElement.className != "search-result-message") {
+  if (document.querySelector('.search-result-message') && e.srcElement.className != "search-result-message") {
+
     document.querySelector(".search-result-message").style.display = "none";
+
   }
+
+
 
   // Will loop through the array of dropdowns
   let arr = ["noti", "msg", "req"];
-  arr.forEach(function(value) {
+  arr.forEach(function (value) {
     if (
       !e.srcElement.classList.contains(`${value}-click`) &&
       !e.srcElement.classList.contains(`${value}-dropdown`)
     ) {
+      console.log('Here');
       document.querySelector(`.${value}-dropdown`).style.display = "none";
     }
   });

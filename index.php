@@ -14,6 +14,46 @@ if(isset($_SESSION['user_id'])){
 <!-- Login page, the first page where user comes -->
 
   <?php
+
+    
+  // POST request made to this file
+  // Passed login information with the request
+
+  if (isset($_POST['submit'])) { // If form is submitted
+    // Email of the user
+    $email = mysqli_real_escape_string($connection, $_POST['email']);
+    //Hash of password is returned
+    $password = hashString(mysqli_real_escape_string($connection, $_POST['password']));
+  
+    // Checking if user exists or getting that user from database
+    $queryResult = queryFunc("SELECT * FROM users WHERE email = '$email'");
+
+    
+    if (!isData($queryResult)) {
+        // If user doesn't exist
+        $_SESSION['login_message'] = "User doesn't exist";
+        
+
+    } else {
+        $row = isRecord($queryResult);
+        // Hash from database is compared with the hash created now.
+        if ($row['password'] === $password) {
+            turnOnline($row['user_id']);
+            $_SESSION['user_id'] = $row['user_id'];
+            $_SESSION['user'] = $row['first_name'].' '.$row['last_name'];
+            // If password matches, redirect to main.php
+            redirection('main.php');
+        } else {
+          $_SESSION['login_message'] = "Wrong Password";
+          
+        }
+    }
+}
+//If user has already logged In and coming from another page to here
+elseif (isset($_SESSION['user_id'])) {
+    redirection('main.php');
+}
+
     
   ?>
       <div class='header-links header-links-login'>
@@ -25,10 +65,27 @@ if(isset($_SESSION['user_id'])){
 
     <div class="login-container">
       <h1 class="login-heading">Welcome</h1>
-      <form action="login.php" method='POST' class="login-form">
-        <input type="text"  name='email' placeholder="Email" class="login-input" required><br>
-        <input type="password" name='password' placeholder="Password" class="login-input" required><br>
+      <form action="index.php" method='POST' class="login-form">
+        <input type="text"  name='email' placeholder="Email" class="login-input"  required><br>
+        <input type="password" name='password' placeholder="Password" class="login-input"  required><br>
         <input type="submit" name='submit' class="login-submit">
       </form>
+
+      <?php 
+        if(isset($_SESSION['login_message'])){
+          if($_SESSION['login_message'] != ''){
+            $data = $_SESSION['login_message'];
+            $_SESSION['login_message'] = '';
+          }else{
+            $data = '';
+          }
+          echo "<h3>{$data}</h3>";
+        }
+      
+        
+      ?>
+
+      
+
     </div>
  
