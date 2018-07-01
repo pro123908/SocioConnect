@@ -1,9 +1,13 @@
-function setUserId(id) {
-  var url = window.location.href;
+function setUserId(userLoggedInId) {
+  var path = window.location.pathname;
+  var args = window.location.search;
+
+  //to get id from url, slicing the url after "=" sign  
+  var id = args.slice(args.search("=") + 1);
+
   if (
-    url == "http://localhost/socioConnect/main.php" ||
-    url == "http://localhost/socioConnect/timeline.php" ||
-    url.slice(0, 42) == "http://localhost/socioConnect/timeline.php"
+    path == "/socioConnect/main.php" ||
+    path == "/socioConnect/timeline.php"
   ) {
     var post = document.querySelectorAll(".post");
     //If there are no posts
@@ -20,25 +24,18 @@ function setUserId(id) {
         document.getElementById("loading").innerHTML = "No More Posts To Show";
       //if there are more posts present
       else {
-        if (url == "http://localhost/socioConnect/timeline.php") {
+        if (!id && path == "/socioConnect/timeline.php") {
           var loading = `<a href="javascript:showNextPage('b')">Show More Posts</a>`;
-        } else if (
-          url.slice(0, 42) == "http://localhost/socioConnect/timeline.php"
-        ) {
-          var id = url.slice(58);
+        } else if (id)
+        {
           var loading = `<a href="javascript:showNextPage('${id}')">Show More Posts</a>`;
         } else {
           var loading = `<a href="javascript:showNextPage('a')">Show More Posts</a>`;
-          // if(){
-          //   var seeMoreActivites = "<a href='allActivities.php' class='see-more'><span>See more</span></a>";
-          // }else{
-          //   var seeMoreActivites = "<p class='see-more'>No Recent Activities</p>";
-          // }
         }
         document.getElementById("loading").innerHTML = loading;
       }
     }
-  } else if (url.slice(0, 42) == "http://localhost/socioConnect/messages.php") {
+  } else if (path == "/socioConnect/messages.php") {
     var msgs = document.querySelectorAll(".chat-message");
     if (msgs.length == 0)
       document.getElementById("loading-messages").innerHTML =
@@ -52,15 +49,14 @@ function setUserId(id) {
         document.getElementById("loading-messages").innerHTML =
           "No More Messages To Show";
       else {
-        var id = url.slice(46);
-        if (id > 0) {
+        if (id) {
           document.getElementById(
             "loading-messages"
           ).innerHTML = `<a href="javascript:showNextPageMessages('${id}')">Show More Messages</a>`;
         }
       }
     }
-  } else if (url == "http://localhost/socioConnect/allNotification.php") {
+  } else if (path == "/socioConnect/allNotification.php") {
     var notis = document.querySelectorAll(".notification");
     if (notis.length == 0)
       document.getElementById("loading-notis").innerHTML =
@@ -79,7 +75,7 @@ function setUserId(id) {
         ).innerHTML = `<a href="javascript:showNextPageNotis()">Show More Notifications</a>`;
       }
     }
-  } else if (url == "http://localhost/socioConnect/allActivities.php") {
+  } else if (path == "/socioConnect/allActivities.php") {
     var notis = document.querySelectorAll(".recent_activity ");
     if (notis.length == 0)
       document.getElementById("loading-activities").innerHTML =
@@ -99,7 +95,7 @@ function setUserId(id) {
       }
     }
   }
-  session_user_id = id;
+  session_user_id = userLoggedInId;
 }
 
 function showCommentField(id) {
@@ -908,9 +904,12 @@ function showNextPageMessages(id) {
 }
 
 function removeFriend(id) {
-  var url = window.location.href;
-
-  let param = `friendId=${id}`;
+  var path = window.location.pathname;
+  var flag = "";
+  if (path != "/socioConnect/requests.php"){
+    var flag = " limit 10";
+  }
+  let param = `friendId=${id}&conflict=${flag}`;
   ajaxCalls("POST", "removeFriendAjax.php", param).then(function (result) {
     var data = JSON.parse(result);
     // if(data.length == 0){
@@ -919,7 +918,7 @@ function removeFriend(id) {
     // else{
     console.log("Response messageSimple : " + data[0]);
     document.querySelector(".friends-container").innerHTML = "";
-    var flag = 0;
+    flag = 0;
     console.log(data.length);
     for (i = 0; i < data.length; i++) {
       flag++;
@@ -949,10 +948,10 @@ function removeFriend(id) {
           </div>  
         `;
       document.querySelector(".friends-container").innerHTML += friend;
-      if (flag == 10 && url != "http://localhost/socioConnect/requests.php")
+      if (flag == 10 && path != "/socioConnect/requests.php")
         break;
     }
-    if (url != "http://localhost/socioConnect/requests.php") {
+    if (path != "/socioConnect/requests.php") {
       if (flag == 0) {
         document.querySelector(".show-more-friends").innerHTML =
           "<p class='see-more'>No Friends To Show</p>";

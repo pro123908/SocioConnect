@@ -9,7 +9,7 @@ $friends = array();
 $sorted_friends = array();
 $counter = 0;
 removeFriend($_POST['friendId'],"no redirection"); 
-$friends_query = queryFunc("SELECT * from friends where user1 = ".$_SESSION['user_id']." OR user2 = ".$_SESSION['user_id']);
+$friends_query = queryFunc("SELECT * from friends where user1 = ".$_SESSION['user_id']." OR user2 = ".$_SESSION['user_id']." ".$_POST['conflict']);
 if(isData($friends_query)){
     while($row = isRecord($friends_query)){
         $friend_id = ($_SESSION['user_id'] == $row['user1']) ? $row['user2'] : $row['user1'] ;

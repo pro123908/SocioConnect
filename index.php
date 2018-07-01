@@ -22,6 +22,7 @@ if(isset($_SESSION['user_id'])){
   if (isset($_POST['submit'])) { // If form is submitted
     // Email of the user
     $email = mysqli_real_escape_string($connection, $_POST['email']);
+    $_SESSION['user_email'] = $email;
     //Hash of password is returned
     $password = hashString(mysqli_real_escape_string($connection, $_POST['password']));
   
@@ -44,6 +45,7 @@ if(isset($_SESSION['user_id'])){
             // If password matches, redirect to main.php
             redirection('main.php');
         } else {
+          $flag = 1;
           $_SESSION['login_message'] = "Wrong Password";
           
         }
@@ -66,7 +68,7 @@ elseif (isset($_SESSION['user_id'])) {
     <div class="login-container">
       <h1 class="login-heading">Welcome</h1>
       <form action="index.php" method='POST' class="login-form">
-        <input type="text"  name='email' placeholder="Email" class="login-input"  required><br>
+        <input type="text"  name='email' placeholder="Email" class="login-input" value= '<?php $value =  isset($flag) ? $_SESSION['user_email'] : ""; echo $value;    ?>' required><br>
         <input type="password" name='password' placeholder="Password" class="login-input"  required><br>
         <input type="submit" name='submit' class="login-submit">
       </form>
