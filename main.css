@@ -907,7 +907,7 @@ input[type="file"]:hover {
 .user-cover-area {
   position: relative;
   height: 500px;
-  margin: 30px 100px 0;
+  margin: 30px 0px;
   border-radius: 5px 5px 0px 0px;
   border-radius: 5px;
   background-color: #fff;
@@ -924,7 +924,9 @@ input[type="file"]:hover {
 }
 
 .user-cover {
-  background: linear-gradient(to bottom, #083023, #1f4b49);
+  /* background-color: #3578e5; */
+  background-repeat: no-repeat;
+  background-size: cover;
   height: 400px;
   border-radius: 5px;
 }
@@ -946,6 +948,19 @@ input[type="file"]:hover {
 .user-pic-container img {
   width: 150px;
   height: 150px;
+}
+
+.edit-profile-pic{
+  position: absolute;
+  top: 290px;
+  left: 600px;
+
+}
+
+.edit-profile-pic .pic-upload-btn{
+  font-size: 20px;
+  padding: 5px;
+  background: #ff763a;
 }
 
 .friend-button {
