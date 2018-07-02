@@ -19,8 +19,6 @@ require_once('header.php');
 
 ?>
 
-
-
 <div class='content'>
     <?php
         // Getting all your requests from database which you have received
@@ -48,8 +46,11 @@ DELIMETER;
         }
         // Displaying friends
         $friend_req .= '<div class="friends-list"><h1>Friends</h1><div class="friends-list-elements"><div class="friends-container">';
-        echo $friend_req;  
-        displayFriends();
+        echo $friend_req;
+        $id = null;
+        if(isset($_GET['id']))
+            $id = $_GET['id'];    
+        displayFriends(null,$id);
         echo "</div></div></div></div>";
         
     ?>

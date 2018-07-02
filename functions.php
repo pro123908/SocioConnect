@@ -1115,11 +1115,13 @@ function ignoreReq($id)
     queryFunc("UPDATE friend_requests SET status=2 WHERE to_id='{$userLoggedIn}' AND from_id='{$id}'");
 }
 
-function displayFriends($count=null)
+function displayFriends($count=null,$id=null)
 {
     // Displaying all friends of current user
-
-    $userID = $_SESSION['user_id'];
+    if($id)
+        $userID = $id;
+    else        
+        $userID = $_SESSION['user_id'];
 
     $queryResult = queryFunc("SELECT * from friends WHERE user1='$userID' OR  user2='$userID'");
     
@@ -1148,7 +1150,7 @@ function displayFriends($count=null)
                     break;
                 }
             }
-            $friend_id = ($_SESSION['user_id'] == $row['user1']) ? $row['user2'] : $row['user1'] ;  // friend
+            $friend_id = ($userID == $row['user1']) ? $row['user2'] : $row['user1'] ;  // friend
             // Getting name of that friend
             $queryFriends = queryFunc("SELECT *,CONCAT(first_name,' ',last_name) as name FROM users WHERE user_id='$friend_id'");
 
@@ -1157,7 +1159,7 @@ function displayFriends($count=null)
             array_push($friends,$friend);
         }
         sortArrayByKey($friends,true);
-        printFriendsList($friends);
+        printFriendsList($friends,$id);
     }
     if(!isset($_SESSION['more_friends'])){
         if ($numberOfIteration == 0) {
@@ -1169,7 +1171,7 @@ function displayFriends($count=null)
 
 }
 
-function printFriendsList($friends){
+function printFriendsList($friends,$id){
     
     foreach ($friends as $friend){
         $time = activeAgo($friend['user_id']);
@@ -1200,13 +1202,20 @@ function printFriendsList($friends){
                 <a href="timeline.php?visitingUserID={$friend['user_id']}" class='friend-text'>{$friend['name']}</a> 
                 <span class='{$stateClass}'>{$time}</span>           
             </div>
-            <div class='friend-action'>
-            <div>
-            <a href="javascript:removeFriend({$friend['user_id']})" class='remove-friend'><i class="tooltip-container fas fa-times">
-            <span class='tooltip tooltip-right'>Remove Friend</span>
-            </i></a>
+FRIEND;
+          if(!$id){
+            $content .= <<<FRIEND
+                <div class='friend-action'>
+                <div>
+                <a href="javascript:removeFriend({$friend['user_id']})" class='remove-friend'><i class="tooltip-container fas fa-times">
+                <span class='tooltip tooltip-right'>Remove Friend</span>
+                </i></a>
+                </div>
             </div>
-        </div>
+FRIEND;
+         }
+
+    $content .= <<<FRIEND
         </div>
         </div>
 FRIEND;
@@ -1648,7 +1657,7 @@ function deleteConvo($partnerId)
 }
 
 
-function profilePic($id)
+function coverArea($id)
 {
     $queryResult = queryFunc("SELECT * FROM users WHERE user_id='$id'");
     $queryUser = isRecord($queryResult);
@@ -1702,13 +1711,18 @@ PROFILE;
             <img class="modal-content" id="modal-img" src="">
         </div>
 PROFILE;
+    $friendsLink = "requests.php";
+    $activitiesLink = "allActivities.php";
+    if(isFriend($id)){
+        $friendsLink  = $friendsLink . "?id=" . $id;
+        $activitiesLink = $activitiesLink . "?id=" . $id;
     }
     $content .=<<<PROFILE
     </div>
     <div class='user-timeline-tabs'>
 
     <div class='friends-link'>
-        <a href='requests.php' class='friends-link-button'>Friends</a>
+        <a href='{$friendsLink}' class='friends-link-button'>Friends</a>
     </div>
 
         <div class='user-info'>
@@ -1717,12 +1731,12 @@ PROFILE;
         </div>
 
         <div class='newsfeed-link'>
-        <a href='main.php' class='newsfeed-link-button'>Newsfeed</a>
+        <a href='{$activitiesLink}' class='recent-activities-link-button'>Recent Activities</a>
     </div>
     </div>
     
 PROFILE;
-    
+}
     echo $content;
 }
 
