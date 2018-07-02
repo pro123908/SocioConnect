@@ -30,7 +30,7 @@ require_once('header.php')
 ?>
 <div class='user-timeline'>
     <div class='user-cover-area'>
-        <?php $flag ? profilePic($_SESSION['user_id']) : profilePic($_GET['visitingUserID']) ?>
+        <?php $flag ? coverArea($_SESSION['user_id']) : coverArea($_GET['visitingUserID']) ?>
     </div>
 
     <div class='user-attributes-area'>

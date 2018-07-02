@@ -981,7 +981,7 @@ input[type="file"]:hover {
   text-align: center;
 }
 
-.friends-link-button,.newsfeed-link-button{
+.friends-link-button, .recent-activities-link-button{
   text-decoration: none;
   color: #000;
   
@@ -989,7 +989,7 @@ input[type="file"]:hover {
 }
 
 
-.friends-link-button:hover,.newsfeed-link-button:hover{
+.friends-link-button:hover,.recent-activities-link-button:hover{
  background-color: #edf2f6;
 }
 
