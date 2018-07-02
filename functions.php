@@ -71,6 +71,9 @@ function redirection($path)
 
 function addPost($flag, $visitorID)
 {
+
+    // ---------------------- REFRACTED ------------------------
+
     // Adding post form
     $userID = $_SESSION['user_id'];
     if ($flag || $visitorID == $userID) {
@@ -113,6 +116,9 @@ function getTime($time)
 
 function newPost($postContent,$pic=null)
 {
+
+    // ---------------------- REFRACTED ------------------------
+
     // Function for adding a post
     global $connection;
     $post = mysqli_real_escape_string($connection, $postContent);
@@ -220,6 +226,8 @@ POST;
 
 function deletePost($postID)
 {
+    // ---------------------- REFRACTED ------------------------
+
     // Deleting post selected by passed postID
     $deleteQuery = queryFunc("DELETE from posts WHERE post_id ='$postID'");
 
@@ -232,8 +240,10 @@ function deletePost($postID)
     //Deleting notifications of that post
     queryFunc("DELETE FROM notifications WHERE post_id='$postID'");
 
-    // Returning success message
+    // Post Decreased
     $_SESSION['no_of_posts_changed']--;
+
+    // Returning success message
     return $deleteQuery;
 }
 
@@ -246,8 +256,13 @@ function deleteComment($commentID)
 
 function addComment($userID, $postID, $comment)
 {
-    // Adding comment
+    // ---------------------- REFRACTED ------------------------
 
+    // userID - Person who commented
+    // postID - Post on which person commented
+    // comment - Comment text
+
+    // Adding comment
     global $connection;
     //Inserting the comment using different method
     $queryInsert = $connection->prepare("INSERT INTO comments (user_id, post_id, comment,createdAt) VALUES (?, ?, ?,now())");
@@ -255,27 +270,24 @@ function addComment($userID, $postID, $comment)
     $queryInsert->execute();
     $queryInsert->close();
 
+    // Gettting the ID of last inserted record
     $ID = mysqli_insert_id($connection);
 
     
     //Generating Notification
+    // Getting the creator of the post
     $whosePostQuery = queryFunc("SELECT user_id from posts where post_id='$postID'");
     $whosePost = isRecord($whosePostQuery);
 
     // Calling notification method for notification entry to database
     notification($userID, $whosePost['user_id'], $postID, 'commented');
     
-    // // Query for getting the latest comment
-    // $queryResult = queryFunc("SELECT comment_id from comments ORDER BY comment_id DESC LIMIT 1");
-    // $row = isRecord($queryResult);
-
-    // Returning the latest comemnt ID
-    // return $row['comment_id'];
     return $ID;
 }
 
 function showPostsQueries($exception)
 {
+    // Selecting posts from database based on exception passed
     $queryResult = queryFunc("SELECT post,post_id,posts.user_id,users.profile_pic,posts.pic,edited,CONCAT(first_name,' ',last_name) as 'name',createdAt from posts inner join users on users.user_id = posts.user_id {$exception}");
 
     return $queryResult;
@@ -283,6 +295,7 @@ function showPostsQueries($exception)
 
 function showPostQuery($flag)
 {
+    // ---------------------- REFRACTED ------------------------
 
     //Selecting all the posts in a manner where user_id matches post_id
     // Querying database depending on flag value
@@ -298,25 +311,22 @@ function showPostQuery($flag)
     $userID = $_SESSION["user_id"];
 
     if ($flag=='a') {
-        // $queryResult = queryFunc("SELECT post,post_id,posts.user_id,users.profile_pic,CONCAT(first_name,' ',last_name) as 'name',createdAt from posts inner join users on users.user_id = posts.user_id order by post_id desc");
-
+        //Getting all posts 
         $queryResult = showPostsQueries('order by post_id desc');
     } elseif ($flag == 'b') {
-        // $queryResult = queryFunc("SELECT post,post_id,posts.user_id,users.profile_pic,CONCAT(first_name,' ',last_name) as 'name',createdAt from posts inner join users on users.user_id = posts.user_id where users.user_id = {$userID} order by post_id desc");
-
+        
+        // Getting only user's posts
         $queryResult = showPostsQueries("where users.user_id = {$userID} order by post_id desc");
     } elseif ($flag=='c') {
         $postID = $_SESSION['notiPostID'];
-        // $queryResult = queryFunc("SELECT post,post_id,posts.user_id,users.profile_pic,CONCAT(first_name,' ',last_name) as 'name',createdAt from posts inner join users on users.user_id = posts.user_id WHERE post_id='$postID'");
-
+       // To display notification on separate page with post
         $queryResult = showPostsQueries("WHERE post_id={$postID}");
     } elseif ($flag == 'd') {
-        // $queryResult = queryFunc("SELECT post,post_id,posts.user_id,users.profile_pic,CONCAT(first_name,' ',last_name) as 'name',createdAt from posts inner join users on users.user_id = posts.user_id WHERE posts.user_id='$userID' order by post_id desc LIMIT 1");
+       
 
         $queryResult = showPostsQueries("WHERE posts.user_id={$userID} order by post_id desc LIMIT 1");
     } elseif ($flag > 0) {
-        // $queryResult = queryFunc("SELECT post,post_id,posts.user_id,users.profile_pic,CONCAT(first_name,' ',last_name) as 'name',createdAt from posts inner join users on users.user_id = posts.user_id where users.user_id = '$flag' order by post_id desc");
-
+        // When you go to someone elses profile
         $queryResult = showPostsQueries("where users.user_id = {$flag} order by post_id desc");
     }
 
@@ -800,17 +810,26 @@ DELIMETER;
     }
 }
 
-function notification($sUser, $dUser, $post, $type)
+function notification($sUser, $dUser, $postID, $type)
 {
+    // ---------------------- REFRACTED ------------------------
+
+    // sUser - Person who generated notification
+    // dUser - Person to which notification will be sent
+    // post - post on which notification is occured
+    // type - type of notification - like,comment
+
     //Checking if notification already been there and is seen
-    $notiAlready = queryFunc("SELECT * from notifications WHERE s_user_id='$sUser' AND post_id='$post' AND typeC='$type' AND d_user_id='$dUser' AND seen != 1");
+    // To avoid multiple notifications for comment on post
+    // Such as commenting two times on post in one go
+    $notiAlready = queryFunc("SELECT * from notifications WHERE s_user_id='$sUser' AND post_id='$postID' AND typeC='$type' AND d_user_id='$dUser' AND seen != 1");
 
     if (!isData($notiAlready)) {
         //Checking if the src and dest user are not same
+        // Avoiding generating notification to yourself
         if ($sUser != $dUser) {
-            $notiQuery = queryFunc("INSERT INTO notifications(s_user_id,d_user_id,post_id,typeC,createdAt) VALUES('$sUser', '$dUser','$post','$type',now())");
-        } else {
-        }
+            $notiQuery = queryFunc("INSERT INTO notifications(s_user_id,d_user_id,post_id,typeC,createdAt) VALUES('$sUser', '$dUser','$postID','$type',now())");
+        } 
     }
 }
 
