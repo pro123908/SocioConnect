@@ -295,7 +295,7 @@ function showPostsQueries($exception)
 
 function showPostQuery($flag)
 {
-    // ---------------------- REFRACTED ------------------------
+    // ---------------------- REFRACTORED ------------------------
 
     //Selecting all the posts in a manner where user_id matches post_id
     // Querying database depending on flag value
@@ -336,6 +336,9 @@ function showPostQuery($flag)
 
 function showPosts($flag, $page, $limit)
 {
+    // ------------------ REFACTORED -------------------------
+
+
     //Selecting all the posts in a manner where user_id matches post_id
     // Querying database depending on flag value
     /*
@@ -378,27 +381,27 @@ function showPosts($flag, $page, $limit)
         while ($row = isRecord($queryResult)) {
             //Wait to reach start value to start rendering posts, because before $start are already rendered
 
+            // Showing only friends posts and your posts
             if ($row['user_id'] == $_SESSION['user_id'] || isFriend($row['user_id'])) {
+
                 //once it reaches to value of $start we start rendering posts.
                 if ($numberOfIteration++ < $start) {
                     continue;
                 }
                 if ($count > $limit) {
+                    // Break if 10 posts are rendered
                     break;
                 } else {
                     $count++;
                 }
 
                 $postID = $row['post_id'];
-                // $userID = $_SESSION['user_id'];
+                
                 $user = $_SESSION['user'];
-                // $fUser = $row['user_id'];
-                // $diffTime = differenceInTime($row['createdAt']);
-                // $timeToShow = timeString($diffTime);
-
-                $post = renderPost($row);
-                $post .= renderPostComments($flag, $postID, $row['user_id']);
-                $post .= renderPostCommentForm($postID, $user, $profilePic);
+              
+                $post = renderPost($row); // For rendering post
+                $post .= renderPostComments($flag, $postID, $row['user_id']); // For rendering comments of that post
+                $post .= renderPostCommentForm($postID, $user, $profilePic); // Comment form for that post
 
          
                 // Finally rendering all the content in the variable xD
