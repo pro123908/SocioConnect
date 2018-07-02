@@ -194,9 +194,6 @@ CONTENT;
             </div>
                     <form onsubmit="return comment({$postID},'{$user}','{$profilePic}')" method="post" id='commentForm'>
                         <input name = "comment_{$postID}" type='text' autocomplete = "off">
-                        <input type="text" value="{$postID}" style="display:none" name="post_id_{$postID}">
-                        <input type="text" value="{$user}" style="display:none" name="post_user">
-                        <input type="text" value="{$profilePic}" style="display:none" name="pic_user">
                         <input style='display:none;' type='submit' id="{$postID}" value="Comment" > 
                     </form>
                 </div>
@@ -397,7 +394,7 @@ function showPosts($flag, $page, $limit)
 
                 $postID = $row['post_id'];
                 
-                $user = $_SESSION['user'];
+                $user = $_SESSION['user']; // username
               
                 $post = renderPost($row); // For rendering post
                 $post .= renderPostComments($flag, $postID, $row['user_id']); // For rendering comments of that post
@@ -409,10 +406,13 @@ function showPosts($flag, $page, $limit)
             }
         }
         if ($count > $limit) {
+            // If there are more posts after limit
             $infoForNextTime = "<input type='hidden' id='nextPage' value='".($page+1)."' ><input type='hidden' id='noMorePosts' value='false'>";
         } else {
             $infoForNextTime = "<input type='hidden' id='noMorePosts' value='true'>";
         }
+
+
         echo $infoForNextTime;
     }
 }
@@ -420,8 +420,9 @@ function showPosts($flag, $page, $limit)
 
 function renderPostCommentForm($postID, $user, $profilePic)
 {
+    // ---------------------- REFRACTORED ------------------------
        
-                // Rendering input field for adding comment
+    // Rendering input field for adding comment
     $post = <<<POST
             </div>
             <div class='comment-form comment-form-$postID'>
@@ -430,9 +431,6 @@ function renderPostCommentForm($postID, $user, $profilePic)
                 </div>
                 <form onsubmit="return comment({$postID},'{$user}','{$profilePic}')" method="post" id='commentForm'>
                     <input name = "comment_{$postID}" type='text' autocomplete = "off">
-                    <input type="text" value="{$postID}" style="display:none" name="post_id_{$postID}">
-                    <input type="text" value="{$user}" style="display:none" name="post_user">
-                    <input type="text" value="{$profilePic}" style="display:none" name="pic_user">
                     <input style='display:none;' type='submit' id="{$postID}" value="Comment" > 
                 </form>
             </div>
@@ -445,6 +443,11 @@ POST;
 
 function renderPostComments($flag, $postID, $fUser)
 {
+    // ---------------------- REFRACTORED ------------------------
+
+    // flag - notification type
+    // fUser - creator of post
+
     // Opening comment section if it is a comment notification else not
     if ($flag == 'c' && $_SESSION['notiType'] == 'commented') {
         $commentShow = 'show';
@@ -466,6 +469,7 @@ POST;
         $timeToShow = getTime($comments['createdAt']);
         $commentID = $comments['comment_id'];
         $DP = $comments['profile_pic'];
+
         // Enabling delete option for comment if it is user's post or his comment else disabling
         if ($comments['user_id'] == $_SESSION['user_id'] || $_SESSION['user_id'] == $fUser) {
             $commentDeleteButton = <<<ComDel
@@ -475,7 +479,7 @@ ComDel;
             $commentDeleteButton = '';
         }
 
-        // Enabling edit option for comment if it is his comment else disabling
+        // Enabling edit option for comment if it is user's comment else disabling
         if ($comments['user_id'] == $_SESSION['user_id']) {
             $commentEditButton = <<<ComEdit
             <i class="tooltip-container fas fa-edit comment-edit" onclick="javascript:editComment({$commentID},{$postID},'{$DP}','{$timeToShow}')"><span class='tooltip tooltip-right'>Edit</span></i>
@@ -484,6 +488,7 @@ ComEdit;
             $commentEditButton = '';
         }
 
+        // if comment is edited then display 'edited' text
         if($comments['edited'] == 1)
             $edited = "Edited";
         else
@@ -506,7 +511,6 @@ ComEdit;
                         <span class='comment-time'>$timeToShow</span>
                         <span class='comment-edit-text'>$edited</span>
                         </div>
-                        
                         </div>
                     </div>
 
@@ -518,6 +522,10 @@ POST;
 
 function renderPost($row)
 {
+    // ---------------------- REFRACTORED ------------------------
+
+    // row - All content about post
+
     $postID = $row['post_id'];
     $timeToShow = getTime($row['createdAt']);
     $postPic = $row['pic'];
@@ -532,20 +540,14 @@ function renderPost($row)
     $commentCountResult = queryFunc("SELECT count(*) as count from comments where post_id='$postID'");
     $commentsCount = isRecord($commentCountResult);
 
-    //Getting liker's IDs
+    //Getting liker's IDs - If you have liked that post or not?
     $likers = queryFunc("SELECT user_id from likes where post_id='$postID' and user_id = '$userLoggedIn'");
+
     $flag = false;
-    // if(isData($likers)){
-    //     while($liker = isRecord($likers)){
-    //         if($liker['user_id'] == $_SESSION['user_id']){
-    //             $flag = true;
-    //             break;
-    //         }
-    //     }
-    // }
+
 
     if(isData($likers)){
-        $flag = true;
+        $flag = true; // You have liked the current post
     }
 
     //Checking if you have liked the post?
@@ -555,7 +557,7 @@ function renderPost($row)
         $likeIcon = "<i class='far fa-thumbs-up'></i>";
     }
 
-    // Enabling delete option for post if it is current user's post else disabling
+    // Enabling delete and edit option for post if it is current user's post else disabling
     if ($row['user_id'] == $_SESSION['user_id']) {
         $PostDeleteButton = <<<PosDel
             <div class='post-delete-icon'>
@@ -569,7 +571,8 @@ PosDel;
 
      /* Post Pic */
      $postPicContent = '';
-     if(!($postPic == null)){
+     if($postPic != null){
+         // if there is a post pic
          $postPicContent =<<<CONTENT
          <div class='post-image-container'>
          <img src='{$postPic}' class='post-image' width='400' />
@@ -577,6 +580,7 @@ PosDel;
 CONTENT;
      }
 
+     // If post is edited then displaying 'edited' text
      if($row['edited'] == 1)
          $edited = "Edited";
      else    
@@ -618,6 +622,8 @@ POST;
 
 function logout()
 {
+    // --------------------- REFACTORED -----------------------
+
     turnOffline($_SESSION['user_id']);
     
     session_start();
@@ -645,7 +651,7 @@ function logout()
 function differenceInTime($createdAt)
 {
     // Calculating difference in current time and time of the particular content
-    $currentTime = queryFunc("SELECT TIMESTAMPDIFF(SECOND, '".$createdAt."', now()) as 'time' ");
+    $currentTime = queryFunc("SELECT TIMESTAMPDIFF(SECOND, '$createdAt', now()) as 'time' ");
     $currentTime = isRecord($currentTime);
     return $currentTime['time'];
 }
@@ -715,6 +721,8 @@ function timeString($time)
 
 function formValidation($email, $pass, $re_pass)
 {
+    /* --------------------- REFACTORED ----------------------- */
+
     // Querying database to check if user exists already?
     $queryResult = queryFunc("SELECT user_id from users where email='$email'");
     $row = isRecord($queryResult);
@@ -747,71 +755,6 @@ function formValidation($email, $pass, $re_pass)
     }
 }
 
-
-function personalInfo($flag, $id)
-{
-    // Displaying user personal info
-
-    // Querying database for user info
-    if ($id > 0) { // You searched someone
-        $queryResult = queryFunc("SELECT * from users where user_id='$id'");
-    } else { // you came on your profile xD
-        $queryResult = queryFunc("SELECT * from users where user_id={$_SESSION['user_id']}");
-    }
-    $row = isRecord($queryResult);
-    $pic = $row['profile_pic'];
-    // If profilePic has been uploaded then hide the form else show it
-    if (isset($pic)) {
-        $picForm = 'hidden';
-    } else {
-        $picForm = 'show';
-    }
-
-    // Rendering Personal Info Block
-    $info = <<<DELIMETER
-    <div id="modal" class="modal">
-        <span class="close" id="modal-close" onclick="onClosedImagModal()">&times;</span>
-        <img class="modal-content" id="modal-img" src='http://localhost/SocioConnect/{$pic}'>
-    </div>
-     <img class='dp' src='http://localhost/SocioConnect/{$pic}'alt='hello' onclick='showImage()'>
-DELIMETER;
-    if ($flag || ($_SESSION['user_id'] == $row['user_id'])) {
-        // 2nd condtion - have you searched yourself and then came to your profile xD
-        // User will have changing pic capability
-        $info .= <<<DELIMETER
-    <button onclick="javascript:changePic()">Change Profile Pic</button>
-DELIMETER;
-    }
-    // You have came to someone else profile, how come you are supposed to change profile pic? xD
-    $info .= <<<DELIMETER
-     <p>First Name: {$row['first_name']} </p>
-     <p>Last Name: {$row['last_name']}</p>
-     <p>Email: {$row['email']}</p>
-     <p>Age: {$row['age']}</p>
-     <p>Gender: {$row['gender']}</p>
-DELIMETER;
-
-    // Profile pic input form
-    if ($flag || ($_SESSION['user_id'] == $row['user_id'])) {
-        // 2nd condtion - have you searched yourself and then came to your profile xD
-
-        $info .= <<<DELIMETER
-     <form action="uploadpic.php" method="post" enctype="multipart/form-data" class='formPic {$picForm}'>
-        <label for='file'>Select a pic</label>
-        <input type="file" name="file" style='margin-left:110px;'><br>
-        <input type="submit" name="submit" value="Upload Photo">
-     </form>
-DELIMETER;
-    }
-    // Rendering all above stuff xD
-    echo $info;
-
-    // Just unsetting dp set text after printing on screen
-    if (isset($_SESSION['dp_upload_message'])) {
-        echo $_SESSION['dp_upload_message'];
-        unset($_SESSION['dp_upload_message']);
-    }
-}
 
 function notification($sUser, $dUser, $postID, $type)
 {
