@@ -758,7 +758,7 @@ function formValidation($email, $pass, $re_pass)
 
 function notification($sUser, $dUser, $postID, $type)
 {
-    // ---------------------- REFRACTED ------------------------
+    /* ---------------------- REFRACTORED ------------------------ */
 
     // sUser - Person who generated notification
     // dUser - Person to which notification will be sent
@@ -780,11 +780,15 @@ function notification($sUser, $dUser, $postID, $type)
 }
 
 function notificationQuery($conflict,$limit=0){
+
+    // limit - Number of notifications to render
     $isLimit = '';
+
     if($limit != 0)
     {
         $isLimit = "LIMIT $limit";
     }
+
     $notiQuery = queryFunc("SELECT * from notifications WHERE $conflict order by noti_id desc $isLimit ");
 
     return $notiQuery;
@@ -793,6 +797,7 @@ function notificationQuery($conflict,$limit=0){
 
 function showNotifications($place,$page,$limit)
 {
+
     // $limit - Number of notifications 
 
     // $page - Notification Page Number -> on which page you are
@@ -811,6 +816,7 @@ function showNotifications($place,$page,$limit)
     
     if ($place == 1) {
         // Getting all the requests from database
+        // Requests accepted by you and requests sent by you
        $notiQuery = notificationQuery("(d_user_id='$user' or s_user_id='$user') AND typeC='request'",$limit);
        $postAvatar = 'post-avatar-30';
        $ifNoData = 'No Friend Request';
@@ -818,11 +824,13 @@ function showNotifications($place,$page,$limit)
     
     elseif ($place==2) {
         // Selecting notifications for the current User
+        // Notification generated for you or friend request sent by you
         $notiQuery = notificationQuery("d_user_id={$user} OR (s_user_id={$user} AND typeC='request')",$limit);
         $postAvatar = 'post-avatar-30'; // For notification Area
         $ifNoData = 'No Notifications';
 
     } elseif($place == 3) {
+        // For notificaton page
         $notiQuery = notificationQuery("d_user_id={$user} OR (s_user_id={$user} AND typeC='request')");
         $postAvatar = 'post-avatar-40'; // For notification Page
         $ifNoData = 'No Notifications';
@@ -892,11 +900,13 @@ function showNotifications($place,$page,$limit)
                 if ($row['seen'] == 1 && ($place == 1 || $place==2 || $place == 3)) {
                     $conflict = 'accepted your request';
                     $notiIcon = 'fas fa-check-circle';
+                    $notiLink = "timeline.php?visitingUserID=$dUser";
                     //Modifying queryID because we are selecing different user's pic this time
                     $queryID = $dUser;
-                    // $personQuery = queryFunc("SELECT profile_pic,CONCAT(first_name,' ',last_name) as name FROM users WHERE user_id='$dUser'");
-                    // $sPerson = isRecord($personQuery);
+                 
+
                 }
+                
             }
              else if ($type=='post') {
                 $conflict = 'posted';
@@ -916,7 +926,9 @@ function showNotifications($place,$page,$limit)
             // Selecting name of the user who generated the notification
             $personQuery = queryFunc("SELECT profile_pic,CONCAT(first_name,' ',last_name) as name FROM users WHERE user_id='$queryID'");
             $sPerson = isRecord($personQuery);
-            $notiLink = "notification.php?postID=$postID&type=$type&notiID=$notiID";
+            
+            if($type != 'request')
+                $notiLink = "notification.php?postID=$postID&type=$type&notiID=$notiID";
 
             $noti = <<<NOTI
                 <a href={$notiLink} class='notification  {$colorNoti}'>
@@ -1299,6 +1311,7 @@ function showRecentActivities($page,$limit,$place = null,$id = null){
     // 1 - main.php area
     // 2 - recent activities page
 
+    //if id is true then you are seeing someone else's activities
     $userLoggedIn = $_SESSION['user_id'];
     if($id)
         $userLoggedIn = $id;
@@ -1747,7 +1760,7 @@ function activeAgo($id)
     return $time;
 }
 
-function addActivity($activity_type, $target_id, $userLoggedIn,$id)
+function addActivity($activity_type, $target_id, $userLoggedIn,$id = null)
 {
     // Activity type
     // activity_type == 0 ==> Like
@@ -1764,8 +1777,17 @@ function addActivity($activity_type, $target_id, $userLoggedIn,$id)
     // target content post etc
 
     $userLoggedIn = $_SESSION['user_id'];
-    if($id)
+    
+    //flag2 is used for checking whether user logged is authorized for viewing that post
+    $flag2 = false;
+    if($id){
         $userLoggedIn = $id;
+        $frined = queryFunc("SELECT user_id from posts where post_id = '$target_id'");
+        $friend = isRecord($frined);
+        $friend = $friend['user_id'];
+        if(!(isFriend($friend)) && $friend != $_SESSION['user_id'])
+            $flag2 = true;
+    }
     $profilePic = getUserProfilePic($userLoggedIn);
     $deletedActivity = '';
 
@@ -1840,12 +1862,18 @@ function addActivity($activity_type, $target_id, $userLoggedIn,$id)
             $flag = false;
         }
     }
-    if ($flag) {
+    if ($flag && !$flag2) {
         // Activity not deleted, so getting its time
         $time = getTime($time);
     } else {
         // Activity deleted
-        $time = "Deleted";
+        if(!($flag)){
+            $time = "Deleted";
+        }
+        //Unauthorized
+        else{            
+            $time = "Unauthorized Access";
+        }
         $deletedActivity = 'deleted-activity';
         $activityLink = "javascript:void(0)";
     }
