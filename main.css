@@ -988,16 +988,9 @@ input[type="file"]:hover {
   padding: 20px;
 }
 
-
 .friends-link-button:hover,.recent-activities-link-button:hover{
  background-color: #edf2f6;
 }
-
-
-
-
-
-
 
 .friend-button {
   display: inline-block;
@@ -1446,4 +1439,21 @@ input[type="file"]:hover {
 
 ::-webkit-scrollbar-thumb:hover {
   /* background: #555;  */
+}
+
+.user-info-value{
+  font-weight: bold;
+  color:blue;
+}
+
+.user-info-key{
+  color:red;
+}
+
+.user-info{
+  padding: 10px;
+}
+
+.user-information{
+  margin : 10px;
 }

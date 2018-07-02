@@ -1048,6 +1048,14 @@ function showFriendButton($id)
     }
 }
 
+function showUserButton($id){
+    
+    $button = "<form class='friend-button' action = 'timeline.php?visitingUserID=$id' method='POST'>";
+    $button .= checkUserState($id);
+    $button .= "</form>";
+    echo $button;
+}
+
 
 //friend operations
 function addFriend($id)
@@ -1966,4 +1974,50 @@ function profilePicChange($pic){
 
     $userID = $_SESSION['user_id'];
     $queryCoverPic = queryFunc("UPDATE users set profile_pic='$pic' where user_id=$userID");
+}
+
+function showUserInfo($id){
+    $userInfo = queryFunc("SELECT school,college,university,contact_no,work from users where user_id = '$id'");
+    if(isData($userInfo)){
+        $userInfo = isRecord($userInfo);
+
+        //Setting default value if there is no value
+        if(!isset($userInfo['school']))
+            $userInfo['school'] = "-------";
+        if(!isset($userInfo['college']))
+            $userInfo['college'] = "-------";
+        if(!isset($userInfo['university']))
+            $userInfo['university'] = "-------";
+        if(!isset($userInfo['work']))
+            $userInfo['work'] = "-------";
+        if(!isset($userInfo['contact_no']))
+            $userInfo['contact_no'] = "-------"; 
+
+        $info = <<<INFO
+            <div class='user-info'>
+                <span class='user-info-key'>School: </span>
+                <span class='user-info-value'>{$userInfo['school']}</span> 
+            </div>
+            <div class='user-info'>
+                <span class='user-info-key'>College: </span>
+                <span class='user-info-value'>{$userInfo['college']} </span>
+            </div>
+            <div class='user-info'>
+                <span class='user-info-key'>University: </span>
+                <span class='user-info-value'>{$userInfo['university']} </span>
+            </div>
+            <div class='user-info'>
+                <span class='user-info-key'>Work: </span>
+                <span class='user-info-value'>{$userInfo['work']} </span>
+            </div>
+            <div class='user-info'>
+                <span class='user-info-key'>Contact No:</span>
+                <span class='user-info-value'>{$userInfo['contact_no']} </span>
+            </div>
+INFO;
+
+    if($id == $_SESSION['user_id'])
+        $info .= "<input type = 'submit' value='Edit' name = 'edit'>";
+    echo $info;            
+    }
 }
