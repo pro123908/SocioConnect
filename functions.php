@@ -408,7 +408,7 @@ function showPosts($flag, $page, $limit)
 function renderPostCommentForm($postID, $user, $profilePic)
 {
        
-                // Rendering input field for adding comment
+    // Rendering input field for adding comment
     $post = <<<POST
             </div>
             <div class='comment-form comment-form-$postID'>
@@ -1334,6 +1334,7 @@ function showRecentActivities($page,$limit,$place = null,$id = null){
     // 1 - main.php area
     // 2 - recent activities page
 
+    //if id is true then you are seeing someone else's activities
     $userLoggedIn = $_SESSION['user_id'];
     if($id)
         $userLoggedIn = $id;
@@ -1782,7 +1783,7 @@ function activeAgo($id)
     return $time;
 }
 
-function addActivity($activity_type, $target_id, $userLoggedIn,$id)
+function addActivity($activity_type, $target_id, $userLoggedIn,$id = null)
 {
     // Activity type
     // activity_type == 0 ==> Like
@@ -1799,8 +1800,17 @@ function addActivity($activity_type, $target_id, $userLoggedIn,$id)
     // target content post etc
 
     $userLoggedIn = $_SESSION['user_id'];
-    if($id)
+    
+    //flag2 is used for checking whether user logged is authorized for viewing that post
+    $flag2 = false;
+    if($id){
         $userLoggedIn = $id;
+        $frined = queryFunc("SELECT user_id from posts where post_id = '$target_id'");
+        $friend = isRecord($frined);
+        $friend = $friend['user_id'];
+        if(!(isFriend($friend)) && $friend != $_SESSION['user_id'])
+            $flag2 = true;
+    }
     $profilePic = getUserProfilePic($userLoggedIn);
     $deletedActivity = '';
 
@@ -1875,12 +1885,18 @@ function addActivity($activity_type, $target_id, $userLoggedIn,$id)
             $flag = false;
         }
     }
-    if ($flag) {
+    if ($flag && !$flag2) {
         // Activity not deleted, so getting its time
         $time = getTime($time);
     } else {
         // Activity deleted
-        $time = "Deleted";
+        if(!($flag)){
+            $time = "Deleted";
+        }
+        //Unauthorized
+        else{            
+            $time = "Unauthorized Access";
+        }
         $deletedActivity = 'deleted-activity';
         $activityLink = "javascript:void(0)";
     }
