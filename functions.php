@@ -1675,8 +1675,20 @@ DATA;
         </form>
 
 COVER;
+
+        $editProfilePic =<<<PROFILE
+        <form onchange="return editProfilePicture()" method="post" class="edit-profile-pic">
+                <div class='upload-btn-wrapper'>
+                <button class='pic-upload-btn'><i class='far fa-image'></i></button>
+                <input type='file' name='profile-pic'/>
+                <span class='pic-name'></span>
+            </div>   
+            </form>
+
+PROFILE;
     }else{
         $editCover = '';
+        $editProfilePic = '';
     }
 
     $content =<<<PROFILE
@@ -1686,13 +1698,7 @@ COVER;
             <span class='user-pic-container' onmouseover ="showEditImageButton()" onmouseout ="hideEditImageButton()">
             <img src='{$queryUser['profile_pic']}' onclick="showImage()"  id="profile_picture"/>
             </span>
-            <form onchange="return editProfilePicture()" method="post" class="edit-profile-pic">
-                <div class='upload-btn-wrapper'>
-                <button class='pic-upload-btn'><i class='far fa-image'></i></button>
-                <input type='file' name='profile-pic'/>
-                <span class='pic-name'></span>
-            </div>   
-            </form>
+            $editProfilePic
         </div>
 PROFILE;
     if (isFriend($id) || $_SESSION['user_id'] == $id) {
