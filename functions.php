@@ -774,7 +774,7 @@ function notification($sUser, $dUser, $postID, $type)
         //Checking if the src and dest user are not same
         // Avoiding generating notification to yourself
         if ($sUser != $dUser) {
-            $notiQuery = queryFunc("INSERT INTO notifications(s_user_id,d_user_id,post_id,typeC,createdAt) VALUES('$sUser', '$dUser','$postID','$type',now())");
+            $notiQuery = queryFunc("INSERT INTO notifications(s_user_id,d_user_id,post_id,typeC,createdAt) VALUES({$sUser}, '$dUser','$postID','$type',now())");
         } 
     }
 }
@@ -797,6 +797,8 @@ function notificationQuery($conflict,$limit=0){
 
 function showNotifications($place,$page,$limit)
 {
+    /* --------------- REFACTORED -------------------- */
+
 
     // $limit - Number of notifications 
 
@@ -819,7 +821,7 @@ function showNotifications($place,$page,$limit)
         // Requests accepted by you and requests sent by you
        $notiQuery = notificationQuery("(d_user_id='$user' or s_user_id='$user') AND typeC='request'",$limit);
        $postAvatar = 'post-avatar-30';
-       $ifNoData = 'No Friend Request';
+       $ifNoData = '<h3>No Friend Requests</h3>';
     } 
     
     elseif ($place==2) {
@@ -827,13 +829,13 @@ function showNotifications($place,$page,$limit)
         // Notification generated for you or friend request sent by you
         $notiQuery = notificationQuery("d_user_id={$user} OR (s_user_id={$user} AND typeC='request')",$limit);
         $postAvatar = 'post-avatar-30'; // For notification Area
-        $ifNoData = 'No Notifications';
+        $ifNoData = '<h3>No Notifications</h3>';
 
     } elseif($place == 3) {
         // For notificaton page
         $notiQuery = notificationQuery("d_user_id={$user} OR (s_user_id={$user} AND typeC='request')");
         $postAvatar = 'post-avatar-40'; // For notification Page
-        $ifNoData = 'No Notifications';
+        $ifNoData = '<h3>No Notifications</h3>';
     }
 
 
@@ -846,6 +848,17 @@ function showNotifications($place,$page,$limit)
 
     
     if (isData($notiQuery)) {
+
+
+        if($place == 1){
+            $friendRequestText = '<h3>Friend Requests</h3>';
+            echo $friendRequestText;
+        }else if($place == 2){
+            $notificationText = '<h3>Notifications</h3>';
+            echo $notificationText;
+        }
+
+        
         
         $numberOfIteration = 0; //Number of results checked - once it reaches to value of start we start rendering posts.
         $count = 1; // To keep track of no of posts rendered
@@ -880,6 +893,11 @@ function showNotifications($place,$page,$limit)
             $colorNoti = '';
             $conflict = '';
             $notiIcon = '';
+
+            // Will explain this xD
+            if($type == 'request' && $sUser==$user && $row['seen'] != 1){
+                continue;
+            }
 
             // Keeping ID of last notification so we can load latest notifications through AJAX
             if ($notiCounter == 0) {
@@ -926,7 +944,7 @@ function showNotifications($place,$page,$limit)
             // Selecting name of the user who generated the notification
             $personQuery = queryFunc("SELECT profile_pic,CONCAT(first_name,' ',last_name) as name FROM users WHERE user_id='$queryID'");
             $sPerson = isRecord($personQuery);
-            
+
             if($type != 'request')
                 $notiLink = "notification.php?postID=$postID&type=$type&notiID=$notiID";
 
@@ -941,6 +959,28 @@ NOTI;
             
                 echo $noti;
         }
+
+        // When notification dropdown
+        if($place == 2){
+        $notificationSeeMore = <<<DATA
+        <a href="allNotification.php" class='see-more'>
+              <span>See more</span>
+        </a>
+DATA;
+        echo $notificationSeeMore;
+
+        
+        }elseif($place == 1){
+            // When Friend Request dropdown
+            $friendRequestSeeMore = <<<DATA
+            <a href="requests.php" class='see-more'>
+            <span>See more</span>
+          </a>
+DATA;
+        echo $friendRequestSeeMore;
+        }
+
+
         if($place == 3){
             // If page is full with notification limit
             if ($count > $limit) {
@@ -965,7 +1005,7 @@ function isFriend($id)
 {
     // Checking if specified user your friend or not?
     $userLoggedIn = $_SESSION['user_id'];
-    $friend = queryFunc("SELECT friend_id FROM friends WHERE (user1='".$userLoggedIn."' and user2 = '".$id."') OR (user2='".$userLoggedIn."' and user1 = '".$id."') ");
+    $friend = queryFunc("SELECT friend_id FROM friends WHERE (user1='{$userLoggedIn}' and user2 = {$id}) OR (user2={$userLoggedIn} and user1 = {$id}) ");
     if (isData($friend)) {
         return true;
     } else {
@@ -975,8 +1015,9 @@ function isFriend($id)
 
 function reqSent($id)
 {
+    
     // Checking if request is already sent?
-    $request = queryFunc("SELECT id from friend_requests where to_id ='".$id."' and from_id='" . $_SESSION['user_id'] ."' and status = 0");
+    $request = queryFunc("SELECT id from friend_requests where to_id ={$id} AND from_id={$_SESSION['user_id']} AND status = 0");
     if (isRecord($request)) {
         return true;
     } else {
@@ -987,7 +1028,7 @@ function reqSent($id)
 function reqRecieved($id)
 {
     // Checking if you have received the request from that person?
-    $request = queryFunc("SELECT id from friend_requests where to_id ='".$_SESSION['user_id']."' and from_id='". $id ."' and status = 0");
+    $request = queryFunc("SELECT id from friend_requests where to_id ={$_SESSION['user_id']} AND from_id={$id} AND status = 0");
     if (isRecord($request)) {
         return true;
     } else {
@@ -997,6 +1038,8 @@ function reqRecieved($id)
 
 function checkUserState($id)
 {
+    // Checking if person whom profile you visited is your friend or not?
+
     if (isFriend($id)) {
         // If person is already your friend
         $state = "<i class='fas fa-user-friends'></i><input type = 'Submit' name='remove_friend' value='Remove Friend'>";
@@ -1025,21 +1068,13 @@ function showFriendButton($id)
     }
 }
 
-function showUserButton($id){
-    
-    $button = "<form class='friend-button' action = 'timeline.php?visitingUserID=$id' method='POST'>";
-    $button .= checkUserState($id);
-    $button .= "</form>";
-    echo $button;
-}
-
 
 //friend operations
 function addFriend($id)
 {
     // When add friend button is clicked
     // $id -> the person you are sending request too xD
-    $friend = queryFunc("INSERT INTO friend_requests (to_id, from_id) values(".$id.",".$_SESSION['user_id'].")");
+    $friend = queryFunc("INSERT INTO friend_requests (to_id, from_id) values({$id},{$_SESSION['user_id']})");
     
     notification($_SESSION['user_id'], $id, 0, 'request');
 
@@ -1051,7 +1086,8 @@ function cancelReq($id)
     $userID = $_SESSION['user_id'];
     // When cancel request button is clicked
     // Deleting friend request from database
-    $friend = queryFunc("DELETE FROM friend_requests WHERE to_id =".$id." AND from_id =".$_SESSION['user_id']);
+    $friend = queryFunc("DELETE FROM friend_requests WHERE to_id ={$id} AND from_id ={$_SESSION['user_id']}");
+
     queryFunc("DELETE from notifications where s_user_id='$userID' AND d_user_id='$id' AND typeC='request'");
     redirection("timeline.php?visitingUserID=".$id);
 }
@@ -1061,24 +1097,11 @@ function removeFriend($id, $redirection = "")
     // When remove friend button is clicked
     // Removing friends and from both's records
     $userLoggedIn = $_SESSION['user_id'];
-    queryFunc("delete from friends where (user1 = '$id' and user2 = '$userLoggedIn') OR (user1 = '$userLoggedIn' and user2 = '$id')");
+    queryFunc("DELETE FROM friends where (user1 = '$id' and user2 = '$userLoggedIn') OR (user1 = '$userLoggedIn' and user2 = '$id')");
     if ($redirection == "") {
         redirection("timeline.php?visitingUserID=".$id);
     }
 }
-
-// function updateFriendList($user, $friend)
-// {
-//     $friendArray = queryFunc("select friends_array from users where user_id =".$user);
-//     $friendArray = isRecord($friendArray);
-//     $friendArray = $friendArray['friends_array'];
-//     // 1st -> search for this
-//     // 2nd -> replace with this
-//     // 3rd -> search in this
-//     $newFriendsArray = str_replace($friend.",", "", $friendArray);
-    
-//     queryFunc("update users set friends_array ='". $newFriendsArray ."' where user_id =".$user);
-// }
 
 function acceptReq($id)
 {
@@ -1086,10 +1109,10 @@ function acceptReq($id)
     // $id of the user of whom you are accepting the request
     // Updating both users records
     $userLoggedIn = $_SESSION['user_id'];
-    $friend = queryFunc("insert into friends (user1,user2,become_friends_at) VALUES ('$id','$userLoggedIn',now())");
+    $friend = queryFunc("INSERT into friends (user1,user2,become_friends_at) VALUES ('$id','$userLoggedIn',now())");
 
     // Deleting request from the person record  who sent you the request,bcoz it is accepted
-    queryFunc("UPDATE friend_requests SET status=1 WHERE to_id='{$userLoggedIn}' AND from_id='{$id}'");
+    queryFunc("UPDATE friend_requests SET status=1 WHERE to_id={$userLoggedIn} AND from_id={$id}");
 }
 
 function ignoreReq($id)
@@ -1097,12 +1120,15 @@ function ignoreReq($id)
     $userLoggedIn = $_SESSION['user_id'];
 
     // Just simply deleting the request from sending user's record
-    queryFunc("UPDATE friend_requests SET status=2 WHERE to_id='{$userLoggedIn}' AND from_id='{$id}'");
+    queryFunc("UPDATE friend_requests SET status=2 WHERE to_id={$userLoggedIn} AND from_id={$id}");
 }
 
 function displayFriends($count=null,$id=null)
 {
+    // id - some value if you have visited someone's else profile and click on friends
+    // count - some value if limit is given for friends representation
     // Displaying all friends of current user
+    
     if($id)
         $userID = $id;
     else        
@@ -1110,32 +1136,26 @@ function displayFriends($count=null,$id=null)
 
     $queryResult = queryFunc("SELECT * from friends WHERE user1='$userID' OR  user2='$userID'");
     
-    // Breaking the friends list in array
-    
-    //if ($friendsCount >= 1 ) {
-    // if ($count == 10) {
-    //     $expression = 10; // for friends area
-    // } else {
-    //     $expression = sizeof($friendsListSeparated)-1; //For request.php page
-    // }
-        
-    // if($friendsCount >= $count){
-    //     $expression = $count ? $count : sizeof($friendsListSeparated)-1;
-    // }else{
-    //     $expression = $friendsCount;
-    // }
+
     $numberOfIteration = 0;
     if (isData($queryResult)) {
     
         $friends = array();
         while ($row = isRecord($queryResult)) {
             if(isset($count)){
+                // if friends equal to count are rendered then break loop
                 if(++$numberOfIteration > $count){
-                    $_SESSION['more_friends'] = 1;
+                    $_SESSION['more_friends'] = 1; // See more friends
                     break;
                 }
             }
+
+            // Reason yet to be found!
             $friend_id = ($userID == $row['user1']) ? $row['user2'] : $row['user1'] ;  // friend
+
+            // $friend_id = $row['user2'];
+
+
             // Getting name of that friend
             $queryFriends = queryFunc("SELECT *,CONCAT(first_name,' ',last_name) as name FROM users WHERE user_id='$friend_id'");
 
@@ -1148,15 +1168,17 @@ function displayFriends($count=null,$id=null)
     }
     if(!isset($_SESSION['more_friends'])){
         if ($numberOfIteration == 0) {
-            $_SESSION['more_friends'] = 0;
+            $_SESSION['more_friends'] = 0; // No friends to show
         } else {
-            $_SESSION['more_friends'] = 2;
+            $_SESSION['more_friends'] = 2; // No more friends to show
         }
     }
 
 }
 
 function printFriendsList($friends,$id){
+    
+    // id - some value if it is your profile
     
     foreach ($friends as $friend){
         $time = activeAgo($friend['user_id']);
@@ -1168,13 +1190,7 @@ function printFriendsList($friends,$id){
             $stateClass = 'state-on';
         }
         
-        // if ($friend['online'] == 0) {
-        //     $state = "Offline";
-        //     $stateClass = 'state-off';
-        // } else {
-        //     $state = "Online";
-        //     $stateClass = 'state-on';
-        // }
+      
 
         $content = <<<FRIEND
             <div class="friend-container">
@@ -1461,7 +1477,7 @@ function getPartnersLastMessage($partnerId)
     return $details;
 }
     
-function showRecentChats()
+function showRecentChats($place = 0)
 {
     // Showing Recents Chats
     
@@ -1469,6 +1485,12 @@ function showRecentChats()
     $recentUserIds = getRecentChatsUserIds(); 
 
     if ($recentUserIds) {
+
+        if($place == 1){
+            $messageText = '<h3>Messages</h3>';
+            echo $messageText;
+        }
+
         $recentUsernames = getRecentChatsUsernames($recentUserIds); // Names of users
         $recentProfilePics = getProfilePicData($recentUserIds); // Pics of users
         $counter = 0;
@@ -1513,9 +1535,24 @@ DELIMETER;
             echo $user;
             $counter++;
         }
+
+        if($place == 1){
+            $messageSeeMore = <<<DATA
+            <a href="messages.php" class='see-more'>
+              <span>See more</span>
+            </a>
+DATA;
+            echo $messageSeeMore;
+        }
     } else {
+        if($place == 1){
+            $noData = '<h3>No Messages</h3>';
+            echo $noData;
+        }
         $_SESSION['last_message_retrieved_for_recent_convos'] = 0;
     }
+
+    
 }
 
 function searchUsersFortChats()

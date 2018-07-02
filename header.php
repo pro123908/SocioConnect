@@ -52,11 +52,9 @@
           
           <!-- Dropdown Content -->
           <div class='noti-dropdown'>
-            <h3>Notifications</h3>  
+            
             <?php showNotifications(2,1,20)?>
-            <a href="allNotification.php" class='see-more'>
-              <span>See more</span>
-            </a>
+            
           </div>
         
           <div class='noti-count'>
@@ -73,13 +71,11 @@
           <a href="javascript:toggleDropdown('.msg-dropdown');" class="header-btn mr-1"><i class="msg-click fas fa-envelope fa-lg"></i></a>
 
           <div class='msg-dropdown'>
-            <h3>Messages</h3> 
+            
             <div class='recent-chats-dropdown'>
-              <?php showRecentChats(); ?>
+              <?php showRecentChats(1); ?>
             </div>
-            <a href="messages.php" class='see-more'>
-              <span>See more</span>
-            </a>
+            
           </div>
 
           <div class='msg-count'>
@@ -95,11 +91,9 @@
           <a href="javascript:toggleDropdown('.req-dropdown');" class="header-btn mr-1"><i class="req-click fas fa-user-plus fa-lg"></i></a>
 
           <div class='req-dropdown'>
-            <h3>Friend Requests</h3> 
+             
             <?php showNotifications(1,0,10); ?>
-            <a href="requests.php" class='see-more'>
-              <span>See more</span>
-            </a>
+            
           </div>
 
           <div class='req-count'>
