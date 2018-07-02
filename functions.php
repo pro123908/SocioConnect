@@ -1325,7 +1325,7 @@ MESSAGE;
     echo $infoForNextTime;
 }
 
-function showRecentActivities($page,$limit,$place = null){
+function showRecentActivities($page,$limit,$place = null,$id = null){
     // Show recent activities
 
     // limit - number of activites to render
@@ -1335,6 +1335,8 @@ function showRecentActivities($page,$limit,$place = null){
     // 2 - recent activities page
 
     $userLoggedIn = $_SESSION['user_id'];
+    if($id)
+        $userLoggedIn = $id;
     $limitRecords = $limit + 1;
 
     if($place == 1){
@@ -1374,7 +1376,7 @@ function showRecentActivities($page,$limit,$place = null){
             } else {
                 $count++;
             }    
-            addActivity($row['activity_type'], $row['activity_at_id'], $row['user_id']);
+            addActivity($row['activity_type'], $row['activity_at_id'], $row['user_id'],$id);
         }
         // If it is a recent activity page
         if($place == 2){
@@ -1743,6 +1745,18 @@ PROFILE;
     
 PROFILE;
 }
+    else{
+        $content .=<<<PROFILE
+        </div>
+        <div class='user-timeline-tabs'>
+            <div class='user-info'>
+                <h3>{$name}</h3>
+                <span>{$queryUser['email']}</span>
+            </div>
+        </div>
+        
+PROFILE;
+    }
     echo $content;
 }
 
@@ -1768,7 +1782,7 @@ function activeAgo($id)
     return $time;
 }
 
-function addActivity($activity_type, $target_id, $userLoggedIn)
+function addActivity($activity_type, $target_id, $userLoggedIn,$id)
 {
     // Activity type
     // activity_type == 0 ==> Like
@@ -1777,10 +1791,16 @@ function addActivity($activity_type, $target_id, $userLoggedIn)
     // activity_type == 3 ==> Added Friend
     // activity_type == 4 ==> Unlike
 
+
+    //if id is null then user is visiting his own timeline
+    //else he is visiting someone else's
+    
     //Target_id
     // target content post etc
 
     $userLoggedIn = $_SESSION['user_id'];
+    if($id)
+        $userLoggedIn = $id;
     $profilePic = getUserProfilePic($userLoggedIn);
     $deletedActivity = '';
 
@@ -1864,6 +1884,13 @@ function addActivity($activity_type, $target_id, $userLoggedIn)
         $deletedActivity = 'deleted-activity';
         $activityLink = "javascript:void(0)";
     }
+    if($id && $id != $_SESSION['user_id']){
+        $user = queryFunc("SELECT first_name from users where user_id = '$id'");
+        $user = isRecord($user);
+        $user = $user['first_name'];
+    }
+    else
+        $user = "You";
 
     $noti = <<<NOTI
         <a href={$activityLink} class='recent-activity recent_activity {$deletedActivity}'>
@@ -1871,7 +1898,7 @@ function addActivity($activity_type, $target_id, $userLoggedIn)
                 <img src='{$profilePic}' class='post-avatar post-avatar-30' />
             </span>
             <span class='recent-activity-info'>
-                <span class='recent-activity-text'>You {$conflict}</span><i class='recent-activity-icon {$activityIcon}'></i><span class='recent-activity-time {$deletedActivity}'>{$time}</span>
+                <span class='recent-activity-text'>{$user} {$conflict}</span><i class='recent-activity-icon {$activityIcon}'></i><span class='recent-activity-time {$deletedActivity}'>{$time}</span>
             </span>
         </a>
 NOTI;
