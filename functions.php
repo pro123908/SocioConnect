@@ -1996,28 +1996,48 @@ function showUserInfo($id){
         $info = <<<INFO
             <div class='user-info'>
                 <span class='user-info-key'>School: </span>
-                <span class='user-info-value'>{$userInfo['school']}</span> 
+                <span class='user-info-value user-school'>{$userInfo['school']}</span> 
             </div>
             <div class='user-info'>
                 <span class='user-info-key'>College: </span>
-                <span class='user-info-value'>{$userInfo['college']} </span>
+                <span class='user-info-value user-college'>{$userInfo['college']} </span>
             </div>
             <div class='user-info'>
                 <span class='user-info-key'>University: </span>
-                <span class='user-info-value'>{$userInfo['university']} </span>
+                <span class='user-info-value user-university'>{$userInfo['university']} </span>
             </div>
             <div class='user-info'>
                 <span class='user-info-key'>Work: </span>
-                <span class='user-info-value'>{$userInfo['work']} </span>
+                <span class='user-info-value user-work'>{$userInfo['work']} </span>
             </div>
             <div class='user-info'>
                 <span class='user-info-key'>Contact No:</span>
-                <span class='user-info-value'>{$userInfo['contact_no']} </span>
+                <span class='user-info-value user-contact'>{$userInfo['contact_no']} </span>
             </div>
 INFO;
 
-    if($id == $_SESSION['user_id'])
-        $info .= "<input type = 'submit' value='Edit' name = 'edit'>";
+    if($id == $_SESSION['user_id']){
+        $info .= <<<EDIT
+        <button class='user-info-edit-button' onclick = 'showEditInfoDiv()'>Edit</button>
+        <div class="user-info-edit-div">
+            <span><h1 class = "user-info-edit-div-heading">Edit Personal Information</h1></span>
+            <span class="user-info-edit-div-close" onclick="hideEditInfoDiv()">&times;</span>
+            
+            <div class = "user-info-edit-div-content">
+                <form action = "" method = "post">
+                    <label class = "user-info-for-edit">New Password : <input type = "password" name = "password" class = "user-edit-password"></label><br>
+                    <label class = "user-info-for-edit">Confirm Password : <input type = "password" name = "repeatPassword" class = "user-edit-repeat-password"></label><br>
+                    <label class = "user-info-for-edit">School : <input type = "text" name = "school" class ="user-edit-school"></label><br>
+                    <label class = "user-info-for-edit">College : <input type = "text" name = "college" class = "user-edit-college"></label><br>
+                    <label class = "user-info-for-edit">University : <input type = "text" name = "university" class = "user-edit-university"></label><br>
+                    <label class = "user-info-for-edit">Work : <input type = "text" name = "work" class = "user-edit-work"></label><br>
+                    <label class = "user-info-for-edit">Contact No : <input type = "text" name = "contact" class = "user-edit-contact"></label><br>
+                    <input type = "submit" value = "Save Changes" name="save" class = "user-edit-save">
+                </form>
+            </div>
+    </div>
+EDIT;
+    }    
     echo $info;            
     }
 }

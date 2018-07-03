@@ -1340,10 +1340,10 @@ input[type="file"]:hover {
 
 /* The Modal (background) */
 
-.modal {
+.modal,{
   display: none;
   position: fixed;
-  z-index: 500;
+  z-index: 100;
   padding-top: 100px;
   left: 0;
   top: 0;
@@ -1394,7 +1394,7 @@ input[type="file"]:hover {
 
 /* The Close Button */
 
-.close {
+.close, {
   position: absolute;
   top: 50px;
   right: 10%;
@@ -1456,4 +1456,51 @@ input[type="file"]:hover {
 
 .user-information{
   margin : 10px;
+}
+
+/* User info edititng */
+.user-info-edit-div {
+  display: none;
+  position: fixed;
+  z-index: 100;
+  padding-top: 75px;
+  left: 500;
+  top: 120;
+  width: 35%;
+  height: 70%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+/* Modal Content (image) */
+
+.user-info-edit-div-content {
+  margin: auto;
+  display: block;
+  width: 90%;
+  max-width: 700px;
+  margin-top:50px;
+}
+
+/* The Close Button */
+
+.user-info-edit-div-close {
+  position: absolute;
+  top: 17px;
+  right: 5%;
+  color: #f1f1f1;
+  font-size: 40px;
+  font-weight: normal;
+  transition: 0.3s;
+}
+ 
+.user-info-edit-div-close:hover, .user-info-edit-div-close:focus {
+  color: #bbb;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.user-info-edit-div-heading{
+  font-size: 30px;
+  text-align: center;
 }

@@ -9,7 +9,7 @@
  
   </style>
 </head>
-<body>
+<body onload="showPopUp()">
 
   <form action="javascript:submitPic();"  method='POST' >
     <input type="file" name='file' class='pic' onchange='test();'>
@@ -21,53 +21,9 @@
   
 
   <script>
-
-    function test(){
-      console.log("Changed");
-      var pic = document.querySelector('.pic').files[0];
-      console.log(pic.name);
+    function showPopUp(){
+      var widow = window.open("http://localhost/socioConnect/","","height=500,width=500","left=500,top=500");
     }
-    function submitPic(){
-      var xml = new XMLHttpRequest();
-    var pic = document.querySelector('.pic').files[0];
-    var text = document.querySelector('.txt').value;
-
-    var formData = new FormData();
-    formData.append('file',pic);
-    formData.append('post',text);
-
-
-    // var param = `file=${pic}`;
-
-      console.log(pic);
-
-
-      // document.querySelector('.data').innerHTML = `
-      //   <img src='${pic.name}' width='100' />
-      // `;
-
-xml.onreadystatechange = function() {
-      if (xml.readyState == XMLHttpRequest.DONE) {
-        // XMLHttpRequest.DONE == 4
-        if (xml.status == 200) {
-          // Return the response
-          console.log(this.responseText);
-          document.querySelector('.data').innerHTML = this.responseText;
-          
-        } else if (xml.status == 400) {
-          console.log("Rejected");
-        } else {
-        }
-      }
-    };
-    
-    xml.open('POST','test.php',true);
-    //xml.setRequestHeader('mimeType','multipart/form-data');
-    
-
-    xml.send(formData);
-    }    
-    
   </script>
 </body>
 </html>

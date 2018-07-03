@@ -1159,3 +1159,38 @@ function editProfilePicture(){
     
   });
 }
+
+//DP Animation Functions
+function hideEditInfoDiv() {
+  // When model is closed
+  var editDiv = document.querySelector(".user-info-edit-div");
+  editDiv.classList.remove("modal-open");
+  editDiv.classList.add("modal-close");
+
+  // Timeout in displaying
+  setTimeout(() => {
+    editDiv.style.display = "none";
+  }, 550);
+}
+function showEditInfoDiv(){
+  // Showing pic in the model
+  var editDiv = document.querySelector(".user-info-edit-div");
+  editDiv.classList.add("modal-open");
+  editDiv.classList.remove("modal-close");
+  editDiv.style.display = "block";
+
+  //Getting current info
+  var skul = document.querySelector(".user-school").innerHTML;
+  var colg = document.querySelector(".user-college").innerHTML;
+  var uni = document.querySelector(".user-university").innerHTML;
+  var work = document.querySelector(".user-work").innerHTML;
+  var cntct = document.querySelector(".user-contact").innerHTML;
+
+  //Setting Values in input fields
+  document.querySelector(".user-edit-school").value =  skul;
+  document.querySelector(".user-edit-college").value = colg;
+  document.querySelector(".user-edit-university").value = uni;
+  document.querySelector(".user-edit-work").value = work;
+  document.querySelector(".user-edit-contact").value =cntct;
+   
+}
