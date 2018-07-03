@@ -14,7 +14,6 @@ $content = "<div class='user-information'>";
 $content .= showUserInfo($_GET['id']);
 $content .= "</div>";
 echo $content;
-
 ?>
 
 

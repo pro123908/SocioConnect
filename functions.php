@@ -1994,18 +1994,18 @@ function showUserInfo($id){
     $userInfo = queryFunc("SELECT school,college,university,contact_no,work from users where user_id = '$id'");
     if(isData($userInfo)){
         $userInfo = isRecord($userInfo);
-
+        $defaultValue = "-------";
         //Setting default value if there is no value
         if(!isset($userInfo['school']) || strlen($userInfo['school']) == 0) 
-            $userInfo['school'] = "-------";
+            $userInfo['school'] = $defaultValue;
         if(!isset($userInfo['college']) || strlen($userInfo['college']) == 0)
-            $userInfo['college'] = "-------";
+            $userInfo['college'] = $defaultValue;
         if(!isset($userInfo['university']) || strlen($userInfo['university']) == 0)
-            $userInfo['university'] = "-------";
+            $userInfo['university'] = $defaultValue;
         if(!isset($userInfo['work']) || strlen($userInfo['work']) == 0)
-            $userInfo['work'] = "-------";
+            $userInfo['work'] = $defaultValue;
         if(!isset($userInfo['contact_no']) || strlen($userInfo['contact_no']) == 0)
-            $userInfo['contact_no'] = "-------"; 
+            $userInfo['contact_no'] = $defaultValue;
 
         $info = <<<INFO
             <div class='user-info'>
@@ -2039,18 +2039,23 @@ INFO;
             
             <div class = "user-info-edit-div-content">
                 <form action = "editInfo.php" method = "post" id = "editForm">
-                    <label class = "user-info-for-edit">Password : <input type = "password" name = "password" class = "user-edit-password"></label><br>
-                    <label class = "user-info-for-edit">School : <input type = "text" name = "school" class ="user-edit-school"></label><br>
-                    <label class = "user-info-for-edit">College : <input type = "text" name = "college" class = "user-edit-college"></label><br>
-                    <label class = "user-info-for-edit">University : <input type = "text" name = "university" class = "user-edit-university"></label><br>
-                    <label class = "user-info-for-edit">Work : <input type = "text" name = "work" class = "user-edit-work"></label><br>
-                    <label class = "user-info-for-edit">Contact No : <input type = "text" name = "contact" class = "user-edit-contact"></label><br>
+                    <label class = "user-info-for-edit">School : <input type = "text" name = "school" class ="user-edit-school" autocomplete="off"></label><br>
+                    <label class = "user-info-for-edit">College : <input type = "text" name = "college" class = "user-edit-college" autocomplete="off"></label><br>
+                    <label class = "user-info-for-edit">University : <input type = "text" name = "university" class = "user-edit-university" autocomplete="off"></label><br>
+                    <label class = "user-info-for-edit">Work : <input type = "text" name = "work" class = "user-edit-work" autocomplete="off"></label><br>
+                    <label class = "user-info-for-edit">Contact No : <input type = "text" name = "contact" class = "user-edit-contact" autocomplete="off"></label><br>
+                    <label class = "user-info-for-edit">Password : <input type = "password" name = "password" class = "user-edit-password" autocomplete="off"></label><br>
                     <input type = "button" value = "Save Changes" name="save" class = "user-edit-save" onclick = "submitEditInfoForm()">
                 </form>
             </div>
     </div>
 EDIT;
-    }    
+    } 
+    if(isset($_SESSION['edit_info_pass_error'])){
+        if($_SESSION['edit_info_pass_error'])  
+            $info .= "<div class='user-info-wrong-pass-warning'>Wrong Password</div>";
+            unset($_SESSION['edit_info_pass_error']);
+    }   
     echo $info;            
     }
 }
@@ -2078,10 +2083,9 @@ function saveEditedInfo($password, $school, $college, $university, $work,$contac
 }
 
 function validatePassword($pass){
-    $id = queryFunc("SELECT user_id from users where password = '$pass'");
-    $id = isRecord($id);
-    $id = $id['user_id'];
-    if($id == $_SESSION['user_id'])
+    $userLoggedIn = $_SESSION['user_id'];
+    $id = queryFunc("SELECT user_id from users where password = '$pass' and user_id = '$userLoggedIn'");
+    if(isData($id))
         return true;
     else
         return false;        

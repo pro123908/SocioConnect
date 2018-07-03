@@ -1187,6 +1187,18 @@ function showEditInfoDiv(){
   var cntct = document.querySelector(".user-contact").innerHTML;
 
   //Setting Values in input fields
+  var defaultVaue = "-------";
+  if(skul.trim() == defaultVaue)
+    skul = "";
+  if(colg.trim() == defaultVaue)
+    colg = "";
+  if(uni.trim() == defaultVaue)
+    uni = "";
+  if(work.trim() == defaultVaue)
+    work = "";  
+  if(cntct.trim() == defaultVaue)
+    cntct = "";  
+      
   document.querySelector(".user-edit-school").value =  skul;
   document.querySelector(".user-edit-college").value = colg;
   document.querySelector(".user-edit-university").value = uni;

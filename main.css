@@ -1340,7 +1340,7 @@ input[type="file"]:hover {
 
 /* The Modal (background) */
 
-.modal,{
+.modal{
   display: none;
   position: fixed;
   z-index: 100;
@@ -1394,7 +1394,7 @@ input[type="file"]:hover {
 
 /* The Close Button */
 
-.close, {
+.close {
   position: absolute;
   top: 50px;
   right: 10%;
