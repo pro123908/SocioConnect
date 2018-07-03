@@ -2044,7 +2044,9 @@ INFO;
                     <label class = "user-info-for-edit">University : <input type = "text" name = "university" class = "user-edit-university" autocomplete="off"></label><br>
                     <label class = "user-info-for-edit">Work : <input type = "text" name = "work" class = "user-edit-work" autocomplete="off"></label><br>
                     <label class = "user-info-for-edit">Contact No : <input type = "text" name = "contact" class = "user-edit-contact" autocomplete="off"></label><br>
-                    <label class = "user-info-for-edit">Password : <input type = "password" name = "password" class = "user-edit-password" autocomplete="off"></label><br>
+                    <label class = "user-info-for-edit">New Password : <input type = "password" name = "newPassword" class = "user-edit-new-password" autocomplete="off" placeholder="Enter if you want to change password"></label><br>
+                    <label class = "user-info-for-edit">Confirm Password : <input type = "password" name = "rePass" class = "user-edit-new-repeat-password" autocomplete="off" placeholder="Enter if you want to change password"></label><br>
+                    <label class = "user-info-for-edit">Current Password : <input type = "password" name = "password" class = "user-edit-old-password" autocomplete="off"></label><br>
                     <input type = "button" value = "Save Changes" name="save" class = "user-edit-save" onclick = "submitEditInfoForm()">
                 </form>
             </div>
@@ -2060,25 +2062,9 @@ EDIT;
     }
 }
 
-function saveEditedInfo($password, $school, $college, $university, $work,$contact){
-  //  $conflict = " password='$password'";
+function saveEditedInfo($school, $college, $university, $work,$contact,$newPass){
     $userLoggedIn = $_SESSION['user_id'];
-
-    // if($school)
-    //     $conflict .= ", school='$school'";
-    // if($college){
-    //     $conflict .= ", college='$college'";
-    // }
-    // if($university){
-    //     $conflict .= ", university='$university'";
-    // }
-    // if($work){
-    //     $conflict .= ", work='$work'";
-    // }
-    // if($contact){
-    //     $conflict .= ", contact_no='$contact'";
-    // } 
-    $result = queryFunc("update users set school = '$school' , college = '$college' , university = '$university', work = '$work' , contact_no = '$contact' where user_id = '$userLoggedIn' ");
+    $result = queryFunc("update users set school = '$school' , college = '$college' , university = '$university', work = '$work' , contact_no = '$contact', password = '$newPass' where user_id = '$userLoggedIn' ");
     isData($result);
 }
 

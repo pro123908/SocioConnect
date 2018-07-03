@@ -12,6 +12,7 @@ if(!isset($_POST['password']))
 
 //Code for mysqli escape string and trimming whitespaces from beginning and end
 $pass = trim(mysqli_real_escape_string($connection, $_POST['password']));
+$newPass = trim(mysqli_real_escape_string($connection, $_POST['newPassword']));
 $school = trim(mysqli_real_escape_string($connection, $_POST['school'])); 
 $college = trim(mysqli_real_escape_string($connection, $_POST['college'])); 
 $university = trim(mysqli_real_escape_string($connection, $_POST['university'])); 
@@ -19,10 +20,11 @@ $work = trim(mysqli_real_escape_string($connection, $_POST['work']));
 $contact = trim(mysqli_real_escape_string($connection, $_POST['contact'])); 
 
 $pass = hashString($pass);
+$newPass = hashString($newPass);
 $flag = validatePassword($pass);
 
 if($flag)
-    saveEditedInfo($pass,$school,$college,$university,$work,$contact);
+    saveEditedInfo($school,$college,$university,$work,$contact,$newPass);
 else{
     $_SESSION['edit_info_pass_error'] = true;
     $_SESSION['edit_info_user_school'] = $school;
