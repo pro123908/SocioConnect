@@ -117,7 +117,7 @@ function getTime($time)
 function newPost($postContent,$pic=null)
 {
 
-    // ---------------------- REFRACTED ------------------------
+    // ---------------------- REFRACTORED ------------------------
 
     // Function for adding a post
     global $connection;
@@ -262,10 +262,12 @@ function addComment($userID, $postID, $comment)
     // Adding comment
     global $connection;
     //Inserting the comment using different method
-    $queryInsert = $connection->prepare("INSERT INTO comments (user_id, post_id, comment,createdAt) VALUES (?, ?, ?,now())");
-    $queryInsert->bind_param("iis", $userID, $postID, $comment);
-    $queryInsert->execute();
-    $queryInsert->close();
+    // $queryInsert = $connection->prepare("INSERT INTO comments (user_id, post_id, comment,inserted,createdAt) VALUES (?, ?, ?,?,now())");
+    // $queryInsert->bind_param("iisi", $userID, $postID, $comment,1);
+    // $queryInsert->execute();
+    // $queryInsert->close();
+
+    $queryComment = queryFunc("INSERT INTO comments (user_id, post_id, comment,createdAt) VALUES('$userID','$postID','$comment',now())");
 
     // Gettting the ID of last inserted record
     $ID = mysqli_insert_id($connection);
@@ -415,6 +417,11 @@ function showPosts($flag, $page, $limit)
 
         echo $infoForNextTime;
     }
+
+      $lastCommentRendered = queryFunc("SELECT comment_id from comments order by comment_id desc limit 1");
+      $lastComment = isRecord($lastCommentRendered);
+
+      $_SESSION['last_comment_id'] = $lastComment['comment_id'];
 }
 
 
@@ -464,6 +471,10 @@ POST;
 
     // Querying database for the current post comments if any
     $commentResult = queryFunc("SELECT comments.user_id,comment_id,comment,CONCAT(first_name,' ',last_name) as 'name',createdAt,users.profile_pic,edited from comments inner join users on users.user_id = comments.user_id where comments.post_id ='$postID'");
+
+    // Number of comments of post
+    $numberOfComments = mysqli_num_rows($commentResult);
+    $commentCounter = 0;
 
     while ($comments = isRecord($commentResult)) {
         $timeToShow = getTime($comments['createdAt']);
@@ -795,7 +806,7 @@ function notificationQuery($conflict,$limit=0){
 }
 
 
-function showNotifications($place,$page,$limit)
+function showNotifications($place,$page,$limit,$ajax=false)
 {
     /* --------------- REFACTORED -------------------- */
 
@@ -837,6 +848,13 @@ function showNotifications($place,$page,$limit)
         $postAvatar = 'post-avatar-40'; // For notification Page
         $ifNoData = '<h3>No Notifications</h3>';
     }
+    // }elseif($place == 2 && $ajax){
+    //     $lastNotiID = $_SESSION['last_noti_id'];
+    //     $userID = $_SESSION['user_id'];
+
+    //     $notiQuery = queryFunc("SELECT * from notifications WHERE seen !=1 AND noti_id > '$lastNotiID' AND (d_user_id='$userID' OR (s_user_id={$user} AND typeC='request')) order by noti_id desc");
+
+    // }
 
 
     if ($page == 1) { // if you are at first page then starting with post 0
@@ -856,8 +874,10 @@ function showNotifications($place,$page,$limit)
         }else if($place == 2){
             $notificationText = '<h3>Notifications</h3>';
             echo $notificationText;
+            echo "<div class='notifications'>";
         }
 
+        
         
         
         $numberOfIteration = 0; //Number of results checked - once it reaches to value of start we start rendering posts.
@@ -959,6 +979,9 @@ NOTI;
             
                 echo $noti;
         }
+
+        if($place == 2)
+            echo "</div>";
 
         // When notification dropdown
         if($place == 2){
@@ -1863,7 +1886,7 @@ function addActivity($activity_type, $target_id, $userLoggedIn,$id = null)
     //else he is visiting someone else's
     
     //Target_id
-    // target content post etc
+    // target - content such as post,like etc
 
     $userLoggedIn = $_SESSION['user_id'];
     

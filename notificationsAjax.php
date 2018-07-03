@@ -37,9 +37,12 @@ if (isData($queryResult)) {
             $sPerson = isRecord($personQuery);
             $sPersonName = $sPerson['name']; // Name of that person
 
+            $personPic = getUserProfilePic($person);
+
+
             // Inserting notifications into the array
             // PostID,type,notification ID and name of the source person
-            $data[$counter] = array('postID' => $post,'type' => $type,'notiID' => $notiID,'name' => $sPersonName);
+            $data[$counter] = array('postID' => $post,'type' => $type,'notiID' => $notiID,'name' => $sPersonName,'profilePic' => $personPic);
 
             // Moving on to the next notificaiton if any
             $counter += 1;

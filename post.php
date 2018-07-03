@@ -2,6 +2,11 @@
 
 require_once('functions.php');
 
+/* 
+    checks if post has pic or not?
+    Returns Newly inserted post
+*/
+
 if(!isset($_SESSION['user_id'])){
   redirection('index.php');
 }
@@ -11,12 +16,12 @@ if(!isset($_SESSION['user_id'])){
 if (isset($_POST['post'])) {
     if(isset($_FILES['file']['name'])){
     // Calling function to add post
-    $name = $_FILES['file']['name'];
+    $name = $_FILES['file']['name']; // name of pic
     $tmp_name = $_FILES['file']['tmp_name'];
     $type = $_FILES['file']['type'];
     $extension = strtolower(pathinfo($name,PATHINFO_EXTENSION)); // Getting extension of file
 
-    // $typeImage = explode('/', $type);
+    // Unique ID for image for storing
     $uniqueID = uniqid();
 
     if (isset($name)) {
@@ -26,7 +31,7 @@ if (isset($_POST['post'])) {
                 // Location where to save the image
                 $location = 'assets/postPics/';
                 if (move_uploaded_file($tmp_name, $location.$uniqueID.'.'.$extension)) {
-                    $path = $location.$uniqueID.'.'.$extension;
+                    $path = $location.$uniqueID.'.'.$extension; //Complete path of image
                     newPost($_POST['post'],$path);
                 }
             }
@@ -35,6 +40,7 @@ if (isset($_POST['post'])) {
   }
     
     else{
+        // If no picture was attached with post
       newPost($_POST['post']);
     }  
 }

@@ -1,5 +1,9 @@
 <?php
     require_once('functions.php');
+
+    /*
+        Returns search results    
+    */
         
     if(!isset($_SESSION['user_id'])){
         redirection('index.php');

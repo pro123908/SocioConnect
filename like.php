@@ -1,5 +1,11 @@
 <?php 
 
+/* 
+ -> like or unlike the post
+ -> generates notification for like
+ -> returns likes count for the post
+*/
+
 require_once('functions.php');
 
 if(!isset($_SESSION['user_id'])){
@@ -37,11 +43,8 @@ if(isset($_GET['like'])){
   $likesResult = queryFunc("SELECT count(*) as count from likes where post_id='$postID'");
   $likes = isRecord($likesResult);
 
-  // $data = array('likeCount' => $likes['count'],'samp' => 'done');
-
-  // echo json_encode($data);
-  // // Redirecting to other page
-  redirection('likesCount.php?likeCount='.$likes['count']);
+  // Sending likes count as a response to AJAX call
+  echo $likes['count'];
 
 }
 ?>

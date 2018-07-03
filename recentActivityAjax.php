@@ -1,6 +1,11 @@
 <?php
 require_once('functions.php');
 
+/* 
+    Deletes,stores activity from/in database
+    add activity to display
+*/
+
 if(!isset($_SESSION['user_id'])){
     redirection('index.php');
 }
@@ -19,7 +24,7 @@ if($activity_type == 4){
     // Target Content ID or IDs like post etc
     $target_id = $_POST['target_id'];
 
-    // Deleting the activity
+    // Deleting the like activity
     queryFunc("DELETE from recent_activities where activity_at_id = '$target_id' AND user_id = '$userLoggedIn' and activity_type = 0");
 
     //Dislaying Activites
@@ -38,7 +43,10 @@ else{
         $target_id = $_POST['target_id'];
     }
 
+    // Storing activity in database
     queryFunc("INSERT into recent_activities (activity_type, activity_at_id, user_id) values ('$activity_type','$target_id','$userLoggedIn')");
+
+    // Displaying activity
     addActivity($activity_type,$target_id,$userLoggedIn);
 }
 ?>
