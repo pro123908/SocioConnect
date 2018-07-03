@@ -1194,3 +1194,62 @@ function showEditInfoDiv(){
   document.querySelector(".user-edit-contact").value =cntct;
    
 }
+
+function submitEditInfoForm(){
+  //Setting Values in input fields
+  var pass = document.querySelector(".user-edit-password").value;
+  var  skul = document.querySelector(".user-edit-school").value;
+  var colg = document.querySelector(".user-edit-college").value;
+  var uni = document.querySelector(".user-edit-university").value;
+  var work = document.querySelector(".user-edit-work").value;
+  var cntct = document.querySelector(".user-edit-contact").value;
+
+  if(pass){
+    document.getElementById("editForm").submit();   
+  }
+  else{
+    alert("Please Enter Password to Save Changes");
+  }
+}
+
+
+
+
+
+//Password Validation
+// var errorMessage = "";
+// var error = [];
+// var flag1 = flag2 = false;
+
+// if(pass){
+//   if(pass != rePass){
+//       error.push("s Don't Match");
+//       flag1 = true;
+//   }
+//   else{
+//     if(pass.length < 8){
+//       flag1 = true;
+//       error.push("'s length must be greater than 8 characters");
+//     }
+//     if(!(/\d/.test(pass) && pass.match(/[a-z]/i))){
+//       flag2 = true;
+//       error.push(" must contain alphanumeric characters")
+//     }  
+//   }
+// }
+// else{
+//   error.push(" field can't be empty");
+//   flag1 = true;
+// }  
+// if(flag1 && flag2)
+//   errorMessage = "Password" + error[0] + " and" + error[1];
+// else if(flag1 || flag2)
+//   errorMessage = "Password" + error[0];
+// if(flag1 || flag2){
+//   alert(errorMessage);
+//   document.querySelector(".user-edit-password").value = "";
+//   document.querySelector(".user-edit-repeat-password").value = "";
+// }
+// else{
+//   document.getElementById("editForm").submit();
+// }

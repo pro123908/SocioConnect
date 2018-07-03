@@ -1996,15 +1996,15 @@ function showUserInfo($id){
         $userInfo = isRecord($userInfo);
 
         //Setting default value if there is no value
-        if(!isset($userInfo['school']))
+        if(!isset($userInfo['school']) || strlen($userInfo['school']) == 0) 
             $userInfo['school'] = "-------";
-        if(!isset($userInfo['college']))
+        if(!isset($userInfo['college']) || strlen($userInfo['college']) == 0)
             $userInfo['college'] = "-------";
-        if(!isset($userInfo['university']))
+        if(!isset($userInfo['university']) || strlen($userInfo['university']) == 0)
             $userInfo['university'] = "-------";
-        if(!isset($userInfo['work']))
+        if(!isset($userInfo['work']) || strlen($userInfo['work']) == 0)
             $userInfo['work'] = "-------";
-        if(!isset($userInfo['contact_no']))
+        if(!isset($userInfo['contact_no']) || strlen($userInfo['contact_no']) == 0)
             $userInfo['contact_no'] = "-------"; 
 
         $info = <<<INFO
@@ -2032,21 +2032,20 @@ INFO;
 
     if($id == $_SESSION['user_id']){
         $info .= <<<EDIT
-        <button class='user-info-edit-button' onclick = 'showEditInfoDiv()'>Edit</button>
+        <button class='user-info-edit-button' id = 'edit-form' onclick = 'showEditInfoDiv()'>Edit</button>
         <div class="user-info-edit-div">
             <span><h1 class = "user-info-edit-div-heading">Edit Personal Information</h1></span>
             <span class="user-info-edit-div-close" onclick="hideEditInfoDiv()">&times;</span>
             
             <div class = "user-info-edit-div-content">
-                <form action = "" method = "post">
-                    <label class = "user-info-for-edit">New Password : <input type = "password" name = "password" class = "user-edit-password"></label><br>
-                    <label class = "user-info-for-edit">Confirm Password : <input type = "password" name = "repeatPassword" class = "user-edit-repeat-password"></label><br>
+                <form action = "editInfo.php" method = "post" id = "editForm">
+                    <label class = "user-info-for-edit">Password : <input type = "password" name = "password" class = "user-edit-password"></label><br>
                     <label class = "user-info-for-edit">School : <input type = "text" name = "school" class ="user-edit-school"></label><br>
                     <label class = "user-info-for-edit">College : <input type = "text" name = "college" class = "user-edit-college"></label><br>
                     <label class = "user-info-for-edit">University : <input type = "text" name = "university" class = "user-edit-university"></label><br>
                     <label class = "user-info-for-edit">Work : <input type = "text" name = "work" class = "user-edit-work"></label><br>
                     <label class = "user-info-for-edit">Contact No : <input type = "text" name = "contact" class = "user-edit-contact"></label><br>
-                    <input type = "submit" value = "Save Changes" name="save" class = "user-edit-save">
+                    <input type = "button" value = "Save Changes" name="save" class = "user-edit-save" onclick = "submitEditInfoForm()">
                 </form>
             </div>
     </div>
@@ -2054,4 +2053,36 @@ EDIT;
     }    
     echo $info;            
     }
+}
+
+function saveEditedInfo($password, $school, $college, $university, $work,$contact){
+  //  $conflict = " password='$password'";
+    $userLoggedIn = $_SESSION['user_id'];
+
+    // if($school)
+    //     $conflict .= ", school='$school'";
+    // if($college){
+    //     $conflict .= ", college='$college'";
+    // }
+    // if($university){
+    //     $conflict .= ", university='$university'";
+    // }
+    // if($work){
+    //     $conflict .= ", work='$work'";
+    // }
+    // if($contact){
+    //     $conflict .= ", contact_no='$contact'";
+    // } 
+    $result = queryFunc("update users set school = '$school' , college = '$college' , university = '$university', work = '$work' , contact_no = '$contact' where user_id = '$userLoggedIn' ");
+    isData($result);
+}
+
+function validatePassword($pass){
+    $id = queryFunc("SELECT user_id from users where password = '$pass'");
+    $id = isRecord($id);
+    $id = $id['user_id'];
+    if($id == $_SESSION['user_id'])
+        return true;
+    else
+        return false;        
 }
