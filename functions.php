@@ -2068,44 +2068,85 @@ function showUserInfo($id){
     $userInfo = queryFunc("SELECT school,college,university,contact_no,work from users where user_id = '$id'");
     if(isData($userInfo)){
         $userInfo = isRecord($userInfo);
-
+        $defaultValue = "-------";
         //Setting default value if there is no value
-        if(!isset($userInfo['school']))
-            $userInfo['school'] = "-------";
-        if(!isset($userInfo['college']))
-            $userInfo['college'] = "-------";
-        if(!isset($userInfo['university']))
-            $userInfo['university'] = "-------";
-        if(!isset($userInfo['work']))
-            $userInfo['work'] = "-------";
-        if(!isset($userInfo['contact_no']))
-            $userInfo['contact_no'] = "-------"; 
+        if(!isset($userInfo['school']) || strlen($userInfo['school']) == 0) 
+            $userInfo['school'] = $defaultValue;
+        if(!isset($userInfo['college']) || strlen($userInfo['college']) == 0)
+            $userInfo['college'] = $defaultValue;
+        if(!isset($userInfo['university']) || strlen($userInfo['university']) == 0)
+            $userInfo['university'] = $defaultValue;
+        if(!isset($userInfo['work']) || strlen($userInfo['work']) == 0)
+            $userInfo['work'] = $defaultValue;
+        if(!isset($userInfo['contact_no']) || strlen($userInfo['contact_no']) == 0)
+            $userInfo['contact_no'] = $defaultValue;
 
         $info = <<<INFO
             <div class='user-info'>
                 <span class='user-info-key'>School: </span>
-                <span class='user-info-value'>{$userInfo['school']}</span> 
+                <span class='user-info-value user-school'>{$userInfo['school']}</span> 
             </div>
             <div class='user-info'>
                 <span class='user-info-key'>College: </span>
-                <span class='user-info-value'>{$userInfo['college']} </span>
+                <span class='user-info-value user-college'>{$userInfo['college']} </span>
             </div>
             <div class='user-info'>
                 <span class='user-info-key'>University: </span>
-                <span class='user-info-value'>{$userInfo['university']} </span>
+                <span class='user-info-value user-university'>{$userInfo['university']} </span>
             </div>
             <div class='user-info'>
                 <span class='user-info-key'>Work: </span>
-                <span class='user-info-value'>{$userInfo['work']} </span>
+                <span class='user-info-value user-work'>{$userInfo['work']} </span>
             </div>
             <div class='user-info'>
                 <span class='user-info-key'>Contact No:</span>
-                <span class='user-info-value'>{$userInfo['contact_no']} </span>
+                <span class='user-info-value user-contact'>{$userInfo['contact_no']} </span>
             </div>
 INFO;
 
-    if($id == $_SESSION['user_id'])
-        $info .= "<input type = 'submit' value='Edit' name = 'edit'>";
+    if($id == $_SESSION['user_id']){
+        $info .= <<<EDIT
+        <button class='user-info-edit-button' id = 'edit-form' onclick = 'showEditInfoDiv()'>Edit</button>
+        <div class="user-info-edit-div">
+            <span><h1 class = "user-info-edit-div-heading">Edit Personal Information</h1></span>
+            <span class="user-info-edit-div-close" onclick="hideEditInfoDiv()">&times;</span>
+            
+            <div class = "user-info-edit-div-content">
+                <form action = "editInfo.php" method = "post" id = "editForm">
+                    <label class = "user-info-for-edit">School : <input type = "text" name = "school" class ="user-edit-school" autocomplete="off"></label><br>
+                    <label class = "user-info-for-edit">College : <input type = "text" name = "college" class = "user-edit-college" autocomplete="off"></label><br>
+                    <label class = "user-info-for-edit">University : <input type = "text" name = "university" class = "user-edit-university" autocomplete="off"></label><br>
+                    <label class = "user-info-for-edit">Work : <input type = "text" name = "work" class = "user-edit-work" autocomplete="off"></label><br>
+                    <label class = "user-info-for-edit">Contact No : <input type = "text" name = "contact" class = "user-edit-contact" autocomplete="off"></label><br>
+                    <label class = "user-info-for-edit">New Password : <input type = "password" name = "newPassword" class = "user-edit-new-password" autocomplete="off" placeholder="Enter if you want to change password"></label><br>
+                    <label class = "user-info-for-edit">Confirm Password : <input type = "password" name = "rePass" class = "user-edit-new-repeat-password" autocomplete="off" placeholder="Enter if you want to change password"></label><br>
+                    <label class = "user-info-for-edit">Current Password : <input type = "password" name = "password" class = "user-edit-old-password" autocomplete="off"></label><br>
+                    <input type = "button" value = "Save Changes" name="save" class = "user-edit-save" onclick = "submitEditInfoForm()">
+                </form>
+            </div>
+    </div>
+EDIT;
+    } 
+    if(isset($_SESSION['edit_info_pass_error'])){
+        if($_SESSION['edit_info_pass_error'])  
+            $info .= "<div class='user-info-wrong-pass-warning'>Wrong Password</div>";
+            unset($_SESSION['edit_info_pass_error']);
+    }   
     echo $info;            
     }
+}
+
+function saveEditedInfo($school, $college, $university, $work,$contact,$newPass){
+    $userLoggedIn = $_SESSION['user_id'];
+    $result = queryFunc("update users set school = '$school' , college = '$college' , university = '$university', work = '$work' , contact_no = '$contact', password = '$newPass' where user_id = '$userLoggedIn' ");
+    isData($result);
+}
+
+function validatePassword($pass){
+    $userLoggedIn = $_SESSION['user_id'];
+    $id = queryFunc("SELECT user_id from users where password = '$pass' and user_id = '$userLoggedIn'");
+    if(isData($id))
+        return true;
+    else
+        return false;        
 }
