@@ -1225,6 +1225,8 @@ FRIEND;
 }
 
 function sortArrayByKey(&$array,$flag){
+    /* Doesn't make sense to Bilal */
+
     if($flag){
         usort($array,function ($a, $b){
             $comparison = strcmp(strtolower($a{'first_name'}), strtolower($b{'first_name'}));
@@ -1245,17 +1247,17 @@ function sortArrayByKey(&$array,$flag){
 function sendMessage($user_to, $message_body)
 {
     $user_from = $_SESSION['user_id'];
-    $flag = 0;
+    $flag = 0; 
     $space = " ";
-    global $connection;
-    $queryInsert = $connection->prepare("INSERT INTO messages (user_to, user_from, body, opened, viewed,deleted,dateTime) VALUES (?,?,?,?,?,?,now())");
-    $queryInsert->bind_param("iisiis", $user_to, $user_from, $message_body, $flag, $flag,$space);
-    $queryInsert->execute();
-    $queryInsert->close();
+    
+    $queryMessage = queryFunc("INSERT INTO messages (user_to, user_from, body, opened, viewed,deleted,dateTime) VALUES('$user_to','$user_from','$message_body','$flag','$flag','$space',now())");
+
 }
 
 function getUserProfilePic($userID)
 {
+    // Will return the profile pic of user based upon ID passed
+
     $profilePicQuery= queryFunc("SELECT profile_pic from users where user_id=$userID");
     $profilePicQueryResult = isRecord($profilePicQuery);
     return $profilePicQueryResult['profile_pic'];
@@ -1265,13 +1267,15 @@ function showMessages($partnerId, $page, $limitMsg)
 {
     //Update opened to seen
     $userLoggedIn = $_SESSION['user_id'];
-    $seen = queryFunc("update messages set opened = '1' where user_to = '$userLoggedIn'");
+    $seen = queryFunc("UPDATE messages set opened = '1' where user_to = '$userLoggedIn' AND user_from = '$partnerId'");
+
     $start = ($page - 1) * $limitMsg;
 
     $profilePicMe = getUserProfilePic($userLoggedIn);
     $profilePicYou = getUserProfilePic($partnerId);
+
     $check = $userLoggedIn . " ";
-    $getConvo = queryFunc("select * from messages where ((user_to = '$partnerId' AND user_from = '$userLoggedIn') OR (user_to = '$userLoggedIn' AND user_from = '$partnerId')) AND deleted not like ' $userLoggedIn%' AND deleted not like '%$userLoggedIn ' order by id desc");
+    $getConvo = queryFunc("SELECT * from messages where ((user_to = '$partnerId' AND user_from = '$userLoggedIn') OR (user_to = '$userLoggedIn' AND user_from = '$partnerId')) AND deleted not like ' $userLoggedIn%' AND deleted not like '%$userLoggedIn ' order by id desc");
 
     // echo '<script type="text/javascript"> scrollToLastMessage(); </script>';
 
@@ -1288,7 +1292,8 @@ function showMessages($partnerId, $page, $limitMsg)
         if ($numberOfIteration++ < $start) {
             continue;
         }
-        //If defined number of posts are rendered then break
+
+        //If defined number of messages are rendered then break
         if ($count > $limitMsg) {
             break;
         } else {
@@ -1297,6 +1302,9 @@ function showMessages($partnerId, $page, $limitMsg)
         if ($numberOfIteration == mysqli_num_rows($getConvo)) {
             $count = 0;
         }
+        
+
+        //Checking whose message the current message is?
         if ($row['user_to'] == $userLoggedIn) {
             $type='their-message';
             $pic = $profilePicYou;
@@ -1315,6 +1323,7 @@ function showMessages($partnerId, $page, $limitMsg)
         </div>
 MESSAGE;
          
+        //Current message concatenated with previous messages
         $convoList =  $convo . $convoList;
     }
     echo $convoList;
@@ -1326,80 +1335,7 @@ MESSAGE;
     echo $infoForNextTime;
 }
 
-function showRecentActivities($page,$limit,$place = null,$id = null){
-    // Show recent activities
 
-    // limit - number of activites to render
-
-    // place 
-    // 1 - main.php area
-    // 2 - recent activities page
-
-    //if id is true then you are seeing someone else's activities
-    $userLoggedIn = $_SESSION['user_id'];
-    if($id)
-        $userLoggedIn = $id;
-    $limitRecords = $limit + 1;
-
-    if($place == 1){
-        $activities = queryFunc("SELECT * from recent_activities where user_id = '$userLoggedIn' order by activity_id desc limit $limitRecords");
-    }
-    elseif($place == 2){
-        $activities = queryFunc("SELECT * from recent_activities where user_id = '$userLoggedIn' order by activity_id desc");
-    }
-
-    if ($page == 1) { // if you are at first page then starting with post 0
-        $start = 0;
-    } 
-    else { 
-        // else calculating which post to start from
-        $start = ($page - 1) * $limit;
-    }
-    $numberOfIteration = 0; // //Number of results checked - once it reaches to value of start we start rendering posts.
-    
-    // Initial value of this variable
-    $_SESSION['more_activities'] = 3;
-
-    if(isData($activities)){
-        $count = 1; // To keep track of no of posts rendered
-
-        while ($row = isRecord($activities)) {
-             //Wait to reach start value to start rendering posts, because before $start are already rendered
-
-            //If defined number of posts are rendered then break
-            //once it reaches to value of $start we start rendering posts.
-            if ($numberOfIteration++ < $start) {
-                continue;
-            }
-            if ($count > $limit) {
-                // Limit has been reached - shift to next page now xD
-                $_SESSION['more_activities'] = 1;
-                break;
-            } else {
-                $count++;
-            }    
-            addActivity($row['activity_type'], $row['activity_at_id'], $row['user_id'],$id);
-        }
-        // If it is a recent activity page
-        if($place == 2){
-                // If limit was reached
-            if ($count > $limit) {
-                $infoForNextTime = "<input type='hidden' id='noMoreActivities' value='false'><input type='hidden' id='nextPageActivities' value='".($page+1)."' >";
-            } else {
-                $infoForNextTime = "<input type='hidden' id='noMoreActivities' value='true'>";
-            }
-            echo $infoForNextTime;
-        }
-    }
-    // Displaying message depending on variable value
-    if($_SESSION['more_activities'] == 3){ // If limit was not reached in rendering activities 
-        if ($numberOfIteration == 0) {  // If no activity was there to render
-            $_SESSION['more_activities'] = 0;
-        } else {
-            $_SESSION['more_activities'] = 2; // if some activities were rendered
-        }
-    }
-}
 
 function getRecentChatsUserIds()
 {
@@ -1472,7 +1408,7 @@ function getPartnersLastMessage($partnerId)
     $details = isRecord($details);
     // Only displaying first 15 characters of message
     if (strlen($details['body']) > 15) {
-        $details['body'] = (substr($details['body'], 0, 15)."...");
+        $details['body'] = (substr($details['body'], 0, 15)."..."); // 'Look what we h...'
     }
     return $details;
 }
@@ -1480,15 +1416,25 @@ function getPartnersLastMessage($partnerId)
 function showRecentChats($place = 0)
 {
     // Showing Recents Chats
+
+    // place : 1 if message dropdown
     
     // Getting recent user IDs
     $recentUserIds = getRecentChatsUserIds(); 
 
     if ($recentUserIds) {
 
+        $chatDeleteButton = '';
+        $messageSeeMore = '';
+
         if($place == 1){
-            $messageText = '<h3>Messages</h3>';
+            $messageText = '<h3>Messages</h3>';   
             echo $messageText;
+            $messageSeeMore = <<<DATA
+            <a href="messages.php" class='see-more'>
+              <span>See more</span>
+            </a>
+DATA;
         }
 
         $recentUsernames = getRecentChatsUsernames($recentUserIds); // Names of users
@@ -1511,6 +1457,15 @@ function showRecentChats($place = 0)
                 $noSeen = '';
             }
 
+            if($place != 1){
+                // Not dropdown
+                $chatDeleteButton =<<<DATA
+                <span class='chat-del-button'  style="float: right">
+                <i class='tooltip-container far fa-trash-alt  comment-delete' onclick='javascript:deleteConvo({$recentUserIds[$counter]})'><span class='tooltip tooltip-left'>Delete</span></i>
+                 </span>
+DATA;
+            }
+
             $msg = $lastMessageDetails['body']; // Message Body
             $at =  getTime($lastMessageDetails['dateTime']); // Message Time
 
@@ -1527,23 +1482,16 @@ function showRecentChats($place = 0)
                     <span class='recent-message-time'>{$at}</span>
                 </span>
             </a> 
-            <span class='chat-del-button'  style="float: right">
-                <i class='tooltip-container far fa-trash-alt  comment-delete' onclick='javascript:deleteConvo({$recentUserIds[$counter]})'><span class='tooltip tooltip-left'>Delete</span></i>
-            </span>
+            $chatDeleteButton
             </div>
 DELIMETER;
             echo $user;
-            $counter++;
+            $counter++; // increment for rendering next recent chat
         }
 
-        if($place == 1){
-            $messageSeeMore = <<<DATA
-            <a href="messages.php" class='see-more'>
-              <span>See more</span>
-            </a>
-DATA;
-            echo $messageSeeMore;
-        }
+        // See more button will be rendered if there are more chats
+         echo $messageSeeMore;
+        
     } else {
         if($place == 1){
             $noData = '<h3>No Messages</h3>';
@@ -1589,6 +1537,7 @@ function getSearchedUsers($value, $flag)
             //if there there are two substrings then it would search for first substirng in first name and second string in the last name
 
             if ($flag == 2) {
+                // allSearchResults.php - displaying all results
                 $users = queryFunc("SELECT CONCAT(first_name,' ',last_name) as name,profile_pic,username,user_id from users where lower(first_name) like '$names[0]%' AND lower(last_name) like '$names[1]%'");
             } else {
                 $users = queryFunc("SELECT CONCAT(first_name,' ',last_name) as name,profile_pic,username,user_id from users where lower(first_name) like '$names[0]%' AND lower(last_name) like '$names[1]%' limit 5");
@@ -1596,6 +1545,7 @@ function getSearchedUsers($value, $flag)
         } else {
             //if there is only one substring, i.e no spaces are present in the input then it would search that substring in both first name and last name
             if ($flag == 2) {
+                // allSearchResults.php - displaying all results
                 $users = queryFunc("SELECT CONCAT(first_name,' ',last_name) as name,profile_pic,username,user_id from users where lower(first_name) like '$names[0]%' OR lower(last_name) like '$names[0]%'");
             } else {
                 $users = queryFunc("SELECT CONCAT(first_name,' ',last_name) as name,profile_pic,username,user_id from users where lower(first_name) like '$names[0]%' OR lower(last_name) like '$names[0]%' limit 5");
@@ -1631,6 +1581,7 @@ DELIMETER;
                     echo $user;
                 }
             } else {
+                // When search is done from messages
                 while ($row = isRecord($users)) {
                     $user = <<<DELIMETER
             <div class='search-person'>
@@ -1660,13 +1611,15 @@ DELIMETER;
 function getRecentConvo()
 {
     //Will get the ID of the person whom you recently had a chat with
+    // For opening recent chatted user when displaying messages.php
 
     $userLoggedIn =$_SESSION['user_id'];
-    $recentUser = queryFunc("SELECT user_to,user_from from messages where (user_to = ".$userLoggedIn." OR user_from = ".$userLoggedIn.") AND (deleted not like ' $userLoggedIn%' AND deleted not like '%$userLoggedIn ') order by id DESC limit 1");
+    $recentUser = queryFunc("SELECT user_to,user_from from messages where (user_to = '$userLoggedIn' OR user_from = '$userLoggedIn') AND (deleted not like ' $userLoggedIn%' AND deleted not like '%$userLoggedIn ') order by id DESC limit 1");
+
     if (isData($recentUser)) {
         $recentUser = isRecord($recentUser);
         $recentPartnerId = ($recentUser['user_from'] == $userLoggedIn) ? $recentUser['user_to'] : $recentUser['user_from'];
-        redirection("http://localhost/socioConnect/messages.php?id=".$recentPartnerId);
+        redirection("http://localhost/socioConnect/messages.php?id=$recentPartnerId");
     }
 }
 
@@ -1689,6 +1642,7 @@ function coverArea($id)
     $name = $queryUser['first_name'].' '.$queryUser['last_name'];
     $coverPic = $queryUser['cover_pic'];
 
+    // Checking if user has set up a cover image?
     if($coverPic != NULL){
         $coverStyle =<<<DATA
         background-image : url({$coverPic})
@@ -1697,7 +1651,9 @@ DATA;
         $coverStyle = '';
     }
 
+    // Enabling edit cover and edit profile pic option if it is your profile
     if($id == $_SESSION['user_id']){
+        
         $editCover =<<<COVER
 
         <form onchange='return editCoverPicture()' class="edit-cover-pic">
@@ -1736,15 +1692,19 @@ PROFILE;
         </div>
 PROFILE;
     if (isFriend($id) || $_SESSION['user_id'] == $id) {
+        // Enabling seeing of recent activities and friends list if visited user is your friend
         $content .=<<<PROFILE
     <div id="modal" class="modal">
             <span class="close" id="modal-close" onclick="onClosedImagModal()">&times;</span>
             <img class="modal-content" id="modal-img" src="">
         </div>
 PROFILE;
+
+
     $friendsLink = "requests.php";
     $activitiesLink = "allActivities.php";
     if(isFriend($id)){
+        // Will route to the visited user friends and activity page
         $friendsLink  = $friendsLink . "?id=" . $id;
         $activitiesLink = $activitiesLink . "?id=" . $id;
     }
@@ -1769,6 +1729,7 @@ PROFILE;
 PROFILE;
 }
     else{
+        
         $content .=<<<PROFILE
         </div>
         <div class='user-timeline-tabs'>
@@ -1783,9 +1744,10 @@ PROFILE;
     echo $content;
 }
 
+// These two functions are of no use but keep them
 function turnOnline($id)
 {
-    queryFunc("update users set online = 1 where user_id =".$id);
+    queryFunc("UPDATE users set online = 1 where user_id =$id");
     queryFunc("UPDATE users set active_ago=0 WHERE user_id={$id}");
 }
 
@@ -1803,6 +1765,88 @@ function activeAgo($id)
     $time = getTime($timeResult['active_ago']);
     
     return $time;
+}
+
+function showRecentActivities($page,$limit,$place = null,$id = null){
+    // Show recent activities
+    
+    // activity_type == 0 ==> Like
+    // activity_type == 1 ==> Comment
+    // activity_type == 2 ==> Post
+    // activity_type == 3 ==> Added Friend
+    // activity_type == 4 ==> Unlike
+
+    // limit - number of activites to render
+
+    // place 
+    // 1 - main.php area
+    // 2 - recent activities page
+
+    //if id is true then you are seeing someone else's activities
+    $userLoggedIn = $_SESSION['user_id'];
+    if($id)
+        $userLoggedIn = $id;
+
+    $limitRecords = $limit + 1;
+
+    if($place == 1){
+        $activities = queryFunc("SELECT * from recent_activities where user_id = '$userLoggedIn' order by activity_id desc limit $limitRecords");
+    }
+    elseif($place == 2){
+        $activities = queryFunc("SELECT * from recent_activities where user_id = '$userLoggedIn' order by activity_id desc");
+    }
+
+    if ($page == 1) { // if you are at first page then starting with activity 0
+        $start = 0;
+    } 
+    else { 
+        // else calculating which activity to start from
+        $start = ($page - 1) * $limit;
+    }
+    $numberOfIteration = 0; // //Number of results checked - once it reaches to value of start we start rendering activity.
+    
+    // Initial value of this variable
+    $_SESSION['more_activities'] = 3;
+
+    if(isData($activities)){
+        $count = 1; // To keep track of no of activities rendered
+
+        while ($row = isRecord($activities)) {
+             //Wait to reach start value to start rendering activities, because before $start are already rendered
+
+            //If defined number of activities are rendered then break
+            //once it reaches to value of $start we start rendering activities.
+            if ($numberOfIteration++ < $start) {
+                continue;
+            }
+            if ($count > $limit) {
+                // Limit has been reached - shift to next page now xD
+                $_SESSION['more_activities'] = 1;
+                break;
+            } else {
+                $count++;
+            }    
+            addActivity($row['activity_type'], $row['activity_at_id'], $row['user_id'],$id);
+        }
+        // If it is a recent activity page
+        if($place == 2){
+                // If limit was reached
+            if ($count > $limit) {
+                $infoForNextTime = "<input type='hidden' id='noMoreActivities' value='false'><input type='hidden' id='nextPageActivities' value='".($page+1)."' >";
+            } else {
+                $infoForNextTime = "<input type='hidden' id='noMoreActivities' value='true'>";
+            }
+            echo $infoForNextTime;
+        }
+    }
+    // Displaying message depending on variable value
+    if($_SESSION['more_activities'] == 3){ // If limit was not reached in rendering activities 
+        if ($numberOfIteration == 0) {  // If no activity was there to render
+            $_SESSION['more_activities'] = 0;
+        } else {
+            $_SESSION['more_activities'] = 2; // if some activities were rendered
+        }
+    }
 }
 
 function addActivity($activity_type, $target_id, $userLoggedIn,$id = null)
@@ -1853,6 +1897,8 @@ function addActivity($activity_type, $target_id, $userLoggedIn,$id = null)
         } else {
             $flag = false;
         }
+
+       
     } elseif ($activity_type == 1) {
 
         // If comment activity
@@ -1911,11 +1957,11 @@ function addActivity($activity_type, $target_id, $userLoggedIn,$id = null)
         // Activity not deleted, so getting its time
         $time = getTime($time);
     } else {
-        // Activity deleted
+        // Activity deleted 
         if(!($flag)){
             $time = "Deleted";
         }
-        //Unauthorized
+        //Unauthorized bcoz flag2 is true
         else{            
             $time = "Unauthorized Access";
         }
@@ -1923,6 +1969,7 @@ function addActivity($activity_type, $target_id, $userLoggedIn,$id = null)
         $activityLink = "javascript:void(0)";
     }
     if($id && $id != $_SESSION['user_id']){
+        // if it is not your activity
         $user = queryFunc("SELECT first_name from users where user_id = '$id'");
         $user = isRecord($user);
         $user = $user['first_name'];
@@ -1957,7 +2004,8 @@ function CountDropdown($place){
         $queryResult = queryFunc("SELECT count(*) as count from notifications WHERE d_user_id='$userID' AND seen=0");
     }
     elseif($place == 2){
-        $queryResult = queryFunc("SELECT count(*) as count FROM messages WHERE user_to='$userID' AND opened=0");
+        $queryResult = queryFunc("SELECT count(DISTINCT user_from) as count FROM messages WHERE user_to=$userID and opened = 0");
+        
     }
     elseif($place == 3){
         $queryResult = queryFunc("SELECT count(*) as count FROM friend_requests WHERE to_id ='$userID' and status = 0");
@@ -1970,6 +2018,9 @@ function CountDropdown($place){
 }
 
 function countDropdownDisplay($value,$place){
+    // value - number of count to be displayed
+    // place - which dropdown?
+    
     if($value == 0){
         echo "<script>document.querySelector('.$place-count').style.backgroundColor='transparent';</script>";
       }else{
