@@ -2179,71 +2179,67 @@ function validatePassword($pass){
 
 function showPeopleYouMayKnow(){
 
-    $numberOfIteration = 0;
-    //Logic to get people who are not friends, incomplete
-    // if (isData($queryResult)) {
-    //     $people = array();
-    //     while ($row = isRecord($queryResult)) {
-    //             if(++$numberOfIteration > 11)
-    //                 break;
+    //To keep recored of no of iterataion when record is actually rendered
+    $numberOfSuccessfulIteration = 0;
 
-    //         array_push($people,$person);
-    //     }
+    //Getting latest user_id to generate maximum value of ID from rand and to end loop as well
+    $maxID = queryFunc("SELECT user_id from users order by user_id DESC limit 1");
+    $maxID = isRecord($maxID);
+    $maxID = $maxID['user_id'];
 
-        //Loop to print people you may know, only classes would be changed if required
-//     foreach ($people as $person){
-//         $time = activeAgo($person['user_id']);
-
-//         $stateClass = 'state-off';
-
-//         if ($time == 'Just Now') {
-//             $time = 'Now';
-//             $stateClass = 'state-on';
-//         }
-//         $content = <<<FRIEND
-//             <div class="people-you-may-know-container">
-//                 <div class='people-you-may-know'>
-//                     <div class='people-you-may-know-image'>
-//                         <img class='post-avatar post-avatar-30' src='{$person['profile_pic']}'  >
-//                     </div>
-//                     <div class='people-you-may-know-info'>
-//                         <a href="timeline.php?visitingUserID={$person['user_id']}" class='people-you-may-know-text'>{$person['name']}</a> 
-//                         <span class='{$stateClass}'>{$time}</span>           
-//                     </div>
-//                     <div class='people-you-may-know-action'>
-//                         <div>
-//                             <a href="javascript:addFriend({$person['user_id']})" class='add-friend add-friend-{$person['user_id']}'><i class="tooltip-container fas fa-plus">
-//                             <span class='tooltip tooltip-right'>Add Friend</span></i></a>
-//                         </div>
-//                     </div>
-//                 </div>
-//             </div>
-// FRIEND;
-//         echo $content;
-//     }   //Loop ended
-//    }   // if isRecord condition ended
-
-    //Place Holder
-    $content = <<<CO
-    <div class="people-you-may-know-container">
-        <div class="people-you-may-know">
-            <div class="people-you-may-know-image">
-                <img class="post-avatar post-avatar-30" src="assets/profile_pictures/18342234_662175600653086_4712756504172023815_n.jpg">
-            </div>
+    //Two arrays, one to store IDs to user already checked and 2nd to store IDs of people who are rendered on the page, to avoid repition
+    $renderedIDs = array();
+    $checkedIDs = array();
     
-            <div class="people-you-may-know-info">
-                <a href="timeline.php?visitingUserID=34" class="people-you-may-know-text">Abdul Haseeb</a> 
-                <span class="state-on">Now</span>           
-            </div>
-            <div class="people-you-may-know-action">
-                <div>
-                    <a href="javascript:addFriend(34)" class="add-friend add-friend-34"><i class="tooltip-container fas fa-plus">
-                    <span class="tooltip tooltip-right">Add Friend</span></i>
-                    </a>
+    while (true) {
+        //Generate a random number
+        $idToCheck = rand(1,$maxID);
+
+        //If not already in checked then add it
+        if(! in_array($idToCheck,$checkedIDs))
+            array_push($checkedIDs,$idToCheck);
+
+        //If the user is your friend, or you have sent him req or vice versa  or already rendered on the page, then begin from top again    
+        if(isFriend($idToCheck) || reqSent($idToCheck) || reqRecieved($idToCheck) || $idToCheck == $_SESSION['user_id'] || in_array($idToCheck,$renderedIDs))
+            continue;   
+
+        //else fetch that user from DB and render it after checking that this ID belongs to a legit user
+        $person = queryFunc("SELECT profile_pic, CONCAT(first_name,last_name) as 'name' from users where user_id = '$idToCheck'");
+        if(isData($person)){
+            array_push($renderedIDs,$idToCheck);
+            $person = isRecord($person);
+            $time = activeAgo($idToCheck);
+            
+            $stateClass = 'state-off';
+            if ($time == 'Just Now') {
+                $time = 'Now';
+                $stateClass = 'state-on';
+            }
+            $content = <<<USER
+                <div class="people-you-may-know-container">
+                    <div class='people-you-may-know'>
+                        <div class='people-you-may-know-image'>
+                            <img class='post-avatar post-avatar-30' src='{$person['profile_pic']}'  >
+                        </div>
+                        <div class='people-you-may-know-info'>
+                            <a href="timeline.php?visitingUserID={$idToCheck}" class='people-you-may-know-text'>{$person['name']}</a> 
+                            <span class='{$stateClass}'>{$time}</span>           
+                        </div>
+                        <div class='people-you-may-know-action'>
+                            <div>
+                                <a href="javascript:addFriend({$idToCheck})" class='add-friend add-friend-{$idToCheck}'><i class="tooltip-container fas fa-plus">
+                                <span class='tooltip tooltip-right'>Add Friend</span></i></a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
-</div>
-CO;
-echo $content;    
-}
+USER;
+            echo $content;
+
+            if(++$numberOfSuccessfulIteration > 11)
+                break;
+        } 
+        if(sizeof($checkedIDs) >= $maxID)
+            break;
+    }   
+} 

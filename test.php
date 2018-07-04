@@ -56,6 +56,11 @@
   //   // postPicData.value = '';
   //   document.querySelector(".pic-name").innerHTML = "";
   // }
-  require_once('functions.php'); 
-    echo hashString("");
+  // require_once('functions.php'); 
+  //   echo hashString("");
+
+  $array = array('blue','red','green','red');
+  
+  echo array_search('green', $array); // $key = 2;
+  echo array_search('redas', $array);   // $key = 1;
 ?>

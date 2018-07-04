@@ -1063,7 +1063,10 @@ function removeFriend(id) {
 
 function addFriend(id){
   alert("Adding Friend");
-  document.querySelector(`.add-friend-${id}`).style.display = "none";
+  var personLink = document.querySelector(`.add-friend-${id}`);
+  var fontAwesomeIcon = personLink.querySelector(".tooltip-container");
+  fontAwesomeIcon.classList.remove("fa-plus");
+  fontAwesomeIcon.classList.add("fa-check");
 }
 
 function showPage(flag, page) {
