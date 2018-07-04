@@ -1062,11 +1062,15 @@ function removeFriend(id) {
 }
 
 function addFriend(id){
-  alert("Adding Friend");
   var personLink = document.querySelector(`.add-friend-${id}`);
   var fontAwesomeIcon = personLink.querySelector(".tooltip-container");
   fontAwesomeIcon.classList.remove("fa-plus");
   fontAwesomeIcon.classList.add("fa-check");
+  
+  let param = `id=${id}`;
+  ajaxCalls('POST', 'addFriendAjax.php', param).then(function (result) {
+  });
+
 }
 
 function showPage(flag, page) {
