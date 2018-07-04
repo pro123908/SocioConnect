@@ -809,7 +809,7 @@ input[type="file"]:hover {
   float: left;
 }
 
-.notification-heading,.recent-activities-heading, .people-you-may-know-heading{
+.notification-heading,.recent-activities-heading, .people-you-may-know-heading, .user-activities-summary-heading{
   padding: 10px;
   text-align: center;
   font-weight: bold;
@@ -883,7 +883,7 @@ input[type="file"]:hover {
 
 .people-you-may-know-area {
   flex: 1;
-  height: 576px;
+  height: 582px;
   background-color: #fff;
 }
 
@@ -1029,13 +1029,10 @@ input[type="file"]:hover {
   background-color: #fff;
 }
 
-.user-info-area {
+.user-activities-summary-area {
   flex: 1;
-  border-radius: 5px;
-  /* border: 1px solid #e6ecf5; */
-  border: 1px solid #000;
   background-color: #fff;
-  /* height: max-content; */
+  height: 300px;
 }
 
 .user-timeline .content-area {

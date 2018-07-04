@@ -2243,3 +2243,44 @@ USER;
             break;
     }   
 } 
+
+function showUserActivitiesSummary($id){
+    $noOfPosts = queryFunc("SELECT count(*) as 'posts' from posts where user_id = '$id'");
+    $noOfPosts = isRecord($noOfPosts);
+    $noOfPosts = $noOfPosts['posts'];
+
+    $noOfLikes = queryFunc("SELECT count(*) as 'likes' from likes where user_id = '$id'");
+    $noOfLikes = isRecord($noOfLikes);
+    $noOfLikes = $noOfLikes['likes'];
+
+    $noOfComments = queryFunc("SELECT count(*) as 'comments' from comments where user_id = '$id'");
+    $noOfComments = isRecord($noOfComments);
+    $noOfComments = $noOfComments['comments'];    
+
+    $noOfFriends = queryFunc("SELECT count(*) as 'friends' from friends where user1 = '$id' OR user2 = '$id' ");
+    $noOfFriends = isRecord($noOfFriends);
+    $noOfFriends = $noOfFriends['friends'];
+
+    $noOfReqRecieved = queryFunc("SELECT count(*) as 'reqRec' from friend_requests where to_id = '$id' and status = 0 ");
+    $noOfReqRecieved = isRecord($noOfReqRecieved);
+    $noOfReqRecieved = $noOfReqRecieved['reqRec'];
+
+    $noOfReqSent = queryFunc("SELECT count(*) as 'reqSent' from friend_requests where from_id = '$id' and status = 0 ");
+    $noOfReqSent = isRecord($noOfReqSent);
+    $noOfReqSent = $noOfReqSent['reqSent'];
+
+    echo "No Of Posts: " . $noOfPosts . "<br>";
+    echo "No Of Likes: " . $noOfLikes . "<br>";
+    echo "No Of Comments: " . $noOfComments . "<br>";
+    echo "No Of Friends: " . $noOfFriends . "<br>";
+    echo "No Of Requests Recieved: " . $noOfReqRecieved . "<br>";
+    echo "No Of Reqests Sent: " . $noOfReqSent . "<br>";
+
+    $content = <<<ACTIVITIES
+
+    //Put above info here with styling
+
+ACTIVITIES;
+
+//echo $content;
+}

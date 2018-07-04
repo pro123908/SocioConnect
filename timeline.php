@@ -46,8 +46,15 @@ require_once('header.php')
     </div>
     </div>
     <div class='content-area'>
-        <div class='user-info-area'>
-        </div>
+        <?php
+            if($flag || isFriend($_GET['visitingUserID'])){ ?>
+            <div class='user-activities-summary-area'>
+                <div class='user-activities-summary-heading'>Activites Summary</div>
+                <div class='user-activities-summary-content'>
+                    <?php $flag ? showUserActivitiesSummary($_SESSION['user_id']) : showUserActivitiesSummary($_GET['visitingUserID']) ?> 
+                </div>
+            </div>
+            <?php } ?>
         <div class='post-area'>
             <div class='new-post'>
             <?php 
@@ -84,7 +91,15 @@ MSG;
             }
             ?>
         </div>    
-    <div class='friends-area'></div>
+    <?php
+        if($flag || isFriend($_GET['visitingUserID'])){ ?>
+    <div class='people-you-may-know-area'>
+        <div class='people-you-may-know-heading'> People you may know</div>
+        <div class='people-you-may-know-content'>
+            <?php showPeopleYouMayKnow()?>
+        </div>
+    </div>
+    <?php  } ?>
 </div>
 
 <script src="script.js" >
