@@ -347,7 +347,7 @@ body {
   color: #fff;
 }
 
-.friend {
+.friend, .people-you-may-know {
   display: flex;
   align-items: center;
   padding: 5px 10px;
@@ -359,7 +359,7 @@ body {
   background-color: #f6f6f6;
 }
 
-.friend-image {
+.friend-image, .people-you-may-know-image {
   float: left;
 }
 
@@ -418,16 +418,19 @@ body {
 .remove-friend i {
   color: #f97e4d;
 }
+.add-friend i {
+  color: green;
+}
 
-.friend-action {
+.friend-action, .people-you-may-know-action {
   flex: 1;
 }
 
-.friend-info {
+.friend-info, .people-you-may-know-info {
   flex: 8;
 }
 
-.friend-text {
+.friend-text, .people-you-may-know-text {
   font-size: 12px;
   color: black;
   display: block;
@@ -806,7 +809,7 @@ input[type="file"]:hover {
   float: left;
 }
 
-.notification-heading,.recent-activities-heading {
+.notification-heading,.recent-activities-heading, .people-you-may-know-heading{
   padding: 10px;
   text-align: center;
   font-weight: bold;
@@ -814,7 +817,7 @@ input[type="file"]:hover {
   color: #fff;
 }
 
-.notification:hover,.recent-activity:hover {
+.notification:hover,.recent-activity:hover, .people-you-may-know:hover {
   background-color: #f6f6f6;
 }
 
@@ -884,11 +887,17 @@ input[type="file"]:hover {
   background-color: #fff;
 }
 
-.friends-list .friend-container {
+.friends-list .friend-container{
   display: inline-block;
   width: 28%;
   margin-right: 5%;
 }
+.people-you-may-know-container{
+  display: inline-block;
+  width: 100%;
+  margin-right: 5%;
+}
+
 
 .friends-list h1 {
   margin: 10px 0px 10px 10px;
@@ -988,7 +997,7 @@ input[type="file"]:hover {
   padding: 20px;
 }
 
-.friends-link-button:hover,.recent-activities-link-button:hover{
+.friends-link-button:hover,.recent-activities-link-button:hover, {
  background-color: #edf2f6;
 }
 

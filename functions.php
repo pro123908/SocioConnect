@@ -2172,3 +2172,74 @@ function validatePassword($pass){
     else
         return false;        
 }
+
+function showPeopleYouMayKnow(){
+
+    $numberOfIteration = 0;
+    //Logic to get people who are not friends, incomplete
+    // if (isData($queryResult)) {
+    //     $people = array();
+    //     while ($row = isRecord($queryResult)) {
+    //             if(++$numberOfIteration > 11)
+    //                 break;
+
+    //         array_push($people,$person);
+    //     }
+
+        //Loop to print people you may know, only classes would be changed if required
+//     foreach ($people as $person){
+//         $time = activeAgo($person['user_id']);
+
+//         $stateClass = 'state-off';
+
+//         if ($time == 'Just Now') {
+//             $time = 'Now';
+//             $stateClass = 'state-on';
+//         }
+//         $content = <<<FRIEND
+//             <div class="people-you-may-know-container">
+//                 <div class='people-you-may-know'>
+//                     <div class='people-you-may-know-image'>
+//                         <img class='post-avatar post-avatar-30' src='{$person['profile_pic']}'  >
+//                     </div>
+//                     <div class='people-you-may-know-info'>
+//                         <a href="timeline.php?visitingUserID={$person['user_id']}" class='people-you-may-know-text'>{$person['name']}</a> 
+//                         <span class='{$stateClass}'>{$time}</span>           
+//                     </div>
+//                     <div class='people-you-may-know-action'>
+//                         <div>
+//                             <a href="javascript:addFriend({$person['user_id']})" class='add-friend add-friend-{$person['user_id']}'><i class="tooltip-container fas fa-plus">
+//                             <span class='tooltip tooltip-right'>Add Friend</span></i></a>
+//                         </div>
+//                     </div>
+//                 </div>
+//             </div>
+// FRIEND;
+//         echo $content;
+//     }   //Loop ended
+//    }   // if isRecord condition ended
+
+    //Place Holder
+    $content = <<<CO
+    <div class="people-you-may-know-container">
+        <div class="people-you-may-know">
+            <div class="people-you-may-know-image">
+                <img class="post-avatar post-avatar-30" src="assets/profile_pictures/18342234_662175600653086_4712756504172023815_n.jpg">
+            </div>
+    
+            <div class="people-you-may-know-info">
+                <a href="timeline.php?visitingUserID=34" class="people-you-may-know-text">Abdul Haseeb</a> 
+                <span class="state-on">Now</span>           
+            </div>
+            <div class="people-you-may-know-action">
+                <div>
+                    <a href="javascript:addFriend(34)" class="add-friend add-friend-34"><i class="tooltip-container fas fa-plus">
+                    <span class="tooltip tooltip-right">Add Friend</span></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+</div>
+CO;
+echo $content;    
+}

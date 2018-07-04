@@ -1061,6 +1061,11 @@ function removeFriend(id) {
   });
 }
 
+function addFriend(id){
+  alert("Adding Friend");
+  document.querySelector(`.add-friend-${id}`).style.display = "none";
+}
+
 function showPage(flag, page) {
   document.getElementById("loading").style.display = "none";
   var xhr = new XMLHttpRequest();

@@ -54,7 +54,12 @@ DELIMETER;
         echo "</div></div></div></div>";
         
     ?>
-    <div class='people-you-may-know-area'>People you may know</div>
+    <div class='people-you-may-know-area'>
+        <div class='people-you-may-know-heading'> People you may know</div>
+        <div class='people-you-may-know-content'>
+            <?php showPeopleYouMayKnow()?>
+        </div>
+    </div>
 </div>
 
 <script src="script.js"></script>
