@@ -75,7 +75,7 @@
   <input type="password" name='repeatPassword' class='login-input' placeholder='Confirm Password' maxlength="20" minlength='8' required><br><?php if (isset($_SESSION['s_pass_error'])) {
     echo $_SESSION['s_pass_error'];
 }?><br>
-  <input type="number" name='age' placeholder='Age' class='login-input' required value=<?php  if (isset($_SESSION['s_age'])) {
+  <input type="text" name='age' placeholder='Birthday' onfocus="(this.type='date')"   class='login-input' required value=<?php  if (isset($_SESSION['s_age'])) {
     echo $_SESSION['s_age'];
 }?>><br>
   <select name="genderBox"  required class='login-input'>

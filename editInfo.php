@@ -17,14 +17,17 @@ $school = trim(mysqli_real_escape_string($connection, $_POST['school']));
 $college = trim(mysqli_real_escape_string($connection, $_POST['college'])); 
 $university = trim(mysqli_real_escape_string($connection, $_POST['university'])); 
 $work = trim(mysqli_real_escape_string($connection, $_POST['work'])); 
-$contact = trim(mysqli_real_escape_string($connection, $_POST['contact'])); 
+$contact = trim(mysqli_real_escape_string($connection, $_POST['contact']));
+$age = trim(mysqli_real_escape_string($connection, $_POST['age'])); 
+$gender = trim(mysqli_real_escape_string($connection, $_POST['genderBox'])); 
 
 $pass = hashString($pass);
-$newPass = hashString($newPass);
+if(strlen(trim($newPass)) > 7)
+    $newPass = hashString($newPass);
 $flag = validatePassword($pass);
 
 if($flag)
-    saveEditedInfo($school,$college,$university,$work,$contact,$newPass);
+    saveEditedInfo($school,$college,$university,$work,$contact,$newPass,$age,$gender);
 else{
     $_SESSION['edit_info_pass_error'] = true;
     $_SESSION['edit_info_user_school'] = $school;

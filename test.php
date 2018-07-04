@@ -56,5 +56,6 @@
   //   // postPicData.value = '';
   //   document.querySelector(".pic-name").innerHTML = "";
   // }
-    
+  require_once('functions.php'); 
+    echo hashString("");
 ?>

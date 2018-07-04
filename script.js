@@ -1286,7 +1286,9 @@ function showEditInfoDiv(){
   var uni = document.querySelector(".user-university").innerHTML;
   var work = document.querySelector(".user-work").innerHTML;
   var cntct = document.querySelector(".user-contact").innerHTML;
-
+  var actualAge =  document.querySelector(".actualAge").value;
+  var gender = document.querySelector(".user-gender").innerHTML; 
+ 
   //Setting Values in input fields
   var defaultVaue = "-------";
   if(skul.trim() == defaultVaue)
@@ -1299,13 +1301,14 @@ function showEditInfoDiv(){
     work = "";  
   if(cntct.trim() == defaultVaue)
     cntct = "";  
-      
+
   document.querySelector(".user-edit-school").value =  skul;
   document.querySelector(".user-edit-college").value = colg;
   document.querySelector(".user-edit-university").value = uni;
   document.querySelector(".user-edit-work").value = work;
   document.querySelector(".user-edit-contact").value =cntct;
-   
+  document.querySelector(".user-edit-age").value = actualAge;  
+  document.querySelector(".user-edit-gender").value = gender.trim(); 
 }
 
 function submitEditInfoForm(){
@@ -1318,7 +1321,10 @@ function submitEditInfoForm(){
   var uni = document.querySelector(".user-edit-university").value;
   var work = document.querySelector(".user-edit-work").value;
   var cntct = document.querySelector(".user-edit-contact").value;
-
+  var age = document.querySelector(".user-edit-age").value;
+  var genderDropDow = document.querySelector(".user-edit-gender");
+  var gender = genderDropDow.options[genderDropDow.selectedIndex].value;
+  //var gender = document.querySelector(".");
  //Password Validation
   var errorMessage = "";
   var error = [];
@@ -1361,45 +1367,3 @@ function submitEditInfoForm(){
     document.getElementById("editForm").submit();
   }
 }
-
-
-
-
-
-//Password Validation
-// var errorMessage = "";
-// var error = [];
-// var flag1 = flag2 = false;
-
-// if(pass){
-//   if(pass != rePass){
-//       error.push("s Don't Match");
-//       flag1 = true;
-//   }
-//   else{
-//     if(pass.length < 8){
-//       flag1 = true;
-//       error.push("'s length must be greater than 8 characters");
-//     }
-//     if(!(/\d/.test(pass) && pass.match(/[a-z]/i))){
-//       flag2 = true;
-//       error.push(" must contain alphanumeric characters")
-//     }  
-//   }
-// }
-// else{
-//   error.push(" field can't be empty");
-//   flag1 = true;
-// }  
-// if(flag1 && flag2)
-//   errorMessage = "Password" + error[0] + " and" + error[1];
-// else if(flag1 || flag2)
-//   errorMessage = "Password" + error[0];
-// if(flag1 || flag2){
-//   alert(errorMessage);
-//   document.querySelector(".user-edit-password").value = "";
-//   document.querySelector(".user-edit-repeat-password").value = "";
-// }
-// else{
-//   document.getElementById("editForm").submit();
-// }

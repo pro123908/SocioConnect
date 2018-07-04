@@ -2065,7 +2065,7 @@ function profilePicChange($pic){
 }
 
 function showUserInfo($id){
-    $userInfo = queryFunc("SELECT school,college,university,contact_no,work from users where user_id = '$id'");
+    $userInfo = queryFunc("SELECT age as 'actualAge',gender,school,college,university,contact_no,work, TIMESTAMPDIFF(YEAR, age, now()) as 'age' from users where user_id = '$id'");
     if(isData($userInfo)){
         $userInfo = isRecord($userInfo);
         $defaultValue = "-------";
@@ -2080,6 +2080,10 @@ function showUserInfo($id){
             $userInfo['work'] = $defaultValue;
         if(!isset($userInfo['contact_no']) || strlen($userInfo['contact_no']) == 0)
             $userInfo['contact_no'] = $defaultValue;
+        if(!isset($userInfo['age']) || strlen($userInfo['age']) == 0)
+            $userInfo['age'] = $defaultValue;  
+        else
+            $userInfo['age'] .= " Years";
 
         $info = <<<INFO
             <div class='user-info'>
@@ -2102,6 +2106,15 @@ function showUserInfo($id){
                 <span class='user-info-key'>Contact No:</span>
                 <span class='user-info-value user-contact'>{$userInfo['contact_no']} </span>
             </div>
+            <div class='user-info'>
+                <span class='user-info-key'>Age:</span>
+                <span class='user-info-value user-age'>{$userInfo['age']}</span>
+            </div>
+            <div class='user-info'>
+                <span class='user-info-key'>Gender:</span>
+                <span class='user-info-value user-gender'>{$userInfo['gender']} </span>
+            </div>
+            <input type = 'hidden' class = "actualAge" value = "{$userInfo['actualAge']}">
 INFO;
 
     if($id == $_SESSION['user_id']){
@@ -2113,6 +2126,12 @@ INFO;
             
             <div class = "user-info-edit-div-content">
                 <form action = "editInfo.php" method = "post" id = "editForm">
+                    <label class = "user-info-for-edit">Age : <input type = "date" name = "age" class ="user-edit-age"  autocomplete="off"></label><br>
+                    Gender: <select name="genderBox"  required class='user-edit-gender'>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="other">Other</option>
+                    </select><br>
                     <label class = "user-info-for-edit">School : <input type = "text" name = "school" class ="user-edit-school" autocomplete="off"></label><br>
                     <label class = "user-info-for-edit">College : <input type = "text" name = "college" class = "user-edit-college" autocomplete="off"></label><br>
                     <label class = "user-info-for-edit">University : <input type = "text" name = "university" class = "user-edit-university" autocomplete="off"></label><br>
@@ -2136,9 +2155,12 @@ EDIT;
     }
 }
 
-function saveEditedInfo($school, $college, $university, $work,$contact,$newPass){
+function saveEditedInfo($school, $college, $university, $work,$contact,$newPass,$age,$gender){
     $userLoggedIn = $_SESSION['user_id'];
-    $result = queryFunc("update users set school = '$school' , college = '$college' , university = '$university', work = '$work' , contact_no = '$contact', password = '$newPass' where user_id = '$userLoggedIn' ");
+    $conflict = "";
+    if(strlen(trim($newPass)) > 8)
+        $conflict = ", password = '$newPass' ";
+    $result = queryFunc("update users set school = '$school' , college = '$college' , university = '$university', work = '$work' , contact_no = '$contact' $conflict , age = '$age' , gender = '$gender' where user_id = '$userLoggedIn' ");
     isData($result);
 }
 
