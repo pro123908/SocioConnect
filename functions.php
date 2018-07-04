@@ -1027,13 +1027,14 @@ DATA;
 function isFriend($id)
 {
     // Checking if specified user your friend or not?
+   
     $userLoggedIn = $_SESSION['user_id'];
     $friend = queryFunc("SELECT friend_id FROM friends WHERE (user1='{$userLoggedIn}' and user2 = {$id}) OR (user2={$userLoggedIn} and user1 = {$id}) ");
     if (isData($friend)) {
         return true;
     } else {
         return false;
-    }
+    }    
 }
 
 function reqSent($id)
@@ -1807,7 +1808,7 @@ function showRecentActivities($page,$limit,$place = null,$id = null){
 
     //if id is true then you are seeing someone else's activities
     $userLoggedIn = $_SESSION['user_id'];
-    if($id)
+    if($id != null)
         $userLoggedIn = $id;
 
     $limitRecords = $limit + 1;
@@ -1894,11 +1895,14 @@ function addActivity($activity_type, $target_id, $userLoggedIn,$id = null)
     $flag2 = false;
     if($id){
         $userLoggedIn = $id;
-        $frined = queryFunc("SELECT user_id from posts where post_id = '$target_id'");
-        $friend = isRecord($frined);
-        $friend = $friend['user_id'];
-        if(!(isFriend($friend)) && $friend != $_SESSION['user_id'])
-            $flag2 = true;
+        if($activity_type != 3){
+            $frined = queryFunc("SELECT user_id from posts where post_id = '$target_id'");
+            $friend = isRecord($frined);
+            $friend = $friend['user_id'];
+            if(!(isFriend($friend)) && $friend != $_SESSION['user_id'])
+                $flag2 = true;
+        }
+        
     }
     $profilePic = getUserProfilePic($userLoggedIn);
     $deletedActivity = '';
@@ -1964,9 +1968,9 @@ function addActivity($activity_type, $target_id, $userLoggedIn,$id = null)
 
         // Will have IDs of two users 
         $users = explode(" ", $target_id);
-        $visitId = ($users[0] == $_SESSION['user_id']) ? $users[1] : $users[0] ;
+        $visitId = ($users[0] == $userLoggedIn) ? $users[1] : $users[0] ;
         $activityLink = "timeline.php?visitingUserID=$visitId";
-        $time = queryFunc("SELECT become_friends_at from friends where (user1 = '$users[0]' AND user2 = '$users[1]') OR (user2 = '$users[1]' AND user1 = '$users[0]') ");
+        $time = queryFunc("SELECT become_friends_at from friends where (user1 = '$users[0]' AND user2 = '$users[1]') OR (user1 = '$users[1]' AND user2 = '$users[0]') ");
 
         // is activity deleted?
         if (isData($time)) {
@@ -2128,9 +2132,9 @@ INFO;
                 <form action = "editInfo.php" method = "post" id = "editForm">
                     <label class = "user-info-for-edit">Age : <input type = "date" name = "age" class ="user-edit-age"  autocomplete="off"></label><br>
                     Gender: <select name="genderBox"  required class='user-edit-gender'>
-                        <option value="male">Male</option>
-                        <option value="female">Female</option>
-                        <option value="other">Other</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
                     </select><br>
                     <label class = "user-info-for-edit">School : <input type = "text" name = "school" class ="user-edit-school" autocomplete="off"></label><br>
                     <label class = "user-info-for-edit">College : <input type = "text" name = "college" class = "user-edit-college" autocomplete="off"></label><br>

@@ -1143,9 +1143,16 @@ function showNextPageNotis() {
 }
 
 function showPageActivities(page) {
+  var args = window.location.search;
+  var id = args.slice(args.search("=") + 1);
+  var param;
+  if(id  == "")
+    param = "page=" + page;
+  else
+    param = "page="+page+"&id="+id 
   document.getElementById("loading-activities").style.display = "none";
   var xhr = new XMLHttpRequest();
-  xhr.open("GET", "loadRecentActivitiesAjax.php?page=" + page, true);
+  xhr.open("GET", "loadRecentActivitiesAjax.php?"+param, true);
   xhr.onload = function () {
     if ((this.status = 200)) {
       document.querySelector(".activities").innerHTML =
