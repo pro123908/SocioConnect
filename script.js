@@ -785,8 +785,14 @@ function notificationRefresh() {
                 <span class='notification-info'>
             <span class='notification-text'>${obj.name} has ${conflict}</span><i class='noti-icon ${notiIcon}'></i><span class='noti-time'>Now</span></span></a>
 `;
-      document.querySelector(`.notifications`).innerHTML =
+      // Dropdown
+      document.querySelector(`.notifications-dropdown`).innerHTML =
+        notification + document.querySelector(`.notifications-dropdown`).innerHTML;
+
+        if(document.querySelector('.notifications')){
+        document.querySelector(`.notifications`).innerHTML =
         notification + document.querySelector(`.notifications`).innerHTML;
+        }
     }
   });
 }
