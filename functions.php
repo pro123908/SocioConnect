@@ -848,13 +848,6 @@ function showNotifications($place,$page,$limit,$ajax=false)
         $postAvatar = 'post-avatar-40'; // For notification Page
         $ifNoData = '<h3>No Notifications</h3>';
     }
-    // }elseif($place == 2 && $ajax){
-    //     $lastNotiID = $_SESSION['last_noti_id'];
-    //     $userID = $_SESSION['user_id'];
-
-    //     $notiQuery = queryFunc("SELECT * from notifications WHERE seen !=1 AND noti_id > '$lastNotiID' AND (d_user_id='$userID' OR (s_user_id={$user} AND typeC='request')) order by noti_id desc");
-
-    // }
 
 
     if ($page == 1) { // if you are at first page then starting with post 0
@@ -874,7 +867,7 @@ function showNotifications($place,$page,$limit,$ajax=false)
         }else if($place == 2){
             $notificationText = '<h3>Notifications</h3>';
             echo $notificationText;
-            echo "<div class='notifications'>";
+            echo "<div class='notifications-dropdown'>";
         }
 
         
