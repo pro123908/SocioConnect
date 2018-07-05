@@ -420,6 +420,7 @@ body {
 }
 .add-friend i {
   color: green;
+  float: right;
 }
 
 .friend-action, .people-you-may-know-action {

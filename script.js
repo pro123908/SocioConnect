@@ -1000,77 +1000,124 @@ function showNextPageMessages(id) {
 
 function removeFriend(id) {
   var path = window.location.pathname;
+  var args = window.location.search;
   var flag = "";
   if (path != "/socioConnect/requests.php") {
     var flag = " limit 10";
   }
+  var redirectionFlag = true;
+
+  //if you are on someone else's friends page, then don't resfresh the page, just change the icon
+  if(args)
+    var redirectionFlag = false;
+    
   let param = `friendId=${id}&conflict=${flag}`;
   ajaxCalls("POST", "removeFriendAjax.php", param).then(function (result) {
-    var data = JSON.parse(result);
-    // if(data.length == 0){
-    //   document.querySelector(".friends-list-elements").innerHTML = "";
-    // }
-    // else{
-    console.log("Response messageSimple : " + data[0]);
-    document.querySelector(".friends-container").innerHTML = "";
-    flag = 0;
-    console.log(data.length);
-    for (i = 0; i < data.length; i++) {
-      flag++;
-      var obj = data[i];
-      var friend = `
-        <div class="friend-container">
-          <div class='friend'>
-            <div class='friend-image'>
-              <img class='post-avatar post-avatar-30' src='${
-        obj.profile_pic
-        }'  >
-            </div>
-            <div class='friend-info'>
-              <a href="timeline.php?visitingUserID=${
-        obj.user_id
-        }" class='friend-text'>${obj.name}</a>   
-              <span class='${obj.state}'>${obj.time}</span>         
-            </div>
-            <div class='friend-action'>
-            <div>
-              <a href="javascript:removeFriend(${
-        obj.user_id
-        })" class='remove-friend'><i class="fas fa-times tooltip-container"><span class='tooltip tooltip-right'>Remove Friend</span></i></a>
+    if(redirectionFlag){
+      var data = JSON.parse(result);
+      // if(data.length == 0){
+      //   document.querySelector(".friends-list-elements").innerHTML = "";
+      // }
+      // else{
+      console.log("Response messageSimple : " + data[0]);
+      document.querySelector(".friends-container").innerHTML = "";
+      flag = 0;
+      console.log(data.length);
+      for (i = 0; i < data.length; i++) {
+        flag++;
+        var obj = data[i];
+        var friend = `
+          <div class="friend-container">
+            <div class='friend'>
+              <div class='friend-image'>
+                <img class='post-avatar post-avatar-30' src='${
+          obj.profile_pic
+          }'  >
               </div>
-            </div>
-          </div> 
-          </div>  
-        `;
-      document.querySelector(".friends-container").innerHTML += friend;
-      if (flag == 10 && path != "/socioConnect/requests.php")
-        break;
-    }
-    if (path != "/socioConnect/requests.php") {
-      if (flag == 0) {
-        document.querySelector(".show-more-friends").innerHTML =
-          "<p class='see-more'>No Friends To Show</p>";
-      } else if (flag == 10) {
-        document.querySelector(".show-more-friends").innerHTML =
-          "<a href='requests.php' class='see-more'><span>See more</span></a>";
-      } else {
-        document.querySelector(".show-more-friends").innerHTML =
-          "<p class='see-more'>No More Friends To Show</p>";
+              <div class='friend-info'>
+                <a href="timeline.php?visitingUserID=${
+          obj.user_id
+          }" class='friend-text'>${obj.name}</a>   
+                <span class='${obj.state}'>${obj.time}</span>         
+              </div>
+              <div class='friend-action'>
+              <div>
+                <a href="javascript:removeFriend(${
+          obj.user_id
+          })" class='remove-friend'><i class="fas fa-times tooltip-container"><span class='tooltip tooltip-right'>Remove Friend</span></i></a>
+                </div>
+              </div>
+            </div> 
+            </div>  
+          `;
+        document.querySelector(".friends-container").innerHTML += friend;
+        if (flag == 10 && path != "/socioConnect/requests.php")
+          break;
       }
+      if (path != "/socioConnect/requests.php") {
+        if (flag == 0) {
+          document.querySelector(".show-more-friends").innerHTML =
+            "<p class='see-more'>No Friends To Show</p>";
+        } else if (flag == 10) {
+          document.querySelector(".show-more-friends").innerHTML =
+            "<a href='requests.php' class='see-more'><span>See more</span></a>";
+        } else {
+          document.querySelector(".show-more-friends").innerHTML =
+            "<p class='see-more'>No More Friends To Show</p>";
+        }
+      }
+    }
+    else{
+      var personLink = document.querySelector(`.remove-friend-${id}`);  
+      personLink.className = `add-friend add-friend-${id}`;
+      personLink.setAttribute("href",`javascript:addFriend(${id})`);
+      personLink.querySelector(".tooltip").innerHTML = "Add Friend";
+
+      fontAwesomeIcon = personLink.querySelector(".tooltip-container");
+      fontAwesomeIcon.classList.remove("fa-times");
+      fontAwesomeIcon.classList.add("fa-plus");   
+      
     }
   });
 }
 
 function addFriend(id){
-  var personLink = document.querySelector(`.add-friend-${id}`);
-  var fontAwesomeIcon = personLink.querySelector(".tooltip-container");
-  fontAwesomeIcon.classList.remove("fa-plus");
-  fontAwesomeIcon.classList.add("fa-check");
+  var personLink = document.querySelectorAll(`.add-friend-${id}`);
+  var fontAwesomeIcon;
+  for(var i=0; i<personLink.length; i++){
+    fontAwesomeIcon = personLink[i].querySelector(".tooltip-container");
+    fontAwesomeIcon.classList.remove("fa-plus");
+    fontAwesomeIcon.classList.add("fa-check");
+  }
   
   let param = `id=${id}`;
   ajaxCalls('POST', 'addFriendAjax.php', param).then(function (result) {
+
+    for(var i=0; i<personLink.length; i++){
+      personLink[i].setAttribute("href",`javascript:cancelReq(${id})`);
+      personLink[i].querySelector(".tooltip").innerHTML = "Friend Request Sent";
+    }
   });
 
+}
+
+function cancelReq(id){
+  var personLink = document.querySelectorAll(`.add-friend-${id}`);
+  alert(personLink.length);
+  var fontAwesomeIcon;
+  for(var i=0; i<personLink.length; i++){
+    fontAwesomeIcon = personLink[i].querySelector(".tooltip-container");
+    fontAwesomeIcon.classList.remove("fa-check");
+    fontAwesomeIcon.classList.add("fa-plus");
+  }
+  let param = `id=${id}`;
+  ajaxCalls('POST', 'cancelReqAjax.php', param).then(function (result) {
+    for(var i=0; i<personLink.length; i++){
+      personLink[i].setAttribute("href",`javascript:addFriend(${id})`);
+      personLink[i].querySelector(".tooltip").innerHTML = "Add Friend";
+    }
+  });
+  
 }
 
 function showPage(flag, page) {

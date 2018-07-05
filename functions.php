@@ -1027,7 +1027,6 @@ DATA;
 function isFriend($id)
 {
     // Checking if specified user your friend or not?
-   
     $userLoggedIn = $_SESSION['user_id'];
     $friend = queryFunc("SELECT friend_id FROM friends WHERE (user1='{$userLoggedIn}' and user2 = {$id}) OR (user2={$userLoggedIn} and user1 = {$id}) ");
     if (isData($friend)) {
@@ -1160,7 +1159,6 @@ function displayFriends($count=null,$id=null)
 
     $queryResult = queryFunc("SELECT * from friends WHERE user1='$userID' OR  user2='$userID'");
     
-
     $numberOfIteration = 0;
     if (isData($queryResult)) {
     
@@ -1227,20 +1225,41 @@ function printFriendsList($friends,$id){
                 <a href="timeline.php?visitingUserID={$friend['user_id']}" class='friend-text'>{$friend['name']}</a> 
                 <span class='{$stateClass}'>{$time}</span>           
             </div>
+            <div class='friend-action'>
+            <div>
 FRIEND;
-          if(!$id){
+        if(!$id || isFriend($friend['user_id'])){
             $content .= <<<FRIEND
-                <div class='friend-action'>
-                <div>
-                <a href="javascript:removeFriend({$friend['user_id']})" class='remove-friend'><i class="tooltip-container fas fa-times">
+                <a href="javascript:removeFriend({$friend['user_id']})" class='remove-friend remove-friend-{$friend['user_id']}'><i class="tooltip-container fas fa-times">
                 <span class='tooltip tooltip-right'>Remove Friend</span>
                 </i></a>
-                </div>
-            </div>
 FRIEND;
-         }
-
+        }    
+        else if(reqRecieved($friend['user_id'])){
+            $content .= <<<FRIEND
+            <a href="requests.php?id={$id}" class='remove-friend'><i class="tooltip-container fas fa-backward">
+            <span class='tooltip tooltip-right'>Respond To Friend Request</span>
+            </i></a>
+FRIEND;
+        }
+        else if(reqSent($friend['user_id'])){
+            $content .= <<<FRIEND
+            <a href="javascript:cancelReq({$friend['user_id']})" class='add-friend add-friend-{$friend['user_id']}'><i class="tooltip-container fas fa-check">
+            <span class='tooltip tooltip-right'>Friend Request Sent</span>
+            </i></a>
+FRIEND;
+        }
+        else{
+            $content .= <<<FRIEND
+            <a href="javascript:addFriend({$friend['user_id']})" class='add-friend add-friend-{$friend['user_id']}'><i class="tooltip-container fas fa-plus">
+            <span class='tooltip tooltip-right'>Add Friend</span>
+            </i></a>
+FRIEND;
+        }
+         
     $content .= <<<FRIEND
+        </div>
+        </div>
         </div>
         </div>
 FRIEND;
@@ -2204,7 +2223,7 @@ function showPeopleYouMayKnow(){
             continue;   
 
         //else fetch that user from DB and render it after checking that this ID belongs to a legit user
-        $person = queryFunc("SELECT profile_pic, CONCAT(first_name,last_name) as 'name' from users where user_id = '$idToCheck'");
+        $person = queryFunc("SELECT profile_pic, CONCAT(first_name ,' ', last_name) as 'name' from users where user_id = '$idToCheck'");
         if(isData($person)){
             array_push($renderedIDs,$idToCheck);
             $person = isRecord($person);
