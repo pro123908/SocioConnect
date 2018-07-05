@@ -814,7 +814,10 @@ function likesRefresh() {
         var obj = data[i];
 
         if(document.querySelector(`.like-count-${obj.postID}`)){
-        document.querySelector(`.like-count-${obj.postID}`).innerHTML = obj.likes;
+        document.querySelector(`.like-count-${obj.postID}`).innerHTML = `
+        <i class='like-count-icon fas fa-thumbs-up'></i> ${obj.likes}
+                   <span class='tooltip tooltip-bottom count'></span>
+        `;
         }
       }
     });
@@ -831,11 +834,13 @@ function likeUsers(postID) {
     for (i = 0; i < data.length; i++) {
       flag = false;
       var obj = data[i];
-      console.log("In");
+      
       document.querySelector(`.like-count-${postID} .count`).innerHTML += `${
         obj.name
         }<br>`;
     }
+
+    // If no person like that post then not to display tooltip
     if (flag) {
       document
         .querySelector(`.like-count-${postID} .count`)
@@ -850,16 +855,15 @@ function hideLikers(postID) {
 }
 
 function message() {
-  let messageBody = document.messageForm.message_body;
-  let partner = document.messageForm.partner;
-  let pic = document.messageForm.pic;
 
-  var width = document.querySelector(".chat-messages").offsetWidth;
-  var widthX = document.querySelector(".chat-messages .message");
+  let messageBody = document.messageForm.message_body; // Message text
+  let partner = document.messageForm.partner; // Parnter ID
+  let pic = document.messageForm.pic; // User Pic
 
-  console.log("width : " + width * 0.8);
-  console.log(messageBody.value.length);
+
   if (messageBody.value.length > 0) {
+    
+    // Making AJAX request with partner ID and message text
     let param = `partner=${partner.value}&messageBody=${messageBody.value}`;
 
     document.querySelector(".chat-messages").innerHTML += `
@@ -871,31 +875,30 @@ function message() {
       `;
 
     ajaxCalls("POST", "messageAjax.php", param).then(function (response) {
-      console.log("Response messageSimple : " + response);
-      var msgs = document.querySelectorAll(".chat-message");
-      if (
-        document.getElementById("loading-messages").innerHTML ==
-        "No Messages To Show"
-      )
-        document.getElementById("loading-messages").innerHTML =
-          "No More Messages To Show";
+      
+      // var msgs = document.querySelectorAll(".chat-message");
+
+      if (document.getElementById("loading-messages").innerHTML == "No Messages To Show")
+        document.getElementById("loading-messages").innerHTML = "No More Messages To Show";
     });
 
     messageBody.value = "";
 
+    // Scrolling to the most recent message
     var last = document.querySelector(".my-message:last-child");
-    // var last = nodes[nodes.length - 1];
-
     last.scrollIntoView();
+
+
   }
 }
 
-setInterval(messageRefresh, 1000);
 
 function messageRefresh() {
-  var url = window.location.href;
-  var id = url.substring(url.lastIndexOf("=") + 1);
+  var url = window.location.href; // Getting URL of page
+  var id = url.substring(url.lastIndexOf("=") + 1); // Extracting ID from URL
 
+
+  // AJAX call for message Refreshing
   ajaxCalls("GET", `messageAjax.php?id=${id}`).then(function (response) {
     let messageResponse = JSON.parse(response);
 
@@ -910,15 +913,17 @@ function messageRefresh() {
         </div>
        `;
 
-      var last = document.querySelector(".their-message:last-child");
-      // var last = nodes[nodes.length - 1];
 
+      // Scrolling to the most recent message
+      var last = document.querySelector(".their-message:last-child");
       last.scrollIntoView();
     }
   });
 }
 
+
 function refreshRecentConvos() {
+
   ajaxCalls("GET", "recentConvoAjax.php").then(function (result) {
     var data = JSON.parse(result);
 
@@ -957,14 +962,17 @@ function refreshRecentConvos() {
     }
   });
 }
-setInterval(refreshRecentConvos, 1000);
+
 
 function deleteConvo(id) {
   // For deleting User Chat
   // id - loggedIn userID
 
   var url = window.location.href; // URL of the current window
-  var openConvoId = url.slice(46); // Will give the ID of the user whom you are chatting with
+  //var openConvoId = url.slice(46); // Will give the ID of the user whom you are chatting with
+  
+  var openConvoId =  url.substring(url.lastIndexOf("=") + 1); // Extracting ID from URL
+
   let param = `id=${id}&urlID=${openConvoId}`;
   ajaxCalls("POST", `deleteConvoAjax.php`, param).then(function (response) {
     console.log(response);
@@ -1332,9 +1340,7 @@ function editProfilePicture() {
 }
 
 
-setInterval(commentsRefresh, 3000);
-setInterval(notificationRefresh, 3000);
-setInterval(likesRefresh, 3000);
+
 
 
 //DP Animation Functions
@@ -1443,3 +1449,10 @@ function submitEditInfoForm(){
     document.getElementById("editForm").submit();
   }
 }
+
+
+setInterval(commentsRefresh, 3000);
+setInterval(notificationRefresh, 3000);
+setInterval(likesRefresh, 3000);
+setInterval(messageRefresh, 1000);
+setInterval(refreshRecentConvos, 1000);

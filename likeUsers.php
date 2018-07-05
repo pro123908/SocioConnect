@@ -33,6 +33,8 @@ if (isset($_GET['postID'])) {
 
         // Simple converting the array to JSON format and passing it
         echo json_encode($data);
+
+        
     } else { // If there were no data
         echo '{"notEmpty" : "Bilal"}';
     }

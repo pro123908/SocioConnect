@@ -48,13 +48,15 @@ if (isData($queryResult)) {
             $counter += 1;
         }
         // if there were no notifations for you
-        if ($counter != 0) {
-          // Simple converting the array to JSON format and passing it
+        // if ($counter != 0) {
+        //   // Simple converting the array to JSON format and passing it
+        //   echo json_encode($data);
+        // } else {
+        //   // If there were no notifications, then just giving a JSON response for avoiding error
+        //   echo '{"notEmpty" : "Bilal"}';
+        // }
+
           echo json_encode($data);
-        } else {
-          // If there were no notifications, then just giving a JSON response for avoiding error
-          echo '{"notEmpty" : "Bilal"}';
-        }
 } 
 else {
       echo '{"notEmpty" : "Bilal"}';

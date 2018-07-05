@@ -10,8 +10,9 @@ if(!isset($_SESSION['user_id'])){
 $recentUserIds = array();
 //Getting ids of all the users where messages are received from
 $lastMsg = $_SESSION['last_message_retrieved_for_recent_convos'];
-$senderOfRecentMsgs = queryFunc("SELECT id,user_from,user_to FROM messages where (user_to = ".$_SESSION['user_id']." or user_from = ".$_SESSION['user_id'].") AND id > ".$lastMsg ." AND deleted = 0 ORDER BY id DESC");
-// 
+
+$senderOfRecentMsgs = queryFunc("SELECT id,user_from,user_to FROM messages where (user_to = {$_SESSION['user_id']} or user_from = {$_SESSION['user_id']}) AND id > $lastMsg AND deleted = 0 ORDER BY id DESC");
+
 $flag = 0; 
 if (isData($senderOfRecentMsgs)) {
     while ($row = isRecord($senderOfRecentMsgs)) {
@@ -40,22 +41,25 @@ if (isData($senderOfRecentMsgs)) {
         }
     
         $msg = $lastMessageDetails['body'];
-        $at =  timeString(differenceInTime($lastMessageDetails['dateTime']));
+        $at =  getTime($lastMessageDetails['dateTime']);
+        
  
         $data[$counter] = array('fromID'=>$recentUserIds[$counter],'partner'=>$recentUsernames[$counter],'from'=>$from,'msg'=>$msg,'at'=>$at,'pic' => $profilePic);
 
         $counter += 1;
     }
 
-    // Checking if there were comments of other users in last one second
-    if ($counter != 0) {
-        // Simple converting the array to JSON format and passing it
+    // // Checking if there were comments of other users in last one second
+    // if ($counter != 0) {
+    //     // Simple converting the array to JSON format and passing it
+    //     echo json_encode($data);
+    // } else {
+    //     // If there were no comments inserted, then just giving a JSON response for avoiding error 
+    //     echo '{"notEmpty" : "Bilal"}';
+    // }
+    // // If no user inserted comments or comment
+
         echo json_encode($data);
-    } else {
-        // If there were no comments inserted, then just giving a JSON response for avoiding error 
-        echo '{"notEmpty" : "Bilal"}';
-    }
-    // If no user inserted comments or comment
 
 }
 else{
