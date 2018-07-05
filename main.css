@@ -1467,12 +1467,11 @@ input[type="file"]:hover {
 
 /* User info edititng */
 .user-info-edit-div {
-  display: none;
   position: fixed;
   z-index: 100;
   padding-top: 75px;
   left: 500;
-  top: 120;
+  top: 100;
   width: 35%;
   height: 70%;
   overflow: auto;
