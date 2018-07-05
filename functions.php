@@ -810,7 +810,6 @@ function showNotifications($place,$page,$limit,$ajax=false)
 {
     /* --------------- REFACTORED -------------------- */
 
-
     // $limit - Number of notifications 
 
     // $page - Notification Page Number -> on which page you are
@@ -824,8 +823,6 @@ function showNotifications($place,$page,$limit,$ajax=false)
 
     // If no notifications are found then to display a message
    $ifNoData  = '';
-
-
     
     if ($place == 1) {
         // Getting all the requests from database
@@ -1900,7 +1897,6 @@ function addActivity($activity_type, $target_id, $userLoggedIn,$id = null)
     
     //Target_id
     // target - content such as post,like etc
-
     $userLoggedIn = $_SESSION['user_id'];
     
     //flag2 is used for checking whether user logged is authorized for viewing that post
@@ -1908,11 +1904,15 @@ function addActivity($activity_type, $target_id, $userLoggedIn,$id = null)
     if($id){
         $userLoggedIn = $id;
         if($activity_type != 3){
-            $frined = queryFunc("SELECT user_id from posts where post_id = '$target_id'");
-            $friend = isRecord($frined);
-            $friend = $friend['user_id'];
-            if(!(isFriend($friend)) && $friend != $_SESSION['user_id'])
-                $flag2 = true;
+            $friend = queryFunc("SELECT user_id from posts where post_id = '$target_id'");
+            if(isData($friend)){
+                $friend = isRecord($friend);
+                $friend = $friend['user_id'];
+                if(!(isFriend($friend)) && $friend != $_SESSION['user_id'])
+                    $flag2 = true;
+            }
+            else
+                $friend = null;
         }
         
     }
@@ -1936,8 +1936,6 @@ function addActivity($activity_type, $target_id, $userLoggedIn,$id = null)
         } else {
             $flag = false;
         }
-
-       
     } elseif ($activity_type == 1) {
 
         // If comment activity

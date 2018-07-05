@@ -1107,7 +1107,6 @@ function addFriend(id){
 
 function cancelReq(id){
   var personLink = document.querySelectorAll(`.add-friend-${id}`);
-  alert(personLink.length);
   var fontAwesomeIcon;
   for(var i=0; i<personLink.length; i++){
     fontAwesomeIcon = personLink[i].querySelector(".tooltip-container");
