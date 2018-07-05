@@ -2149,41 +2149,50 @@ function showUserInfo($id){
             </div>
             <input type = 'hidden' class = "actualAge" value = "{$userInfo['actualAge']}">
 INFO;
-
+    if(isset($_SESSION['edit_info_pass_error']) && $_SESSION['edit_info_pass_error']){
+        $showHidden = "";
+        // unset($_SESSION['edit_info_pass_error']);
+    }   
+    else{
+        $showHidden = "hidden";
+    } 
     if($id == $_SESSION['user_id']){
-        $info .= <<<EDIT
-        <button class='user-info-edit-button' id = 'edit-form' onclick = 'showEditInfoDiv()'>Edit</button>
-        <div class="user-info-edit-div">
+        $info .= "<button class='user-info-edit-button' id = 'edit-form' onclick = 'showEditInfoDiv()'>Edit</button>";
+        ?>
+        <div class="user-info-edit-div <?php echo $showHidden;?>">
             <span><h1 class = "user-info-edit-div-heading">Edit Personal Information</h1></span>
             <span class="user-info-edit-div-close" onclick="hideEditInfoDiv()">&times;</span>
             
             <div class = "user-info-edit-div-content">
                 <form action = "editInfo.php" method = "post" id = "editForm">
-                    <label class = "user-info-for-edit">Age : <input type = "date" name = "age" class ="user-edit-age"  autocomplete="off"></label><br>
+                    <label class = "user-info-for-edit">Age : <input type = "date" name = "age" class ="user-edit-age"  autocomplete="off" value = "<?php $val = isset($_SESSION['edit_info_user_age']) ? $_SESSION['edit_info_user_age']: '' ; echo $val; ?>"></label><br>
                     Gender: <select name="genderBox"  required class='user-edit-gender'>
                         <option value="Male">Male</option>
                         <option value="Female">Female</option>
                         <option value="Other">Other</option>
                     </select><br>
-                    <label class = "user-info-for-edit">School : <input type = "text" name = "school" class ="user-edit-school" autocomplete="off"></label><br>
-                    <label class = "user-info-for-edit">College : <input type = "text" name = "college" class = "user-edit-college" autocomplete="off"></label><br>
-                    <label class = "user-info-for-edit">University : <input type = "text" name = "university" class = "user-edit-university" autocomplete="off"></label><br>
-                    <label class = "user-info-for-edit">Work : <input type = "text" name = "work" class = "user-edit-work" autocomplete="off"></label><br>
-                    <label class = "user-info-for-edit">Contact No : <input type = "text" name = "contact" class = "user-edit-contact" autocomplete="off"></label><br>
+                    <label class = "user-info-for-edit">School : <input type = "text" name = "school" class ="user-edit-school" autocomplete="off" value = "<?php $val = isset($_SESSION['edit_info_user_school']) ? $_SESSION['edit_info_user_school']: '' ; echo $val; ?>"></label><br>
+                    <label class = "user-info-for-edit">College : <input type = "text" name = "college" class = "user-edit-college" autocomplete="off" value = "<?php $val = isset($_SESSION['edit_info_user_college']) ? $_SESSION['edit_info_user_college']: '' ; echo $val; ?>" ></label><br>
+                    <label class = "user-info-for-edit">University : <input type = "text" name = "university" class = "user-edit-university" autocomplete="off" value = "<?php $val = isset($_SESSION['edit_info_user_university']) ? $_SESSION['edit_info_user_university']: '' ; echo $val; ?>"></label><br>
+                    <label class = "user-info-for-edit">Work : <input type = "text" name = "work" class = "user-edit-work" autocomplete="off" value = "<?php $val = isset($_SESSION['edit_info_user_work']) ? $_SESSION['edit_info_user_work']: '' ; echo $val; ?>"></label><br>
+                    <label class = "user-info-for-edit">Contact No : <input type = "text" name = "contact" class = "user-edit-contact" autocomplete="off" value = "<?php $val = isset($_SESSION['edit_info_user_contact']) ? $_SESSION['edit_info_user_contact']: '' ; echo $val; ?>"></label><br>
                     <label class = "user-info-for-edit">New Password : <input type = "password" name = "newPassword" class = "user-edit-new-password" autocomplete="off" placeholder="Enter if you want to change password"></label><br>
                     <label class = "user-info-for-edit">Confirm Password : <input type = "password" name = "rePass" class = "user-edit-new-repeat-password" autocomplete="off" placeholder="Enter if you want to change password"></label><br>
                     <label class = "user-info-for-edit">Current Password : <input type = "password" name = "password" class = "user-edit-old-password" autocomplete="off"></label><br>
                     <input type = "button" value = "Save Changes" name="save" class = "user-edit-save" onclick = "submitEditInfoForm()">
                 </form>
             </div>
-    </div>
-EDIT;
+        <?php 
+            if(isset($_SESSION['edit_info_pass_error']) && $_SESSION['edit_info_pass_error']){
+                ?>
+                <div class='user-info-wrong-pass-warning'>Wrong Password</div>
+                <?php
+                unset($_SESSION['edit_info_pass_error']);
+            }
+        ?>    
+        </div>
+        <?php
     } 
-    if(isset($_SESSION['edit_info_pass_error'])){
-        if($_SESSION['edit_info_pass_error'])  
-            $info .= "<div class='user-info-wrong-pass-warning'>Wrong Password</div>";
-            unset($_SESSION['edit_info_pass_error']);
-    }   
     echo $info;            
     }
 }

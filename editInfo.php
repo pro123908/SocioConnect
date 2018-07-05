@@ -30,6 +30,8 @@ if($flag)
     saveEditedInfo($school,$college,$university,$work,$contact,$newPass,$age,$gender);
 else{
     $_SESSION['edit_info_pass_error'] = true;
+    $_SESSION['edit_info_user_age'] = $age;
+    $_SESSION['edit_info_user_gender'] =$gender;
     $_SESSION['edit_info_user_school'] = $school;
     $_SESSION['edit_info_user_college'] =$college ;
     $_SESSION['edit_info_user_university'] = $university;
