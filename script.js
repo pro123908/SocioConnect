@@ -640,13 +640,13 @@ function showImage() {
 //   formPic.classList.toggle("hidden");
 // }
 
-// function showEditImageButton() {
-//   // document.querySelector(".edit-profile-pic").classList.remove("hidden");
-// }
+function showEditImageButton(div) {
+  document.querySelector(`.${div}`).classList.remove("hidden");
+}
 
-// function hideEditImageButton() {
-//   // document.querySelector(".edit-profile-pic").classList.add("hidden");
-// }
+function hideEditImageButton(div) {
+  document.querySelector(`.${div}`).classList.add("hidden");
+}
 
 
 //Search Function

@@ -1699,7 +1699,7 @@ DATA;
         
         $editCover =<<<COVER
 
-        <form onchange='return editCoverPicture()' class="edit-cover-pic">
+        <form onchange='return editCoverPicture()' class="edit-cover-pic hidden" onmouseover ="showEditImageButton('edit-cover-pic')" onmouseout ="hideEditImageButton('edit-cover-pic')">
         <div class='upload-btn-wrapper'>
         <button class='pic-upload-btn'><i class='far fa-image'></i></button>
         <input type='file' name='cover-pic'/>
@@ -1710,7 +1710,7 @@ DATA;
 COVER;
 
         $editProfilePic =<<<PROFILE
-        <form onchange="return editProfilePicture()" method="post" class="edit-profile-pic">
+        <form onchange="return editProfilePicture()" method="post" class="edit-profile-pic hidden" onmouseover ="showEditImageButton('edit-profile-pic')" onmouseout ="hideEditImageButton('edit-profile-pic')">
                 <div class='upload-btn-wrapper'>
                 <button class='pic-upload-btn'><i class='far fa-image'></i></button>
                 <input type='file' name='profile-pic'/>
@@ -1725,10 +1725,10 @@ PROFILE;
     }
 
     $content =<<<PROFILE
-    <div class='user-cover' style='$coverStyle'>
+    <div class='user-cover' onmouseover ="showEditImageButton('edit-cover-pic')" onmouseout ="hideEditImageButton('edit-cover-pic')" style='$coverStyle' >
         $editCover
         <div class='user-pic'>
-            <span class='user-pic-container' onmouseover ="showEditImageButton()" onmouseout ="hideEditImageButton()">
+            <span class='user-pic-container' onmouseover ="showEditImageButton('edit-profile-pic')" onmouseout ="hideEditImageButton('edit-profile-pic')">
             <img src='{$queryUser['profile_pic']}' onclick="showImage()"  id="profile_picture"/>
             </span>
             $editProfilePic
