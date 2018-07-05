@@ -1376,9 +1376,12 @@ MESSAGE;
         $convoList =  $convo . $convoList;
     }
     echo $convoList;
+
+    // If defined number of messages were rendered
     if ($count > $limitMsg) {
         $infoForNextTime = "<input type='hidden' id='noMoreMessages' value='false'><input type='hidden' id='nextPageMessages' value='".($page+1)."' >";
     } else {
+        // If there were no more messages to rendered
         $infoForNextTime = "<input  type='hidden' id='noMoreMessages' value='true'>";
     }
     echo $infoForNextTime;

@@ -732,10 +732,10 @@ function commentsRefresh() {
 
 
 function notificationRefresh() {
-  ajaxCalls("GET", "notificationsAjax.php").then(function (result) {
+  ajaxCalls("GET", "notificationFunctions.php?refresh=1").then(function (result) {
     // Displaying search results
 
-    console.log(result);
+    // console.log(result);
 
     var data = JSON.parse(result);
 
@@ -896,8 +896,10 @@ function message() {
 function messageRefresh() {
   var url = window.location.href; // Getting URL of page
   var id = url.substring(url.lastIndexOf("=") + 1); // Extracting ID from URL
+  
+  
 
-
+  if(window.location.pathname == '/socioConnect/messages.php'){
   // AJAX call for message Refreshing
   ajaxCalls("GET", `messageAjax.php?id=${id}`).then(function (response) {
     let messageResponse = JSON.parse(response);
@@ -919,6 +921,7 @@ function messageRefresh() {
       last.scrollIntoView();
     }
   });
+}
 }
 
 
@@ -987,19 +990,36 @@ function deleteConvo(id) {
 
 function showPageMessages(id, page) {
   document.getElementById("loading-messages").style.display = "none";
-  var xhr = new XMLHttpRequest();
-  xhr.open("GET", "loadMessagesAjax.php?id=" + id + "&page=" + page, true);
-  xhr.onload = function () {
-    if ((this.status = 200)) {
-      document.querySelector(".chat-messages").innerHTML =
-        this.responseText + document.querySelector(".chat-messages").innerHTML;
+
+   ajaxCalls('GET',`loadMessagesAjax.php?id=${id}&page=${page}`).then(function(result){
+
+    document.querySelector(".chat-messages").innerHTML =
+        result + document.querySelector(".chat-messages").innerHTML;
       document.getElementById("loading-messages").style.display = "block";
-    }
+
+      
     if (document.getElementById("noMoreMessages").value == "true")
-      document.getElementById("loading-messages").innerHTML =
-        "No More Messages To Show";
-  };
-  xhr.send();
+    document.getElementById("loading-messages").innerHTML =
+      "No More Messages To Show";
+
+
+  }).catch(function(reject){
+      // just like that
+  });
+
+  // var xhr = new XMLHttpRequest();
+  // xhr.open("GET", "loadMessagesAjax.php?id=" + id + "&page=" + page, true);
+  // xhr.onload = function () {
+  //   if ((this.status = 200)) {
+  //     document.querySelector(".chat-messages").innerHTML =
+  //       this.responseText + document.querySelector(".chat-messages").innerHTML;
+  //     document.getElementById("loading-messages").style.display = "block";
+  //   }
+  //   if (document.getElementById("noMoreMessages").value == "true")
+  //     document.getElementById("loading-messages").innerHTML =
+  //       "No More Messages To Show";
+  // };
+  // xhr.send();
 }
 
 function showNextPageMessages(id) {
@@ -1012,36 +1032,34 @@ function showNextPageMessages(id) {
     div.removeChild(noMorePosts);
 
     showPageMessages(id, page.value);
-  } else {
-    alert("khtm");
   }
+
 }
 
 function removeFriend(id) {
   var path = window.location.pathname;
   var args = window.location.search;
   var flag = "";
+  
   if (path != "/socioConnect/requests.php") {
-    var flag = " limit 10";
+     flag = " limit 10";
   }
+
   var redirectionFlag = true;
 
   //if you are on someone else's friends page, then don't resfresh the page, just change the icon
   if(args)
-    var redirectionFlag = false;
+     redirectionFlag = false;
     
   let param = `friendId=${id}&conflict=${flag}`;
   ajaxCalls("POST", "removeFriendAjax.php", param).then(function (result) {
     if(redirectionFlag){
       var data = JSON.parse(result);
-      // if(data.length == 0){
-      //   document.querySelector(".friends-list-elements").innerHTML = "";
-      // }
-      // else{
-      console.log("Response messageSimple : " + data[0]);
+      
+      //console.log(data);
       document.querySelector(".friends-container").innerHTML = "";
       flag = 0;
-      console.log(data.length);
+      // console.log(data.length);
       for (i = 0; i < data.length; i++) {
         flag++;
         var obj = data[i];
@@ -1186,7 +1204,7 @@ function hello() {
 function showPageNotis(page) {
   document.getElementById("loading-notis").style.display = "none";
   var xhr = new XMLHttpRequest();
-  xhr.open("GET", "loadNotificationsAjax.php?page=" + page, true);
+  xhr.open("GET", "notificationFunctions.php?page=" + page, true);
   xhr.onload = function () {
     if ((this.status = 200)) {
       document.querySelector(".notifications").innerHTML =

@@ -1,15 +1,14 @@
-<?php 
+<?php
 
-  require_once('functions.php');
+require_once('functions.php');
 
-  if(!isset($_SESSION['user_id'])){
-     redirection('index.php');
-  }  
+if(!isset($_SESSION['user_id'])){
+   redirection('index.php');
+}  
 
+ // For loading notifcaitons without reloading the page
 
-  // For loading notifcaitons without reloading the page
-
-if(isset($_GET['refresh'])){
+ if(isset($_GET['refresh'])){
 
     $counter = 0;
     $lastNotiID = $_SESSION['last_noti_id'];
@@ -63,8 +62,11 @@ if(isset($_GET['refresh'])){
     else {
           echo '{"notEmpty" : "Bilal"}';
     }
+}
 
-
+if(isset($_GET['page'])){
+    $limit = 10;
+    showNotifications(3,$_GET['page'],$limit);
 }
 
 ?>
