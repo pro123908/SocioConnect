@@ -422,6 +422,13 @@ function showPosts($flag, $page, $limit)
       $lastComment = isRecord($lastCommentRendered);
 
       $_SESSION['last_comment_id'] = $lastComment['comment_id'];
+
+
+      $lastLikeRendered = queryFunc("SELECT like_id from likes order by like_id desc limit 1");
+      $lastLike = isRecord($lastLikeRendered);
+
+      $_SESSION['last_like_id'] = $lastLike['like_id'];
+      
 }
 
 

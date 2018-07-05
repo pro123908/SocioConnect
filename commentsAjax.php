@@ -18,9 +18,7 @@ $queryResult = queryFunc("SELECT * FROM comments WHERE comment_id > $lastComment
 
 if (isData($queryResult)) {
 
-    // Number of comments 
-$numberOfComments = mysqli_num_rows($queryResult);
-$commentCounter = 0;
+
 
 
     while ($row = isRecord($queryResult)) {

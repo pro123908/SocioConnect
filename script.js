@@ -802,6 +802,10 @@ function notificationRefresh() {
 function likesRefresh() {
   if (window.location.pathname == '/socioConnect/main.php') {
     ajaxCalls("GET", "likesAjax.php").then(function (result) {
+
+      console.log('Result :  ');
+      console.log(result);
+
       // Displaying search results
       var data = JSON.parse(result);
 

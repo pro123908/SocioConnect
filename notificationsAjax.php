@@ -17,7 +17,7 @@ $queryResult = queryFunc("SELECT * from notifications WHERE seen !=1 AND noti_id
 
 
 if (isData($queryResult)) {
-    $notiCounter = 0;
+    
         while ($row = isRecord($queryResult)) {
             // Selecing notificaiton based on
             // If is your notification and it is not already been seen
@@ -27,10 +27,9 @@ if (isData($queryResult)) {
             $type = $row['typeC']; // type of the notification
             $notiID = $row['noti_id']; // Notification 
             
-            if($notiCounter == 0){
+            
             $_SESSION['last_noti_id'] = $notiID;
-            $notiCounter = 1;
-            }
+       
             
             // Selecting name of the person who geneerated the notification
             $personQuery = queryFunc("SELECT CONCAT(first_name,' ',last_name) as name FROM users WHERE user_id='$person'");
