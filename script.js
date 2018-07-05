@@ -63,7 +63,6 @@ function setUserId(userLoggedInId) {
 
     // Selecting all notifications on page
     var notis = document.querySelectorAll(".notification");
-
     if (notis.length == 0) // If no notis
       document.getElementById("loading-notis").innerHTML =
         "No Notifications To Show";
@@ -84,7 +83,6 @@ function setUserId(userLoggedInId) {
   } else if (path == "/socioConnect/allActivities.php") {
     // Selecting all recent activities on page
     var notis = document.querySelectorAll(".recent_activity ");
-
     if (notis.length == 0) // If no recent activity
       document.getElementById("loading-activities").innerHTML =
         "No Activities To Show";
@@ -1113,7 +1111,6 @@ function addFriend(id){
 
 function cancelReq(id){
   var personLink = document.querySelectorAll(`.add-friend-${id}`);
-  alert(personLink.length);
   var fontAwesomeIcon;
   for(var i=0; i<personLink.length; i++){
     fontAwesomeIcon = personLink[i].querySelector(".tooltip-container");
