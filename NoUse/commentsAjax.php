@@ -62,3 +62,6 @@ if ($counter != 0) {
 } else {
 echo '{"notEmpty" : "Bilal"}';
 }
+
+
+?>

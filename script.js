@@ -127,7 +127,7 @@ function like(postID) {
 
       // Ajax call for adding like activity in recent activity
       param = `target_id=${postID}&activity_type=${activity_type}`;
-      ajaxCalls("POST", `recentActivityAjax.php`, param).then(function (result) {
+      ajaxCalls("POST", `AJAX2.php?recentActivity=1`, param).then(function (result) {
         // Adding to the view
         addRecentActivity(result);
       });
@@ -690,7 +690,7 @@ function getUsers(value, flag) {
 function commentsRefresh() {
 
   if (window.location.pathname == '/socioConnect/main.php') {
-    ajaxCalls("GET", "commentsAjax.php").then(function (result) {
+    ajaxCalls("GET", "AJAX.php?comment=1").then(function (result) {
 
 
       // Displaying search results
@@ -732,7 +732,7 @@ function commentsRefresh() {
 
 
 function notificationRefresh() {
-  ajaxCalls("GET", "notificationFunctions.php?refresh=1").then(function (result) {
+  ajaxCalls("GET", "AJAX.php?noti=1").then(function (result) {
     // Displaying search results
 
     // console.log(result);
@@ -802,7 +802,7 @@ function notificationRefresh() {
 
 function likesRefresh() {
   if (window.location.pathname == '/socioConnect/main.php') {
-    ajaxCalls("GET", "likesAjax.php").then(function (result) {
+    ajaxCalls("GET", "AJAX.php?like=1").then(function (result) {
 
       console.log('Result :  ');
       console.log(result);
@@ -901,7 +901,7 @@ function messageRefresh() {
 
   if(window.location.pathname == '/socioConnect/messages.php'){
   // AJAX call for message Refreshing
-  ajaxCalls("GET", `messageAjax.php?id=${id}`).then(function (response) {
+  ajaxCalls("GET", `AJAX.php?message=1&id=${id}`).then(function (response) {
     let messageResponse = JSON.parse(response);
 
     for (i = 0; i < messageResponse.length; i++) {
@@ -927,7 +927,7 @@ function messageRefresh() {
 
 function refreshRecentConvos() {
 
-  ajaxCalls("GET", "recentConvoAjax.php").then(function (result) {
+  ajaxCalls("GET", "AJAX.php?recentConvo=1").then(function (result) {
     var data = JSON.parse(result);
 
     if (!(data.notEmpty == "Bilal")) {
@@ -977,7 +977,7 @@ function deleteConvo(id) {
   var openConvoId =  url.substring(url.lastIndexOf("=") + 1); // Extracting ID from URL
 
   let param = `id=${id}&urlID=${openConvoId}`;
-  ajaxCalls("POST", `deleteConvoAjax.php`, param).then(function (response) {
+  ajaxCalls("POST", `AJAX2.php?deleteConvo=1`, param).then(function (response) {
     console.log(response);
     //If response is not a redirection, this would be changed if this comment is removed from messags.php
     if (response == "Reload the page") {
@@ -991,7 +991,7 @@ function deleteConvo(id) {
 function showPageMessages(id, page) {
   document.getElementById("loading-messages").style.display = "none";
 
-   ajaxCalls('GET',`loadMessagesAjax.php?id=${id}&page=${page}`).then(function(result){
+   ajaxCalls('GET',`AJAX3.php?messagePage=1&id=${id}&page=${page}`).then(function(result){
 
     document.querySelector(".chat-messages").innerHTML =
         result + document.querySelector(".chat-messages").innerHTML;
@@ -1052,7 +1052,7 @@ function removeFriend(id) {
      redirectionFlag = false;
     
   let param = `friendId=${id}&conflict=${flag}`;
-  ajaxCalls("POST", "removeFriendAjax.php", param).then(function (result) {
+  ajaxCalls("POST", "AJAX2.php?removeFriend=1", param).then(function (result) {
     if(redirectionFlag){
       var data = JSON.parse(result);
       
@@ -1128,7 +1128,7 @@ function addFriend(id){
   }
   
   let param = `id=${id}`;
-  ajaxCalls('POST', 'addFriendAjax.php', param).then(function (result) {
+  ajaxCalls('POST', 'AJAX2.php?addFriend=1', param).then(function (result) {
 
     for(var i=0; i<personLink.length; i++){
       personLink[i].setAttribute("href",`javascript:cancelReq(${id})`);
@@ -1147,7 +1147,7 @@ function cancelReq(id){
     fontAwesomeIcon.classList.add("fa-plus");
   }
   let param = `id=${id}`;
-  ajaxCalls('POST', 'cancelReqAjax.php', param).then(function (result) {
+  ajaxCalls('POST', 'AJAX2.php?cancelReq=1', param).then(function (result) {
     for(var i=0; i<personLink.length; i++){
       personLink[i].setAttribute("href",`javascript:addFriend(${id})`);
       personLink[i].querySelector(".tooltip").innerHTML = "Add Friend";
@@ -1159,7 +1159,7 @@ function cancelReq(id){
 function showPage(flag, page) {
   document.getElementById("loading").style.display = "none";
   var xhr = new XMLHttpRequest();
-  xhr.open("GET", `loadPostsAjax.php?flag=${flag}&page=${page}`, true);
+  xhr.open("GET", `AJAX2.php?loadPosts=1&flag=${flag}&page=${page}`, true);
   xhr.onload = function () {
     if ((this.status = 200)) {
       document.querySelector(".posts").innerHTML += this.responseText;
@@ -1204,7 +1204,7 @@ function hello() {
 function showPageNotis(page) {
   document.getElementById("loading-notis").style.display = "none";
   var xhr = new XMLHttpRequest();
-  xhr.open("GET", "notificationFunctions.php?page=" + page, true);
+  xhr.open("GET", "AJAX3.php?notiPage=1&page=" + page, true);
   xhr.onload = function () {
     if ((this.status = 200)) {
       document.querySelector(".notifications").innerHTML =
@@ -1237,12 +1237,12 @@ function showPageActivities(page) {
   var id = args.slice(args.search("=") + 1);
   var param;
   if(id  == "")
-    param = "page=" + page;
+    param = "loadRA=1&page=" + page;
   else
-    param = "page="+page+"&id="+id 
+    param = "loadRA=1&page="+page+"&id="+id 
   document.getElementById("loading-activities").style.display = "none";
   var xhr = new XMLHttpRequest();
-  xhr.open("GET", "loadRecentActivitiesAjax.php?"+param, true);
+  xhr.open("GET", `AJAX2.php?${param}`, true);
   xhr.onload = function () {
     if ((this.status = 200)) {
       document.querySelector(".activities").innerHTML =

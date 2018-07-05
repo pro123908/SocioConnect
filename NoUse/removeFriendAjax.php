@@ -5,6 +5,7 @@ require_once('functions.php');
 if(!isset($_SESSION['user_id'])){
     redirection('index.php');
 }
+
 $friends = array();
 $sorted_friends = array();
 $counter = 0;
@@ -40,11 +41,6 @@ if(isData($friends_query)){
     }else{
         echo '{"notEmpty" : "Bilal"}';   
     }
-    // Checking if there were comments of other users in last one second
-    // if ($counter != 0) {
-    //     // Simple converting the array to JSON format and passing it
-    //     echo json_encode($sorted_friends);
-    // } else {
-    //     // If there were no comments inserted, then just giving a JSON response for avoiding error 
-    //     echo '{"notEmpty" : "Bilal"}';
-    // }
+    
+
+?>

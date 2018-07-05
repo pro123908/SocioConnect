@@ -6,6 +6,8 @@ if(!isset($_SESSION['user_id'])){
     redirection('index.php');
 }
 
+
+
 $lastLikeID = $_SESSION['last_like_id'];
 
 

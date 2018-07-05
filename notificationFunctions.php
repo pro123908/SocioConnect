@@ -6,6 +6,8 @@ if(!isset($_SESSION['user_id'])){
    redirection('index.php');
 }  
 
+/* DEAD */
+
  // For loading notifcaitons without reloading the page
 
  if(isset($_GET['refresh'])){
@@ -68,5 +70,6 @@ if(isset($_GET['page'])){
     $limit = 10;
     showNotifications(3,$_GET['page'],$limit);
 }
+
 
 ?>

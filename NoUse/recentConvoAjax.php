@@ -48,20 +48,11 @@ if (isData($senderOfRecentMsgs)) {
 
         $counter += 1;
     }
-
-    // // Checking if there were comments of other users in last one second
-    // if ($counter != 0) {
-    //     // Simple converting the array to JSON format and passing it
-    //     echo json_encode($data);
-    // } else {
-    //     // If there were no comments inserted, then just giving a JSON response for avoiding error 
-    //     echo '{"notEmpty" : "Bilal"}';
-    // }
-    // // If no user inserted comments or comment
-
-        echo json_encode($data);
+      echo json_encode($data);
 
 }
 else{
     echo '{"notEmpty" : "Bilal"}';
 }
+
+?>
