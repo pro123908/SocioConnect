@@ -428,6 +428,15 @@ function showPosts($flag, $page, $limit)
       $lastLike = isRecord($lastLikeRendered);
 
       $_SESSION['last_like_id'] = $lastLike['like_id'];
+
+      
+      $lastNotiRendered = queryFunc("SELECT noti_id from notifications order by noti_id desc limit 1");
+      $lastNoti = isRecord($lastNotiRendered);
+
+      $_SESSION['last_noti_id'] = $lastNoti['noti_id'];
+
+
+
       
 }
 
@@ -917,10 +926,10 @@ function showNotifications($place,$page,$limit,$ajax=false)
             }
 
             // Keeping ID of last notification so we can load latest notifications through AJAX
-            if ($notiCounter == 0) {
-                $_SESSION['last_noti_id'] = $notiID;
-                $notiCounter = 1;
-            }
+            // if ($notiCounter == 0) {
+            //     $_SESSION['last_noti_id'] = $notiID;
+            //     $notiCounter = 1;
+            // }
 
             // Changing notification color if it hasn't been seen
             if ($row['seen'] == 0) {

@@ -734,6 +734,9 @@ function commentsRefresh() {
 function notificationRefresh() {
   ajaxCalls("GET", "notificationsAjax.php").then(function (result) {
     // Displaying search results
+
+    console.log(result);
+
     var data = JSON.parse(result);
 
     var notification = "";
