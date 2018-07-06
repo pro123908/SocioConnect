@@ -4,6 +4,9 @@
     /* 
         Edit the comment in database 
     */
+
+    /* DEAD */
+
     if(!isset($_SESSION['user_id'])){
         redirection("index.php");
     }

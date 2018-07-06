@@ -2,6 +2,8 @@
 
 require_once('functions.php');
 
+/* DEAD */
+
 /* 
     checks if post has pic or not?
     Returns Newly inserted post

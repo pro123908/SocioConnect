@@ -84,7 +84,7 @@ function addPost($flag, $visitorID)
     }
     $addPost .= <<<DELIMETER
         <div class='post-options'></div>
-            <form action="post.php" method='POST'>
+            <form action="" method='POST'>
                 <textarea name="post" id="" cols="30" rows="10" placeholder='Share what you are thinking here' class="post-input"></textarea>
                 <br>
                 <div class='upload-btn-wrapper'>

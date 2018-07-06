@@ -5,6 +5,8 @@
     if(!isset($_SESSION['user_id'])){
         redirection('index.php');
     }
+
+    /* DEAD */
     
     if(isset($_FILES['profile_pic'])){
     // When profile pic is uploaded
@@ -58,5 +60,5 @@
         }
     }
 }
-    // redirection("timeline.php");
+    
 ?>

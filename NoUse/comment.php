@@ -2,6 +2,8 @@
 
 require_once('functions.php'); 
 
+/* DEAD */
+
 /* 
     Adds comment to database
     returns ID of the inserted comment

@@ -2,6 +2,8 @@
 
 require_once('functions.php');
 
+/* Dead */
+
 if(!isset($_SESSION['user_id'])){
   redirection('index.php');
 }

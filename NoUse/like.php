@@ -1,5 +1,8 @@
 <?php 
 
+/* DEAD */
+
+
 /* 
  -> like or unlike the post
  -> generates notification for like

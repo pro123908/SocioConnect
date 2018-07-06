@@ -1,6 +1,9 @@
 <?php
     require_once('functions.php');
 
+
+    /* DEAD */
+
     /*
         Returns search results    
     */

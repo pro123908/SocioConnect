@@ -1,6 +1,9 @@
 <?php
     require_once('functions.php');
 
+
+    /* DEAD */
+
     /*
         Take action based on action provided and return path
     */

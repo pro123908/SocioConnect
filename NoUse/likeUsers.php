@@ -1,5 +1,7 @@
 <?php
 
+/* DEAD */
+
 require_once('functions.php');
 
 if(!isset($_SESSION['user_id'])){

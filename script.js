@@ -110,7 +110,7 @@ function showCommentField(id) {
 }
 
 function like(postID) {
-  ajaxCalls("GET", `like.php?like=${postID}`).then(function (result) {
+  ajaxCalls("GET", `AJAX3.php?like=${postID}`).then(function (result) {
 
     let value = result.trim(); // because there is a space in response (don't know why))
 
@@ -137,7 +137,7 @@ function like(postID) {
       var activity_type = 4; // Unlike
       param = `target_id=${postID}&activity_type=${activity_type}`;
 
-      ajaxCalls("POST", `recentActivityAjax.php`, param).then(function (result) {
+      ajaxCalls("POST", `AJAX2.php?recentActivity=1`, param).then(function (result) {
         document.querySelector(".activities-content").innerHTML = result;
       });
     }
@@ -239,7 +239,7 @@ function comment(postID, user, profilePic) {
     // Setting up parameters for POST request to the file
     var param = `comment=${comment.value}&post_id=${postID}`;
 
-    ajaxCalls("POST", "comment.php", param).then(function (result) {
+    ajaxCalls("POST", "AJAX3.php?comment=1", param).then(function (result) {
       // Added Comment ID is returned in response
       commentID = result.trim();
 
@@ -270,7 +270,7 @@ function comment(postID, user, profilePic) {
       // targeted Content
       var commentDetails = postID + " " + commentID;
       param = `target_id=${commentDetails}&activity_type=${activity_type}`;
-      ajaxCalls("POST", `recentActivityAjax.php`, param).then(function (result) {
+      ajaxCalls("POST", `AJAX2.php?recentActivity=1`, param).then(function (result) {
         addRecentActivity(result);
       });
     });
@@ -282,7 +282,7 @@ function comment(postID, user, profilePic) {
 function deletePost(postID) {
   // As the name suggests
 
-  ajaxCalls("GET", `delete.php?id=${postID}`).then(function (result) {
+  ajaxCalls("GET", `AJAX3.php?deletePost=1&id=${postID}`).then(function (result) {
     // Removing post from the view
     document.querySelector(`.post-${postID}`).style.display = "none";
   });
@@ -308,7 +308,7 @@ function addPost(user_id) {
     formData.append("file", postPic); // Picture
     formData.append("post", post.value);
 
-    ajaxCalls("POST", "post.php", formData, "pic").then(function (result) {
+    ajaxCalls("POST", "AJAX3.php?post=1", formData, "pic").then(function (result) {
       // Adding new post to post Area
       // Adding post to the top not bottom. Clue xD
       document.querySelector(".posts").innerHTML =
@@ -320,7 +320,7 @@ function addPost(user_id) {
       //Adding in recent activities
       var activity_type = 2;
       param = `activity_type=${activity_type}`;
-      ajaxCalls("POST", `recentActivityAjax.php`, param).then(function (result) {
+      ajaxCalls("POST", `AJAX2.php?recentActivity=1`, param).then(function (result) {
         addRecentActivity(result);
       });
     });
@@ -391,7 +391,7 @@ function editPost(postID) {
 
     var div = document.createElement("div");
     div.setAttribute("class", "show edit-post edit-post-" + postID);
-    div.innerHTML = `<form action="editPost.php" method='POST'>
+    div.innerHTML = `<form action="" method='POST'>
           <textarea name="post" id="" cols="30" rows="10" class="post-input post-edit-${postID}">${
       postContent.innerHTML
       }</textarea>
@@ -460,7 +460,7 @@ function saveEditPost(postID) {
       formData.append("postContent", postContent.value);
       formData.append("action", action);
 
-      ajaxCalls("POST", "postEdit.php", formData, "pic").then(function (result) {
+      ajaxCalls("POST", "AJAX3.php?editPost=1", formData, "pic").then(function (result) {
         //Displaying original post div which was made hidden in previous function
         var post = document.querySelector(".actual-post-" + postID);
         //Storing edited status in the p tag
@@ -500,7 +500,7 @@ function saveEditPost(postID) {
 function deleteComment(commentID) {
   // Deleting Comment specified by comment ID
 
-  ajaxCalls("GET", `commentDelete.php?id=${commentID}`).then(function (result) {
+  ajaxCalls("GET", `AJAX3.php?deleteComment=1&id=${commentID}`).then(function (result) {
     // taking comment out from view
     document.querySelector(`.comment-${commentID}`).style.display = "none";
   });
@@ -522,7 +522,7 @@ function saveEditComment(postID, commentID, user, profilePic, time) {
   //Showing post comment form
   // document.querySelector(`.comment-form-${postID}`).style.display = 'flex';
 
-  ajaxCalls("POST", "commentEdit.php", param)
+  ajaxCalls("POST", "AJAX3.php?editComment=1", param)
     .then(function (result) {
       showComment(user, commentID, postID, profilePic, time, comment.value, true);
     })
@@ -658,7 +658,7 @@ function getUsers(value, flag) {
   var param = `query=${value}&flag=${flag}`;
   var searchFooter;
 
-  ajaxCalls("POST", "search.php", param).then(function (result) {
+  ajaxCalls("POST", "AJAX3.php?search=1", param).then(function (result) {
     if (flag == 0)
       conflict = "-message";
     else
@@ -825,7 +825,7 @@ function likesRefresh() {
 }
 
 function likeUsers(postID) {
-  ajaxCalls("GET", `likeUsers.php?postID=${postID}`).then(function (result) {
+  ajaxCalls("GET", `AJAX3.php?likeUsers=1&postID=${postID}`).then(function (result) {
     // Displaying search results
     document.querySelector(`.like-count-${postID} .count`).innerHTML = "";
     var data = JSON.parse(result);
@@ -874,7 +874,7 @@ function message() {
       </div>
       `;
 
-    ajaxCalls("POST", "messageAjax.php", param).then(function (response) {
+    ajaxCalls("POST", "AJAX.php?message=1", param).then(function (response) {
       
       // var msgs = document.querySelectorAll(".chat-message");
 
@@ -1328,7 +1328,7 @@ function editCoverPicture() {
   formData.append("cover_pic", coverPic);
 
 
-  ajaxCalls('POST', 'uploadpic.php', formData, 'pic').then(function (result) {
+  ajaxCalls('POST', 'AJAX3.php?pic=1', formData, 'pic').then(function (result) {
     console.log(result);
     document.querySelector('.user-cover').style.backgroundImage = `url(${result})`;
 
@@ -1350,7 +1350,7 @@ function editProfilePicture() {
   formData.append("profile_pic", ProfilePic);
 
 
-  ajaxCalls('POST', 'uploadpic.php', formData, 'pic').then(function (result) {
+  ajaxCalls('POST', 'AJAX3.php?pic=1', formData, 'pic').then(function (result) {
     console.log(result);
     document.querySelector('#profile_picture').src = result;
 

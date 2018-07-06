@@ -2,6 +2,8 @@
 
 require_once('functions.php');
 
+/* DEAD */
+
 // Deletes POST
 
 if(!isset($_SESSION['user_id'])){
