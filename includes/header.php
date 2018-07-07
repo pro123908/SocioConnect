@@ -1,6 +1,7 @@
-<?php  require_once('functions.php'); 
-      ob_start(); // Turn on ouput buffering
-      
+<?php require_once dirname(__FILE__) . '/functions.php';
+
+ob_start(); // Turn on ouput buffering
+
 ?>
 
 <!-- Header Section of the website. Will be included in every page  -->
@@ -8,11 +9,14 @@
 <html>
 <head>
 <!-- <link href="fonts/fontawesome-all.css" rel="stylesheet" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous"> -->
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous"> 
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
 <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700,800" rel="stylesheet">
- <link rel="stylesheet" href="styles/main.css">
+ <link rel="stylesheet" href="./styles/main.css">
 </head>
-<body onload="setUserId('<?php if(isset($_SESSION['user_id']))echo $_SESSION['user_id'];?>')">
+<body onload="setUserId('<?php if (isset($_SESSION['user_id'])) {
+    echo $_SESSION['user_id'];
+}
+?>')">
 
 <!-- Starting div of main content area of the website, where all the stuff lies -->
 <div class="main-container">
@@ -22,16 +26,16 @@
       <div class="header-heading">
         <h1><a href="main.php" class="heading_link">Socio Connect</a></h1>
       </div>
-      
-      
-      <?php
-  // Displaying this navbar if user is logged in
-  if (isset($_SESSION['user_id'])) {
-      $user = $_SESSION['user'];  // loggedIn username
 
-      // Getting user pic
-      $pic = getUserProfilePic($_SESSION['user_id']);
-      $image = "<img src='{$pic}' class='post-avatar post-avatar-40' />"; ?>
+
+      <?php
+// Displaying this navbar if user is logged in
+if (isset($_SESSION['user_id'])) {
+    $user = $_SESSION['user']; // loggedIn username
+
+    // Getting user pic
+    $pic = getUserProfilePic($_SESSION['user_id']);
+    $image = "<img src='{$pic}' class='post-avatar post-avatar-40' />";?>
 
 
       <!-- Search Bar to search Users -->
@@ -41,27 +45,27 @@
         <!-- Results of search will be displayed in this div -->
       <div class='search-result'></div>
       </div>
-      
+
       <!-- Header Buttons -->
       <div class="header-links">
-        
-        
+
+
         <!--************************* Notification Dropdown ****************************-->
         <div class='notification-dropdown'>
           <a href="javascript:toggleDropdown('.noti-dropdown');" class="header-btn mr-1 "><i class="noti-click fas fa-bell fa-lg"></i></a>
-          
+
           <!-- Dropdown Content -->
           <div class='noti-dropdown'>
-            
-            <?php showNotifications(2,1,20)?>
-            
-            
+
+            <?php showNotifications(2, 1, 20)?>
+
+
           </div>
-        
+
           <div class='noti-count'>
-            <?php  $value = CountDropdown(1); 
-              countDropdownDisplay($value,'noti');
-            ?>
+            <?php $value = CountDropdown(1);
+    countDropdownDisplay($value, 'noti');
+    ?>
           </div>
         </div>
 
@@ -72,19 +76,19 @@
           <a href="javascript:toggleDropdown('.msg-dropdown');" class="header-btn mr-1"><i class="msg-click fas fa-envelope fa-lg"></i></a>
 
           <div class='msg-dropdown'>
-            
+
             <div class='recent-chats-dropdown'>
-              <?php showRecentChats(1); ?>
+              <?php showRecentChats(1);?>
             </div>
-            
+
           </div>
 
           <div class='msg-count'>
-            <?php  $value = CountDropdown(2); 
-              countDropdownDisplay($value,'msg');
-            ?>
+            <?php $value = CountDropdown(2);
+    countDropdownDisplay($value, 'msg');
+    ?>
           </div>
-        </div>  
+        </div>
         <!-- ********************************************************** -->
 
         <!-- ********** Request Dropdown ************** -->
@@ -92,16 +96,16 @@
           <a href="javascript:toggleDropdown('.req-dropdown');" class="header-btn mr-1"><i class="req-click fas fa-user-plus fa-lg"></i></a>
 
           <div class='req-dropdown'>
-             
-            <?php showNotifications(1,0,10); ?>
-            
+
+            <?php showNotifications(1, 0, 10);?>
+
           </div>
 
           <div class='req-count'>
-            <?php 
-              $value = CountDropdown(3); 
-              countDropdownDisplay($value,'req');
-            ?>
+            <?php
+$value = CountDropdown(3);
+    countDropdownDisplay($value, 'req');
+    ?>
           </div>
         </div>
         <!-- ********************************************************** -->
@@ -119,5 +123,5 @@
     </div>
     <!-- ***************************** Header *************************** -->
   <?php
-  } 
-  ?>
+}
+?>

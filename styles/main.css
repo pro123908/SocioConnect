@@ -884,7 +884,7 @@ input[type="file"]:hover {
 
 .people-you-may-know-area {
   flex: 1;
-  height: 582px;
+  height: fit-content;
   background-color: #fff;
 }
 
@@ -893,11 +893,7 @@ input[type="file"]:hover {
   width: 28%;
   margin-right: 5%;
 }
-.people-you-may-know-container{
-  display: inline-block;
-  width: 100%;
-  margin-right: 5%;
-}
+
 
 
 .friends-list h1 {
@@ -1033,7 +1029,7 @@ input[type="file"]:hover {
 .user-activities-summary-area {
   flex: 1;
   background-color: #fff;
-  height: 300px;
+  height: fit-content;
 }
 
 .user-timeline .content-area {
