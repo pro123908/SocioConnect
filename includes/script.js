@@ -1424,7 +1424,7 @@ function submitFrogotPassForm(){
         editDiv.innerHTML = `<span><h1 class = "forgot-password-div-heading">Set New Password</h1></span>
                              <span class="forgot-password-div-close" onclick="hideForgotPassWindow()">&times;</span>
                              <form action = "javascript:void(0)" method = "post" id = "changetPassForm">                          
-                             <label class = "user-info-for-edit">New Password : <input type = "password" name = "newPassword" class = "user-edit-new-password" autocomplete="off" maxlength= "255" required></label><br>
+                             <label class = "user-info-for-edit">New Password : <input type = "password" name = "newPassword" class = "user-edit-new-password" autocomplete="off" maxlength= "255" required autofocus></label><br>
                              <label class = "user-info-for-edit">Confirm Password : <input type = "password" name = "rePass" class = "user-edit-new-repeat-password" autocomplete="off" maxlength= "255" required></label><br>
                              <input type = "submit" value = "Save New Password" name="submit" class = "user-edit-save" onclick = "changePassword()">`      
       }

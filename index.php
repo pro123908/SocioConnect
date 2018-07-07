@@ -90,7 +90,7 @@ echo $value;?>' required><br>
       <div class = "forgot-password-div-content">
           <div class='forgot-password-question'></div>
           <form action = "javascript:void(0)" method = "post" id = "forgotPassForm">
-              <label class = "forgot-password-answer">Answer : <input type = "text" name = "answer" class = "forgot-password-input" autocomplete="off" maxlength= "255" required></label><br>
+              <label class = "forgot-password-answer">Answer : <input type = "text" name = "answer" class = "forgot-password-input" autocomplete="off" maxlength= "255" required autofocus></label><br>
               <input type = "submit" value = "Change Password" name="submit" class = "user-edit-save" onclick = "submitFrogotPassForm()">
           </form>
       </div>
