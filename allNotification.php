@@ -2,7 +2,7 @@
 
 <?php 
 
-require_once('header.php');
+require_once('./includes/header.php');
 if(!isset($_SESSION['user_id'])){
     redirection('index.php');
 }
@@ -12,6 +12,6 @@ if(!isset($_SESSION['user_id'])){
     echo '</div></div>';
     echo "<div id='loading-notis' class='loading-messages'>Show More Notifications</div>";
 ?>
-<script src="script.js" >
+<script src="./includes/script.js" >
 
 </script>

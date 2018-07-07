@@ -1,6 +1,6 @@
 <?php
 
-  require_once('header.php');
+  require_once('./includes/header.php');
   
   if(!isset($_SESSION['user_id'])){
     redirection('index.php');
@@ -33,6 +33,6 @@
 
 ?>
 
-<script src="script.js" >
+<script src="./includes/script.js" >
 
 </script>

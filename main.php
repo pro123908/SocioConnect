@@ -2,7 +2,7 @@
 // Main file of the website
 
   // Including header
-  require_once('header.php');
+  require_once('./includes/header.php');
 
   // If user is not logged in then redirect user to login page
   if(!isset($_SESSION['user_id'])){
@@ -86,7 +86,7 @@ addPost(true,"");
 
 </body>
 </html>
-<script src="script.js" ></script>
+<script src="./includes/script.js" ></script>
 
 <script>
 // window.addEventListener('scroll',function(){
