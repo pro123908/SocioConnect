@@ -1,5 +1,5 @@
 
-<?php require_once('functions.php');
+<?php require_once('./includes/functions.php');
    $_SESSION['no_of_posts_changed'] = 0;
     
 if(isset($_GET['visitingUserID']) && isset($_SESSION['user_id'])){
@@ -26,7 +26,7 @@ else{
     redirection("index.php"); // previously it was set to main.php
 }
 
-require_once('header.php')
+require_once('./includes/header.php')
 ?>
 <div class='user-timeline'>
     <div class='user-cover-area'>
@@ -102,6 +102,6 @@ MSG;
     <?php  } ?>
 </div>
 
-<script src="script.js" >
+<script src="./includes/script.js" >
 
 </script>

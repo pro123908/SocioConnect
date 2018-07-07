@@ -5,7 +5,7 @@
   // Checked
 
 
-  require_once('header.php');
+  require_once('./includes/header.php');
   
   // Sign up form for registration of new user
 

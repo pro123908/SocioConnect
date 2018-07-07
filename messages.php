@@ -1,6 +1,6 @@
 <?php
 
-require_once('functions.php');
+require_once('./includes/functions.php');
 
 if (!isset($_SESSION['user_id'])) {
     redirection('index.php');
@@ -18,7 +18,7 @@ if (isset($_GET['id'])) {
     // If user comes to messages page just by clicking on messages
     getRecentConvo();
 }
-require_once('header.php');
+require_once('./includes/header.php');
 ?>
 <div class='message-area'>
 <div class="recent-chat-area">
@@ -118,6 +118,6 @@ DELIMETER;
 </div>
 </div>
 <!-- <div style='height:200px;'></div> -->
-<script src="script.js" >
+<script src="./includes/script.js" >
     
 </script>

@@ -2,7 +2,7 @@
 
 // Checked
 
-require_once('header.php');
+require_once('./includes/header.php');
 
 // If user has already logged in, then redirect user to main.php
 if(isset($_SESSION['user_id'])){

@@ -1,7 +1,7 @@
 
 <?php 
 
-require_once('functions.php');
+require_once('./includes/functions.php');
 
 if(!isset($_SESSION['user_id'])){
     redirection('index.php');
@@ -15,7 +15,7 @@ else if(isset($_POST['respond_to_request']))
 else if(isset($_POST['remove_friend']))
     removeFriend($_POST['userId']);
     
-require_once('header.php');
+require_once('./includes/header.php');
 
 ?>
 
@@ -62,4 +62,4 @@ DELIMETER;
     </div>
 </div>
 
-<script src="script.js"></script>
+<script src="./includes/script.js"></script>

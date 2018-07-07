@@ -1,6 +1,6 @@
 <?php 
 
-require_once('header.php');
+require_once('./includes/header.php');
 if(!isset($_SESSION['user_id'])){
     redirection('index.php');
 }
@@ -18,6 +18,6 @@ if(!isset($_SESSION['user_id'])){
     <div id='loading-activities' class='loading-messages'></div>"
 
 
-<script src="script.js" >
+<script src="./includes/script.js" >
 
 </script>

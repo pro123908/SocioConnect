@@ -1255,7 +1255,7 @@ FRIEND;
             </i></a>
 FRIEND;
         }
-        else{
+        else if($friend['user_id'] != $_SESSION['user_id']){
             $content .= <<<FRIEND
             <a href="javascript:addFriend({$friend['user_id']})" class='add-friend add-friend-{$friend['user_id']}'><i class="tooltip-container fas fa-plus">
             <span class='tooltip tooltip-right'>Add Friend</span>
