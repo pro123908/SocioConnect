@@ -2312,12 +2312,11 @@ function showUserActivitiesSummary($id)
     $content = '';
 
     foreach ($stats as $stat => $value) {
-
+        $conflict = $stat == "Posts" ? "first-stat" : "";
         $content .= <<<STATS
-        <div class='stat'>
-        <div class='stat-value'>{$value}</div>
+        <div class='stat {$conflict}'>
+            <div class='stat-value'>{$value}</div>
             <div class='stat-heading'>{$stat}</div>
-
         </div>
 
 

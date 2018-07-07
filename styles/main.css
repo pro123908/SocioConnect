@@ -1535,3 +1535,19 @@ input[type="file"]:hover {
   display: block;
   text-decoration: none;
 }
+/* ----------------------- User activities summary --------------------------*/
+
+.stat-heading{
+  text-align: center;
+    margin: 20px;
+    margin-top: 0;
+}
+
+.stat-value{
+  text-align: center;
+  font-size: 40px;
+}
+
+.first-stat{
+  margin-top: 10px;
+}
