@@ -1,5 +1,5 @@
 <?php
-require 'db.php';
+require_once dirname(__FILE__) . '/db.php';
 session_start();
 
 function queryFunc($query)

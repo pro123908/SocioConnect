@@ -1,6 +1,6 @@
 <?php
 
-require_once('./includes/header.php');
+require_once dirname(__FILE__) . '/includes/header.php';
 
 if (!isset($_SESSION['user_id'])) {
     redirection('index.php');

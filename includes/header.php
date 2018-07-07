@@ -1,4 +1,5 @@
-<?php require_once 'functions.php';
+<?php require_once dirname(__FILE__) . '/functions.php';
+
 ob_start(); // Turn on ouput buffering
 
 ?>

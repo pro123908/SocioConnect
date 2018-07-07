@@ -1,15 +1,9 @@
 
-<<<<<<< HEAD
-<?php require_once 'functions.php';
+<?php require_once dirname(__FILE__) . '/includes/functions.php';
+
 $_SESSION['no_of_posts_changed'] = 0;
 
 if (isset($_GET['visitingUserID']) && isset($_SESSION['user_id'])) {
-=======
-<?php require_once('./includes/functions.php');
-   $_SESSION['no_of_posts_changed'] = 0;
-    
-if(isset($_GET['visitingUserID']) && isset($_SESSION['user_id'])){
->>>>>>> 0ebbbbd466850668142aef7b2a8058e9bba0ac5f
 // If both conditions are satisfied then you have come to this page by searching
     if ($_GET['visitingUserID'] == $_SESSION['user_id']) {
         $flag = true;
@@ -34,11 +28,7 @@ if(isset($_GET['visitingUserID']) && isset($_SESSION['user_id'])){
     redirection("index.php"); // previously it was set to main.php
 }
 
-<<<<<<< HEAD
-require_once 'header.php'
-=======
-require_once('./includes/header.php')
->>>>>>> 0ebbbbd466850668142aef7b2a8058e9bba0ac5f
+require_once './includes/header.php'
 ?>
 <div class='user-timeline'>
     <div class='user-cover-area'>
