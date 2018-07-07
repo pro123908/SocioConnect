@@ -1357,11 +1357,113 @@ function editProfilePicture() {
   });
 }
 
-
-
-
-
 //DP Animation Functions
+function validateNewPassword(newPass,rePass){
+
+  var errorMessage = "";
+  var error = [];
+  var flag1 = flag2 = false;
+
+  if(newPass != rePass){
+      error.push("s Don't Match");
+      flag1 = true;
+  }
+  else{
+    if(newPass.length < 8){
+      flag1 = true;
+      error.push("'s length must be greater than 8 characters");
+    }
+    if(!(/\d/.test(newPass) && newPass.match(/[a-z]/i))){
+      flag2 = true;
+      error.push(" must contain alphanumeric characters")
+    }  
+  }  
+  if(flag1 && flag2)
+    errorMessage = "Password" + error[0] + " and" + error[1];
+  else if(flag1 || flag2)
+    errorMessage = "Password" + error[0];
+
+  if(flag1 || flag2){
+    alert(errorMessage);
+    document.querySelector(".user-edit-new-repeat-password").value = "";
+    document.querySelector(".user-edit-new-password").value = "";
+    return false;
+  }
+  else{
+    return true
+  }
+}
+function changePassword(){
+  var newPass = document.querySelector("input[name = 'newPassword']");
+  var rePass = document.querySelector("input[name = 'rePass']");
+  newPass = newPass.value.trim();
+  rePass = rePass.value.trim();
+  
+  if(validateNewPassword(newPass,rePass)){
+    saveNewPassword(newPass);    
+  }
+}
+
+function saveNewPassword(newPass){
+  var email = document.querySelector("input[name = 'email']").value;
+  param = `password=${newPass}&email=${email}`;
+  ajaxCalls("POST","AJAX2.php?saveNewPassword=1",param).then(function(result){
+    if(result == "ok"){
+      hideForgotPassWindow(); 
+    }
+  });
+}
+
+function submitFrogotPassForm(){
+  var email = document.querySelector("input[name = 'email']").value;
+  var answer = document.querySelector("input[name = 'answer']").value;
+  if(answer.trim().length != 0){
+    ajaxCalls("GET",`AJAX2.php?validateAnswer=1&answer=${answer.toLowerCase()}&email=${email}`).then(function (result){
+      if(result == "Yes"){
+        var editDiv = document.querySelector(".forgot-password-div");
+        editDiv.innerHTML = `<span><h1 class = "forgot-password-div-heading">Set New Password</h1></span>
+                             <span class="forgot-password-div-close" onclick="hideForgotPassWindow()">&times;</span>
+                             <form action = "javascript:void(0)" method = "post" id = "changetPassForm">                          
+                             <label class = "user-info-for-edit">New Password : <input type = "password" name = "newPassword" class = "user-edit-new-password" autocomplete="off" maxlength= "255" required></label><br>
+                             <label class = "user-info-for-edit">Confirm Password : <input type = "password" name = "rePass" class = "user-edit-new-repeat-password" autocomplete="off" maxlength= "255" required></label><br>
+                             <input type = "submit" value = "Save New Password" name="submit" class = "user-edit-save" onclick = "changePassword()">`      
+      }
+      else
+        document.querySelector(".forgot-password-message").innerHTML = "Wrong Answer!";
+    });
+  }
+}
+
+function hideForgotPassWindow(){
+  // When model is closed
+  var editDiv = document.querySelector(".forgot-password-div");
+  editDiv.classList.remove("modal-open");
+  editDiv.classList.add("modal-close");
+
+  // Timeout in displaying
+  setTimeout(() => {
+    editDiv.style.display = "none";
+  }, 550);
+}
+
+function showForgotPassWindow(){
+  // Showing pic in the model
+  var editDiv = document.querySelector(".forgot-password-div");
+  editDiv.classList.add("modal-open");
+  editDiv.classList.remove("modal-close");
+  editDiv.classList.remove("hidden");
+  editDiv.style.display = "block";
+
+  var email = document.querySelector("input[name = 'email']").value;
+  ajaxCalls("GET", `AJAX2.php?check_answer=1&email=${email}`).then(function (result) {
+    if(result.trim() != "")
+      document.querySelector(".forgot-password-question").innerHTML = "Q. " + result;
+    else
+      document.querySelector(".forgot-password-question").innerHTML = "No Question Selected";
+  });
+}
+
+
 function hideEditInfoDiv() {
   // When model is closed
   var editDiv = document.querySelector(".user-info-edit-div");
@@ -1425,49 +1527,23 @@ function submitEditInfoForm(){
   var genderDropDow = document.querySelector(".user-edit-gender");
   var gender = genderDropDow.options[genderDropDow.selectedIndex].value;
   //var gender = document.querySelector(".");
- //Password Validation
-  var errorMessage = "";
-  var error = [];
-  var flag1 = flag2 = false;
-
+ 
+  //Password Validation
+  flag = true;
   if(newPass){
-    if(newPass != rePass){
-        error.push("s Don't Match");
-        flag1 = true;
-    }
-    else{
-      if(newPass.length < 8){
-        flag1 = true;
-        error.push("'s length must be greater than 8 characters");
-      }
-      if(!(/\d/.test(newPass) && newPass.match(/[a-z]/i))){
-        flag2 = true;
-        error.push(" must contain alphanumeric characters")
-      }  
-    }
+    if(!validateNewPassword(newPass,rePass))
+      flag = false;
   }
   else if(oldPass){
     //Do nothin, just to make an exception from else 
   }
   else{
-    error.push(" field can't be empty");
-    flag1 = true;
-  }  
-  if(flag1 && flag2)
-    errorMessage = "Password" + error[0] + " and" + error[1];
-  else if(flag1 || flag2)
-    errorMessage = "Password" + error[0];
-  if(flag1 || flag2){
-    alert(errorMessage);
-    document.querySelector(".user-edit-old-password").value = "";
-    document.querySelector(".user-edit-new-repeat-password").value = "";
-    document.querySelector(".user-edit-new-password").value = "";
+    alert("Password field can't be empty");
+    flag = false;
   }
-  else{
+  if(flag)  
     document.getElementById("editForm").submit();
-  }
 }
-
 
 setInterval(commentsRefresh, 3000);
 setInterval(notificationRefresh, 3000);
