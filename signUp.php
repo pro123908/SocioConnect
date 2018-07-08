@@ -34,7 +34,7 @@ if (isset($_POST['submit'])) {
         } else {
             $profile_pic = "assets/profile_pictures/male.jpg";
         }
-
+        $answer = strtolower($answer);
         $queryResult = queryFunc("INSERT INTO users(first_name,last_name,email,password,age,gender,profile_pic,question,answer) VALUES('$fname','$lname','$email','$password','$age','$gender','$profile_pic','$question','$answer')");
 
         //Selecting ID of new inserted user

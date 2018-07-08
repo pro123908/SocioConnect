@@ -1490,6 +1490,7 @@ function showEditInfoDiv(){
   var cntct = document.querySelector(".user-contact").innerHTML;
   var actualAge =  document.querySelector(".actualAge").value;
   var gender = document.querySelector(".user-gender").innerHTML; 
+  var question = document.querySelector(".user-question").innerHTML; 
  
   //Setting Values in input fields
   var defaultVaue = "-------";
@@ -1503,6 +1504,8 @@ function showEditInfoDiv(){
     work = "";  
   if(cntct.trim() == defaultVaue)
     cntct = "";  
+  if(question.trim() == defaultVaue)
+    question = "";  
 
   document.querySelector(".user-edit-school").value =  skul;
   document.querySelector(".user-edit-college").value = colg;
@@ -1510,24 +1513,26 @@ function showEditInfoDiv(){
   document.querySelector(".user-edit-work").value = work;
   document.querySelector(".user-edit-contact").value =cntct;
   document.querySelector(".user-edit-age").value = actualAge;  
+  document.querySelector(".user-edit-question").value = question;  
   document.querySelector(".user-edit-gender").value = gender.trim(); 
 }
 
 function submitEditInfoForm(){
-  //Setting Values in input fields
   var oldPass = document.querySelector(".user-edit-old-password").value;
   var newPass = document.querySelector(".user-edit-new-password").value;
   var rePass = document.querySelector(".user-edit-new-repeat-password").value;
-  var skul = document.querySelector(".user-edit-school").value;
-  var colg = document.querySelector(".user-edit-college").value;
-  var uni = document.querySelector(".user-edit-university").value;
-  var work = document.querySelector(".user-edit-work").value;
-  var cntct = document.querySelector(".user-edit-contact").value;
-  var age = document.querySelector(".user-edit-age").value;
-  var genderDropDow = document.querySelector(".user-edit-gender");
-  var gender = genderDropDow.options[genderDropDow.selectedIndex].value;
-  //var gender = document.querySelector(".");
- 
+  // var skul = document.querySelector(".user-edit-school").value;
+  // var colg = document.querySelector(".user-edit-college").value;
+  // var uni = document.querySelector(".user-edit-university").value;
+  // var work = document.querySelector(".user-edit-work").value;
+  // var cntct = document.querySelector(".user-edit-contact").value;
+  // var age = document.querySelector(".user-edit-age").value;
+  // var question = document.querySelector(".user-edit-question").value;
+  // var answer = document.querySelector(".user-edit-answer").value;
+  // answer = answer.toLowerCase();
+  // var genderDropDow = document.querySelector(".user-edit-gender");
+  // var gender = genderDropDow.options[genderDropDow.selectedIndex].value;
+
   //Password Validation
   flag = true;
   if(newPass){
