@@ -2064,7 +2064,7 @@ function showUserInfo($id)
     $userInfo = queryFunc("SELECT age as 'actualAge',gender,school,college,university,contact_no,work, question,answer, TIMESTAMPDIFF(YEAR, age, now()) as 'age' from users where user_id = '$id'");
     if (isData($userInfo)) {
         $userInfo = isRecord($userInfo);
-        $defaultValue = "-------";
+        $defaultValue = "-";
         //Setting default value if there is no value
         if (!isset($userInfo['school']) || strlen($userInfo['school']) == 0) {
             $userInfo['school'] = $defaultValue;
@@ -2104,7 +2104,7 @@ function showUserInfo($id)
             $info .=<<< INFO
             <div class='user-info user-info-{$key}'>
                 <div class='user-info-key'>{$key}</div>
-                <span class='user-info-value user-{$key}'>{$value}</span>
+                <div class='user-info-value user-{$key}'>{$value}</div>
                 <!-- <i class='fas fa-edit' onclick='javascript:userInfoEditField("$key","$value")'></i> -->
             </div>
 INFO;
@@ -2114,37 +2114,6 @@ INFO;
         <input type = 'hidden' class = "actualAge" value = "{$userInfo['actualAge']}">
 INFO;
 
-//         $info = <<<INFO
-//             <div class='user-info'>
-//                 <span class='user-info-key'>School: </span>
-//                 <span class='user-info-value user-school'>{$userInfo['school']}</span>
-//             </div>
-//             <div class='user-info'>
-//                 <span class='user-info-key'>College: </span>
-//                 <span class='user-info-value user-college'>{$userInfo['college']} </span>
-//             </div>
-//             <div class='user-info'>
-//                 <span class='user-info-key'>University: </span>
-//                 <span class='user-info-value user-university'>{$userInfo['university']} </span>
-//             </div>
-//             <div class='user-info'>
-//                 <span class='user-info-key'>Work: </span>
-//                 <span class='user-info-value user-work'>{$userInfo['work']} </span>
-//             </div>
-//             <div class='user-info'>
-//                 <span class='user-info-key'>Contact No:</span>
-//                 <span class='user-info-value user-contact'>{$userInfo['contact_no']} </span>
-//             </div>
-//             <div class='user-info'>
-//                 <span class='user-info-key'>Age:</span>
-//                 <span class='user-info-value user-age'>{$userInfo['age']}</span>
-//             </div>
-//             <div class='user-info'>
-//                 <span class='user-info-key'>Gender:</span>
-//                 <span class='user-info-value user-gender'>{$userInfo['gender']} </span>
-//             </div>
-//             <input type = 'hidden' class = "actualAge" value = "{$userInfo['actualAge']}">
-// INFO;
         if (isset($_SESSION['edit_info_pass_error']) && $_SESSION['edit_info_pass_error']) {
             $showHidden = "";
             // unset($_SESSION['edit_info_pass_error']);
@@ -2153,12 +2122,13 @@ INFO;
         }
         if ($id == $_SESSION['user_id']) {
             $info .= "<div class='user-info'>
-                        <span class='user-info-key'>Security Question:</span>
-                        <span class='user-info-value user-question'>{$userInfo['question']} </span>
+                        <div class='user-info-key'>Security Question:</div>
+                        <div class='user-info-value user-question'>{$userInfo['question']} </div>
                       </div>
-                      <button class='user-info-edit-button' id = 'edit-form' onclick = 'showEditInfoDiv()'>Edit</button>";
+                      <div class='user-info-edit-container'>
+                      <button class='user-info-edit-button' id = 'edit-form' onclick = 'showEditInfoDiv()'>Edit</button></div>";
 
-            ?>
+        }?>
         <div class = "user-info-edit-div-container <?php echo $showHidden; ?>">    
         <div class="user-info-edit-div">
             <span><h1 class = "user-info-edit-div-heading">Edit Personal Information</h1></span>
@@ -2207,7 +2177,7 @@ unset($_SESSION['edit_info_pass_error']);
 }
         echo $info;
     }
-}
+
 
 function saveEditedInfo($school, $college, $university, $work, $contact, $newPass, $age, $gender,$question,$answer)
 {

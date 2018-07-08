@@ -1498,6 +1498,8 @@ input[type="file"]:hover {
 
 
 
+
+
 /* User info edititng */
 
 .user-info-edit{
@@ -1570,6 +1572,11 @@ input[type="file"]:hover {
 .user-info-edit-div-heading, .forgot-password-div-heading{
   font-size: 30px;
   text-align: center;
+}
+
+.user-info-edit-container{
+  text-align: center;
+  margin-top: 10px;
 }
 
 .user-info-edit-button{
