@@ -2140,7 +2140,8 @@ INFO;
                       <button class='user-info-edit-button' id = 'edit-form' onclick = 'showEditInfoDiv()'>Edit</button>";
 
             ?>
-        <div class="user-info-edit-div <?php echo $showHidden; ?>">
+        <div class = "user-info-edit-div-container <?php echo $showHidden; ?>">    
+        <div class="user-info-edit-div">
             <span><h1 class = "user-info-edit-div-heading">Edit Personal Information</h1></span>
             <span class="user-info-edit-div-close" onclick="hideEditInfoDiv()">&times;</span>
 
@@ -2181,6 +2182,7 @@ if (isset($_SESSION['edit_info_pass_error']) && $_SESSION['edit_info_pass_error'
 unset($_SESSION['edit_info_pass_error']);
             }
             ?>
+        </div>
         </div>
         <?php
 }

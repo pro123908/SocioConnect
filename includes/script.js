@@ -1436,23 +1436,14 @@ function submitFrogotPassForm(){
 
 function hideForgotPassWindow(){
   // When model is closed
-  var editDiv = document.querySelector(".forgot-password-div");
-  editDiv.classList.remove("modal-open");
-  editDiv.classList.add("modal-close");
-
-  // Timeout in displaying
-  setTimeout(() => {
-    editDiv.style.display = "none";
-  }, 550);
+  var editDiv = document.querySelector(".forgot-password-div-container");
+  hideDiv(editDiv);
 }
 
 function showForgotPassWindow(){
   // Showing pic in the model
-  var editDiv = document.querySelector(".forgot-password-div");
-  editDiv.classList.add("modal-open");
-  editDiv.classList.remove("modal-close");
-  editDiv.classList.remove("hidden");
-  editDiv.style.display = "block";
+  var editDiv = document.querySelector(".forgot-password-div-container");
+  showDiv(editDiv);
 
   var email = document.querySelector("input[name = 'email']").value;
   ajaxCalls("GET", `AJAX2.php?check_answer=1&email=${email}`).then(function (result) {
@@ -1464,25 +1455,32 @@ function showForgotPassWindow(){
 }
 
 
-function hideEditInfoDiv() {
-  // When model is closed
-  var editDiv = document.querySelector(".user-info-edit-div");
-  editDiv.classList.remove("modal-open");
-  editDiv.classList.add("modal-close");
+function showDiv(div){
+  div.classList.add("modal-open");
+  div.classList.remove("modal-close");
+  div.style.display = "block";
+}
+
+function hideDiv(div){
+  div.classList.remove("modal-open");
+  div.classList.add("modal-close");
 
   // Timeout in displaying
   setTimeout(() => {
-    editDiv.style.display = "none";
+    div.style.display = "none";
   }, 550);
 }
-function showEditInfoDiv(){
-  // Showing pic in the model
-  var editDiv = document.querySelector(".user-info-edit-div");
-  editDiv.classList.add("modal-open");
-  editDiv.classList.remove("modal-close");
-  editDiv.style.display = "block";
 
+function hideEditInfoDiv() {
+  // When model is closed
+  var editDiv = document.querySelector(".user-info-edit-div-container");
+  hideDiv(editDiv);
+}
+function showEditInfoDiv(){
   //Getting current info
+  
+  var editDiv = document.querySelector(".user-info-edit-div-container");
+  showDiv(editDiv);
   var skul = document.querySelector(".user-school").innerHTML;
   var colg = document.querySelector(".user-college").innerHTML;
   var uni = document.querySelector(".user-university").innerHTML;
