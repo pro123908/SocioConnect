@@ -962,7 +962,7 @@ input[type="file"]:hover {
 .edit-profile-pic{
   position: absolute;
   top: 290px;
-  left: 610px;
+  left: 675px;
 
 }
 
@@ -1516,6 +1516,19 @@ input[type="file"]:hover {
   background-color: rgba(0, 0, 0, 0.5);
 }
 
+.forgot-password-div{
+  position:fixed;
+  z-index: 100;
+  padding-top: 75px;
+  left: 580;
+  top: 200;
+  width: 25%;
+  height: 30%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 1);
+  color: rgb(255, 255, 255);
+}
+
 /* Modal Content (image) */
 
 .user-info-edit-div-content {
@@ -1537,14 +1550,24 @@ input[type="file"]:hover {
   font-weight: normal;
   transition: 0.3s;
 }
+
+.forgot-password-div-close{
+  position: absolute;
+  top: 17px;
+  right: 5%;
+  color: #f1f1f1;
+  font-size: 40px;
+  font-weight: normal;
+  transition: 0.3s;
+}
  
-.user-info-edit-div-close:hover, .user-info-edit-div-close:focus {
+.user-info-edit-div-close:hover, .user-info-edit-div-close:focus, .forgot-password-div-close:focus, .forgot-password-div-close:hover{
   color: #bbb;
   text-decoration: none;
   cursor: pointer;
 }
 
-.user-info-edit-div-heading{
+.user-info-edit-div-heading, .forgot-password-div-heading{
   font-size: 30px;
   text-align: center;
 }
@@ -1554,8 +1577,40 @@ input[type="file"]:hover {
   background: #edf2f6;
   border: none;
   padding: 10px 60px;
-
 }
+
+.forgot-password-text{
+  display: block;
+  text-decoration: none;
+}
+
+.forgot-password-div-container{
+  display: none;
+  position: fixed;
+  z-index: 500;
+  padding-top: 100px;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(36, 37, 52, 0.95);
+}
+
+.user-info-edit-div-container{
+  position: fixed;
+  z-index: 500;
+  padding-top: 100px;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(36, 37, 52, 0.95);
+}
+/* ----------------------- User activities summary --------------------------*/
+
+
 
 .user-info-edit-button:hover{
   background-color: #ececec;
@@ -1563,3 +1618,11 @@ input[type="file"]:hover {
 }
 
 
+.stat-value{
+  text-align: center;
+  font-size: 40px;
+}
+
+.first-stat{
+  margin-top: 10px;
+}

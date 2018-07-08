@@ -15,13 +15,15 @@ if (isset($_POST['submit'])) {
     $password = hashString(mysqli_real_escape_string($connection, $_POST['password'])); // Password
     $age = mysqli_real_escape_string($connection, $_POST['age']); //Age
     $gender = mysqli_real_escape_string($connection, $_POST['genderBox']); // Gender
-
+    $question = mysqli_real_escape_string($connection, $_POST['question']); 
+    $answer = mysqli_real_escape_string($connection, $_POST['answer']);
     // Placing all fields value in session variables
     $_SESSION['s_first_name'] = $fname;
     $_SESSION['s_last_name'] = $lname;
     $_SESSION['s_email'] = $email;
     $_SESSION['s_age'] = $age;
-
+    $_SESSION['s_question'] = $question;
+    $_SESSION['s_answer'] = $answer;
     // Validating the value of input fields and checking if user exists already?
     if (!(formValidation($email, $_POST['password'], $_POST['repeatPassword']))) {
         redirection('signUp.php');
@@ -32,8 +34,8 @@ if (isset($_POST['submit'])) {
         } else {
             $profile_pic = "assets/profile_pictures/male.jpg";
         }
-
-        $queryResult = queryFunc("INSERT INTO users(first_name,last_name,email,password,age,gender,profile_pic) VALUES('$fname','$lname','$email','$password','$age','$gender','$profile_pic')");
+        $answer = strtolower($answer);
+        $queryResult = queryFunc("INSERT INTO users(first_name,last_name,email,password,age,gender,profile_pic,question,answer) VALUES('$fname','$lname','$email','$password','$age','$gender','$profile_pic','$question','$answer')");
 
         //Selecting ID of new inserted user
         $ID = mysqli_insert_id($connection);
@@ -47,7 +49,7 @@ if (isset($_POST['submit'])) {
 } elseif (isset($_SESSION['user_id'])) {
     // If user is logged in already
     redirection('main.php');
-}
+ }
 ?>
 
 <div class='header-links header-links-login'>
@@ -84,6 +86,13 @@ if (isset($_POST['submit'])) {
     <option value="Female">Female</option>
     <option value="Other">Other</option>
   </select><br>
+  <input type="text" class='login-input' name='question' placeholder='Securtiy Question' maxlength="255" minlength='3' required value="<?php if (isset($_SESSION['s_question'])) {
+    echo $_SESSION['s_question'];
+}?>" ><br>
+  <input type="text"  name='answer' class='login-input' placeholder='Answer' maxlength="255" minlength='3' required value="<?php if (isset($_SESSION['s_answer'])) {
+    echo $_SESSION['s_answer'];
+}?>"><br>
+
   <input type="submit" name='submit' class='login-submit' value='Register'>
       </form>
     </div>

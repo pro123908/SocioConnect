@@ -70,19 +70,33 @@ echo $value;?>' required><br>
         <input type="submit" name='submit' class="login-submit">
       </form>
 
-      <?php
-if (isset($_SESSION['login_message'])) {
-    if ($_SESSION['login_message'] != '') {
-        $data = $_SESSION['login_message'];
-        $_SESSION['login_message'] = '';
-    } else {
-        $data = '';
-    }
-    echo "<h3>{$data}</h3>";
-}
-
-?>
-
-
-
+      <?php 
+        if(isset($_SESSION['login_message'])){
+          if($_SESSION['login_message'] != ''){
+            $data = $_SESSION['login_message'];
+            $_SESSION['login_message'] = '';
+            if($data == "Wrong Password")
+              $data .= "<a href= 'javascript:showForgotPassWindow()' class='forgot-password-text'>Forgot Password</a>";
+          }else{
+            $data = '';
+          }
+          echo "<h3>{$data}</h3>";
+        }
+      ?>
+      <div class= "forgot-password-div-container">
+        <div class="forgot-password-div">
+            <span><h1 class = "forgot-password-div-heading">Forgot Password</h1></span>
+            <span class="forgot-password-div-close" onclick="hideForgotPassWindow()">&times;</span>
+      
+            <div class = "forgot-password-div-content">
+                <div class='forgot-password-question'></div>
+                <form action = "javascript:void(0)" method = "post" id = "forgotPassForm">
+                    <label class = "forgot-password-answer">Answer : <input type = "text" name = "answer" class = "forgot-password-input" autocomplete="off" maxlength= "255" required autofocus></label><br>
+                    <input type = "submit" value = "Change Password" name="submit" class = "user-edit-save" onclick = "submitFrogotPassForm()">
+                </form>
+            </div>
+            <div class = "forgot-password-message"></div>
+        </div>
+    </div>  
     </div>
+    <script src="./includes/script.js" ></script>

@@ -1,8 +1,9 @@
 <?php
-require_once dirname(__FILE__) . '/includes/functions.php';
+
+require_once dirname(__FILE__,2) . '/functions.php';
 
 if (!isset($_SESSION['user_id'])) {
-    redirection('index.php');
+    redirection('../../index.php');
 }
 
 $userID = $_SESSION['user_id'];
@@ -24,4 +25,4 @@ if (isset($_POST['accept'])) {
 }
 $dUser = $_POST['id'];
 queryFunc("UPDATE notifications set seen=1 where s_user_id='$dUser' AND d_user_id='$userID' AND typeC='request'");
-redirection('requests.php');
+redirection('../../requests.php');

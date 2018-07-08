@@ -1352,30 +1352,130 @@ function editProfilePicture() {
   });
 }
 
-
-
-
-
 //DP Animation Functions
-function hideEditInfoDiv() {
+function validateNewPassword(newPass, rePass) {
+
+  var errorMessage = "";
+  var error = [];
+  var flag1 = flag2 = false;
+
+  if (newPass != rePass) {
+    error.push("s Don't Match");
+    flag1 = true;
+  }
+  else {
+    if (newPass.length < 8) {
+      flag1 = true;
+      error.push("'s length must be greater than 8 characters");
+    }
+    if (!(/\d/.test(newPass) && newPass.match(/[a-z]/i))) {
+      flag2 = true;
+      error.push(" must contain alphanumeric characters")
+    }
+  }
+  if (flag1 && flag2)
+    errorMessage = "Password" + error[0] + " and" + error[1];
+  else if (flag1 || flag2)
+    errorMessage = "Password" + error[0];
+
+  if (flag1 || flag2) {
+    alert(errorMessage);
+    document.querySelector(".user-edit-new-repeat-password").value = "";
+    document.querySelector(".user-edit-new-password").value = "";
+    return false;
+  }
+  else {
+    return true
+  }
+}
+function changePassword() {
+  var newPass = document.querySelector("input[name = 'newPassword']");
+  var rePass = document.querySelector("input[name = 'rePass']");
+  newPass = newPass.value.trim();
+  rePass = rePass.value.trim();
+
+  if (validateNewPassword(newPass, rePass)) {
+    saveNewPassword(newPass);
+  }
+}
+
+function saveNewPassword(newPass) {
+  var email = document.querySelector("input[name = 'email']").value;
+  param = `password=${newPass}&email=${email}`;
+  ajaxCalls("POST", "AJAX2.php?saveNewPassword=1", param).then(function (result) {
+    if (result == "ok") {
+      hideForgotPassWindow();
+    }
+  });
+}
+
+function submitFrogotPassForm() {
+  var email = document.querySelector("input[name = 'email']").value;
+  var answer = document.querySelector("input[name = 'answer']").value;
+  if (answer.trim().length != 0) {
+    ajaxCalls("GET", `AJAX2.php?validateAnswer=1&answer=${answer.toLowerCase()}&email=${email}`).then(function (result) {
+      if (result == "Yes") {
+        var editDiv = document.querySelector(".forgot-password-div");
+        editDiv.innerHTML = `<span><h1 class = "forgot-password-div-heading">Set New Password</h1></span>
+                             <span class="forgot-password-div-close" onclick="hideForgotPassWindow()">&times;</span>
+                             <form action = "javascript:void(0)" method = "post" id = "changetPassForm">                          
+                             <label class = "user-info-for-edit">New Password : <input type = "password" name = "newPassword" class = "user-edit-new-password" autocomplete="off" maxlength= "255" required autofocus></label><br>
+                             <label class = "user-info-for-edit">Confirm Password : <input type = "password" name = "rePass" class = "user-edit-new-repeat-password" autocomplete="off" maxlength= "255" required></label><br>
+                             <input type = "submit" value = "Save New Password" name="submit" class = "user-edit-save" onclick = "changePassword()">`
+      }
+      else
+        document.querySelector(".forgot-password-message").innerHTML = "Wrong Answer!";
+    });
+  }
+}
+
+function hideForgotPassWindow() {
   // When model is closed
-  var editDiv = document.querySelector(".user-info-edit-div");
-  editDiv.classList.remove("modal-open");
-  editDiv.classList.add("modal-close");
+  var editDiv = document.querySelector(".forgot-password-div-container");
+  hideDiv(editDiv);
+}
+
+function showForgotPassWindow() {
+  // Showing pic in the model
+  var editDiv = document.querySelector(".forgot-password-div-container");
+  showDiv(editDiv);
+
+  var email = document.querySelector("input[name = 'email']").value;
+  ajaxCalls("GET", `AJAX2.php?check_answer=1&email=${email}`).then(function (result) {
+    if (result.trim() != "")
+      document.querySelector(".forgot-password-question").innerHTML = "Q. " + result;
+    else
+      document.querySelector(".forgot-password-question").innerHTML = "No Question Selected";
+  });
+}
+
+
+function showDiv(div) {
+  div.classList.add("modal-open");
+  div.classList.remove("modal-close");
+  div.style.display = "block";
+}
+
+function hideDiv(div) {
+  div.classList.remove("modal-open");
+  div.classList.add("modal-close");
 
   // Timeout in displaying
   setTimeout(() => {
-    editDiv.style.display = "none";
+    div.style.display = "none";
   }, 550);
 }
-function showEditInfoDiv() {
-  // Showing pic in the model
-  var editDiv = document.querySelector(".user-info-edit-div");
-  editDiv.classList.add("modal-open");
-  editDiv.classList.remove("modal-close");
-  editDiv.style.display = "block";
 
+function hideEditInfoDiv() {
+  // When model is closed
+  var editDiv = document.querySelector(".user-info-edit-div-container");
+  hideDiv(editDiv);
+}
+function showEditInfoDiv() {
   //Getting current info
+
+  var editDiv = document.querySelector(".user-info-edit-div-container");
+  showDiv(editDiv);
   var skul = document.querySelector(".user-school").innerHTML;
   var colg = document.querySelector(".user-college").innerHTML;
   var uni = document.querySelector(".user-university").innerHTML;
@@ -1383,6 +1483,7 @@ function showEditInfoDiv() {
   var cntct = document.querySelector(".user-contact").innerHTML;
   var actualAge = document.querySelector(".actualAge").value;
   var gender = document.querySelector(".user-gender").innerHTML;
+  var question = document.querySelector(".user-question").innerHTML;
 
   //Setting Values in input fields
   var defaultVaue = "-------";
@@ -1396,6 +1497,8 @@ function showEditInfoDiv() {
     work = "";
   if (cntct.trim() == defaultVaue)
     cntct = "";
+  if (question.trim() == defaultVaue)
+    question = "";
 
   document.querySelector(".user-edit-school").value = skul;
   document.querySelector(".user-edit-college").value = colg;
@@ -1403,118 +1506,41 @@ function showEditInfoDiv() {
   document.querySelector(".user-edit-work").value = work;
   document.querySelector(".user-edit-contact").value = cntct;
   document.querySelector(".user-edit-age").value = actualAge;
+  document.querySelector(".user-edit-question").value = question;
   document.querySelector(".user-edit-gender").value = gender.trim();
 }
 
 function submitEditInfoForm() {
-  //Setting Values in input fields
   var oldPass = document.querySelector(".user-edit-old-password").value;
   var newPass = document.querySelector(".user-edit-new-password").value;
   var rePass = document.querySelector(".user-edit-new-repeat-password").value;
-  var school = document.querySelector(".user-edit-school").value;
-  var college = document.querySelector(".user-edit-college").value;
-  var university = document.querySelector(".user-edit-university").value;
-  var work = document.querySelector(".user-edit-work").value;
-  var contact = document.querySelector(".user-edit-contact").value;
-  var age = document.querySelector(".user-edit-age").value;
-  var genderDropDown = document.querySelector(".user-edit-gender");
-  var gender = genderDropDow.options[genderDropDown.selectedIndex].value;
+  // var skul = document.querySelector(".user-edit-school").value;
+  // var colg = document.querySelector(".user-edit-college").value;
+  // var uni = document.querySelector(".user-edit-university").value;
+  // var work = document.querySelector(".user-edit-work").value;
+  // var cntct = document.querySelector(".user-edit-contact").value;
+  // var age = document.querySelector(".user-edit-age").value;
+  // var question = document.querySelector(".user-edit-question").value;
+  // var answer = document.querySelector(".user-edit-answer").value;
+  // answer = answer.toLowerCase();
+  // var genderDropDow = document.querySelector(".user-edit-gender");
+  // var gender = genderDropDow.options[genderDropDow.selectedIndex].value;
 
-
-
-  //var gender = document.querySelector(".");
   //Password Validation
-  var errorMessage = "";
-  var error = [];
-  var flag1 = flag2 = false;
-
+  flag = true;
   if (newPass) {
-    if (newPass != rePass) {
-      error.push("s Don't Match");
-      flag1 = true;
-    }
-    else {
-      if (newPass.length < 8) {
-        flag1 = true;
-        error.push("'s length must be greater than 8 characters");
-      }
-      if (!(/\d/.test(newPass) && newPass.match(/[a-z]/i))) {
-        flag2 = true;
-        error.push(" must contain alphanumeric characters")
-      }
-    }
+    if (!validateNewPassword(newPass, rePass))
+      flag = false;
   }
   else if (oldPass) {
     //Do nothin, just to make an exception from else 
   }
   else {
-    error.push(" field can't be empty");
-    flag1 = true;
+    alert("Password field can't be empty");
+    flag = false;
   }
-  if (flag1 && flag2)
-    errorMessage = "Password" + error[0] + " and" + error[1];
-  else if (flag1 || flag2)
-    errorMessage = "Password" + error[0];
-  if (flag1 || flag2) {
-    alert(errorMessage);
-    document.querySelector(".user-edit-old-password").value = "";
-    document.querySelector(".user-edit-new-repeat-password").value = "";
-    document.querySelector(".user-edit-new-password").value = "";
-  }
-  else {
-    // document.getElementById("editForm").submit();
-    param = `password=${oldPass}&newPassword=${newPass}&school=${school}&college=${college}&university=${university}&work=${work}&contact=${contact}&age=${age}&genderBox=${gender}`;
-    ajaxCalls('POST', 'editInfo.php', param);
-  }
-}
-
-
-function userInfoEditField(key, value) {
-  console.log(value);
-
-  if ((document.querySelector(`.user-${key}`).style.display != 'none')) {
-    document.querySelector(`.user-${key}`).classList.toggle('hidden');
-
-    var info = document.querySelector(`.user-info-${key}`);
-
-    var field = `
-  <form onsubmit="return saveEditInfo('${key}')">
-  <input type='text' class='user-info-value' value='${value}'></input>
-  <input type='submit' style='display:none;'></input>
-  </form>
-  `;
-
-
-    info.innerHTML = field + info.innerHTML;
-
-  }
-}
-
-function saveEditInfo(key) {
-  console.log('key:', key);
-
-
-  var editInput = document.querySelector(`input[class='user-info-value']`);
-  editInput.style.display = 'none';
-
-  var value = editInput.value;
-
-  var currentField = document.querySelector(`.user-${key}`);
-  currentField.style.display = 'block';
-  currentField.innerHTML = value;
-
-
-
-
-
-  console.log('Value:', value);
-
-
-  ajaxCalls('GET', `about.php?key=${key}&value=${value}`).then(function (result) {
-
-  });
-
-  return false;
+  if (flag)
+    document.getElementById("editForm").submit();
 }
 
 setInterval(commentsRefresh, 3000);

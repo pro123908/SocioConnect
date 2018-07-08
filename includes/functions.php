@@ -651,7 +651,7 @@ function logout()
     session_destroy();
 
     // Redirecting to the login page
-    redirection('index.php');
+    redirection('../../index.php');
 }
 
 function differenceInTime($createdAt)
@@ -2061,7 +2061,7 @@ function profilePicChange($pic)
 
 function showUserInfo($id)
 {
-    $userInfo = queryFunc("SELECT age as 'actualAge',gender,school,college,university,contact_no,work, TIMESTAMPDIFF(YEAR, age, now()) as 'age' from users where user_id = '$id'");
+    $userInfo = queryFunc("SELECT age as 'actualAge',gender,school,college,university,contact_no,work, question,answer, TIMESTAMPDIFF(YEAR, age, now()) as 'age' from users where user_id = '$id'");
     if (isData($userInfo)) {
         $userInfo = isRecord($userInfo);
         $defaultValue = "-------";
@@ -2084,6 +2084,9 @@ function showUserInfo($id)
 
         if (!isset($userInfo['contact_no']) || strlen($userInfo['contact_no']) == 0) {
             $userInfo['contact_no'] = $defaultValue;
+        }
+        if (!isset($userInfo['question']) || strlen($userInfo['question']) == 0) {
+            $userInfo['question'] = $defaultValue;
         }
 
         if (!isset($userInfo['age']) || strlen($userInfo['age']) == 0) {
@@ -2149,9 +2152,15 @@ INFO;
             $showHidden = "hidden";
         }
         if ($id == $_SESSION['user_id']) {
-            $info .= "<div class='user-info-edit'><button class='user-info-edit-button' id = 'edit-form' onclick = 'showEditInfoDiv()'>Edit</button></div>";
+            $info .= "<div class='user-info'>
+                        <span class='user-info-key'>Security Question:</span>
+                        <span class='user-info-value user-question'>{$userInfo['question']} </span>
+                      </div>
+                      <button class='user-info-edit-button' id = 'edit-form' onclick = 'showEditInfoDiv()'>Edit</button>";
+
             ?>
-        <div class="user-info-edit-div <?php echo $showHidden; ?>">
+        <div class = "user-info-edit-div-container <?php echo $showHidden; ?>">    
+        <div class="user-info-edit-div">
             <span><h1 class = "user-info-edit-div-heading">Edit Personal Information</h1></span>
             <span class="user-info-edit-div-close" onclick="hideEditInfoDiv()">&times;</span>
 
@@ -2174,6 +2183,10 @@ INFO;
             echo $val;?>"></label><br>
                     <label class = "user-info-for-edit">Contact No : <input type = "text" name = "contact" class = "user-edit-contact" autocomplete="off" value = "<?php $val = isset($_SESSION['edit_info_user_contact']) ? $_SESSION['edit_info_user_contact'] : '';
             echo $val;?>"></label><br>
+                    <label class = "user-info-for-edit">Security Question : <input type = "text" name = "question" class = "user-edit-question" autocomplete="off" value = "<?php $val = isset($_SESSION['edit_info_user_question']) ? $_SESSION['edit_info_user_question'] : '';
+            echo $val;?>"></label><br>
+                    <label class = "user-info-for-edit">Answer : <input type = "text" name = "answer" class = "user-edit-answer" autocomplete="off" value = "<?php $val = isset($_SESSION['edit_info_user_answer']) ? $_SESSION['edit_info_user_answer'] : '';
+            echo $val;?>"></label><br>
                     <label class = "user-info-for-edit">New Password : <input type = "password" name = "newPassword" class = "user-edit-new-password" autocomplete="off" placeholder="Enter if you want to change password"></label><br>
                     <label class = "user-info-for-edit">Confirm Password : <input type = "password" name = "rePass" class = "user-edit-new-repeat-password" autocomplete="off" placeholder="Enter if you want to change password"></label><br>
                     <label class = "user-info-for-edit">Current Password : <input type = "password" name = "password" class = "user-edit-old-password" autocomplete="off"></label><br>
@@ -2189,13 +2202,14 @@ unset($_SESSION['edit_info_pass_error']);
             }
             ?>
         </div>
+        </div>
         <?php
 }
         echo $info;
     }
 }
 
-function saveEditedInfo($school, $college, $university, $work, $contact, $newPass, $age, $gender)
+function saveEditedInfo($school, $college, $university, $work, $contact, $newPass, $age, $gender,$question,$answer)
 {
     $userLoggedIn = $_SESSION['user_id'];
     $conflict = "";
@@ -2203,7 +2217,7 @@ function saveEditedInfo($school, $college, $university, $work, $contact, $newPas
         $conflict = ", password = '$newPass' ";
     }
 
-    $result = queryFunc("update users set school = '$school' , college = '$college' , university = '$university', work = '$work' , contact_no = '$contact' $conflict , age = '$age' , gender = '$gender' where user_id = '$userLoggedIn' ");
+    $result = queryFunc("update users set school = '$school' , college = '$college' , university = '$university', work = '$work' , contact_no = '$contact' $conflict , age = '$age' , gender = '$gender', question = '$question', answer = '$answer'  where user_id = '$userLoggedIn' ");
     isData($result);
 }
 
@@ -2331,12 +2345,11 @@ function showUserActivitiesSummary($id)
     $content = '';
 
     foreach ($stats as $stat => $value) {
-
+        $conflict = $stat == "Posts" ? "first-stat" : "";
         $content .= <<<STATS
-        <div class='stat'>
-        <div class='stat-value'>{$value}</div>
+        <div class='stat {$conflict}'>
+            <div class='stat-value'>{$value}</div>
             <div class='stat-heading'>{$stat}</div>
-
         </div>
 
 

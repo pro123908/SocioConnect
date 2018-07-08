@@ -2,7 +2,7 @@
 
 require_once dirname(__FILE__) . '/includes/functions.php';
 
-if (!isset($_SESSION['user_id'])) {
+if(!isset($_SESSION['user_id']) && !isset($_GET['check_answer']) && !isset($_GET['validateAnswer']) && !isset($_GET['saveNewPassword'])){
     redirection('index.php');
 }
 
@@ -135,3 +135,34 @@ if (isset($_GET['addFriend'])) {
         echo '{"notEmpty" : "Bilal"}';
     }
 }
+else if(isset($_GET['check_answer'])){
+            
+        $email = queryFunc("SELECT question from users where email = '{$_GET['email']}'");
+        if(isData($email)){
+            $email = isRecord($email);
+            echo $email['question'];
+        }else{
+            echo "No";
+        }
+    }
+else if(isset($_GET['validateAnswer'])){    
+    $answer = queryFunc("SELECT answer from users where email = '{$_GET['email']}'");
+    if(isData($answer)){
+        $answer = isRecord($answer);
+        if($answer['answer'] == $_GET['answer'])
+            echo "Yes";
+        else
+            echo "No";    
+    }else{
+        echo "No";
+    }
+}
+else if(isset($_GET['saveNewPassword'])){    
+    if(isset($_POST['password'])){
+        $password = hashString($_POST['password']);
+        $email = $_POST['email'];
+        queryFunc("update users set password = '$password' where email = '$email'");
+        echo "ok";
+    }
+}
+?>

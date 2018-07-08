@@ -20,8 +20,9 @@ $work = trim(mysqli_real_escape_string($connection, $_POST['work']));
 $contact = trim(mysqli_real_escape_string($connection, $_POST['contact']));
 $age = trim(mysqli_real_escape_string($connection, $_POST['age']));
 $gender = trim(mysqli_real_escape_string($connection, $_POST['genderBox']));
-
-// Checking the length of new password if it is entered
+$question = trim(mysqli_real_escape_string($connection, $_POST['question']));
+$answer = trim(mysqli_real_escape_string($connection, $_POST['answer']));
+$answer = strtolower($answer);
 $pass = hashString($pass);
 if (strlen(trim($newPass)) > 7) {
     $newPass = hashString($newPass);
@@ -32,7 +33,7 @@ $flag = validatePassword($pass);
 
 //If current password was correct
 if ($flag) {
-    saveEditedInfo($school, $college, $university, $work, $contact, $newPass, $age, $gender);
+    saveEditedInfo($school, $college, $university, $work, $contact, $newPass, $age, $gender, $question, $answer);
 } else {
     // If current password was incorrect
     $_SESSION['edit_info_pass_error'] = true;
@@ -43,6 +44,8 @@ if ($flag) {
     $_SESSION['edit_info_user_university'] = $university;
     $_SESSION['edit_info_user_work'] = $work;
     $_SESSION['edit_info_user_contact'] = $contact;
+    $_SESSION['edit_info_user_question'] = $question;
+    $_SESSION['edit_info_user_answer'] = $answer;
 }
 
 // redirection("about.php?id=" . $_SESSION['user_id']);
