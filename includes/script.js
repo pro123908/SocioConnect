@@ -631,12 +631,7 @@ function showImage() {
   ).src;
 }
 
-// function changePic() {
-//   // Changing Pic xD
-//   var formPic = document.querySelector(".formPic");
-//   formPic.classList.toggle("show");
-//   formPic.classList.toggle("hidden");
-// }
+
 
 function showEditImageButton(div) {
   document.querySelector(`.${div}`).classList.remove("hidden");
@@ -719,10 +714,10 @@ function commentsRefresh() {
   </div>
          `;
 
-         
 
-        if(document.querySelector(`.comment-area-${obj.postID}`)){
-        document.querySelector(`.comment-area-${obj.postID}`).innerHTML += comment;
+
+        if (document.querySelector(`.comment-area-${obj.postID}`)) {
+          document.querySelector(`.comment-area-${obj.postID}`).innerHTML += comment;
         }
       }
     });
@@ -790,10 +785,10 @@ function notificationRefresh() {
       document.querySelector(`.notifications-dropdown`).innerHTML =
         notification + document.querySelector(`.notifications-dropdown`).innerHTML;
 
-        if(document.querySelector('.notifications')){
+      if (document.querySelector('.notifications')) {
         document.querySelector(`.notifications`).innerHTML =
-        notification + document.querySelector(`.notifications`).innerHTML;
-        }
+          notification + document.querySelector(`.notifications`).innerHTML;
+      }
     }
   });
 }
@@ -813,8 +808,8 @@ function likesRefresh() {
       for (i = 0; i < data.length; i++) {
         var obj = data[i];
 
-        if(document.querySelector(`.like-count-${obj.postID}`)){
-        document.querySelector(`.like-count-${obj.postID}`).innerHTML = `
+        if (document.querySelector(`.like-count-${obj.postID}`)) {
+          document.querySelector(`.like-count-${obj.postID}`).innerHTML = `
         <i class='like-count-icon fas fa-thumbs-up'></i> ${obj.likes}
                    <span class='tooltip tooltip-bottom count'></span>
         `;
@@ -834,7 +829,7 @@ function likeUsers(postID) {
     for (i = 0; i < data.length; i++) {
       flag = false;
       var obj = data[i];
-      
+
       document.querySelector(`.like-count-${postID} .count`).innerHTML += `${
         obj.name
         }<br>`;
@@ -862,7 +857,7 @@ function message() {
 
 
   if (messageBody.value.length > 0) {
-    
+
     // Making AJAX request with partner ID and message text
     let param = `partner=${partner.value}&messageBody=${messageBody.value}`;
 
@@ -875,7 +870,7 @@ function message() {
       `;
 
     ajaxCalls("POST", "AJAX.php?message=1", param).then(function (response) {
-      
+
       // var msgs = document.querySelectorAll(".chat-message");
 
       if (document.getElementById("loading-messages").innerHTML == "No Messages To Show")
@@ -896,18 +891,18 @@ function message() {
 function messageRefresh() {
   var url = window.location.href; // Getting URL of page
   var id = url.substring(url.lastIndexOf("=") + 1); // Extracting ID from URL
-  
-  
 
-  if(window.location.pathname == '/socioConnect/messages.php'){
-  // AJAX call for message Refreshing
-  ajaxCalls("GET", `AJAX.php?message=1&id=${id}`).then(function (response) {
-    let messageResponse = JSON.parse(response);
 
-    for (i = 0; i < messageResponse.length; i++) {
-      let obj = messageResponse[i];
 
-      document.querySelector(".chat-messages").innerHTML += `
+  if (window.location.pathname == '/socioConnect/messages.php') {
+    // AJAX call for message Refreshing
+    ajaxCalls("GET", `AJAX.php?message=1&id=${id}`).then(function (response) {
+      let messageResponse = JSON.parse(response);
+
+      for (i = 0; i < messageResponse.length; i++) {
+        let obj = messageResponse[i];
+
+        document.querySelector(".chat-messages").innerHTML += `
       <div class='chat-message their-message'>
             <img src='${obj.pic}' class='post-avatar post-avatar-30' />
             <span class='message'>${obj.message}</span>
@@ -916,12 +911,12 @@ function messageRefresh() {
        `;
 
 
-      // Scrolling to the most recent message
-      var last = document.querySelector(".their-message:last-child");
-      last.scrollIntoView();
-    }
-  });
-}
+        // Scrolling to the most recent message
+        var last = document.querySelector(".their-message:last-child");
+        last.scrollIntoView();
+      }
+    });
+  }
 }
 
 
@@ -973,8 +968,8 @@ function deleteConvo(id) {
 
   var url = window.location.href; // URL of the current window
   //var openConvoId = url.slice(46); // Will give the ID of the user whom you are chatting with
-  
-  var openConvoId =  url.substring(url.lastIndexOf("=") + 1); // Extracting ID from URL
+
+  var openConvoId = url.substring(url.lastIndexOf("=") + 1); // Extracting ID from URL
 
   let param = `id=${id}&urlID=${openConvoId}`;
   ajaxCalls("POST", `AJAX2.php?deleteConvo=1`, param).then(function (response) {
@@ -991,20 +986,20 @@ function deleteConvo(id) {
 function showPageMessages(id, page) {
   document.getElementById("loading-messages").style.display = "none";
 
-   ajaxCalls('GET',`AJAX3.php?messagePage=1&id=${id}&page=${page}`).then(function(result){
+  ajaxCalls('GET', `AJAX3.php?messagePage=1&id=${id}&page=${page}`).then(function (result) {
 
     document.querySelector(".chat-messages").innerHTML =
-        result + document.querySelector(".chat-messages").innerHTML;
-      document.getElementById("loading-messages").style.display = "block";
+      result + document.querySelector(".chat-messages").innerHTML;
+    document.getElementById("loading-messages").style.display = "block";
 
-      
+
     if (document.getElementById("noMoreMessages").value == "true")
-    document.getElementById("loading-messages").innerHTML =
-      "No More Messages To Show";
+      document.getElementById("loading-messages").innerHTML =
+        "No More Messages To Show";
 
 
-  }).catch(function(reject){
-      // just like that
+  }).catch(function (reject) {
+    // just like that
   });
 
   // var xhr = new XMLHttpRequest();
@@ -1040,22 +1035,22 @@ function removeFriend(id) {
   var path = window.location.pathname;
   var args = window.location.search;
   var flag = "";
-  
+
   if (path != "/socioConnect/requests.php") {
-     flag = " limit 10";
+    flag = " limit 10";
   }
 
   var redirectionFlag = true;
 
   //if you are on someone else's friends page, then don't resfresh the page, just change the icon
-  if(args)
-     redirectionFlag = false;
-    
+  if (args)
+    redirectionFlag = false;
+
   let param = `friendId=${id}&conflict=${flag}`;
   ajaxCalls("POST", "AJAX2.php?removeFriend=1", param).then(function (result) {
-    if(redirectionFlag){
+    if (redirectionFlag) {
       var data = JSON.parse(result);
-      
+
       //console.log(data);
       document.querySelector(".friends-container").innerHTML = "";
       flag = 0;
@@ -1104,56 +1099,56 @@ function removeFriend(id) {
         }
       }
     }
-    else{
-      var personLink = document.querySelector(`.remove-friend-${id}`);  
+    else {
+      var personLink = document.querySelector(`.remove-friend-${id}`);
       personLink.className = `add-friend add-friend-${id}`;
-      personLink.setAttribute("href",`javascript:addFriend(${id})`);
+      personLink.setAttribute("href", `javascript:addFriend(${id})`);
       personLink.querySelector(".tooltip").innerHTML = "Add Friend";
 
       fontAwesomeIcon = personLink.querySelector(".tooltip-container");
       fontAwesomeIcon.classList.remove("fa-times");
-      fontAwesomeIcon.classList.add("fa-plus");   
-      
+      fontAwesomeIcon.classList.add("fa-plus");
+
     }
   });
 }
 
-function addFriend(id){
+function addFriend(id) {
   var personLink = document.querySelectorAll(`.add-friend-${id}`);
   var fontAwesomeIcon;
-  for(var i=0; i<personLink.length; i++){
+  for (var i = 0; i < personLink.length; i++) {
     fontAwesomeIcon = personLink[i].querySelector(".tooltip-container");
     fontAwesomeIcon.classList.remove("fa-plus");
     fontAwesomeIcon.classList.add("fa-check");
   }
-  
+
   let param = `id=${id}`;
   ajaxCalls('POST', 'AJAX2.php?addFriend=1', param).then(function (result) {
 
-    for(var i=0; i<personLink.length; i++){
-      personLink[i].setAttribute("href",`javascript:cancelReq(${id})`);
+    for (var i = 0; i < personLink.length; i++) {
+      personLink[i].setAttribute("href", `javascript:cancelReq(${id})`);
       personLink[i].querySelector(".tooltip").innerHTML = "Friend Request Sent";
     }
   });
 
 }
 
-function cancelReq(id){
+function cancelReq(id) {
   var personLink = document.querySelectorAll(`.add-friend-${id}`);
   var fontAwesomeIcon;
-  for(var i=0; i<personLink.length; i++){
+  for (var i = 0; i < personLink.length; i++) {
     fontAwesomeIcon = personLink[i].querySelector(".tooltip-container");
     fontAwesomeIcon.classList.remove("fa-check");
     fontAwesomeIcon.classList.add("fa-plus");
   }
   let param = `id=${id}`;
   ajaxCalls('POST', 'AJAX2.php?cancelReq=1', param).then(function (result) {
-    for(var i=0; i<personLink.length; i++){
-      personLink[i].setAttribute("href",`javascript:addFriend(${id})`);
+    for (var i = 0; i < personLink.length; i++) {
+      personLink[i].setAttribute("href", `javascript:addFriend(${id})`);
       personLink[i].querySelector(".tooltip").innerHTML = "Add Friend";
     }
   });
-  
+
 }
 
 function showPage(flag, page) {
@@ -1236,10 +1231,10 @@ function showPageActivities(page) {
   var args = window.location.search;
   var id = args.slice(args.search("=") + 1);
   var param;
-  if(id  == "")
+  if (id == "")
     param = "loadRA=1&page=" + page;
   else
-    param = "loadRA=1&page="+page+"&id="+id 
+    param = "loadRA=1&page=" + page + "&id=" + id
   document.getElementById("loading-activities").style.display = "none";
   var xhr = new XMLHttpRequest();
   xhr.open("GET", `AJAX2.php?${param}`, true);
@@ -1373,7 +1368,7 @@ function hideEditInfoDiv() {
     editDiv.style.display = "none";
   }, 550);
 }
-function showEditInfoDiv(){
+function showEditInfoDiv() {
   // Showing pic in the model
   var editDiv = document.querySelector(".user-info-edit-div");
   editDiv.classList.add("modal-open");
@@ -1386,88 +1381,141 @@ function showEditInfoDiv(){
   var uni = document.querySelector(".user-university").innerHTML;
   var work = document.querySelector(".user-work").innerHTML;
   var cntct = document.querySelector(".user-contact").innerHTML;
-  var actualAge =  document.querySelector(".actualAge").value;
-  var gender = document.querySelector(".user-gender").innerHTML; 
- 
+  var actualAge = document.querySelector(".actualAge").value;
+  var gender = document.querySelector(".user-gender").innerHTML;
+
   //Setting Values in input fields
   var defaultVaue = "-------";
-  if(skul.trim() == defaultVaue)
+  if (skul.trim() == defaultVaue)
     skul = "";
-  if(colg.trim() == defaultVaue)
+  if (colg.trim() == defaultVaue)
     colg = "";
-  if(uni.trim() == defaultVaue)
+  if (uni.trim() == defaultVaue)
     uni = "";
-  if(work.trim() == defaultVaue)
-    work = "";  
-  if(cntct.trim() == defaultVaue)
-    cntct = "";  
+  if (work.trim() == defaultVaue)
+    work = "";
+  if (cntct.trim() == defaultVaue)
+    cntct = "";
 
-  document.querySelector(".user-edit-school").value =  skul;
+  document.querySelector(".user-edit-school").value = skul;
   document.querySelector(".user-edit-college").value = colg;
   document.querySelector(".user-edit-university").value = uni;
   document.querySelector(".user-edit-work").value = work;
-  document.querySelector(".user-edit-contact").value =cntct;
-  document.querySelector(".user-edit-age").value = actualAge;  
-  document.querySelector(".user-edit-gender").value = gender.trim(); 
+  document.querySelector(".user-edit-contact").value = cntct;
+  document.querySelector(".user-edit-age").value = actualAge;
+  document.querySelector(".user-edit-gender").value = gender.trim();
 }
 
-function submitEditInfoForm(){
+function submitEditInfoForm() {
   //Setting Values in input fields
   var oldPass = document.querySelector(".user-edit-old-password").value;
   var newPass = document.querySelector(".user-edit-new-password").value;
   var rePass = document.querySelector(".user-edit-new-repeat-password").value;
-  var skul = document.querySelector(".user-edit-school").value;
-  var colg = document.querySelector(".user-edit-college").value;
-  var uni = document.querySelector(".user-edit-university").value;
+  var school = document.querySelector(".user-edit-school").value;
+  var college = document.querySelector(".user-edit-college").value;
+  var university = document.querySelector(".user-edit-university").value;
   var work = document.querySelector(".user-edit-work").value;
-  var cntct = document.querySelector(".user-edit-contact").value;
+  var contact = document.querySelector(".user-edit-contact").value;
   var age = document.querySelector(".user-edit-age").value;
-  var genderDropDow = document.querySelector(".user-edit-gender");
-  var gender = genderDropDow.options[genderDropDow.selectedIndex].value;
+  var genderDropDown = document.querySelector(".user-edit-gender");
+  var gender = genderDropDow.options[genderDropDown.selectedIndex].value;
+
+
+
   //var gender = document.querySelector(".");
- //Password Validation
+  //Password Validation
   var errorMessage = "";
   var error = [];
   var flag1 = flag2 = false;
 
-  if(newPass){
-    if(newPass != rePass){
-        error.push("s Don't Match");
-        flag1 = true;
+  if (newPass) {
+    if (newPass != rePass) {
+      error.push("s Don't Match");
+      flag1 = true;
     }
-    else{
-      if(newPass.length < 8){
+    else {
+      if (newPass.length < 8) {
         flag1 = true;
         error.push("'s length must be greater than 8 characters");
       }
-      if(!(/\d/.test(newPass) && newPass.match(/[a-z]/i))){
+      if (!(/\d/.test(newPass) && newPass.match(/[a-z]/i))) {
         flag2 = true;
         error.push(" must contain alphanumeric characters")
-      }  
+      }
     }
   }
-  else if(oldPass){
+  else if (oldPass) {
     //Do nothin, just to make an exception from else 
   }
-  else{
+  else {
     error.push(" field can't be empty");
     flag1 = true;
-  }  
-  if(flag1 && flag2)
+  }
+  if (flag1 && flag2)
     errorMessage = "Password" + error[0] + " and" + error[1];
-  else if(flag1 || flag2)
+  else if (flag1 || flag2)
     errorMessage = "Password" + error[0];
-  if(flag1 || flag2){
+  if (flag1 || flag2) {
     alert(errorMessage);
     document.querySelector(".user-edit-old-password").value = "";
     document.querySelector(".user-edit-new-repeat-password").value = "";
     document.querySelector(".user-edit-new-password").value = "";
   }
-  else{
-    document.getElementById("editForm").submit();
+  else {
+    // document.getElementById("editForm").submit();
+    param = `password=${oldPass}&newPassword=${newPass}&school=${school}&college=${college}&university=${university}&work=${work}&contact=${contact}&age=${age}&genderBox=${gender}`;
+    ajaxCalls('POST', 'editInfo.php', param);
   }
 }
 
+
+function userInfoEditField(key, value) {
+  console.log(value);
+
+  if ((document.querySelector(`.user-${key}`).style.display != 'none')) {
+    document.querySelector(`.user-${key}`).classList.toggle('hidden');
+
+    var info = document.querySelector(`.user-info-${key}`);
+
+    var field = `
+  <form onsubmit="return saveEditInfo('${key}')">
+  <input type='text' class='user-info-value' value='${value}'></input>
+  <input type='submit' style='display:none;'></input>
+  </form>
+  `;
+
+
+    info.innerHTML = field + info.innerHTML;
+
+  }
+}
+
+function saveEditInfo(key) {
+  console.log('key:', key);
+
+
+  var editInput = document.querySelector(`input[class='user-info-value']`);
+  editInput.style.display = 'none';
+
+  var value = editInput.value;
+
+  var currentField = document.querySelector(`.user-${key}`);
+  currentField.style.display = 'block';
+  currentField.innerHTML = value;
+
+
+
+
+
+  console.log('Value:', value);
+
+
+  ajaxCalls('GET', `about.php?key=${key}&value=${value}`).then(function (result) {
+
+  });
+
+  return false;
+}
 
 setInterval(commentsRefresh, 3000);
 setInterval(notificationRefresh, 3000);

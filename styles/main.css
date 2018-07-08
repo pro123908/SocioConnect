@@ -810,7 +810,7 @@ input[type="file"]:hover {
   float: left;
 }
 
-.notification-heading,.recent-activities-heading, .people-you-may-know-heading, .user-activities-summary-heading{
+.notification-heading,.recent-activities-heading, .people-you-may-know-heading, .user-activities-summary-heading,.user-info-heading{
   padding: 10px;
   text-align: center;
   font-weight: bold;
@@ -882,11 +882,13 @@ input[type="file"]:hover {
   padding: 20px;
 }
 
-.people-you-may-know-area {
-  flex: 1;
+.people-you-may-know-area,.user-info-area {
+  margin-bottom: 50px;
   height: fit-content;
   background-color: #fff;
 }
+
+
 
 .friends-list .friend-container{
   display: inline-block;
@@ -1444,24 +1446,64 @@ input[type="file"]:hover {
   /* background: #555;  */
 }
 
-.user-info-value{
-  font-weight: bold;
-  color:blue;
+
+
+
+/* ----------------------- User activities summary --------------------------*/
+
+.stat-heading{
+  text-align: center;
+    margin: 20px;
+    margin-top: 0;
 }
 
-.user-info-key{
-  color:red;
+.stat-value{
+  text-align: center;
+  font-size: 40px;
+
 }
 
-.user-info{
-  padding: 10px;
+/* --------------------------- Content area left & right side --------------------- */
+.content-right-side {
+  flex: 1;
 }
+
+/*--------------------- User details --------------------- */
+
 
 .user-information{
   margin : 10px;
 }
 
+.user-info-value{
+  
+  
+}
+
+.user-info .fa-edit{
+  font-size: 10px;
+}
+
+.user-info-key{
+  text-transform: capitalize;
+  font-weight: bold;
+}
+
+.user-info-content .user-info{
+  padding: 10px;
+  text-align: center;
+
+}
+
+
+
+
 /* User info edititng */
+
+.user-info-edit{
+  text-align: center;
+}
+
 .user-info-edit-div {
   position: fixed;
   z-index: 100;
@@ -1507,16 +1549,17 @@ input[type="file"]:hover {
   text-align: center;
 }
 
-/* ----------------------- User activities summary --------------------------*/
-
-.stat-heading{
-  text-align: center;
-    margin: 20px;
-    margin-top: 0;
-}
-
-.stat-value{
-  text-align: center;
-  font-size: 40px;
+.user-info-edit-button{
+  margin-bottom: 10px;
+  background: #edf2f6;
+  border: none;
+  padding: 10px 60px;
 
 }
+
+.user-info-edit-button:hover{
+  background-color: #ececec;
+  cursor: pointer;
+}
+
+

@@ -21,16 +21,20 @@ $contact = trim(mysqli_real_escape_string($connection, $_POST['contact']));
 $age = trim(mysqli_real_escape_string($connection, $_POST['age']));
 $gender = trim(mysqli_real_escape_string($connection, $_POST['genderBox']));
 
+// Checking the length of new password if it is entered
 $pass = hashString($pass);
 if (strlen(trim($newPass)) > 7) {
     $newPass = hashString($newPass);
 }
 
+// Checking the validity of current password for saving changes
 $flag = validatePassword($pass);
 
+//If current password was correct
 if ($flag) {
     saveEditedInfo($school, $college, $university, $work, $contact, $newPass, $age, $gender);
 } else {
+    // If current password was incorrect
     $_SESSION['edit_info_pass_error'] = true;
     $_SESSION['edit_info_user_age'] = $age;
     $_SESSION['edit_info_user_gender'] = $gender;
@@ -40,4 +44,6 @@ if ($flag) {
     $_SESSION['edit_info_user_work'] = $work;
     $_SESSION['edit_info_user_contact'] = $contact;
 }
-redirection("about.php?id=" . $_SESSION['user_id']);
+
+// redirection("about.php?id=" . $_SESSION['user_id']);
+redirection('timeline.php');

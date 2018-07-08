@@ -94,6 +94,10 @@ MSG;
 }
 ?>
         </div>
+
+
+    <div class='content-right-side'>
+
     <?php
 if ($flag || isFriend($_GET['visitingUserID'])) {?>
     <div class='people-you-may-know-area'>
@@ -103,6 +107,18 @@ if ($flag || isFriend($_GET['visitingUserID'])) {?>
         </div>
     </div>
     <?php }?>
+
+    <div class='user-info-area'>
+        <div class='user-info-heading'>User Details</div>
+        <div class='user-info-content'><?php
+if (isset($_GET['visitingUserID'])) {
+    showUserInfo($_GET['visitingUserID']);
+} else {
+    showUserInfo($_SESSION['user_id']);
+}
+?></div>
+    </div>
+    </div>
 </div>
 
 <script src="./includes/script.js" >

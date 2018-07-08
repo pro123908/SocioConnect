@@ -2092,37 +2092,56 @@ function showUserInfo($id)
             $userInfo['age'] .= " Years";
         }
 
-        $info = <<<INFO
-            <div class='user-info'>
-                <span class='user-info-key'>School: </span>
-                <span class='user-info-value user-school'>{$userInfo['school']}</span>
+        $infoValues = array('school' => $userInfo['school'], 'college' => $userInfo['college'] ,'university' => $userInfo['university'],'work' => $userInfo['work'],'contact' => $userInfo['contact_no'], 'age' => $userInfo['age'], 'gender' => $userInfo['gender']);
+
+        $info = '';
+
+
+        foreach ($infoValues as $key => $value) {
+            $info .=<<< INFO
+            <div class='user-info user-info-{$key}'>
+                <div class='user-info-key'>{$key}</div>
+                <span class='user-info-value user-{$key}'>{$value}</span>
+                <!-- <i class='fas fa-edit' onclick='javascript:userInfoEditField("$key","$value")'></i> -->
             </div>
-            <div class='user-info'>
-                <span class='user-info-key'>College: </span>
-                <span class='user-info-value user-college'>{$userInfo['college']} </span>
-            </div>
-            <div class='user-info'>
-                <span class='user-info-key'>University: </span>
-                <span class='user-info-value user-university'>{$userInfo['university']} </span>
-            </div>
-            <div class='user-info'>
-                <span class='user-info-key'>Work: </span>
-                <span class='user-info-value user-work'>{$userInfo['work']} </span>
-            </div>
-            <div class='user-info'>
-                <span class='user-info-key'>Contact No:</span>
-                <span class='user-info-value user-contact'>{$userInfo['contact_no']} </span>
-            </div>
-            <div class='user-info'>
-                <span class='user-info-key'>Age:</span>
-                <span class='user-info-value user-age'>{$userInfo['age']}</span>
-            </div>
-            <div class='user-info'>
-                <span class='user-info-key'>Gender:</span>
-                <span class='user-info-value user-gender'>{$userInfo['gender']} </span>
-            </div>
-            <input type = 'hidden' class = "actualAge" value = "{$userInfo['actualAge']}">
 INFO;
+        }
+
+        $info .= <<<INFO
+        <input type = 'hidden' class = "actualAge" value = "{$userInfo['actualAge']}">
+INFO;
+
+//         $info = <<<INFO
+//             <div class='user-info'>
+//                 <span class='user-info-key'>School: </span>
+//                 <span class='user-info-value user-school'>{$userInfo['school']}</span>
+//             </div>
+//             <div class='user-info'>
+//                 <span class='user-info-key'>College: </span>
+//                 <span class='user-info-value user-college'>{$userInfo['college']} </span>
+//             </div>
+//             <div class='user-info'>
+//                 <span class='user-info-key'>University: </span>
+//                 <span class='user-info-value user-university'>{$userInfo['university']} </span>
+//             </div>
+//             <div class='user-info'>
+//                 <span class='user-info-key'>Work: </span>
+//                 <span class='user-info-value user-work'>{$userInfo['work']} </span>
+//             </div>
+//             <div class='user-info'>
+//                 <span class='user-info-key'>Contact No:</span>
+//                 <span class='user-info-value user-contact'>{$userInfo['contact_no']} </span>
+//             </div>
+//             <div class='user-info'>
+//                 <span class='user-info-key'>Age:</span>
+//                 <span class='user-info-value user-age'>{$userInfo['age']}</span>
+//             </div>
+//             <div class='user-info'>
+//                 <span class='user-info-key'>Gender:</span>
+//                 <span class='user-info-value user-gender'>{$userInfo['gender']} </span>
+//             </div>
+//             <input type = 'hidden' class = "actualAge" value = "{$userInfo['actualAge']}">
+// INFO;
         if (isset($_SESSION['edit_info_pass_error']) && $_SESSION['edit_info_pass_error']) {
             $showHidden = "";
             // unset($_SESSION['edit_info_pass_error']);
@@ -2130,7 +2149,7 @@ INFO;
             $showHidden = "hidden";
         }
         if ($id == $_SESSION['user_id']) {
-            $info .= "<button class='user-info-edit-button' id = 'edit-form' onclick = 'showEditInfoDiv()'>Edit</button>";
+            $info .= "<div class='user-info-edit'><button class='user-info-edit-button' id = 'edit-form' onclick = 'showEditInfoDiv()'>Edit</button></div>";
             ?>
         <div class="user-info-edit-div <?php echo $showHidden; ?>">
             <span><h1 class = "user-info-edit-div-heading">Edit Personal Information</h1></span>
