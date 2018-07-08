@@ -651,7 +651,7 @@ function logout()
     session_destroy();
 
     // Redirecting to the login page
-    redirection('index.php');
+    redirection('../../index.php');
 }
 
 function differenceInTime($createdAt)
