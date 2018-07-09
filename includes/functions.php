@@ -715,12 +715,19 @@ function timeString($time)
         }
     }
     // Time in months
-    elseif ($time > 2627999) {
+    elseif ($time > 2627999 && $time < 31557600) {
         // if it is just one month
         if (($time / 2628000) < 2) {
             return floor($time / 2628000) . " Month Ago";
         } else {
             return floor($time / 2628000) . " Months Ago";
+        }
+    }
+    elseif($time > 31557599){
+        if(($time / 31557600) < 2){
+            return floor($time / 31557600) . " Year";
+        }else{
+            return floor($time / 31557600) . " Years";
         }
     }
 }
@@ -2064,6 +2071,7 @@ function showUserInfo($id)
     $userInfo = queryFunc("SELECT age as 'actualAge',gender,school,college,university,contact_no,work, question,answer, TIMESTAMPDIFF(YEAR, age, now()) as 'age' from users where user_id = '$id'");
     if (isData($userInfo)) {
         $userInfo = isRecord($userInfo);
+        
         $defaultValue = "-";
         //Setting default value if there is no value
         if (!isset($userInfo['school']) || strlen($userInfo['school']) == 0) {
@@ -2131,36 +2139,73 @@ INFO;
         }?>
         <div class = "user-info-edit-div-container <?php echo $showHidden; ?>">    
         <div class="user-info-edit-div">
-            <span><h1 class = "user-info-edit-div-heading">Edit Personal Information</h1></span>
+           <h1 class = "user-info-edit-div-heading">Edit Personal Information</h1>
             <span class="user-info-edit-div-close" onclick="hideEditInfoDiv()">&times;</span>
 
+            <hr>
+
             <div class = "user-info-edit-div-content">
-                <form action = "editInfo.php" method = "post" id = "editForm">
-                    <label class = "user-info-for-edit">Age : <input type = "date" name = "age" class ="user-edit-age"  autocomplete="off" value = "<?php $val = isset($_SESSION['edit_info_user_age']) ? $_SESSION['edit_info_user_age'] : '';
-            echo $val;?>"></label><br>
-                    Gender: <select name="genderBox"  required class='user-edit-gender'>
+                <form action = "" method = "post" id = "editForm">
+
+        <div class='user-info-display'>
+                    <h3 class='user-info-display-heading'>Academic</h3>
+
+                     <input placeholder='School' type = "text" name = "school" class ="user-edit-field user-edit-school" autocomplete="off" value = "<?php $val = isset($_SESSION['edit_info_user_school']) ? $_SESSION['edit_info_user_school'] : '';
+            echo $val;?>">
+
+                    <input placeholder='College' type = "text" name = "college" class = "user-edit-field user-edit-college" autocomplete="off" value = "<?php $val = isset($_SESSION['edit_info_user_college']) ? $_SESSION['edit_info_user_college'] : '';
+            echo $val;?>" >
+                    <input placeholder='University' type = "text" name = "university" class = "user-edit-field user-edit-university" autocomplete="off" value = "<?php $val = isset($_SESSION['edit_info_user_university']) ? $_SESSION['edit_info_user_university'] : '';
+            echo $val;?>">
+
+        </div>
+
+        <div class='user-info-display'>
+                    <h3 class='user-info-display-heading'>Contact</h3>
+
+                   <input placeholder='Work' type = "text" name = "work" class = "user-edit-field user-edit-work" autocomplete="off" value = "<?php $val = isset($_SESSION['edit_info_user_work']) ? $_SESSION['edit_info_user_work'] : '';
+            echo $val;?>">
+                    <input placeholder='Contact' type = "text" name = "contact" class = "user-edit-field user-edit-contact" autocomplete="off" value = "<?php $val = isset($_SESSION['edit_info_user_contact']) ? $_SESSION['edit_info_user_contact'] : '';
+            echo $val;?>">
+
+</div>
+
+    <div class='user-info-display'>
+                <h3 class='user-info-display-heading'>Personal</h3>
+
+
+
+                    <input placeholder='Age' type = "date" name = "age" class ="user-edit-field user-edit-age"  autocomplete="off" value = "<?php $val = isset($_SESSION['edit_info_user_age']) ? $_SESSION['edit_info_user_age'] : '';
+            echo $val;?>">
+                    <select placeholder='Gender' name="genderBox"  required class='user-edit-field user-edit-gender'>
                         <option value="Male">Male</option>
                         <option value="Female">Female</option>
                         <option value="Other">Other</option>
-                    </select><br>
-                    <label class = "user-info-for-edit">School : <input type = "text" name = "school" class ="user-edit-school" autocomplete="off" value = "<?php $val = isset($_SESSION['edit_info_user_school']) ? $_SESSION['edit_info_user_school'] : '';
-            echo $val;?>"></label><br>
-                    <label class = "user-info-for-edit">College : <input type = "text" name = "college" class = "user-edit-college" autocomplete="off" value = "<?php $val = isset($_SESSION['edit_info_user_college']) ? $_SESSION['edit_info_user_college'] : '';
-            echo $val;?>" ></label><br>
-                    <label class = "user-info-for-edit">University : <input type = "text" name = "university" class = "user-edit-university" autocomplete="off" value = "<?php $val = isset($_SESSION['edit_info_user_university']) ? $_SESSION['edit_info_user_university'] : '';
-            echo $val;?>"></label><br>
-                    <label class = "user-info-for-edit">Work : <input type = "text" name = "work" class = "user-edit-work" autocomplete="off" value = "<?php $val = isset($_SESSION['edit_info_user_work']) ? $_SESSION['edit_info_user_work'] : '';
-            echo $val;?>"></label><br>
-                    <label class = "user-info-for-edit">Contact No : <input type = "text" name = "contact" class = "user-edit-contact" autocomplete="off" value = "<?php $val = isset($_SESSION['edit_info_user_contact']) ? $_SESSION['edit_info_user_contact'] : '';
-            echo $val;?>"></label><br>
-                    <label class = "user-info-for-edit">Security Question : <input type = "text" name = "question" class = "user-edit-question" autocomplete="off" value = "<?php $val = isset($_SESSION['edit_info_user_question']) ? $_SESSION['edit_info_user_question'] : '';
-            echo $val;?>"></label><br>
-                    <label class = "user-info-for-edit">Answer : <input type = "text" name = "answer" class = "user-edit-answer" autocomplete="off" value = "<?php $val = isset($_SESSION['edit_info_user_answer']) ? $_SESSION['edit_info_user_answer'] : '';
-            echo $val;?>"></label><br>
-                    <label class = "user-info-for-edit">New Password : <input type = "password" name = "newPassword" class = "user-edit-new-password" autocomplete="off" placeholder="Enter if you want to change password"></label><br>
-                    <label class = "user-info-for-edit">Confirm Password : <input type = "password" name = "rePass" class = "user-edit-new-repeat-password" autocomplete="off" placeholder="Enter if you want to change password"></label><br>
-                    <label class = "user-info-for-edit">Current Password : <input type = "password" name = "password" class = "user-edit-old-password" autocomplete="off"></label><br>
-                    <input type = "button" value = "Save Changes" name="save" class = "user-edit-save" onclick = "submitEditInfoForm()">
+                    </select>
+                   
+                    
+                    <input placeholder='Security Question' type = "text" name = "question" class = "user-edit-field user-edit-question" autocomplete="off" value = "<?php $val = isset($_SESSION['edit_info_user_question']) ? $_SESSION['edit_info_user_question'] : '';
+            echo $val;?>">
+                    <input placeholder='Answer' type = "text" name = "answer" class = "user-edit-field user-edit-answer" autocomplete="off" value = "<?php $val = isset($_SESSION['edit_info_user_answer']) ? $_SESSION['edit_info_user_answer'] : '';
+            echo $val;?>">
+
+        </div>
+
+        <div class='user-info-display'>
+
+
+                    <h3 class='user-info-display-heading' >Change Password</h3>
+                    <input type = "password" name = "newPassword" class = "user-edit-field user-edit-new-password" autocomplete="off" placeholder="Password">
+                    <input type = "password" name = "rePass" class = "user-edit-field user-edit-new-repeat-password" autocomplete="off" placeholder="Confirm Password">
+        </div>
+
+        <div class='user-info-display'>
+                    <h3 class='user-info-display-heading'>Save Changes</h3>
+                    <input placeholder='Current Password'  type = "password" name = "password" class = "user-edit-field user-edit-old-password" autocomplete="off">
+        </div>
+                    <div class='user-edit-save-container'>
+                    <input type = "button" value = "Save" name="save" class = "user-edit-save" onclick = "submitEditInfoForm()">
+    </div>  
                 </form>
             </div>
         <?php
@@ -2187,8 +2232,9 @@ function saveEditedInfo($school, $college, $university, $work, $contact, $newPas
         $conflict = ", password = '$newPass' ";
     }
 
-    $result = queryFunc("update users set school = '$school' , college = '$college' , university = '$university', work = '$work' , contact_no = '$contact' $conflict , age = '$age' , gender = '$gender', question = '$question', answer = '$answer'  where user_id = '$userLoggedIn' ");
-    isData($result);
+    $result = queryFunc("UPDATE users set school = '$school' , college = '$college' , university = '$university', work = '$work' , contact_no = '$contact' $conflict , age = '$age' , gender = '$gender', question = '$question', answer = '$answer'  where user_id = '$userLoggedIn' ");
+    // isData($result);
+    
 }
 
 function validatePassword($pass)

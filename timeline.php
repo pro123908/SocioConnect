@@ -40,8 +40,7 @@ require_once './includes/header.php'
         <!-- If you are comming here through searching or by clicking on your profile button -->
         <?php $flag ? showFriendButton(0) : showFriendButton($_GET['visitingUserID'])?>
         <?php if (!isset($_GET['visitingUserID']) || isFriend($_GET['visitingUserID']) || $_GET['visitingUserID'] == $_SESSION['user_id']) {?>
-        <a class='timeline-message-button' href="about.php?id=<?php $visitor = isset($_GET['visitingUserID']) ? $_GET['visitingUserID'] : $_SESSION['user_id'];
-    echo $visitor;?>">About</a>
+
         <?php }?>
         <?php if (isset($_GET['visitingUserID']) && $_GET['visitingUserID'] != $_SESSION['user_id']) {?>
         <a class='timeline-message-button' href="messages.php?id=<?php echo $_GET['visitingUserID']; ?>">Message</a>

@@ -34,6 +34,8 @@ $flag = validatePassword($pass);
 //If current password was correct
 if ($flag) {
     saveEditedInfo($school, $college, $university, $work, $contact, $newPass, $age, $gender, $question, $answer);
+    echo timeString(differenceInTime($age));
+
 } else {
     // If current password was incorrect
     $_SESSION['edit_info_pass_error'] = true;
@@ -49,4 +51,3 @@ if ($flag) {
 }
 
 // redirection("about.php?id=" . $_SESSION['user_id']);
-redirection('timeline.php');

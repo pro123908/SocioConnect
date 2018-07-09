@@ -1486,7 +1486,7 @@ function showEditInfoDiv() {
   var question = document.querySelector(".user-question").innerHTML;
 
   //Setting Values in input fields
-  var defaultVaue = "-------";
+  var defaultVaue = "-";
   if (skul.trim() == defaultVaue)
     skul = "";
   if (colg.trim() == defaultVaue)
@@ -1529,25 +1529,51 @@ function submitEditInfoForm() {
   param = `password=${oldPass}&newPassword=${newPass}&school=${school}&college=${college}&university=${university}&work=${work}&age=${age}&contact=${contact}&genderBox=${gender}&question=${question}&answer=${answer}
   `;
 
+
+  // age.substring(age.)
+
+
+  console.log('Param');
+  console.log(param);
+
   //Password Validation   
-  flag = true;   
+  flag = true;
   if (newPass) {
-(!validateNewPassword(newPass, rePass))       flag = false;   }   else if
-(oldPass) {     //Do nothin, just to make an exception from else    }   else {
-alert("Password field can't be empty");     flag = false;   }   if (flag) {
-// document.getElementById("editForm").submit();     
+    if (!validateNewPassword(newPass, rePass))
+      flag = false;
+  }
+  else if (oldPass) {     //Do nothin, just to make an exception from else   
+  }
+
+  else {
+    alert("Password field can't be empty"); flag = false;
+  } if (flag) {
+    // document.getElementById("editForm").submit();     
 
 
- ajaxCalls('POST','editInfo.php', param).then(function (result) {
+    ajaxCalls('POST', 'editInfo.php', param).then(function (result) {
 
+
+      infos = {
+        'school': school, 'college': college, 'university': university, 'work': work,
+        'contact': contact, 'age': result, 'question': question, 'gender': gender
+      }
+
+      for (info in infos) {
+        document.querySelector(`.user-${info}`).innerHTML = infos[info];
+        hideEditInfoDiv();
+
+      }
     });
   }
 }
 
 
 
+setInterval(refreshRecentConvos, 1000);
 setInterval(commentsRefresh, 3000);
 setInterval(notificationRefresh, 3000);
 setInterval(likesRefresh, 3000);
 setInterval(messageRefresh, 1000);
-setInterval(refreshRecentConvos, 1000);
+
+
