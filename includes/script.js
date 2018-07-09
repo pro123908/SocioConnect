@@ -1514,34 +1514,37 @@ function submitEditInfoForm() {
   var oldPass = document.querySelector(".user-edit-old-password").value;
   var newPass = document.querySelector(".user-edit-new-password").value;
   var rePass = document.querySelector(".user-edit-new-repeat-password").value;
-  // var skul = document.querySelector(".user-edit-school").value;
-  // var colg = document.querySelector(".user-edit-college").value;
-  // var uni = document.querySelector(".user-edit-university").value;
-  // var work = document.querySelector(".user-edit-work").value;
-  // var cntct = document.querySelector(".user-edit-contact").value;
-  // var age = document.querySelector(".user-edit-age").value;
-  // var question = document.querySelector(".user-edit-question").value;
-  // var answer = document.querySelector(".user-edit-answer").value;
-  // answer = answer.toLowerCase();
-  // var genderDropDow = document.querySelector(".user-edit-gender");
-  // var gender = genderDropDow.options[genderDropDow.selectedIndex].value;
+  var school = document.querySelector(".user-edit-school").value;
+  var college = document.querySelector(".user-edit-college").value;
+  var university = document.querySelector(".user-edit-university").value;
+  var work = document.querySelector(".user-edit-work").value;
+  var contact = document.querySelector(".user-edit-contact").value;
+  var age = document.querySelector(".user-edit-age").value;
+  var question = document.querySelector(".user-edit-question").value;
+  var answer = document.querySelector(".user-edit-answer").value;
+  answer = answer.toLowerCase();
+  var genderDropDown = document.querySelector(".user-edit-gender");
+  var gender = genderDropDown.options[genderDropDown.selectedIndex].value;
 
-  //Password Validation
-  flag = true;
+  param = `password=${oldPass}&newPassword=${newPass}&school=${school}&college=${college}&university=${university}&work=${work}&age=${age}&contact=${contact}&genderBox=${gender}&question=${question}&answer=${answer}
+  `;
+
+  //Password Validation   
+  flag = true;   
   if (newPass) {
-    if (!validateNewPassword(newPass, rePass))
-      flag = false;
+(!validateNewPassword(newPass, rePass))       flag = false;   }   else if
+(oldPass) {     //Do nothin, just to make an exception from else    }   else {
+alert("Password field can't be empty");     flag = false;   }   if (flag) {
+// document.getElementById("editForm").submit();     
+
+
+ ajaxCalls('POST','editInfo.php', param).then(function (result) {
+
+    });
   }
-  else if (oldPass) {
-    //Do nothin, just to make an exception from else 
-  }
-  else {
-    alert("Password field can't be empty");
-    flag = false;
-  }
-  if (flag)
-    document.getElementById("editForm").submit();
 }
+
+
 
 setInterval(commentsRefresh, 3000);
 setInterval(notificationRefresh, 3000);
