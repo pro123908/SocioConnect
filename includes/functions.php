@@ -1639,7 +1639,7 @@ function getRecentConvo()
     if (isData($recentUser)) {
         $recentUser = isRecord($recentUser);
         $recentPartnerId = ($recentUser['user_from'] == $userLoggedIn) ? $recentUser['user_to'] : $recentUser['user_from'];
-        redirection("http://localhost/socioConnect/messages.php?id=$recentPartnerId");
+        redirection("messages.php?id=$recentPartnerId");
     }
 }
 
@@ -2227,12 +2227,16 @@ unset($_SESSION['edit_info_pass_error']);
 function saveEditedInfo($school, $college, $university, $work, $contact, $newPass, $age, $gender,$question,$answer)
 {
     $userLoggedIn = $_SESSION['user_id'];
-    $conflict = "";
+    $conflict1 = "";
+    $conflict2 = "";
     if (strlen(trim($newPass)) > 8) {
-        $conflict = ", password = '$newPass' ";
+        $conflict1 = ", password = '$newPass' ";
     }
-
-    $result = queryFunc("UPDATE users set school = '$school' , college = '$college' , university = '$university', work = '$work' , contact_no = '$contact' $conflict , age = '$age' , gender = '$gender', question = '$question', answer = '$answer'  where user_id = '$userLoggedIn' ");
+    if(!empty($answer)){
+        $conflict2 = ", answer = '$answer' ";
+    }
+    
+    $result = queryFunc("UPDATE users set school = '$school' , college = '$college' , university = '$university', work = '$work' , contact_no = '$contact' $conflict1  $conflict2 , age = '$age' , gender = '$gender', question = '$question' where user_id = '$userLoggedIn' ");
     // isData($result);
     
 }

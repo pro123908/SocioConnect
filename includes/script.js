@@ -1521,20 +1521,11 @@ function submitEditInfoForm() {
   var contact = document.querySelector(".user-edit-contact").value;
   var age = document.querySelector(".user-edit-age").value;
   var question = document.querySelector(".user-edit-question").value;
-  var answer = document.querySelector(".user-edit-answer").value;
-  answer = answer.toLowerCase();
+  var answer = document.querySelector(".user-edit-answer").value;  
   var genderDropDown = document.querySelector(".user-edit-gender");
   var gender = genderDropDown.options[genderDropDown.selectedIndex].value;
-
   param = `password=${oldPass}&newPassword=${newPass}&school=${school}&college=${college}&university=${university}&work=${work}&age=${age}&contact=${contact}&genderBox=${gender}&question=${question}&answer=${answer}
   `;
-
-
-  // age.substring(age.)
-
-
-  console.log('Param');
-  console.log(param);
 
   //Password Validation   
   flag = true;
@@ -1548,12 +1539,8 @@ function submitEditInfoForm() {
   else {
     alert("Password field can't be empty"); flag = false;
   } if (flag) {
-    // document.getElementById("editForm").submit();     
 
-
-    ajaxCalls('POST', 'editInfo.php', param).then(function (result) {
-
-
+    ajaxCalls('POST', './includes/EventHandlers/editInfo.php', param).then(function (result) {
       infos = {
         'school': school, 'college': college, 'university': university, 'work': work,
         'contact': contact, 'age': result, 'question': question, 'gender': gender
@@ -1561,9 +1548,9 @@ function submitEditInfoForm() {
 
       for (info in infos) {
         document.querySelector(`.user-${info}`).innerHTML = infos[info];
-        hideEditInfoDiv();
-
       }
+      hideEditInfoDiv();
+      document.querySelector(".user-edit-old-password").value = "";
     });
   }
 }
