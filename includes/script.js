@@ -110,7 +110,7 @@ function showCommentField(id) {
 }
 
 function like(postID) {
-  ajaxCalls("GET", `AJAX3.php?like=${postID}`).then(function (result) {
+  ajaxCalls("GET", `./includes/AjaxHandlers/AJAX3.php?like=${postID}`).then(function (result) {
 
     let value = result.trim(); // because there is a space in response (don't know why))
 
@@ -127,7 +127,7 @@ function like(postID) {
 
       // Ajax call for adding like activity in recent activity
       param = `target_id=${postID}&activity_type=${activity_type}`;
-      ajaxCalls("POST", `AJAX2.php?recentActivity=1`, param).then(function (result) {
+      ajaxCalls("POST", `./includes/AjaxHandlers/AJAX2.php?recentActivity=1`, param).then(function (result) {
         // Adding to the view
         addRecentActivity(result);
       });
@@ -137,7 +137,7 @@ function like(postID) {
       var activity_type = 4; // Unlike
       param = `target_id=${postID}&activity_type=${activity_type}`;
 
-      ajaxCalls("POST", `AJAX2.php?recentActivity=1`, param).then(function (result) {
+      ajaxCalls("POST", `./includes/AjaxHandlers/AJAX2.php?recentActivity=1`, param).then(function (result) {
         document.querySelector(".activities-content").innerHTML = result;
       });
     }
@@ -239,7 +239,7 @@ function comment(postID, user, profilePic) {
     // Setting up parameters for POST request to the file
     var param = `comment=${comment.value}&post_id=${postID}`;
 
-    ajaxCalls("POST", "AJAX3.php?comment=1", param).then(function (result) {
+    ajaxCalls("POST", "./includes/AjaxHandlers/AJAX3.php?comment=1", param).then(function (result) {
       // Added Comment ID is returned in response
       commentID = result.trim();
 
@@ -270,7 +270,7 @@ function comment(postID, user, profilePic) {
       // targeted Content
       var commentDetails = postID + " " + commentID;
       param = `target_id=${commentDetails}&activity_type=${activity_type}`;
-      ajaxCalls("POST", `AJAX2.php?recentActivity=1`, param).then(function (result) {
+      ajaxCalls("POST", `./includes/AjaxHandlers/AJAX2.php?recentActivity=1`, param).then(function (result) {
         addRecentActivity(result);
       });
     });
@@ -282,7 +282,7 @@ function comment(postID, user, profilePic) {
 function deletePost(postID) {
   // As the name suggests
 
-  ajaxCalls("GET", `AJAX3.php?deletePost=1&id=${postID}`).then(function (result) {
+  ajaxCalls("GET", `./includes/AjaxHandlers/AJAX3.php?deletePost=1&id=${postID}`).then(function (result) {
     // Removing post from the view
     document.querySelector(`.post-${postID}`).style.display = "none";
   });
@@ -308,7 +308,7 @@ function addPost(user_id) {
     formData.append("file", postPic); // Picture
     formData.append("post", post.value);
 
-    ajaxCalls("POST", "AJAX3.php?post=1", formData, "pic").then(function (result) {
+    ajaxCalls("POST", "./includes/AjaxHandlers/AJAX3.php?post=1", formData, "pic").then(function (result) {
       // Adding new post to post Area
       // Adding post to the top not bottom. Clue xD
       document.querySelector(".posts").innerHTML =
@@ -320,7 +320,7 @@ function addPost(user_id) {
       //Adding in recent activities
       var activity_type = 2;
       param = `activity_type=${activity_type}`;
-      ajaxCalls("POST", `AJAX2.php?recentActivity=1`, param).then(function (result) {
+      ajaxCalls("POST", `./includes/AjaxHandlers/AJAX2.php?recentActivity=1`, param).then(function (result) {
         addRecentActivity(result);
       });
     });
@@ -460,7 +460,7 @@ function saveEditPost(postID) {
       formData.append("postContent", postContent.value);
       formData.append("action", action);
 
-      ajaxCalls("POST", "AJAX3.php?editPost=1", formData, "pic").then(function (result) {
+      ajaxCalls("POST", "./includes/AjaxHandlers/AJAX3.php?editPost=1", formData, "pic").then(function (result) {
         //Displaying original post div which was made hidden in previous function
         var post = document.querySelector(".actual-post-" + postID);
         //Storing edited status in the p tag
@@ -500,7 +500,7 @@ function saveEditPost(postID) {
 function deleteComment(commentID) {
   // Deleting Comment specified by comment ID
 
-  ajaxCalls("GET", `AJAX3.php?deleteComment=1&id=${commentID}`).then(function (result) {
+  ajaxCalls("GET", `./includes/AjaxHandlers/AJAX3.php?deleteComment=1&id=${commentID}`).then(function (result) {
     // taking comment out from view
     document.querySelector(`.comment-${commentID}`).style.display = "none";
   });
@@ -522,12 +522,12 @@ function saveEditComment(postID, commentID, user, profilePic, time) {
   //Showing post comment form
   // document.querySelector(`.comment-form-${postID}`).style.display = 'flex';
 
-  ajaxCalls("POST", "AJAX3.php?editComment=1", param)
+  ajaxCalls("POST", "./includes/AjaxHandlers/AJAX3.php?editComment=1", param)
     .then(function (result) {
       showComment(user, commentID, postID, profilePic, time, comment.value, true);
     })
     .catch(function (reject) {
-      console.log("REJECTED");
+      // console.log("REJECTED");
     });
 
   return false;
@@ -653,7 +653,7 @@ function getUsers(value, flag) {
   var param = `query=${value}&flag=${flag}`;
   var searchFooter;
 
-  ajaxCalls("POST", "AJAX3.php?search=1", param).then(function (result) {
+  ajaxCalls("POST", "./includes/AjaxHandlers/AJAX3.php?search=1", param).then(function (result) {
     if (flag == 0)
       conflict = "-message";
     else
@@ -685,7 +685,7 @@ function getUsers(value, flag) {
 function commentsRefresh() {
 
   if (window.location.pathname == '/socioConnect/main.php') {
-    ajaxCalls("GET", "AJAX.php?comment=1").then(function (result) {
+    ajaxCalls("GET", "./includes/AjaxHandlers/AJAX.php?comment=1").then(function (result) {
 
 
       // Displaying search results
@@ -727,7 +727,7 @@ function commentsRefresh() {
 
 
 function notificationRefresh() {
-  ajaxCalls("GET", "AJAX.php?noti=1").then(function (result) {
+  ajaxCalls("GET", "./includes/AjaxHandlers/AJAX.php?noti=1").then(function (result) {
     // Displaying search results
 
     // console.log(result);
@@ -797,10 +797,10 @@ function notificationRefresh() {
 
 function likesRefresh() {
   if (window.location.pathname == '/socioConnect/main.php') {
-    ajaxCalls("GET", "AJAX.php?like=1").then(function (result) {
+    ajaxCalls("GET", "./includes/AjaxHandlers/AJAX.php?like=1").then(function (result) {
 
-      console.log('Result :  ');
-      console.log(result);
+      // console.log('Result :  ');
+      // console.log(result);
 
       // Displaying search results
       var data = JSON.parse(result);
@@ -820,7 +820,7 @@ function likesRefresh() {
 }
 
 function likeUsers(postID) {
-  ajaxCalls("GET", `AJAX3.php?likeUsers=1&postID=${postID}`).then(function (result) {
+  ajaxCalls("GET", `./includes/AjaxHandlers/AJAX3.php?likeUsers=1&postID=${postID}`).then(function (result) {
     // Displaying search results
     document.querySelector(`.like-count-${postID} .count`).innerHTML = "";
     var data = JSON.parse(result);
@@ -869,7 +869,7 @@ function message() {
       </div>
       `;
 
-    ajaxCalls("POST", "AJAX.php?message=1", param).then(function (response) {
+    ajaxCalls("POST", "./includes/AjaxHandlers/AJAX.php?message=1", param).then(function (response) {
 
       // var msgs = document.querySelectorAll(".chat-message");
 
@@ -896,7 +896,7 @@ function messageRefresh() {
 
   if (window.location.pathname == '/socioConnect/messages.php') {
     // AJAX call for message Refreshing
-    ajaxCalls("GET", `AJAX.php?message=1&id=${id}`).then(function (response) {
+    ajaxCalls("GET", `./includes/AjaxHandlers/AJAX.php?message=1&id=${id}`).then(function (response) {
       let messageResponse = JSON.parse(response);
 
       for (i = 0; i < messageResponse.length; i++) {
@@ -922,7 +922,7 @@ function messageRefresh() {
 
 function refreshRecentConvos() {
 
-  ajaxCalls("GET", "AJAX.php?recentConvo=1").then(function (result) {
+  ajaxCalls("GET", "./includes/AjaxHandlers/AJAX.php?recentConvo=1").then(function (result) {
     var data = JSON.parse(result);
 
     if (!(data.notEmpty == "Bilal")) {
@@ -972,8 +972,8 @@ function deleteConvo(id) {
   var openConvoId = url.substring(url.lastIndexOf("=") + 1); // Extracting ID from URL
 
   let param = `id=${id}&urlID=${openConvoId}`;
-  ajaxCalls("POST", `AJAX2.php?deleteConvo=1`, param).then(function (response) {
-    console.log(response);
+  ajaxCalls("POST", `./includes/AjaxHandlers/AJAX2.php?deleteConvo=1`, param).then(function (response) {
+    // console.log(response);
     //If response is not a redirection, this would be changed if this comment is removed from messags.php
     if (response == "Reload the page") {
       window.location.href = "messages.php"; // Redirect the user to message Page
@@ -986,7 +986,7 @@ function deleteConvo(id) {
 function showPageMessages(id, page) {
   document.getElementById("loading-messages").style.display = "none";
 
-  ajaxCalls('GET', `AJAX3.php?messagePage=1&id=${id}&page=${page}`).then(function (result) {
+  ajaxCalls('GET', `./includes/AjaxHandlers/AJAX3.php?messagePage=1&id=${id}&page=${page}`).then(function (result) {
 
     document.querySelector(".chat-messages").innerHTML =
       result + document.querySelector(".chat-messages").innerHTML;
@@ -1047,7 +1047,7 @@ function removeFriend(id) {
     redirectionFlag = false;
 
   let param = `friendId=${id}&conflict=${flag}`;
-  ajaxCalls("POST", "AJAX2.php?removeFriend=1", param).then(function (result) {
+  ajaxCalls("POST", "./includes/AjaxHandlers/AJAX2.php?removeFriend=1", param).then(function (result) {
     if (redirectionFlag) {
       var data = JSON.parse(result);
 
@@ -1123,7 +1123,7 @@ function addFriend(id) {
   }
 
   let param = `id=${id}`;
-  ajaxCalls('POST', 'AJAX2.php?addFriend=1', param).then(function (result) {
+  ajaxCalls('POST', './includes/AjaxHandlers/AJAX2.php?addFriend=1', param).then(function (result) {
 
     for (var i = 0; i < personLink.length; i++) {
       personLink[i].setAttribute("href", `javascript:cancelReq(${id})`);
@@ -1142,7 +1142,7 @@ function cancelReq(id) {
     fontAwesomeIcon.classList.add("fa-plus");
   }
   let param = `id=${id}`;
-  ajaxCalls('POST', 'AJAX2.php?cancelReq=1', param).then(function (result) {
+  ajaxCalls('POST', './includes/AjaxHandlers/AJAX2.php?cancelReq=1', param).then(function (result) {
     for (var i = 0; i < personLink.length; i++) {
       personLink[i].setAttribute("href", `javascript:addFriend(${id})`);
       personLink[i].querySelector(".tooltip").innerHTML = "Add Friend";
@@ -1154,7 +1154,7 @@ function cancelReq(id) {
 function showPage(flag, page) {
   document.getElementById("loading").style.display = "none";
   var xhr = new XMLHttpRequest();
-  xhr.open("GET", `AJAX2.php?loadPosts=1&flag=${flag}&page=${page}`, true);
+  xhr.open("GET", `./includes/AjaxHandlers/AJAX2.php?loadPosts=1&flag=${flag}&page=${page}`, true);
   xhr.onload = function () {
     if ((this.status = 200)) {
       document.querySelector(".posts").innerHTML += this.responseText;
@@ -1199,7 +1199,7 @@ function hello() {
 function showPageNotis(page) {
   document.getElementById("loading-notis").style.display = "none";
   var xhr = new XMLHttpRequest();
-  xhr.open("GET", "AJAX3.php?notiPage=1&page=" + page, true);
+  xhr.open("GET", "./includes/AjaxHandlers/AJAX3.php?notiPage=1&page=" + page, true);
   xhr.onload = function () {
     if ((this.status = 200)) {
       document.querySelector(".notifications").innerHTML =
@@ -1237,7 +1237,7 @@ function showPageActivities(page) {
     param = "loadRA=1&page=" + page + "&id=" + id
   document.getElementById("loading-activities").style.display = "none";
   var xhr = new XMLHttpRequest();
-  xhr.open("GET", `AJAX2.php?${param}`, true);
+  xhr.open("GET", `./includes/AjaxHandlers/AJAX2.php?${param}`, true);
   xhr.onload = function () {
     if ((this.status = 200)) {
       document.querySelector(".activities").innerHTML =
@@ -1301,7 +1301,7 @@ window.onclick = function (e) {
       !e.srcElement.classList.contains(`${value}-click`) &&
       !e.srcElement.classList.contains(`${value}-dropdown`)
     ) {
-      console.log('Here');
+      // console.log('Here');
       document.querySelector(`.${value}-dropdown`).style.display = "none";
     }
   });
@@ -1311,19 +1311,19 @@ window.onclick = function (e) {
 
 
 function editCoverPicture() {
-  console.log('here');
+  // console.log('here');
 
   var coverPicData = document.querySelector("input[name='cover-pic']");
 
   var coverPic = coverPicData.files[0];
 
-  console.log(coverPic);
+  // console.log(coverPic);
 
   var formData = new FormData();
   formData.append("cover_pic", coverPic);
 
 
-  ajaxCalls('POST', 'AJAX3.php?pic=1', formData, 'pic').then(function (result) {
+  ajaxCalls('POST', './includes/AjaxHandlers/AJAX3.php?pic=1', formData, 'pic').then(function (result) {
     console.log(result);
     document.querySelector('.user-cover').style.backgroundImage = `url(${result})`;
 
@@ -1333,20 +1333,20 @@ function editCoverPicture() {
 
 
 function editProfilePicture() {
-  console.log('Proifle');
+  // console.log('Proifle');
 
   var ProfilePicData = document.querySelector("input[name='profile-pic']");
 
   var ProfilePic = ProfilePicData.files[0];
 
-  console.log(ProfilePic);
+  // console.log(ProfilePic);
 
   var formData = new FormData();
   formData.append("profile_pic", ProfilePic);
 
 
-  ajaxCalls('POST', 'AJAX3.php?pic=1', formData, 'pic').then(function (result) {
-    console.log(result);
+  ajaxCalls('POST', './includes/AjaxHandlers/AJAX3.php?pic=1', formData, 'pic').then(function (result) {
+    // console.log(result);
     document.querySelector('#profile_picture').src = result;
 
   });
@@ -1402,7 +1402,7 @@ function changePassword() {
 function saveNewPassword(newPass) {
   var email = document.querySelector("input[name = 'email']").value;
   param = `password=${newPass}&email=${email}`;
-  ajaxCalls("POST", "AJAX2.php?saveNewPassword=1", param).then(function (result) {
+  ajaxCalls("POST", "./includes/AjaxHandlers/AJAX2.php?saveNewPassword=1", param).then(function (result) {
     if (result == "ok") {
       hideForgotPassWindow();
     }
@@ -1413,7 +1413,7 @@ function submitFrogotPassForm() {
   var email = document.querySelector("input[name = 'email']").value;
   var answer = document.querySelector("input[name = 'answer']").value;
   if (answer.trim().length != 0) {
-    ajaxCalls("GET", `AJAX2.php?validateAnswer=1&answer=${answer.toLowerCase()}&email=${email}`).then(function (result) {
+    ajaxCalls("GET", `./includes/AjaxHandlers/AJAX2.php?validateAnswer=1&answer=${answer.toLowerCase()}&email=${email}`).then(function (result) {
       if (result == "Yes") {
         var editDiv = document.querySelector(".forgot-password-div");
         editDiv.innerHTML = `<span><h1 class = "forgot-password-div-heading">Set New Password</h1></span>
@@ -1441,7 +1441,7 @@ function showForgotPassWindow() {
   showDiv(editDiv);
 
   var email = document.querySelector("input[name = 'email']").value;
-  ajaxCalls("GET", `AJAX2.php?check_answer=1&email=${email}`).then(function (result) {
+  ajaxCalls("GET", `./includes/AjaxHandlers/AJAX2.php?check_answer=1&email=${email}`).then(function (result) {
     if (result.trim() != "")
       document.querySelector(".forgot-password-question").innerHTML = "Q. " + result;
     else
