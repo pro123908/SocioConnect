@@ -113,7 +113,7 @@ MSG;
                 <div class='user-activities-summary-area'>
                     <div class='user-activities-summary-heading'>Activites Summary</div>
                     <div class='user-activities-summary-content'>
-                        <?php $flag ? showUserActivitiesSummary($_SESSION['user_id']) : showUserActivitiesSummary($_GET['visitingUserID'])?>
+                        <?php $flag ==1 ? showUserActivitiesSummary($_SESSION['user_id']) : showUserActivitiesSummary($_GET['visitingUserID'])?>
                     </div>
                 </div>
 
