@@ -1,9 +1,9 @@
 <?php
 
-require_once dirname(__FILE__) . '/includes/functions.php';
+require_once dirname(__FILE__,2) . '/functions.php';
 
 if (!isset($_SESSION['user_id'])) {
-    redirection('index.php');
+    redirection('../../index.php');
 }
 
 // For loading notifcaitons without reloading the page

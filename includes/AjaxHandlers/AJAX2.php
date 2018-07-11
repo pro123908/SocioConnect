@@ -1,15 +1,15 @@
 <?php
 
-require_once dirname(__FILE__) . '/includes/functions.php';
+require_once dirname(__FILE__,2) . '/functions.php';
 
 if(!isset($_SESSION['user_id']) && !isset($_GET['check_answer']) && !isset($_GET['validateAnswer']) && !isset($_GET['saveNewPassword'])){
-    redirection('index.php');
+    redirection('../../index.php');
 }
 
 if (isset($_GET['addFriend'])) {
 
     if (!isset($_GET['id'])) {
-        redirection('main.php');
+        redirection('../../main.php');
     }
 
     $friend = queryFunc("INSERT INTO friend_requests (to_id, from_id) values({$_POST['id']},{$_SESSION['user_id']})");
@@ -19,7 +19,7 @@ if (isset($_GET['addFriend'])) {
 } elseif (isset($_GET['cancelReq'])) {
 
     if (!isset($_GET['id'])) {
-        redirection('main.php');
+        redirection('../../main.php');
     }
 
     queryFunc("DELETE FROM friend_requests WHERE to_id ={$_POST['id']} AND from_id ={$_SESSION['user_id']}");
