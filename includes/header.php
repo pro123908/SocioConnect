@@ -94,14 +94,14 @@ if (isset($_SESSION['user_id'])) {
             <div class='req-dropdown'>
               <?php showNotifications(1, 0, 10);?>
 
-              <div class='req-count'>
+
+            </div>
+            <div class='req-count'>
               <?php
 $value = CountDropdown(3);
     countDropdownDisplay($value, 'req');
     ?>
             </div>
-            </div>
-
 
           </div>
           <!-- ********************************************************** -->
