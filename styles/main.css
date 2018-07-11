@@ -46,6 +46,7 @@ body {
   /* background-image: linear-gradient(to right bottom, #243337, #638a8c);
   background-size: auto;
   background-repeat: no-repeat; */
+  margin-top : 81px;
 }
 
 /* ------------------------- Header Section of website ------------------------ */
@@ -57,6 +58,14 @@ body {
   justify-content: space-between;
   height: 80px;
   color: #fff;
+}
+
+.header-container{
+  position: fixed;
+  top:0;
+  left:0;
+  z-index: 1;
+  width:100%;
 }
 
 /* Header links or buttons on header */
@@ -887,6 +896,10 @@ input[type="file"]:hover {
   margin-bottom: 50px;
   height: fit-content;
   background-color: #fff;
+}
+
+.people-you-may-know-area{
+  flex: 1;
 }
 
 

@@ -158,7 +158,7 @@ if (isset($_GET['notiPage'])) {
                     if (($extension == "jpg" || $extension == "jpeg" || $extension == "png") && ($type == "image/png" || $type == "image/jpeg")) {
                         // Location where to save the image
                         $location = 'assets/postPics/';
-                        if (move_uploaded_file($tmp_name, $location . $uniqueID . '.' . $extension)) {
+                        if (move_uploaded_file($tmp_name, "../../".$location . $uniqueID . '.' . $extension)) {
                             $path = $location . $uniqueID . '.' . $extension; //Complete path of image
                             newPost($_POST['post'], $path);
                         }
