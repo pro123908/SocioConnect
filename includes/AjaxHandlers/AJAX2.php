@@ -165,4 +165,7 @@ else if(isset($_GET['saveNewPassword'])){
         echo "ok";
     }
 }
+else if(isset($_GET['refreshRecentUploads'])){    
+        getUploadedPics($_SESSION['user_id']);
+    }
 ?>

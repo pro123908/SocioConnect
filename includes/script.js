@@ -289,6 +289,11 @@ function deletePost(postID) {
   ajaxCalls("GET", `./includes/AjaxHandlers/AJAX3.php?deletePost=1&id=${postID}`).then(function (result) {
     // Removing post from the view
     document.querySelector(`.post-${postID}`).style.display = "none";
+    if(window.location.pathname == "/socioConnect/timeline.php"){
+        ajaxCalls("GET", `./includes/AjaxHandlers/AJAX2.php?refreshRecentUploads=1`).then(function (result) {
+          document.querySelector(".recenet-uploads-content").innerHTML = result;
+        });
+    }
   });
 }
 
@@ -325,7 +330,15 @@ function addPost(user_id) {
       var activity_type = 2;
       param = `activity_type=${activity_type}`;
       ajaxCalls("POST", `./includes/AjaxHandlers/AJAX2.php?recentActivity=1`, param).then(function (result) {
-        addRecentActivity(result);
+        if(window.location.pathname == "/socioConnect/timeline.php"){
+          if(postPic !== undefined){
+            ajaxCalls("GET", `./includes/AjaxHandlers/AJAX2.php?refreshRecentUploads=1`).then(function (result) {
+              document.querySelector(".recenet-uploads-content").innerHTML = result;
+            });
+          }
+        }
+        else
+          addRecentActivity(result);  
       });
     });
   }
@@ -353,7 +366,6 @@ function postPicSelected(container) {
   // For displaying name of the file which is selected when making post
   var postPic = document.querySelector("input[name='post-pic']").files[0];
   document.querySelector(".pic-name").innerHTML = postPic.name;
-
 }
 
 //Copied this function from above postPicSelected, just to check right now, in future both will be merged

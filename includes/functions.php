@@ -424,7 +424,7 @@ function renderPostCommentForm($postID, $user, $profilePic)
                 <div class='user-image'>
                     <img src='$profilePic' class='post-avatar post-avatar-30' />
                 </div>
-                <form onsubmit="return comment({$postID},'{$user}','{$profilePic}')" method="post" id='commentForm'>
+                <form onsubmit="return comment({$postID},'{$user}','{$profilePic}')" method="post" id='commentForm{$postID}'>
                     <input name = "comment_{$postID}" type='text' autocomplete = "off">
                     <input style='display:none;' type='submit' id="{$postID}" value="Comment" >
                 </form>
@@ -1672,7 +1672,7 @@ DATA;
         <div class='upload-btn-wrapper'>
         <button class='pic-upload-btn'><i class='far fa-image'></i></button>
         <input type='file' name='cover-pic'/>
-        <span class='pic-name'></span>
+        <span class='cover-pic-name'></span>
         </div>
         </form>
 
@@ -1683,7 +1683,7 @@ COVER;
                 <div class='upload-btn-wrapper'>
                 <button class='pic-upload-btn'><i class='far fa-image'></i></button>
                 <input type='file' name='profile-pic'/>
-                <span class='pic-name'></span>
+                <span class='profile-pic-name'></span>
             </div>
             </form>
 
