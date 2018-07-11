@@ -975,8 +975,9 @@ input[type="file"]:hover {
 
 .edit-profile-pic{
   position: absolute;
-  top: 290px;
-  left: 675px;
+  top: 280px;
+  left: 607px;
+
 
 }
 
@@ -1701,5 +1702,6 @@ input[type="file"]:hover {
 }
 
 .recent-upload-image{
-  width : 40%;
+  width : 48%;
+  height: 120px;
 }
