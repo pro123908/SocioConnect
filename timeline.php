@@ -8,6 +8,7 @@ $_SESSION['no_of_posts_changed'] = 0;
 
 // flag 1 => User's own timeline
 // flag 2 => User's friend's timeline
+// flag 0 => for All other users
 
 if (isset($_GET['visitingUserID']) && isset($_SESSION['user_id'])) {
 // If both conditions are satisfied then you have come to this page by searching
@@ -16,6 +17,8 @@ if (isset($_GET['visitingUserID']) && isset($_SESSION['user_id'])) {
     } else {
         if(isFriend($_GET['visitingUserID']))
             $flag = 2;
+        else
+            $flag = 0;    
     }
 
     if (isset($_POST['add_friend'])) {
