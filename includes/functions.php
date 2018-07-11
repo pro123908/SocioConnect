@@ -67,35 +67,28 @@ function redirection($path)
     header('Location: ' . $path);
 }
 
-function addPost($flag, $visitorID)
+function addPost()
 {
-
     // ---------------------- REFRACTED ------------------------
 
     // Adding post form
     $userID = $_SESSION['user_id'];
-    if ($flag || $visitorID == $userID) {
-        // 2nd condition - if you came to your profile by searching
-        $addPost = "<div class='show'>"; //Showing add post area
-    } else {
-        $addPost = "<div class='hidden'>";
-    }
-    $addPost .= <<<DELIMETER
+    $addPost = <<<DELIMETER
+    <div class='show'>
         <div class='post-options'></div>
-            <form action="" method='POST'>
-                <textarea name="post" id="" cols="30" rows="10" placeholder='Share what you are thinking here' class="post-input"></textarea>
-                <br>
-                <div class='upload-btn-wrapper'>
-                    <button class='pic-upload-btn'><i class='far fa-image'></i></button>
-                    <input type='file' name='post-pic' onchange='javascript:postPicSelected()'  />
-                    <span class='pic-name'></span>
-                </div>
-                <div class='post-btn-container'>
-                    <a  href="javascript:addPost({$userID})"  class='add-post-btn'>Post</a>
-                </div>
-            </form>
-        </div>
-
+        <form action="" method='POST'>
+            <textarea name="post" id="" cols="30" rows="10" placeholder='Share what you are thinking here' class="post-input"></textarea>
+            <br>
+            <div class='upload-btn-wrapper'>
+                <button class='pic-upload-btn'><i class='far fa-image'></i></button>
+                <input type='file' name='post-pic' onchange='javascript:postPicSelected()'/>
+                <span class='pic-name'></span>
+            </div>
+            <div class='post-btn-container'>
+                <a href="javascript:addPost({$userID})" class='add-post-btn'>Post</a>
+            </div>
+        </form>
+    </div>
 DELIMETER;
     echo $addPost;
 }
@@ -2345,13 +2338,13 @@ function showUserActivitiesSummary($id)
     $noOfFriends = isRecord($noOfFriends);
     $noOfFriends = $noOfFriends['friends'];
 
-    $noOfReqRecieved = queryFunc("SELECT count(*) as 'reqRec' from friend_requests where to_id = '$id' and status = 0 ");
-    $noOfReqRecieved = isRecord($noOfReqRecieved);
-    $noOfReqRecieved = $noOfReqRecieved['reqRec'];
+    // $noOfReqRecieved = queryFunc("SELECT count(*) as 'reqRec' from friend_requests where to_id = '$id' and status = 0 ");
+    // $noOfReqRecieved = isRecord($noOfReqRecieved);
+    // $noOfReqRecieved = $noOfReqRecieved['reqRec'];
 
-    $noOfReqSent = queryFunc("SELECT count(*) as 'reqSent' from friend_requests where from_id = '$id' and status = 0 ");
-    $noOfReqSent = isRecord($noOfReqSent);
-    $noOfReqSent = $noOfReqSent['reqSent'];
+    // $noOfReqSent = queryFunc("SELECT count(*) as 'reqSent' from friend_requests where from_id = '$id' and status = 0 ");
+    // $noOfReqSent = isRecord($noOfReqSent);
+    // $noOfReqSent = $noOfReqSent['reqSent'];
 
     // echo "No Of Posts: " . $noOfPosts . "<br>";
     // echo "No Of Likes: " . $noOfLikes . "<br>";
@@ -2371,13 +2364,11 @@ function showUserActivitiesSummary($id)
             <div class='stat-value'>{$value}</div>
             <div class='stat-heading'>{$stat}</div>
         </div>
-
-
 STATS;
     }
-
     echo $content;
+}
 
-//echo $content;
-
+function getUploadedPics($userID){
+    echo $userID;
 }
