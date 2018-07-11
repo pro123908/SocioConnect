@@ -36,7 +36,7 @@ function setUserId(userLoggedInId) {
         document.getElementById("loading").innerHTML = loading;
 
         var recenetUploads = document.querySelectorAll(".recent-uploads");
-        if(recenetUploads.length == 0)
+        if (recenetUploads.length == 0 && document.querySelector(".recenet-uploads-footer"))
           document.querySelector(".recenet-uploads-footer").innerHTML = "No Recent Uploads";
       }
     }

@@ -70,13 +70,14 @@ if (isset($_SESSION['user_id'])) {
           <div class='message-dropdown'>
             <a href="javascript:toggleDropdown('.msg-dropdown');" class="header-btn mr-1"><i class="msg-click fas fa-envelope fa-lg"></i></a>
 
-            <div class='msg-dropdown'>
+
 
           <div class='msg-dropdown'>
               <h3>Messages</h3>
             <div class='recent-chats-dropdown'>
               <?php showRecentChats(1);?>
             </div>
+          </div>
 
             <div class='msg-count'>
               <?php $value = CountDropdown(2);
@@ -92,14 +93,16 @@ if (isset($_SESSION['user_id'])) {
 
             <div class='req-dropdown'>
               <?php showNotifications(1, 0, 10);?>
-            </div>
 
-            <div class='req-count'>
+              <div class='req-count'>
               <?php
 $value = CountDropdown(3);
     countDropdownDisplay($value, 'req');
     ?>
             </div>
+            </div>
+
+
           </div>
           <!-- ********************************************************** -->
 
