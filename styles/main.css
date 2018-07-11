@@ -245,6 +245,7 @@ body {
   justify-content: center;
   align-items: center;
   height: 91vh;
+  overflow: scroll;
 }
 
 /* Login Page Heading */
