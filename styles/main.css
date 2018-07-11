@@ -1046,7 +1046,7 @@ input[type="file"]:hover {
   margin: 30px 100px;
 }
 
-.user-friend-button {
+.user-attributes-area {
   display: flex;
   justify-content: space-evenly;
   align-items: center
@@ -1676,4 +1676,13 @@ input[type="file"]:hover {
 
 .first-stat{
   margin-top: 10px;
+}
+
+
+.recenet-uploads-footer{
+  padding: 0px 5px 10px 5px;
+  text-align: center;
+  display: block;
+  color: #000000;
+  font-size: 14px;
 }

@@ -44,10 +44,13 @@ if (isset($_GET['visitingUserID']) && isset($_SESSION['user_id'])) {
     <div class='user-attributes-area'>
         <div class="user-friend-button">
             <!-- Don't show the friend button if user visiting his own timeline  -->
-            <?php $flag ==1 ? showFriendButton(0) : showFriendButton($_GET['visitingUserID']);
-                // if its not user's own timeline, show message button
-                if (isset($_GET['visitingUserID']) && $_GET['visitingUserID'] != $_SESSION['user_id']) {?>
-                    <a class='timeline-message-button' href="messages.php?id=<?php echo $_GET['visitingUserID']; ?>">Message</a>
+            <?php $flag ==1 ? showFriendButton(0) : showFriendButton($_GET['visitingUserID']); ?>
+        </div>
+
+        <div class="user-message-button">    
+            <!-- if its not user's own timeline, show message button -->
+            <?php if (isset($_GET['visitingUserID']) && $_GET['visitingUserID'] != $_SESSION['user_id']) {?>
+                <a class='timeline-message-button' href="messages.php?id=<?php echo $_GET['visitingUserID']; ?>">Message</a>
             <?php }?>
         </div>
     </div>
@@ -55,18 +58,20 @@ if (isset($_GET['visitingUserID']) && isset($_SESSION['user_id'])) {
         <?php
             if ($flag == 1 || $flag == 2) {?>
                 <div class="content-left-side">
-                    <div class='user-activities-summary-area'>
-                        <div class='user-activities-summary-heading'>Activites Summary</div>
-                        <div class='user-activities-summary-content'>
-                            <?php $flag ? showUserActivitiesSummary($_SESSION['user_id']) : showUserActivitiesSummary($_GET['visitingUserID'])?>
-                        </div>
-                    </div>
-
+                    
                     <div class='user-info-area'>
                         <div class='user-info-heading'>User Details</div>
                         <div class='user-info-content'>
                             <?php $flag == 1 ? showUserInfo($_SESSION['user_id']) : showUserInfo($_GET['visitingUserID']); ?>
                         </div>
+                    </div>
+
+                    <div class='recenet-uploads-area'>
+                        <div class='recenet-uploads-heading'>Recent Uploads</div>
+                        <div class='recenet-uploads-content'>
+                            <?php $flag == 1 ? getUploadedPics($_SESSION['user_id']) : getUploadedPics($_GET['visitingUserID']); ?>
+                        </div>
+                        <div class='recenet-uploads-footer'></div>
                     </div>
                 </div>    
         <?php }?>
@@ -105,12 +110,13 @@ MSG;
     <div class='content-right-side'>
         <?php
             if ($flag ==1 || $flag == 2) {?>
-                <div class='recenet-uploads-area'>
-                    <div class='recenet-uploads-heading'>Recent Uploads</div>
-                    <div class='recenet-uploads-content'>
-                        <?php $flag == 1 ? getUploadedPics($_SESSION['user_id']) : getUploadedPics($_GET['visitingUserID']); ?>
+                <div class='user-activities-summary-area'>
+                    <div class='user-activities-summary-heading'>Activites Summary</div>
+                    <div class='user-activities-summary-content'>
+                        <?php $flag ? showUserActivitiesSummary($_SESSION['user_id']) : showUserActivitiesSummary($_GET['visitingUserID'])?>
                     </div>
                 </div>
+
                 <div class='people-you-may-know-area'>
                     <div class='people-you-may-know-heading'> People you may know</div>
                     <div class='people-you-may-know-content'>

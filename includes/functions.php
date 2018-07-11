@@ -2346,13 +2346,6 @@ function showUserActivitiesSummary($id)
     // $noOfReqSent = isRecord($noOfReqSent);
     // $noOfReqSent = $noOfReqSent['reqSent'];
 
-    // echo "No Of Posts: " . $noOfPosts . "<br>";
-    // echo "No Of Likes: " . $noOfLikes . "<br>";
-    // echo "No Of Comments: " . $noOfComments . "<br>";
-    // echo "No Of Friends: " . $noOfFriends . "<br>";
-    // echo "No Of Requests Recieved: " . $noOfReqRecieved . "<br>";
-    // echo "No Of Reqests Sent: " . $noOfReqSent . "<br>";
-
     $stats = array('Posts' => $noOfPosts, 'Likes' => $noOfLikes, 'Comments' => $noOfComments, 'Friends' => $noOfFriends);
 
     $content = '';
@@ -2370,5 +2363,15 @@ STATS;
 }
 
 function getUploadedPics($userID){
-    echo $userID;
+    $posts = queryFunc("SELECT post_id,pic from posts where pic != '' AND user_id = '$userID' order by post_id desc limit 10");
+    if(isData($posts)){
+        while($post = isRecord($posts)){
+            $content = <<<PIC
+                <a href = "./notification.php?postID='{$post['post_id']}'&type=&notiID=" class="recent-uploads">
+                    <img src='{$post['pic']}' height = "120px" width = "140px">
+                </a>    
+PIC;
+        echo $content;                
+        }
+    }
 }

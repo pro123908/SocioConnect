@@ -34,6 +34,10 @@ function setUserId(userLoggedInId) {
           var loading = `<a href="javascript:showNextPage('a')">Show More Posts</a>`;
         }
         document.getElementById("loading").innerHTML = loading;
+
+        var recenetUploads = document.querySelectorAll(".recent-uploads");
+        if(recenetUploads.length == 0)
+          document.querySelector(".recenet-uploads-footer").innerHTML = "No Recent Uploads";
       }
     }
   } else if (path == "/socioConnect/messages.php") {
