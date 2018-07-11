@@ -76,7 +76,7 @@ if (isset($_SESSION['user_id'])) {
           <a href="javascript:toggleDropdown('.msg-dropdown');" class="header-btn mr-1"><i class="msg-click fas fa-envelope fa-lg"></i></a>
 
           <div class='msg-dropdown'>
-
+              <h3>Messages</h3>
             <div class='recent-chats-dropdown'>
               <?php showRecentChats(1);?>
             </div>

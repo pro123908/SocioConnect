@@ -734,6 +734,8 @@ function notificationRefresh() {
 
     var data = JSON.parse(result);
 
+
+
     var notification = "";
     var notiLink = "";
     var conflict = "";
@@ -742,6 +744,8 @@ function notificationRefresh() {
 
     for (i = 0; i < data.length; i++) {
       var obj = data[i];
+
+      console.log('INSIDE NOTI LOOP');
 
 
       if (obj.type == 'commented') {
@@ -790,6 +794,9 @@ function notificationRefresh() {
           notification + document.querySelector(`.notifications`).innerHTML;
       }
     }
+    if (data.length)
+      dropdownCountAjax(1, 'noti');
+
   });
 }
 
@@ -926,14 +933,25 @@ function refreshRecentConvos() {
     var data = JSON.parse(result);
 
     if (!(data.notEmpty == "Bilal")) {
-      // console.log(data);
+      console.log(data);
+
+      // document.querySelector(".recent-chats-dropdown").innerHTML = "";
+
+      // recentMessage = "";
+
       for (i = data.length - 1; i >= 0; i--) {
         var obj = data[i];
         if (document.querySelector(".recent-chats .recent-user-" + obj.fromID)) {
           document.querySelector(".recent-chats").removeChild(document.querySelector(".recent-chats .recent-user-" + obj.fromID));
         }
+
+        if (document.querySelector(".recent-chats-dropdown .recent-user-" + obj.fromID)) {
+          document.querySelector(".recent-chats-dropdown").removeChild(document.querySelector(".recent-chats-dropdown .recent-user-" + obj.fromID));
+        }
+
+
         var recentMessage = `
-        <div class='recent-user-div recent-user-${obj.fromID}'>
+        <div class='recent-user-div recent-user-${obj.fromID} noSeen'>
           <a href='messages.php?id=${
           obj.fromID
           }' class='recent-user'>
@@ -956,7 +974,17 @@ function refreshRecentConvos() {
           document.querySelector(".recent-chats").innerHTML =
             recentMessage + document.querySelector(".recent-chats").innerHTML;
         }
+
+
+        if (document.querySelector(".recent-chats-dropdown")) {
+          console.log(recentMessage);
+          document.querySelector(".recent-chats-dropdown").innerHTML =
+            recentMessage + document.querySelector(".recent-chats-dropdown").innerHTML;
+        }
       }
+
+
+      dropdownCountAjax(2, 'msg');
     }
   });
 }
@@ -1521,7 +1549,7 @@ function submitEditInfoForm() {
   var contact = document.querySelector(".user-edit-contact").value;
   var age = document.querySelector(".user-edit-age").value;
   var question = document.querySelector(".user-edit-question").value;
-  var answer = document.querySelector(".user-edit-answer").value;  
+  var answer = document.querySelector(".user-edit-answer").value;
   var genderDropDown = document.querySelector(".user-edit-gender");
   var gender = genderDropDown.options[genderDropDown.selectedIndex].value;
   param = `password=${oldPass}&newPassword=${newPass}&school=${school}&college=${college}&university=${university}&work=${work}&age=${age}&contact=${contact}&genderBox=${gender}&question=${question}&answer=${answer}
@@ -1553,6 +1581,30 @@ function submitEditInfoForm() {
       document.querySelector(".user-edit-old-password").value = "";
     });
   }
+}
+
+function dropdownCountAjax(place, dropdown) {
+  console.log("IN DPCOUNT AJAX");
+
+
+  ajaxCalls('GET', `./includes/AjaxHandlers/AJAX3.php?dpCount=${place}&class=${dropdown}`).then(function (result) {
+    // console.log(result);
+
+    // console.log("Insiadadsdsda");
+    document.querySelector(`.${dropdown}-count`).innerHTML = result;
+    locStart = result.lastIndexOf('=') + 1;
+    locEnd = result.lastIndexOf(';');
+
+    color = result.substring(locStart, locEnd);
+
+    console.log(toString(color));
+    if (color === "'red'") {
+      document.querySelector(`.${dropdown}-count`).style.backgroundColor = 'red';
+    } else {
+      document.querySelector(`.${dropdown}-count`).style.backgroundColor = 'transparent';
+    }
+
+  });
 }
 
 

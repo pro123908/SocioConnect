@@ -11,8 +11,8 @@ if (!isset($_SESSION['user_id'])) {
 
 // Declaring session variables
 $_SESSION['no_of_posts_changed'] = 0;
-$_SESSION['last_msg_id'] = 0;
-$_SESSION['last_message_retrieved_for_recent_convos'] = 0;
+// $_SESSION['last_msg_id'] = 0;
+// $_SESSION['last_message_retrieved_for_recent_convos'] = 0;
 
 ?>
 

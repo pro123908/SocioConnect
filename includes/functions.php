@@ -1447,8 +1447,8 @@ function showRecentChats($place = 0)
         $messageSeeMore = '';
 
         if ($place == 1) {
-            $messageText = '<h3>Messages</h3>';
-            echo $messageText;
+            // $messageText = '<h3>Messages</h3>';
+            // echo $messageText;
             $messageSeeMore = <<<DATA
             <a href="messages.php" class='see-more'>
               <span>See more</span>
@@ -2046,6 +2046,7 @@ function countDropdownDisplay($value, $place)
 
     if ($value == 0) {
         echo "<script>document.querySelector('.$place-count').style.backgroundColor='transparent';</script>";
+        
     } else {
         echo "<script>document.querySelector('.$place-count').style.backgroundColor='red';</script>";
         echo $value;

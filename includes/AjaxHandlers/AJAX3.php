@@ -1,5 +1,5 @@
 <?php
-require_once dirname(__FILE__,2) . '/functions.php';
+require_once dirname(__FILE__, 2) . '/functions.php';
 
 if (!isset($_SESSION['user_id'])) {
     redirection('../../index.php');
@@ -261,4 +261,13 @@ if (isset($_GET['notiPage'])) {
 
     //Passing input value and flag to the search functiom
     getSearchedUsers($_POST['query'], $_POST['flag']);
+} elseif (isset($_GET['dpCount'])) {
+
+    $place = $_GET['dpCount'];
+    $class = $_GET['class'];
+
+    $value = CountDropdown($place);
+    countDropdownDisplay($value, $class);
+    // echo $value . ' ' . $class;
+
 }
