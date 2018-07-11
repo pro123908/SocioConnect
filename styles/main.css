@@ -357,7 +357,7 @@ body {
   color: #fff;
 }
 
-.friend, .people-you-may-know {
+.friend, .people-you-may-know,.friend-request{
   display: flex;
   align-items: center;
   padding: 5px 10px;
@@ -433,12 +433,12 @@ body {
   float: right;
 }
 
-.friend-action, .people-you-may-know-action {
-  flex: 1;
+.friend-action, .people-you-may-know-action,.friend-request-action {
+  flex: 2;
 }
 
-.friend-info, .people-you-may-know-info {
-  flex: 8;
+.friend-info, .people-you-may-know-info,.friend-request-info {
+  flex: 6;
 }
 
 .friend-text, .people-you-may-know-text {
@@ -889,7 +889,37 @@ input[type="file"]:hover {
   flex: 4;
   background-color: #fff;
   margin-right: 50px;
-  padding: 20px;
+  padding: 15px 20px 5px;
+}
+
+.friend-request-btn{
+  padding: 10px 20px;
+  background: transparent;
+  border: 1px solid #a0aeaf;
+  text-align: center;
+  margin-right: 10px;
+  border-radius: 5px;
+}
+
+.friend-request:hover{
+  background-color: #f6f6f6;
+}
+
+.friend-request-btn:hover{
+  background-color: #edf2f6;
+  cursor: pointer;
+}
+
+.friends-page{
+  display: flex;
+  padding: 30px;
+  overflow: hidden;
+}
+
+.friends-content{
+  flex: 3;
+  background-color: #fff;
+  margin-right: 20px;
 }
 
 .people-you-may-know-area,.user-info-area, .recenet-uploads-area {
@@ -977,8 +1007,6 @@ input[type="file"]:hover {
   position: absolute;
   top: 280px;
   left: 607px;
-
-
 }
 
 .edit-profile-pic .pic-upload-btn{
