@@ -223,7 +223,7 @@ if (isset($_GET['notiPage'])) {
                 if (($extension == "jpg" || $extension == "jpeg" || $extension == "png") && ($type == "image/png" || $type == "image/jpeg")) {
                     // Location where to save the image
                     $location = 'assets/profile_pictures/';
-                    if (move_uploaded_file($tmp_name, $location . $uniqueID . '.' . $extension)) {
+                    if (move_uploaded_file($tmp_name, "../../" .$location . $uniqueID . '.' . $extension)) {
                         $path = $location . $uniqueID . '.' . $extension;
                         profilePicChange($path);
                         echo $path;
@@ -247,7 +247,7 @@ if (isset($_GET['notiPage'])) {
                 if (($extension == "jpg" || $extension == "jpeg" || $extension == "png") && ($type == "image/png" || $type == "image/jpeg")) {
                     // Location where to save the image
                     $location = 'assets/cover_pictures/';
-                    if (move_uploaded_file($tmp_name, $location . $uniqueID . '.' . $extension)) {
+                    if (move_uploaded_file($tmp_name, "../../" . $location . $uniqueID . '.' . $extension)) {
                         $path = $location . $uniqueID . '.' . $extension;
                         coverPicChange($path);
                         echo $path;

@@ -1692,10 +1692,14 @@ input[type="file"]:hover {
 }
 
 
-.recenet-uploads-footer{
+.recentt-uploads-footer{
   padding: 0px 5px 10px 5px;
   text-align: center;
   display: block;
   color: #000000;
   font-size: 14px;
+}
+
+.recent-upload-image{
+  width : 40%;
 }
