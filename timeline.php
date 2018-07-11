@@ -1,14 +1,21 @@
 
-<?php require_once dirname(__FILE__) . '/includes/functions.php';
+<?php 
+require_once dirname(__FILE__) . '/includes/functions.php';
+require_once './includes/header.php';
 
 $_SESSION['no_of_posts_changed'] = 0;
+
+
+// flag 1 => User's own timeline
+// flag 2 => User's friend's timeline
 
 if (isset($_GET['visitingUserID']) && isset($_SESSION['user_id'])) {
 // If both conditions are satisfied then you have come to this page by searching
     if ($_GET['visitingUserID'] == $_SESSION['user_id']) {
-        $flag = true;
+        $flag = 1;
     } else {
-        $flag = false;
+        if(isFriend($_GET['visitingUserID']))
+            $flag = 2;
     }
 
     if (isset($_POST['add_friend'])) {
@@ -22,104 +29,102 @@ if (isset($_GET['visitingUserID']) && isset($_SESSION['user_id'])) {
     }
 } elseif (isset($_SESSION['user_id'])) {
     // If this condition is true then you have come to the page by clicking on profile button on your profile - So you ain't searching anybody xD
-    $flag = true;
+    $flag = 1;
 } else {
     // Not authorized dude,go back to login page xD
     redirection("index.php"); // previously it was set to main.php
 }
 
-require_once './includes/header.php'
 ?>
 <div class='user-timeline'>
     <div class='user-cover-area'>
-        <?php $flag ? coverArea($_SESSION['user_id']) : coverArea($_GET['visitingUserID'])?>
+        <?php $flag == 1 ? coverArea($_SESSION['user_id']) : coverArea($_GET['visitingUserID'])?>
     </div>
 
     <div class='user-attributes-area'>
-    <div class="user-friend-button">
-        <!-- If you are comming here through searching or by clicking on your profile button -->
-        <?php $flag ? showFriendButton(0) : showFriendButton($_GET['visitingUserID'])?>
-        <?php if (!isset($_GET['visitingUserID']) || isFriend($_GET['visitingUserID']) || $_GET['visitingUserID'] == $_SESSION['user_id']) {?>
+        <div class="user-friend-button">
+            <!-- Don't show the friend button if user visiting his own timeline  -->
+            <?php $flag ==1 ? showFriendButton(0) : showFriendButton($_GET['visitingUserID']); ?>
+        </div>
 
-        <?php }?>
-        <?php if (isset($_GET['visitingUserID']) && $_GET['visitingUserID'] != $_SESSION['user_id']) {?>
-        <a class='timeline-message-button' href="messages.php?id=<?php echo $_GET['visitingUserID']; ?>">Message</a>
-        <?php }?>
-    </div>
+        <div class="user-message-button">    
+            <!-- if its not user's own timeline, show message button -->
+            <?php if (isset($_GET['visitingUserID']) && $_GET['visitingUserID'] != $_SESSION['user_id']) {?>
+                <a class='timeline-message-button' href="messages.php?id=<?php echo $_GET['visitingUserID']; ?>">Message</a>
+            <?php }?>
+        </div>
     </div>
     <div class='content-area'>
         <?php
-if ($flag || isFriend($_GET['visitingUserID'])) {?>
-            <div class='user-activities-summary-area'>
-                <div class='user-activities-summary-heading'>Activites Summary</div>
-                <div class='user-activities-summary-content'>
-                    <?php $flag ? showUserActivitiesSummary($_SESSION['user_id']) : showUserActivitiesSummary($_GET['visitingUserID'])?>
-                </div>
-            </div>
-            <?php }?>
-        <div class='post-area'>
-            <div class='new-post'>
+            if ($flag == 1 || $flag == 2) {?>
+                <div class="content-left-side">
+                    
+                    <div class='user-info-area'>
+                        <div class='user-info-heading'>User Details</div>
+                        <div class='user-info-content'>
+                            <?php $flag == 1 ? showUserInfo($_SESSION['user_id']) : showUserInfo($_GET['visitingUserID']); ?>
+                        </div>
+                    </div>
+
+                    <div class='recenet-uploads-area'>
+                        <div class='recenet-uploads-heading'>Recent Uploads</div>
+                        <div class='recenet-uploads-content'>
+                            <?php $flag == 1 ? getUploadedPics($_SESSION['user_id']) : getUploadedPics($_GET['visitingUserID']); ?>
+                        </div>
+                        <div class='recenet-uploads-footer'></div>
+                    </div>
+                </div>    
+        <?php }?>
+    <div class='post-area'>
+        <div class='new-post'>
             <?php
-// Add post functionality
-if (isset($_GET['visitingUserID'])) {
-    addPost(false, $_GET['visitingUserID']);
-} else {
-    addPost(true, "abc");
-}
-
-?>
-            </div>
-
-            <div class='posts'>
-
-            <?php
-$user = $flag ? 'b' : $_GET['visitingUserID'];
-showPosts($user, 1, 10);
-?>
-
-            </div>
-
-            <?php
-if ($flag) {
-    $show = true;
-} else {
-    $show = isFriend($_GET['visitingUserID']) ? true : false;
-}
-if ($show) {
-    $showMoreButton = <<<MSG
-                <div id='loading' class='loading-messages'></div>
-MSG;
-    echo $showMoreButton;
-}
-?>
+                // Add post functionality only if the user is visiting his own timeline
+                if ($flag == 1)
+                    addPost();
+            ?>
         </div>
 
+        <div class='posts'>
+            <?php
+                $user = $flag == 1 ? 'b' : $_GET['visitingUserID'];
+                showPosts($user, 1, 10);
+            ?>
+        </div>
+
+            <?php
+                //Only display show more div iff user if authorized to view them, i.e visiting his own or friend's timelien
+                if ($flag == 1 || $flag == 2)
+                    $show = true;
+                else 
+                    $show = false;
+                if ($show) {
+                    $showMoreButton = <<<MSG
+                        <div id='loading' class='loading-messages'></div>
+MSG;
+                echo $showMoreButton;
+                }
+            ?>
+    <!-- Posts Div ended -->
+    </div>
 
     <div class='content-right-side'>
+        <?php
+            if ($flag ==1 || $flag == 2) {?>
+                <div class='user-activities-summary-area'>
+                    <div class='user-activities-summary-heading'>Activites Summary</div>
+                    <div class='user-activities-summary-content'>
+                        <?php $flag ==1 ? showUserActivitiesSummary($_SESSION['user_id']) : showUserActivitiesSummary($_GET['visitingUserID'])?>
+                    </div>
+                </div>
 
-    <?php
-if ($flag || isFriend($_GET['visitingUserID'])) {?>
-    <div class='people-you-may-know-area'>
-        <div class='people-you-may-know-heading'> People you may know</div>
-        <div class='people-you-may-know-content'>
-            <?php showPeopleYouMayKnow()?>
-        </div>
-    </div>
-    <?php }?>
-
-    <div class='user-info-area'>
-        <div class='user-info-heading'>User Details</div>
-        <div class='user-info-content'><?php
-if (isset($_GET['visitingUserID'])) {
-    showUserInfo($_GET['visitingUserID']);
-} else {
-    showUserInfo($_SESSION['user_id']);
-}
-?></div>
-    </div>
+                <div class='people-you-may-know-area'>
+                    <div class='people-you-may-know-heading'> People you may know</div>
+                    <div class='people-you-may-know-content'>
+                        <?php showPeopleYouMayKnow()?>
+                    </div>
+                </div>
+        <?php }?>        
     </div>
 </div>
 
-<script src="./includes/script.js" >
-
-</script>
+<script src="./includes/script.js" ></script>

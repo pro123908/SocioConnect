@@ -46,6 +46,7 @@ body {
   /* background-image: linear-gradient(to right bottom, #243337, #638a8c);
   background-size: auto;
   background-repeat: no-repeat; */
+  margin-top : 81px;
 }
 
 /* ------------------------- Header Section of website ------------------------ */
@@ -57,6 +58,14 @@ body {
   justify-content: space-between;
   height: 80px;
   color: #fff;
+}
+
+.header-container{
+  position: fixed;
+  top:0;
+  left:0;
+  z-index: 1;
+  width:100%;
 }
 
 /* Header links or buttons on header */
@@ -811,7 +820,7 @@ input[type="file"]:hover {
   float: left;
 }
 
-.notification-heading,.recent-activities-heading, .people-you-may-know-heading, .user-activities-summary-heading,.user-info-heading,.user-info-edit-div-heading{
+.notification-heading,.recent-activities-heading, .people-you-may-know-heading, .user-activities-summary-heading,.user-info-heading,.user-info-edit-div-heading, .recenet-uploads-heading{
   padding: 10px;
   text-align: center;
   font-weight: bold;
@@ -883,10 +892,14 @@ input[type="file"]:hover {
   padding: 20px;
 }
 
-.people-you-may-know-area,.user-info-area {
+.people-you-may-know-area,.user-info-area, .recenet-uploads-area {
   margin-bottom: 50px;
   height: fit-content;
   background-color: #fff;
+}
+
+.people-you-may-know-area{
+  flex: 1;
 }
 
 
@@ -1031,6 +1044,7 @@ input[type="file"]:hover {
 
 .user-activities-summary-area {
   flex: 1;
+  margin-bottom: 50px;
   background-color: #fff;
   height: fit-content;
 }
@@ -1045,7 +1059,7 @@ input[type="file"]:hover {
   margin: 30px 100px;
 }
 
-.user-friend-button {
+.user-attributes-area {
   display: flex;
   justify-content: space-evenly;
   align-items: center
@@ -1465,7 +1479,7 @@ input[type="file"]:hover {
 }
 
 /* --------------------------- Content area left & right side --------------------- */
-.content-right-side {
+.content-right-side,.content-left-side {
   flex: 1;
 }
 
@@ -1490,7 +1504,7 @@ input[type="file"]:hover {
   font-weight: bold;
 }
 
-.user-info-content .user-info{
+.user-info-content .user-info, .recenet-uploads-content{
   padding: 10px;
   text-align: center;
 
@@ -1675,4 +1689,13 @@ input[type="file"]:hover {
 
 .first-stat{
   margin-top: 10px;
+}
+
+
+.recenet-uploads-footer{
+  padding: 0px 5px 10px 5px;
+  text-align: center;
+  display: block;
+  color: #000000;
+  font-size: 14px;
 }
