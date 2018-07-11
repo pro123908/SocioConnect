@@ -36,8 +36,8 @@ function setUserId(userLoggedInId) {
         document.getElementById("loading").innerHTML = loading;
 
         var recenetUploads = document.querySelectorAll(".recent-uploads");
-        if (recenetUploads.length == 0 && document.querySelector(".recenet-uploads-footer"))
-          document.querySelector(".recenet-uploads-footer").innerHTML = "No Recent Uploads";
+        if (recenetUploads.length == 0)
+          document.querySelector(".recent-uploads-footer").innerHTML = "No Recent Uploads";
       }
     }
   } else if (path == "/socioConnect/messages.php") {
@@ -292,6 +292,9 @@ function deletePost(postID) {
     if(window.location.pathname == "/socioConnect/timeline.php"){
         ajaxCalls("GET", `./includes/AjaxHandlers/AJAX2.php?refreshRecentUploads=1`).then(function (result) {
           document.querySelector(".recenet-uploads-content").innerHTML = result;
+          var recenetUploads = document.querySelectorAll(".recent-uploads");
+          if (recenetUploads.length == 0)
+            document.querySelector(".recent-uploads-footer").innerHTML = "No Recent Uploads";
         });
     }
   });
@@ -335,6 +338,9 @@ function addPost(user_id) {
             ajaxCalls("GET", `./includes/AjaxHandlers/AJAX2.php?refreshRecentUploads=1`).then(function (result) {
               document.querySelector(".recenet-uploads-content").innerHTML = result;
             });
+
+            //Unsetting the no recent uploads message
+            document.querySelector(".recent-uploads-footer").innerHTML = "";
           }
         }
         else

@@ -975,8 +975,8 @@ input[type="file"]:hover {
 
 .edit-profile-pic{
   position: absolute;
-  top: 280px;
-  left: 607px;
+  top: 56%;
+  left: 45%;
 
 
 }
@@ -1693,7 +1693,7 @@ input[type="file"]:hover {
 }
 
 
-.recentt-uploads-footer{
+.recent-uploads-footer{
   padding: 0px 5px 10px 5px;
   text-align: center;
   display: block;

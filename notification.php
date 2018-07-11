@@ -15,24 +15,17 @@ if (isset($_GET['postID'])) {
 
     // Now notification has been seen, so set flag to 1
     $queryResult = queryFunc("UPDATE notifications SET seen=1  WHERE noti_id='$notiID'");
-
-    ?>
+?>
     <div class='content-area'>
-    <div class='notification-area' style='border:none'></div>
-    <div class='post-area'>
-
-    <?php
-// Displaying that post only
-    showPosts('c', 1, 1);?>
+        <div class='notification-area' style='border:none'></div>
+        <div class='post-area'>
+            <!-- Displaying that post only -->
+            <?php showPosts('c', 1, 1); ?>
+        </div>
+        <div class='friends-area' style='border:none'></div>
     </div>
-    <div class='friends-area' style='border:none'></div>
-    </div>
-    <?php
-
+<?php
 }
-
 ?>
 
-<script src="./includes/script.js" >
-
-</script>
+<script src="./includes/script.js" ></script>
