@@ -13,7 +13,10 @@ ob_start(); // Turn on ouput buffering
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700,800" rel="stylesheet">
     <link rel="stylesheet" href="./styles/main.css">
   </head>
-  <body onload="setUserId('<?php if(isset($_SESSION['user_id'])) echo $_SESSION['user_id'];  ?>')">
+  <body onload="setUserId('<?php if (isset($_SESSION['user_id'])) {
+    echo $_SESSION['user_id'];
+}
+?>')">
 
   <!-- Starting div of main content area of the website, where all the stuff lies -->
   <div class="main-container">
@@ -26,14 +29,14 @@ ob_start(); // Turn on ouput buffering
         </div>
 
         <?php
-          // Displaying this navbar if user is logged in
-          if (isset($_SESSION['user_id'])) {
-              $user = $_SESSION['user']; // loggedIn username
+// Displaying this navbar if user is logged in
+if (isset($_SESSION['user_id'])) {
+    $user = $_SESSION['user']; // loggedIn username
 
-              // Getting user pic
-              $pic = getUserProfilePic($_SESSION['user_id']);
-              $image = "<img src='{$pic}' class='post-avatar post-avatar-40' />";   
-        ?>
+    // Getting user pic
+    $pic = getUserProfilePic($_SESSION['user_id']);
+    $image = "<img src='{$pic}' class='post-avatar post-avatar-40' />";
+    ?>
 
         <!-- Search Bar to search Users -->
         <div class="header-search-bar">
@@ -57,8 +60,8 @@ ob_start(); // Turn on ouput buffering
 
             <div class='noti-count'>
               <?php $value = CountDropdown(1);
-                    countDropdownDisplay($value, 'noti');
-              ?>
+    countDropdownDisplay($value, 'noti');
+    ?>
             </div>
           </div>
           <!-- ********************************************************** -->
@@ -67,18 +70,19 @@ ob_start(); // Turn on ouput buffering
           <div class='message-dropdown'>
             <a href="javascript:toggleDropdown('.msg-dropdown');" class="header-btn mr-1"><i class="msg-click fas fa-envelope fa-lg"></i></a>
 
-            <div class='msg-dropdown'>
 
-              <div class='recent-chats-dropdown'>
-                <?php showRecentChats(1);?>
-              </div>
-              
+
+          <div class='msg-dropdown'>
+              <h3>Messages</h3>
+            <div class='recent-chats-dropdown'>
+              <?php showRecentChats(1);?>
             </div>
+          </div>
 
             <div class='msg-count'>
               <?php $value = CountDropdown(2);
-                countDropdownDisplay($value, 'msg');
-              ?>
+    countDropdownDisplay($value, 'msg');
+    ?>
             </div>
           </div>
           <!-- ********************************************************** -->
@@ -89,14 +93,16 @@ ob_start(); // Turn on ouput buffering
 
             <div class='req-dropdown'>
               <?php showNotifications(1, 0, 10);?>
+
+              <div class='req-count'>
+              <?php
+$value = CountDropdown(3);
+    countDropdownDisplay($value, 'req');
+    ?>
+            </div>
             </div>
 
-            <div class='req-count'>
-              <?php
-                $value = CountDropdown(3);
-                countDropdownDisplay($value, 'req');
-              ?>
-            </div>
+
           </div>
           <!-- ********************************************************** -->
 
@@ -112,5 +118,5 @@ ob_start(); // Turn on ouput buffering
         <!-- ********************* Header Links **********************  -->
       </div>
     <!-- ***************************** Header *************************** -->
-  <?php } ?>
+  <?php }?>
   </div>
