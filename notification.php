@@ -18,14 +18,14 @@ if (isset($_GET['postID'])) {
 
     ?>
     <div class='content-area'>
-    <div class='notification-area'></div>
+    <div class='notification-area' style='border:none'></div>
     <div class='post-area'>
 
     <?php
 // Displaying that post only
     showPosts('c', 1, 1);?>
     </div>
-    <div class='friends-area'></div>
+    <div class='friends-area' style='border:none'></div>
     </div>
     <?php
 
