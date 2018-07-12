@@ -9,14 +9,24 @@ require_once dirname(__FILE__) . '/includes/header.php';
 // Sign up form for registration of new user
 
 if (isset($_POST['submit'])) {
-    $fname = mysqli_real_escape_string($connection, $_POST['fname']); // First name
-    $lname = mysqli_real_escape_string($connection, $_POST['lname']); // Last name
-    $email = mysqli_real_escape_string($connection, $_POST['email']); // Email
-    $password = hashString(mysqli_real_escape_string($connection, $_POST['password'])); // Password
-    $age = mysqli_real_escape_string($connection, $_POST['age']); //Age
-    $gender = mysqli_real_escape_string($connection, $_POST['genderBox']); // Gender
-    $question = mysqli_real_escape_string($connection, $_POST['question']); 
-    $answer = mysqli_real_escape_string($connection, $_POST['answer']);
+    // $fname = mysqli_real_escape_string($connection, $_POST['fname']); // First name
+    // $lname = mysqli_real_escape_string($connection, $_POST['lname']); // Last name
+    // $email = mysqli_real_escape_string($connection, $_POST['email']); // Email
+    // $password = hashString(mysqli_real_escape_string($connection, $_POST['password'])); // Password
+    // $age = mysqli_real_escape_string($connection, $_POST['age']); //Age
+    // $gender = mysqli_real_escape_string($connection, $_POST['genderBox']); // Gender
+    // $question = mysqli_real_escape_string($connection, $_POST['question']); 
+    // $answer = mysqli_real_escape_string($connection, $_POST['answer']);
+
+    $fname = clearString($_POST['fname']);
+    $lname = clearString($_POST['lname']);
+    $email = clearString($_POST['email']);
+    $password = hashString(clearString($_POST['password']));
+    $age = clearString($_POST['age']);
+    $gender = clearString($_POST['genderBox']);
+    $question = clearString($_POST['question']);
+    $answer = clearString($_POST['answer']);
+
     // Placing all fields value in session variables
     $_SESSION['s_first_name'] = $fname;
     $_SESSION['s_last_name'] = $lname;
@@ -25,7 +35,7 @@ if (isset($_POST['submit'])) {
     $_SESSION['s_question'] = $question;
     $_SESSION['s_answer'] = $answer;
     // Validating the value of input fields and checking if user exists already?
-    if (!(formValidation($email, $_POST['password'], $_POST['repeatPassword']))) {
+    if (!(formValidation($email, clearString($_POST['password']), clearString($_POST['repeatPassword'])))) {
         redirection('signUp.php');
     } else {
         // If fields are validated then adding the user to database

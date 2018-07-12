@@ -1539,11 +1539,6 @@ input[type="file"]:hover {
 
 }
 
-
-
-
-
-
 /* User info edititng */
 
 .user-info-edit{
@@ -1700,10 +1695,7 @@ input[type="file"]:hover {
 }
 
 
-
 /* ----------------------- User activities summary --------------------------*/
-
-
 
 .user-info-edit-button:hover{
   background-color: #ececec;

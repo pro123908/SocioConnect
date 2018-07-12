@@ -9,6 +9,7 @@ $_SESSION['no_of_posts_changed'] = 0;
 // flag 0 => for All other users
 
 if (isset($_GET['visitingUserID']) && isset($_SESSION['user_id'])) {
+    $_GET['visitingUserID'] = clearString($_GET['visitingUserID']);
 // If both conditions are satisfied then you have come to this page by searching
     if ($_GET['visitingUserID'] == $_SESSION['user_id']) {
         $flag = 1;

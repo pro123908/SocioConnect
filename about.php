@@ -8,7 +8,7 @@
     if (!isset($_GET['id'])) {
         redirection('main.php');
     }
-
+    $_GET['id'] = clearString($_GET['id']);
     $content = "<div class='user-information'>";
     $content .= showUserInfo($_GET['id']);
     $content .= "</div>";

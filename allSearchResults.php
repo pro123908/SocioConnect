@@ -7,6 +7,7 @@
 
     // Displaying all results for search
     if (isset($_GET['query'])) {
+        $_GET['query'] = clearString($_GET['query']);
         getSearchedUsers($_GET['query'], 2);
     }
 ?>

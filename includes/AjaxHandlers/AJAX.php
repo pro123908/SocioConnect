@@ -136,6 +136,8 @@ if (isset($_GET['noti'])) {
 
     // Storing message to the database
     if (isset($_POST['partner'])) {
+        $_POST['partner'] = clearString($_POST['partner']);
+        $_POST['messageBody'] = clearString($_POST['messageBody']);
         sendMessage($_POST['partner'], $_POST['messageBody']);
         echo $_POST['partner'];
     }
@@ -143,7 +145,7 @@ if (isset($_GET['noti'])) {
 // For message Refresh
     if (isset($_GET['id'])) {
         $userID = $_SESSION['user_id'];
-        $partnerID = $_GET['id'];
+        $partnerID = clearString($_GET['id']);
         $last_msg_id = $_SESSION['last_msg_id'];
 
         $profilePicYou = getUserProfilePic($partnerID);

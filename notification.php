@@ -9,8 +9,8 @@ if (!isset($_SESSION['user_id'])) {
 // Rendering the post that was clicked through notification
 
 if (isset($_GET['postID'])) {
-    $_SESSION['notiPostID'] = $_GET['postID']; // Post ID
-    $_SESSION['notiType'] = $_GET['type']; // Type of the notification
+    $_SESSION['notiPostID'] = clearString($_GET['postID']); // Post ID
+    $_SESSION['notiType'] = clearString($_GET['type']); // Type of the notification
     $notiID = $_GET['notiID']; // Notification ID
 
     // Now notification has been seen, so set flag to 1

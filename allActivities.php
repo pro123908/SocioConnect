@@ -11,7 +11,7 @@
             <?php
                 $id = null;
                 if (isset($_GET['id'])) {
-                    $id = $_GET['id'];
+                    $id = clearString($_GET['id']);
                 }
                 showRecentActivities(1, 10, 2, $id);
             ?>

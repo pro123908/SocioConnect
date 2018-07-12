@@ -12,7 +12,7 @@ if (isset($_GET['id'])) {
     if ($_GET['id'] == $_SESSION['user_id']) {
         redirection("messages.php");
     }
-    $partnerID = $_GET['id'];
+    $partnerID = clearString($_GET['id']);
     $_SESSION['partner'] = $partnerID;
     $partner = queryFunc("SELECT CONCAT(first_name,' ',last_name) as name from users where user_id ={$partnerID}");
     $partner = isRecord($partner);
@@ -36,8 +36,8 @@ else {
     <div class="chat-box">
         <div class='chat-user'>
             <?php if (isset($_GET['id'])) {
-                $pic = getUserProfilePic($_GET['id']);
-                $time = activeAgo($_GET['id']);
+                $pic = getUserProfilePic(clearString($_GET['id']));
+                $time = activeAgo(clearString($_GET['id']));
                 $state = 'state-off';
 
                 if ($time == 'Just Now') {

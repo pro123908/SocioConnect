@@ -20,10 +20,10 @@ if (isset($_SESSION['user_id'])) {
 
 if (isset($_POST['submit'])) { // If form is submitted
     // Email of the user
-    $email = mysqli_real_escape_string($connection, $_POST['email']);
+    $email = clearString($_POST['email']);
     $_SESSION['user_email'] = $email;
     //Hash of password is returned
-    $password = hashString(mysqli_real_escape_string($connection, $_POST['password']));
+    $password = hashString(clearString($_POST['password']));
 
     // Checking if user exists or getting that user from database
     $queryResult = queryFunc("SELECT * FROM users WHERE email = '$email'");
@@ -83,6 +83,7 @@ echo $value;?>' required><br>
           echo "<h3>{$data}</h3>";
         }
       ?>
+      <input type="hidden" name="email-for-forgot-pass" value= "<?php if(isset($_SESSION['user_email'])) echo $_SESSION['user_email']; ?>">
       <div class= "forgot-password-div-container">
         <div class="forgot-password-div">
             <span><h1 class = "forgot-password-div-heading">Forgot Password</h1></span>
