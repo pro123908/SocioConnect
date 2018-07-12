@@ -1,16 +1,15 @@
-
 <?php 
 require_once dirname(__FILE__) . '/includes/functions.php';
 require_once './includes/header.php';
 
 $_SESSION['no_of_posts_changed'] = 0;
 
-
 // flag 1 => User's own timeline
 // flag 2 => User's friend's timeline
 // flag 0 => for All other users
 
 if (isset($_GET['visitingUserID']) && isset($_SESSION['user_id'])) {
+    $_GET['visitingUserID'] = clearString($_GET['visitingUserID']);
 // If both conditions are satisfied then you have come to this page by searching
     if ($_GET['visitingUserID'] == $_SESSION['user_id']) {
         $flag = 1;
@@ -37,7 +36,6 @@ if (isset($_GET['visitingUserID']) && isset($_SESSION['user_id'])) {
     // Not authorized dude,go back to login page xD
     redirection("index.php"); // previously it was set to main.php
 }
-
 ?>
 <div class='user-timeline'>
     <div class='user-cover-area'>
@@ -57,6 +55,7 @@ if (isset($_GET['visitingUserID']) && isset($_SESSION['user_id'])) {
             <?php }?>
         </div>
     </div>
+
     <div class='content-area'>
         <?php
             if ($flag == 1 || $flag == 2) {?>
@@ -74,60 +73,53 @@ if (isset($_GET['visitingUserID']) && isset($_SESSION['user_id'])) {
                         <div class='recenet-uploads-content'>
                             <?php $flag == 1 ? getUploadedPics($_SESSION['user_id']) : getUploadedPics($_GET['visitingUserID']); ?>
                         </div>
-                        <div class='recenet-uploads-footer'></div>
+                        <div class='recent-uploads-footer'></div>
                     </div>
                 </div>    
-        <?php }?>
-    <div class='post-area'>
-        <div class='new-post'>
-            <?php
-                // Add post functionality only if the user is visiting his own timeline
-                if ($flag == 1)
-                    addPost();
-            ?>
-        </div>
+                <!-- Right Side content Finished -->
 
-        <div class='posts'>
-            <?php
-                $user = $flag == 1 ? 'b' : $_GET['visitingUserID'];
-                showPosts($user, 1, 10);
-            ?>
-        </div>
-
-            <?php
-                //Only display show more div iff user if authorized to view them, i.e visiting his own or friend's timelien
-                if ($flag == 1 || $flag == 2)
-                    $show = true;
-                else 
-                    $show = false;
-                if ($show) {
-                    $showMoreButton = <<<MSG
-                        <div id='loading' class='loading-messages'></div>
-MSG;
-                echo $showMoreButton;
-                }
-            ?>
-    <!-- Posts Div ended -->
-    </div>
-
-    <div class='content-right-side'>
-        <?php
-            if ($flag ==1 || $flag == 2) {?>
-                <div class='user-activities-summary-area'>
-                    <div class='user-activities-summary-heading'>Activites Summary</div>
-                    <div class='user-activities-summary-content'>
-                        <?php $flag ==1 ? showUserActivitiesSummary($_SESSION['user_id']) : showUserActivitiesSummary($_GET['visitingUserID'])?>
+                <div class='post-area'>
+                    <div class='new-post'>
+                        <?php
+                            // Add post functionality only if the user is visiting his own timeline
+                            if ($flag == 1)
+                                addPost();
+                        ?>
                     </div>
-                </div>
 
-                <div class='people-you-may-know-area'>
-                    <div class='people-you-may-know-heading'> People you may know</div>
-                    <div class='people-you-may-know-content'>
-                        <?php showPeopleYouMayKnow()?>
+                    <div class='posts'>
+                        <?php
+                            $user = $flag == 1 ? 'b' : $_GET['visitingUserID'];
+                            showPosts($user, 1, 10);
+                        ?>
                     </div>
+
+                    <div id='loading' class='loading-messages'></div>
                 </div>
-        <?php }?>        
+                <!-- Posts Div ended -->
+
+                <div class='content-right-side'>
+                    <div class='user-activities-summary-area'>
+                        <div class='user-activities-summary-heading'>Activites Summary</div>
+                        <div class='user-activities-summary-content'>
+                            <?php $flag ==1 ? showUserActivitiesSummary($_SESSION['user_id']) : showUserActivitiesSummary($_GET['visitingUserID'])?>
+                        </div>
+                    </div>
+
+                    <div class='people-you-may-know-area'>
+                        <div class='people-you-may-know-heading'> People you may know</div>
+                        <div class='people-you-may-know-content'>
+                            <?php showPeopleYouMayKnow()?>
+                        </div>
+                    </div>   
+                </div>
+                <!-- Right Side content Finished -->
+        <?php 
+            } 
+        ?>    
     </div>
-</div>
+    <!-- Content area ended -->
+</div>    
+<!-- timeline Ended -->
 
 <script src="./includes/script.js" ></script>

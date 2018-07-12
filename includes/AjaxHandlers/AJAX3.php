@@ -8,11 +8,14 @@ if (!isset($_SESSION['user_id'])) {
 if (isset($_GET['notiPage'])) {
 
     $limit = 10;
+    $_GET['page'] = clearString($_GET['page']);
     showNotifications(3, $_GET['page'], $limit);
 
 } elseif (isset($_GET['messagePage'])) {
 
     $limitMsg = 10;
+    $_GET['page'] = clearString($_GET['page']);
+    $_GET['id'] = clearString($_GET['id']);
     showMessages($_GET['id'], $_GET['page'], $limitMsg);
 
 } elseif (isset($_GET['like'])) {
@@ -21,7 +24,7 @@ if (isset($_GET['notiPage'])) {
 
 // For adding like to the current post
     if (isset($_GET['like'])) {
-        $postID = mysqli_real_escape_string($connection, $_GET['like']); // Post ID
+        $postID = clearString($_GET['like']); // Post ID
         $userID = $_SESSION['user_id']; // user who liked the post
 
         //Checking if the post is already been liked.
@@ -54,8 +57,8 @@ if (isset($_GET['notiPage'])) {
 } elseif (isset($_GET['comment'])) {
 
     $userID = $_SESSION['user_id']; //Current User who is commenting
-    $postID = $_POST['post_id']; // Post being commented
-    $comment = $_POST['comment']; // Comment text
+    $postID = clearString($_POST['post_id']); // Post being commented
+    $comment = clearString($_POST['comment']); // Comment text
 
 // Passing above values to this function and getting the ID of newly inserted comment as a result.
     $commentID = addComment($userID, $postID, $comment);
@@ -67,7 +70,7 @@ if (isset($_GET['notiPage'])) {
 
     // For deleting post
     if ($_GET['id']) {
-        $postID = $_GET['id']; // ID of the post to be deleted
+        $postID = clearString($_GET['id']); // ID of the post to be deleted
 
         // Function to call for the deletion of post with post ID
         if (deletePost($postID)) {
@@ -77,7 +80,7 @@ if (isset($_GET['notiPage'])) {
 } elseif (isset($_GET['deleteComment'])) {
     // When user deletes the comment
     if ($_GET['id']) {
-        $commentID = $_GET['id']; // ID of the deleted comment
+        $commentID = clearString($_GET['id']); // ID of the deleted comment
 
         // Function called to delete the comment with given ID
         if (deleteComment($commentID)) {
@@ -85,18 +88,15 @@ if (isset($_GET['notiPage'])) {
         }
     }
 } elseif (isset($_GET['editComment'])) {
-
-    global $connection;
-    $comment_body = mysqli_real_escape_string($connection, $_POST['comment']);
-    $comment_id = $_POST['comment_id'];
+    $comment_body = clearString($_POST['comment']);
+    $comment_id = clearString($_POST['comment_id']);
     queryFunc("UPDATE comments set comment = '{$comment_body}', edited = 1 where comment_id ={$comment_id}");
 } elseif (isset($_GET['editPost'])) {
 
     if (isset($_POST['postID'])) {
-        global $connection;
-        $post_body = mysqli_real_escape_string($connection, $_POST['postContent']);
-        $post_id = $_POST['postID'];
-        $action = $_POST['action'];
+        $post_body = clearString($_POST['postContent']);
+        $post_id = clearString($_POST['postID']);
+        $action = clearString($_POST['action']);
 
         if ($action == "new") {
             // Adding new pic to post
@@ -108,7 +108,6 @@ if (isset($_GET['notiPage'])) {
 
             // Checking the format of the image uploaded
             if (($extension == "jpg" || $extension == "jpeg" || $extension == "png") && ($type == "image/png" || $type == "image/jpeg")) {
-
                 // Location where to save the image
                 $location = 'assets/postPics/';
                 if (move_uploaded_file($tmp_name, $location . $uniqueID . '.' . $extension)) {
@@ -163,6 +162,9 @@ if (isset($_GET['notiPage'])) {
                             newPost($_POST['post'], $path);
                         }
                     }
+                    else{
+                        echo "error";
+                    }
                 }
             }
         } else {
@@ -175,7 +177,7 @@ if (isset($_GET['notiPage'])) {
 
     // Getting the name of the persons who liked a certain post
     if (isset($_GET['postID'])) {
-        $postID = $_GET['postID']; // ID of the post
+        $postID = clearString($_GET['postID']); // ID of the post
 
         // Getting all likes of that particular post
         $queryResult = queryFunc("SELECT user_id FROM likes WHERE post_id='$postID'");
@@ -260,14 +262,15 @@ if (isset($_GET['notiPage'])) {
 } elseif (isset($_GET['search'])) {
 
     //Passing input value and flag to the search functiom
+    $_POST['query'] = clearString($_POST['query']);
+    $_POST['flag'] = clearString($_POST['flag']);
     getSearchedUsers($_POST['query'], $_POST['flag']);
 } elseif (isset($_GET['dpCount'])) {
 
-    $place = $_GET['dpCount'];
-    $class = $_GET['class'];
+    $place = clearString($_GET['dpCount']);
+    $class = clearString($_GET['class']);
 
     $value = CountDropdown($place);
     countDropdownDisplay($value, $class);
     // echo $value . ' ' . $class;
-
 }

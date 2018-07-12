@@ -11,7 +11,7 @@ if (isset($_GET['addFriend'])) {
     if (!isset($_GET['id'])) {
         redirection('../../main.php');
     }
-
+    $_POST['id'] = clearString($_POST['id']);
     $friend = queryFunc("INSERT INTO friend_requests (to_id, from_id) values({$_POST['id']},{$_SESSION['user_id']})");
 
     notification($_SESSION['user_id'], $_POST['id'], 0, 'request');
@@ -21,13 +21,13 @@ if (isset($_GET['addFriend'])) {
     if (!isset($_GET['id'])) {
         redirection('../../main.php');
     }
-
+    $_POST['id'] = clearString($_POST['id']);
     queryFunc("DELETE FROM friend_requests WHERE to_id ={$_POST['id']} AND from_id ={$_SESSION['user_id']}");
 
     queryFunc("DELETE from notifications where s_user_id={$_SESSION['user_id']} AND d_user_id={$_POST['id']} AND typeC='request'");
 
 } elseif (isset($_GET['deleteConvo'])) {
-
+    $_POST['id'] = clearString($_POST['id']);
     if (isset($_POST['id'])) {
         deleteConvo($_POST['id']);
         if ($_POST['id'] == $_POST['urlID']) {
@@ -43,12 +43,16 @@ if (isset($_GET['addFriend'])) {
 } elseif (isset($_GET['loadPosts'])) {
 
     $limit = 10;
+    $_GET['flag'] = clearString($_GET['flag']);
+    $_GET['page'] = clearString($_GET['page']);
     showPosts($_GET['flag'], $_GET['page'], $limit);
 
 } elseif (isset($_GET['loadRA'])) {
 
     $limit = 10;
+    $_GET['page'] = clearString($_GET['page']);
     if (isset($_GET['id'])) {
+        $_GET['id'] = clearString($_GET['id']);
         showRecentActivities($_GET['page'], $limit, 2, $_GET['id']);
     } else {
         showRecentActivities($_GET['page'], $limit, 2);
@@ -63,14 +67,13 @@ if (isset($_GET['addFriend'])) {
     // activity_type == 4 ==> Unlike
 
     $userLoggedIn = $_SESSION['user_id'];
-    $activity_type = $_POST['activity_type'];
+    $activity_type = clearString($_POST['activity_type']);
 
     if ($activity_type == 4) {
         // if unlike activity
 
         // Target Content ID or IDs like post etc
-        $target_id = $_POST['target_id'];
-
+        $target_id = clearString($_POST['target_id']);
         // Deleting the like activity
         queryFunc("DELETE from recent_activities where activity_at_id = '$target_id' AND user_id = '$userLoggedIn' and activity_type = 0");
 
@@ -85,7 +88,7 @@ if (isset($_GET['addFriend'])) {
             $target_id = $target_id['post_id'];
         } else {
             // if activity was like,comment or friend addtion
-            $target_id = $_POST['target_id'];
+            $target_id = clearString($_POST['target_id']);
         }
 
         // Storing activity in database
@@ -100,6 +103,8 @@ if (isset($_GET['addFriend'])) {
     $friends = array();
     $sorted_friends = array();
     $counter = 0;
+    $_POST['friendId'] = clearString($_POST['friendId']);
+    $_POST['conflict'] = clearString($_POST['conflict']);
     removeFriend($_POST['friendId'], "no redirection");
     $friends_query = queryFunc("SELECT * from friends where user1 = {$_SESSION['user_id']} OR user2 = " . $_SESSION['user_id'] . " " . $_POST['conflict']);
 
@@ -136,7 +141,7 @@ if (isset($_GET['addFriend'])) {
     }
 }
 else if(isset($_GET['check_answer'])){
-            
+        $_GET['email'] = clearString($_GET['email']);  
         $email = queryFunc("SELECT question from users where email = '{$_GET['email']}'");
         if(isData($email)){
             $email = isRecord($email);
@@ -145,10 +150,12 @@ else if(isset($_GET['check_answer'])){
             echo "No";
         }
     }
-else if(isset($_GET['validateAnswer'])){    
+else if(isset($_GET['validateAnswer'])){
+    $_GET['email'] = clearString($_GET['email']);    
     $answer = queryFunc("SELECT answer from users where email = '{$_GET['email']}'");
     if(isData($answer)){
         $answer = isRecord($answer);
+        $_GET['answer'] = clearString($_GET['answer']);  
         if($answer['answer'] == $_GET['answer'])
             echo "Yes";
         else
@@ -159,8 +166,9 @@ else if(isset($_GET['validateAnswer'])){
 }
 else if(isset($_GET['saveNewPassword'])){    
     if(isset($_POST['password'])){
+        $_POST['password'] = clearString($_POST['password']);  
         $password = hashString($_POST['password']);
-        $email = $_POST['email'];
+        $email = clearString($_POST['email']);
         queryFunc("update users set password = '$password' where email = '$email'");
         echo "ok";
     }

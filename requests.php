@@ -7,13 +7,13 @@ if (!isset($_SESSION['user_id'])) {
     redirection('index.php');
 }
 if (isset($_POST['add_friend'])) {
-    addFriend($_POST['userId']);
+    addFriend(clearString($_POST['userId']));
 } else if (isset($_POST['cancel_req'])) {
-    cancelReq($_POST['userId']);
+    cancelReq(clearString($_POST['userId']));
 } else if (isset($_POST['respond_to_request'])) {
     redirection("requests.php");
 } else if (isset($_POST['remove_friend'])) {
-    removeFriend($_POST['userId']);
+    removeFriend(clearString($_POST['userId']));
 }
 
 require_once dirname(__FILE__) . '/includes/header.php';
@@ -62,7 +62,7 @@ $friend_req .= '<div class="friends-list"><h1>Friends</h1><div class="friends-li
 echo $friend_req;
 $id = null;
 if (isset($_GET['id'])) {
-    $id = $_GET['id'];
+    $id = clearString($_GET['id']);
 }
 
 displayFriends(null, $id);

@@ -20,10 +20,10 @@ if (isset($_SESSION['user_id'])) {
 
 if (isset($_POST['loginSubmit'])) { // If form is submitted
     // Email of the user
-    $email = mysqli_real_escape_string($connection, $_POST['email']);
+    $email = clearString($_POST['email']);
     $_SESSION['user_email'] = $email;
     //Hash of password is returned
-    $password = hashString(mysqli_real_escape_string($connection, $_POST['password']));
+    $password = hashString(clearString($_POST['password']));
 
     // Checking if user exists or getting that user from database
     $queryResult = queryFunc("SELECT * FROM users WHERE email = '$email'");
@@ -48,14 +48,16 @@ if (isset($_POST['loginSubmit'])) { // If form is submitted
         }
     }
 } elseif (isset($_POST['signSubmit'])) {
-    $fname = mysqli_real_escape_string($connection, $_POST['fname']); // First name
-    $lname = mysqli_real_escape_string($connection, $_POST['lname']); // Last name
-    $email = mysqli_real_escape_string($connection, $_POST['email']); // Email
-    $password = hashString(mysqli_real_escape_string($connection, $_POST['password'])); // Password
-    $age = mysqli_real_escape_string($connection, $_POST['age']); //Age
-    $gender = mysqli_real_escape_string($connection, $_POST['genderBox']); // Gender
-    $question = mysqli_real_escape_string($connection, $_POST['question']);
-    $answer = mysqli_real_escape_string($connection, $_POST['answer']);
+
+    $fname = clearString($_POST['fname']);
+    $lname = clearString($_POST['lname']);
+    $email = clearString($_POST['email']);
+    $password = hashString(clearString($_POST['password']));
+    $age = clearString($_POST['age']);
+    $gender = clearString($_POST['genderBox']);
+    $question = clearString($_POST['question']);
+    $answer = clearString($_POST['answer']);
+
     // Placing all fields value in session variables
     $_SESSION['s_first_name'] = $fname;
     $_SESSION['s_last_name'] = $lname;

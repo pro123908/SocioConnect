@@ -36,8 +36,8 @@ function setUserId(userLoggedInId) {
         document.getElementById("loading").innerHTML = loading;
 
         var recenetUploads = document.querySelectorAll(".recent-uploads");
-        if (recenetUploads.length == 0 && document.querySelector(".recenet-uploads-footer"))
-          document.querySelector(".recenet-uploads-footer").innerHTML = "No Recent Uploads";
+        if (recenetUploads.length == 0)
+          document.querySelector(".recent-uploads-footer").innerHTML = "No Recent Uploads";
       }
     }
   } else if (path == "/socioConnect/messages.php") {
@@ -292,6 +292,9 @@ function deletePost(postID) {
     if(window.location.pathname == "/socioConnect/timeline.php"){
         ajaxCalls("GET", `./includes/AjaxHandlers/AJAX2.php?refreshRecentUploads=1`).then(function (result) {
           document.querySelector(".recenet-uploads-content").innerHTML = result;
+          var recenetUploads = document.querySelectorAll(".recent-uploads");
+          if (recenetUploads.length == 0)
+            document.querySelector(".recent-uploads-footer").innerHTML = "No Recent Uploads";
         });
     }
   });
@@ -320,26 +323,36 @@ function addPost(user_id) {
     ajaxCalls("POST", "./includes/AjaxHandlers/AJAX3.php?post=1", formData, "pic").then(function (result) {
       // Adding new post to post Area
       // Adding post to the top not bottom. Clue xD
-      document.querySelector(".posts").innerHTML =
+      if(result == "error"){
+        alert("File Format Not supported");
+        postPicData = "";
+        postPicData.files[0] = "";
+      }
+      else{
+        document.querySelector(".posts").innerHTML =
         result + document.querySelector(".posts").innerHTML;
 
-      // Clearing the post text from new post area when it is posted
-      document.querySelector("textarea[name='post']").value = " ";
+        // Clearing the post text from new post area when it is posted
+        document.querySelector("textarea[name='post']").value = " ";
 
-      //Adding in recent activities
-      var activity_type = 2;
-      param = `activity_type=${activity_type}`;
-      ajaxCalls("POST", `./includes/AjaxHandlers/AJAX2.php?recentActivity=1`, param).then(function (result) {
-        if(window.location.pathname == "/socioConnect/timeline.php"){
-          if(postPic !== undefined){
-            ajaxCalls("GET", `./includes/AjaxHandlers/AJAX2.php?refreshRecentUploads=1`).then(function (result) {
-              document.querySelector(".recenet-uploads-content").innerHTML = result;
-            });
+        //Adding in recent activities
+        var activity_type = 2;
+        param = `activity_type=${activity_type}`;
+        ajaxCalls("POST", `./includes/AjaxHandlers/AJAX2.php?recentActivity=1`, param).then(function (result) {
+          if(window.location.pathname == "/socioConnect/timeline.php"){
+            if(postPic !== undefined){
+              ajaxCalls("GET", `./includes/AjaxHandlers/AJAX2.php?refreshRecentUploads=1`).then(function (result) {
+                document.querySelector(".recenet-uploads-content").innerHTML = result;
+              });
+
+              //Unsetting the no recent uploads message
+              document.querySelector(".recent-uploads-footer").innerHTML = "";
+            }
           }
-        }
-        else
-          addRecentActivity(result);  
-      });
+          else
+            addRecentActivity(result);  
+        });
+      }
     });
   }
 
@@ -1483,8 +1496,7 @@ function showForgotPassWindow() {
   // Showing pic in the model
   var editDiv = document.querySelector(".forgot-password-div-container");
   showDiv(editDiv);
-
-  var email = document.querySelector("input[name = 'email']").value;
+  var email = document.querySelector("input[name = 'email-for-forgot-pass']").value;
   ajaxCalls("GET", `./includes/AjaxHandlers/AJAX2.php?check_answer=1&email=${email}`).then(function (result) {
     if (result.trim() != "")
       document.querySelector(".forgot-password-question").innerHTML = "Q. " + result;

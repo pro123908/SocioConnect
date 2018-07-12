@@ -107,12 +107,13 @@ function getTime($time)
 
 function newPost($postContent, $pic = null)
 {
-
+    echo $pic;
     // ---------------------- REFRACTORED ------------------------
 
     // Function for adding a post
     global $connection;
-    $post = mysqli_real_escape_string($connection, $postContent);
+    $post = clearString($postContent);
+    // $post = mysqli_real_escape_string($connection, $postContent);
     $userID = $_SESSION['user_id'];
 
     // Inserting post data
@@ -2375,4 +2376,9 @@ PIC;
         echo $content;                
         }
     }
+}
+
+function clearString($string){
+    global $connection;
+    return mysqli_real_escape_string($connection,(htmlentities(stripslashes(trim($string)))));
 }
