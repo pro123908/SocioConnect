@@ -250,10 +250,10 @@ body {
 
 .login-container {
   /* background: linear-gradient(to right bottom, #243337, #638a8c) no-repeat center center fixed; */
-  background-image: url("../login4.jpg") ;
+  background-image: url("../login.jpg") ;
   background-size: cover;
   background-repeat: no-repeat;
- display: flex;
+  display: flex;
   height: 100%;
   
 }
@@ -1632,15 +1632,16 @@ input[type="file"]:hover {
 
 .forgot-password-div{
   position:fixed;
+  padding: 20px;
   z-index: 100;
-  padding-top: 75px;
-  left: 580;
-  top: 200;
-  width: 25%;
-  height: 30%;
+  /* padding-top: 75px; */
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%,-50%);
   overflow: auto;
   background-color: rgba(0, 0, 0, 1);
   color: rgb(255, 255, 255);
+  text-align: center;
 }
 
 /* Modal Content (image) */
@@ -1667,10 +1668,10 @@ input[type="file"]:hover {
 
 .forgot-password-div-close{
   position: absolute;
-  top: 17px;
-  right: 5%;
+  top: -7px;
+  right: 3%;
   color: #f1f1f1;
-  font-size: 40px;
+  font-size: 25px;
   font-weight: normal;
   transition: 0.3s;
 }
@@ -1681,9 +1682,14 @@ input[type="file"]:hover {
   cursor: pointer;
 }
 
-.user-info-edit-div-heading, .forgot-password-div-heading{
-  font-size: 30px;
-  
+.user-info-edit-div-heading{
+  font-size: 30px; 
+}
+
+.forgot-password-div-heading{
+  font-size: 20px;
+  text-align: center;
+  margin-bottom: 10px;
 }
 
 .user-info-edit-container{
@@ -1705,11 +1711,28 @@ input[type="file"]:hover {
   display: block;
 }
 
+.forgot-password-input,.change-pass-input{
+  padding: 5px;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid #a0aeaf;
+  margin-bottom: 10px;
+  color: #ced7d7;
+
+}
+.forgot-password-input:focus,.change-pass-input:focus{
+  outline: 0;
+}
+
+.forgot-password-question{
+  text-align: center;
+  padding: 10px;
+}
+
 .forgot-password-div-container{
   display: none;
   position: fixed;
   z-index: 500;
-  padding-top: 100px; 
   left: 0;
   top: 0;
   width: 100%;
@@ -1763,6 +1786,17 @@ input[type="file"]:hover {
   border: none;
   margin-bottom: 10px;
   width: 20%;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 5px;
+  background-color: #ff763a;
+}
+
+.password-edit-save{
+  cursor: pointer;
+  border: none;
+  margin-bottom: 10px;
+  
   color: #fff;
   padding: 10px 20px;
   border-radius: 5px;

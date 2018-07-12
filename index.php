@@ -103,6 +103,10 @@ elseif (isset($_SESSION['user_id'])) {
         <input type="text"  name='email' placeholder="Email" class="login-input" value= '<?php $value = isset($flag) ? $_SESSION['user_email'] : "";
 echo $value;?>' required>
         <input type="password" name='password' placeholder="Password" class="login-input"  required>
+        <input type="hidden" name="email-for-forgot-pass" value= "<?php if (isset($_SESSION['user_email'])) {
+    echo $_SESSION['user_email'];
+}
+?>">
         <input type="submit" name='loginSubmit' class="login-submit" value='Login'>
       </form>
 
@@ -174,14 +178,16 @@ if (isset($_SESSION['login_message'])) {
 ?>
       <div class= "forgot-password-div-container">
         <div class="forgot-password-div">
-            <span><h1 class = "forgot-password-div-heading">Forgot Password</h1></span>
+            <h1 class = "forgot-password-div-heading">Security Question</h1>
             <span class="forgot-password-div-close" onclick="hideForgotPassWindow()">&times;</span>
 
             <div class = "forgot-password-div-content">
                 <div class='forgot-password-question'></div>
                 <form action = "javascript:void(0)" method = "post" id = "forgotPassForm">
-                    <label class = "forgot-password-answer">Answer : <input type = "text" name = "answer" class = "forgot-password-input" autocomplete="off" maxlength= "255" required autofocus></label><br>
-                    <input type = "submit" value = "Change Password" name="submit" class = "user-edit-save" onclick = "submitFrogotPassForm()">
+                    <label class = "forgot-password-answer"><input type = "text" name = "answer" class = "forgot-password-input" autocomplete="off" maxlength= "255" required autofocus></label><br>
+
+                    <input type = "submit" value = "Change Password" name="submit" class = "password-edit-save" onclick = "submitForgotPassForm()">
+
                 </form>
             </div>
             <div class = "forgot-password-message"></div>

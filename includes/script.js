@@ -289,13 +289,13 @@ function deletePost(postID) {
   ajaxCalls("GET", `./includes/AjaxHandlers/AJAX3.php?deletePost=1&id=${postID}`).then(function (result) {
     // Removing post from the view
     document.querySelector(`.post-${postID}`).style.display = "none";
-    if(window.location.pathname == "/socioConnect/timeline.php"){
-        ajaxCalls("GET", `./includes/AjaxHandlers/AJAX2.php?refreshRecentUploads=1`).then(function (result) {
-          document.querySelector(".recenet-uploads-content").innerHTML = result;
-          var recenetUploads = document.querySelectorAll(".recent-uploads");
-          if (recenetUploads.length == 0)
-            document.querySelector(".recent-uploads-footer").innerHTML = "No Recent Uploads";
-        });
+    if (window.location.pathname == "/socioConnect/timeline.php") {
+      ajaxCalls("GET", `./includes/AjaxHandlers/AJAX2.php?refreshRecentUploads=1`).then(function (result) {
+        document.querySelector(".recenet-uploads-content").innerHTML = result;
+        var recenetUploads = document.querySelectorAll(".recent-uploads");
+        if (recenetUploads.length == 0)
+          document.querySelector(".recent-uploads-footer").innerHTML = "No Recent Uploads";
+      });
     }
   });
 }
@@ -323,14 +323,14 @@ function addPost(user_id) {
     ajaxCalls("POST", "./includes/AjaxHandlers/AJAX3.php?post=1", formData, "pic").then(function (result) {
       // Adding new post to post Area
       // Adding post to the top not bottom. Clue xD
-      if(result == "error"){
+      if (result == "error") {
         alert("File Format Not supported");
         postPicData = "";
         postPicData.files[0] = "";
       }
-      else{
+      else {
         document.querySelector(".posts").innerHTML =
-        result + document.querySelector(".posts").innerHTML;
+          result + document.querySelector(".posts").innerHTML;
 
         // Clearing the post text from new post area when it is posted
         document.querySelector("textarea[name='post']").value = " ";
@@ -339,8 +339,8 @@ function addPost(user_id) {
         var activity_type = 2;
         param = `activity_type=${activity_type}`;
         ajaxCalls("POST", `./includes/AjaxHandlers/AJAX2.php?recentActivity=1`, param).then(function (result) {
-          if(window.location.pathname == "/socioConnect/timeline.php"){
-            if(postPic !== undefined){
+          if (window.location.pathname == "/socioConnect/timeline.php") {
+            if (postPic !== undefined) {
               ajaxCalls("GET", `./includes/AjaxHandlers/AJAX2.php?refreshRecentUploads=1`).then(function (result) {
                 document.querySelector(".recenet-uploads-content").innerHTML = result;
               });
@@ -350,7 +350,7 @@ function addPost(user_id) {
             }
           }
           else
-            addRecentActivity(result);  
+            addRecentActivity(result);
         });
       }
     });
@@ -756,57 +756,59 @@ function commentsRefresh() {
 
 
 function notificationRefresh() {
-  ajaxCalls("GET", "./includes/AjaxHandlers/AJAX.php?noti=1").then(function (result) {
-    // Displaying search results
 
-    // console.log(result);
+  if (window.location.pathname != '/socioConnect/index.php') {
+    ajaxCalls("GET", "./includes/AjaxHandlers/AJAX.php?noti=1").then(function (result) {
+      // Displaying search results
 
-    var data = JSON.parse(result);
+      // console.log(result);
 
-
-
-    var notification = "";
-    var notiLink = "";
-    var conflict = "";
-    var notiIcon = "";
+      var data = JSON.parse(result);
 
 
-    for (i = 0; i < data.length; i++) {
-      var obj = data[i];
 
-      console.log('INSIDE NOTI LOOP');
+      var notification = "";
+      var notiLink = "";
+      var conflict = "";
+      var notiIcon = "";
 
 
-      if (obj.type == 'commented') {
+      for (i = 0; i < data.length; i++) {
+        var obj = data[i];
 
-        notiIcon = 'far fa-comment-dots';
-        conflict = "commented on your post";
+        console.log('INSIDE NOTI LOOP');
 
-      } else if (obj.type == 'liked') {
 
-        notiIcon = 'far fa-thumbs-up';
-        conflict = "liked your post";
+        if (obj.type == 'commented') {
 
-      } else if (obj.type == 'post') {
+          notiIcon = 'far fa-comment-dots';
+          conflict = "commented on your post";
 
-        notiIcon = 'far fa-user';
-        conflict = "posted";
+        } else if (obj.type == 'liked') {
 
-      } else if (obj.type == 'request') {
-        conflict = 'sent you a request';
-        notiIcon = 'fas fa-user-plus';
-        notiLink = "requests.php?notiID=$notiID";
-      }
+          notiIcon = 'far fa-thumbs-up';
+          conflict = "liked your post";
 
-      if (obj.type != 'request') {
-        notiLink = `
+        } else if (obj.type == 'post') {
+
+          notiIcon = 'far fa-user';
+          conflict = "posted";
+
+        } else if (obj.type == 'request') {
+          conflict = 'sent you a request';
+          notiIcon = 'fas fa-user-plus';
+          notiLink = "requests.php?notiID=$notiID";
+        }
+
+        if (obj.type != 'request') {
+          notiLink = `
        notification.php?postID=${obj.postID}&type=${obj.type}&notiID=${obj.notiID} `;
 
-      }
+        }
 
 
-      var notification =
-        `<a href=${notiLink} class='notification noSeen'>
+        var notification =
+          `<a href=${notiLink} class='notification noSeen'>
           
                 <span class='notification-image'>
                 <img src='${obj.profilePic}' class='post-avatar post-avatar-30' />
@@ -814,19 +816,20 @@ function notificationRefresh() {
                 <span class='notification-info'>
             <span class='notification-text'>${obj.name} has ${conflict}</span><i class='noti-icon ${notiIcon}'></i><span class='noti-time'>Now</span></span></a>
 `;
-      // Dropdown
-      document.querySelector(`.notifications-dropdown`).innerHTML =
-        notification + document.querySelector(`.notifications-dropdown`).innerHTML;
+        // Dropdown
+        document.querySelector(`.notifications-dropdown`).innerHTML =
+          notification + document.querySelector(`.notifications-dropdown`).innerHTML;
 
-      if (document.querySelector('.notifications')) {
-        document.querySelector(`.notifications`).innerHTML =
-          notification + document.querySelector(`.notifications`).innerHTML;
+        if (document.querySelector('.notifications')) {
+          document.querySelector(`.notifications`).innerHTML =
+            notification + document.querySelector(`.notifications`).innerHTML;
+        }
       }
-    }
-    if (data.length)
-      dropdownCountAjax(1, 'noti');
+      if (data.length)
+        dropdownCountAjax(1, 'noti');
 
-  });
+    });
+  }
 }
 
 
@@ -957,33 +960,33 @@ function messageRefresh() {
 
 
 function refreshRecentConvos() {
+  if (window.location.pathname != '/socioConnect/index.php') {
+    ajaxCalls("GET", "./includes/AjaxHandlers/AJAX.php?recentConvo=1").then(function (result) {
+      var data = JSON.parse(result);
 
-  ajaxCalls("GET", "./includes/AjaxHandlers/AJAX.php?recentConvo=1").then(function (result) {
-    var data = JSON.parse(result);
+      if (!(data.notEmpty == "Bilal")) {
+        console.log(data);
 
-    if (!(data.notEmpty == "Bilal")) {
-      console.log(data);
+        // document.querySelector(".recent-chats-dropdown").innerHTML = "";
 
-      // document.querySelector(".recent-chats-dropdown").innerHTML = "";
+        // recentMessage = "";
 
-      // recentMessage = "";
+        for (i = data.length - 1; i >= 0; i--) {
+          var obj = data[i];
+          if (document.querySelector(".recent-chats .recent-user-" + obj.fromID)) {
+            document.querySelector(".recent-chats").removeChild(document.querySelector(".recent-chats .recent-user-" + obj.fromID));
+          }
 
-      for (i = data.length - 1; i >= 0; i--) {
-        var obj = data[i];
-        if (document.querySelector(".recent-chats .recent-user-" + obj.fromID)) {
-          document.querySelector(".recent-chats").removeChild(document.querySelector(".recent-chats .recent-user-" + obj.fromID));
-        }
-
-        if (document.querySelector(".recent-chats-dropdown .recent-user-" + obj.fromID)) {
-          document.querySelector(".recent-chats-dropdown").removeChild(document.querySelector(".recent-chats-dropdown .recent-user-" + obj.fromID));
-        }
+          if (document.querySelector(".recent-chats-dropdown .recent-user-" + obj.fromID)) {
+            document.querySelector(".recent-chats-dropdown").removeChild(document.querySelector(".recent-chats-dropdown .recent-user-" + obj.fromID));
+          }
 
 
-        var recentMessage = `
+          var recentMessage = `
         <div class='recent-user-div recent-user-${obj.fromID} noSeen'>
           <a href='messages.php?id=${
-          obj.fromID
-          }' class='recent-user'>
+            obj.fromID
+            }' class='recent-user'>
             <span class='recent-user-image'>
               <img src='${obj.pic}' class='post-avatar post-avatar-40' />
             </span>
@@ -999,23 +1002,24 @@ function refreshRecentConvos() {
           </span>
         </div>
         `;
-        if (document.querySelector(".recent-chats")) {
-          document.querySelector(".recent-chats").innerHTML =
-            recentMessage + document.querySelector(".recent-chats").innerHTML;
+          if (document.querySelector(".recent-chats")) {
+            document.querySelector(".recent-chats").innerHTML =
+              recentMessage + document.querySelector(".recent-chats").innerHTML;
+          }
+
+
+          if (document.querySelector(".recent-chats-dropdown")) {
+            console.log(recentMessage);
+            document.querySelector(".recent-chats-dropdown").innerHTML =
+              recentMessage + document.querySelector(".recent-chats-dropdown").innerHTML;
+          }
         }
 
 
-        if (document.querySelector(".recent-chats-dropdown")) {
-          console.log(recentMessage);
-          document.querySelector(".recent-chats-dropdown").innerHTML =
-            recentMessage + document.querySelector(".recent-chats-dropdown").innerHTML;
-        }
+        dropdownCountAjax(2, 'msg');
       }
-
-
-      dropdownCountAjax(2, 'msg');
-    }
-  });
+    });
+  }
 }
 
 
@@ -1339,29 +1343,31 @@ function toggleDropdown(type) {
 
 /*  --------------- Closing Dropdowns when other areas are clicked ------------------ */
 window.onclick = function (e) {
-  if (e.srcElement.className != "search-input") {
-    document.querySelector(".search-result").style.display = "none";
-  }
-
-  if (document.querySelector('.search-result-message') && e.srcElement.className != "search-result-message") {
-
-    document.querySelector(".search-result-message").style.display = "none";
-
-  }
-
-
-
-  // Will loop through the array of dropdowns
-  let arr = ["noti", "msg", "req"];
-  arr.forEach(function (value) {
-    if (
-      !e.srcElement.classList.contains(`${value}-click`) &&
-      !e.srcElement.classList.contains(`${value}-dropdown`)
-    ) {
-      // console.log('Here');
-      document.querySelector(`.${value}-dropdown`).style.display = "none";
+  if (window.location.pathname != '/socioConnect/index.php') {
+    if (e.srcElement.className != "search-input") {
+      document.querySelector(".search-result").style.display = "none";
     }
-  });
+
+    if (document.querySelector('.search-result-message') && e.srcElement.className != "search-result-message") {
+
+      document.querySelector(".search-result-message").style.display = "none";
+
+    }
+
+
+
+    // Will loop through the array of dropdowns
+    let arr = ["noti", "msg", "req"];
+    arr.forEach(function (value) {
+      if (
+        !e.srcElement.classList.contains(`${value}-click`) &&
+        !e.srcElement.classList.contains(`${value}-dropdown`)
+      ) {
+        // console.log('Here');
+        document.querySelector(`.${value}-dropdown`).style.display = "none";
+      }
+    });
+  }
 };
 
 /* ------------------------------------------------------------------------------ */
@@ -1466,24 +1472,31 @@ function saveNewPassword(newPass) {
   });
 }
 
-function submitFrogotPassForm() {
+function submitForgotPassForm() {
+  console.log("function clled");
   var email = document.querySelector("input[name = 'email']").value;
-  var answer = document.querySelector("input[name = 'answer']").value;
+  var answer = document.querySelector(".forgot-password-input").value;
+  console.log('answer : ', answer);
   if (answer.trim().length != 0) {
+    console.log('not trimmed');
     ajaxCalls("GET", `./includes/AjaxHandlers/AJAX2.php?validateAnswer=1&answer=${answer.toLowerCase()}&email=${email}`).then(function (result) {
+      console.log("result : ");
+      console.log(result);
       if (result == "Yes") {
         var editDiv = document.querySelector(".forgot-password-div");
         editDiv.innerHTML = `<span><h1 class = "forgot-password-div-heading">Set New Password</h1></span>
                              <span class="forgot-password-div-close" onclick="hideForgotPassWindow()">&times;</span>
                              <form action = "javascript:void(0)" method = "post" id = "changetPassForm">                          
-                             <label class = "user-info-for-edit">New Password : <input type = "password" name = "newPassword" class = "user-edit-new-password" autocomplete="off" maxlength= "255" required autofocus></label><br>
-                             <label class = "user-info-for-edit">Confirm Password : <input type = "password" name = "rePass" class = "user-edit-new-repeat-password" autocomplete="off" maxlength= "255" required></label><br>
-                             <input type = "submit" value = "Save New Password" name="submit" class = "user-edit-save" onclick = "changePassword()">`
+                             <label class = "user-info-for-edit"><input type = "password" name = "newPassword" placeholder='Password' class = "change-pass-input" autocomplete="off" maxlength= "255" required autofocus></label><br>
+                             <label class = "user-info-for-edit"><input type = "password" name = "rePass" class = "change-pass-input" placeholder='Confirm Password' autocomplete="off" maxlength= "255" required></label><br>
+                             <input type = "submit" value = "Save New Password" name="submit" class = "password-edit-save" onclick = "changePassword()">`
       }
       else
         document.querySelector(".forgot-password-message").innerHTML = "Wrong Answer!";
     });
   }
+
+  console.log("function exit");
 }
 
 function hideForgotPassWindow() {
@@ -1499,7 +1512,7 @@ function showForgotPassWindow() {
   var email = document.querySelector("input[name = 'email-for-forgot-pass']").value;
   ajaxCalls("GET", `./includes/AjaxHandlers/AJAX2.php?check_answer=1&email=${email}`).then(function (result) {
     if (result.trim() != "")
-      document.querySelector(".forgot-password-question").innerHTML = "Q. " + result;
+      document.querySelector(".forgot-password-question").innerHTML = result;
     else
       document.querySelector(".forgot-password-question").innerHTML = "No Question Selected";
   });
