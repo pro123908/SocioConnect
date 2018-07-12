@@ -18,7 +18,7 @@ if (isset($_SESSION['user_id'])) {
 // POST request made to this file
 // Passed login information with the request
 
-if (isset($_POST['submit'])) { // If form is submitted
+if (isset($_POST['loginSubmit'])) { // If form is submitted
     // Email of the user
     $email = mysqli_real_escape_string($connection, $_POST['email']);
     $_SESSION['user_email'] = $email;
@@ -47,6 +47,44 @@ if (isset($_POST['submit'])) { // If form is submitted
 
         }
     }
+} elseif (isset($_POST['signSubmit'])) {
+    $fname = mysqli_real_escape_string($connection, $_POST['fname']); // First name
+    $lname = mysqli_real_escape_string($connection, $_POST['lname']); // Last name
+    $email = mysqli_real_escape_string($connection, $_POST['email']); // Email
+    $password = hashString(mysqli_real_escape_string($connection, $_POST['password'])); // Password
+    $age = mysqli_real_escape_string($connection, $_POST['age']); //Age
+    $gender = mysqli_real_escape_string($connection, $_POST['genderBox']); // Gender
+    $question = mysqli_real_escape_string($connection, $_POST['question']);
+    $answer = mysqli_real_escape_string($connection, $_POST['answer']);
+    // Placing all fields value in session variables
+    $_SESSION['s_first_name'] = $fname;
+    $_SESSION['s_last_name'] = $lname;
+    $_SESSION['s_email'] = $email;
+    $_SESSION['s_age'] = $age;
+    $_SESSION['s_question'] = $question;
+    $_SESSION['s_answer'] = $answer;
+    // Validating the value of input fields and checking if user exists already?
+    if (!(formValidation($email, $_POST['password'], $_POST['repeatPassword']))) {
+        redirection('index.php');
+    } else {
+        // If fields are validated then adding the user to database
+        if ($gender == "female") {
+            $profile_pic = "assets/profile_pictures/female.jpg";
+        } else {
+            $profile_pic = "assets/profile_pictures/male.jpg";
+        }
+        $answer = strtolower($answer);
+        $queryResult = queryFunc("INSERT INTO users(first_name,last_name,email,password,age,gender,profile_pic,question,answer) VALUES('$fname','$lname','$email','$password','$age','$gender','$profile_pic','$question','$answer')");
+
+        //Selecting ID of new inserted user
+        $ID = mysqli_insert_id($connection);
+
+        if ($queryResult && $ID) {
+            $_SESSION['user'] = $fname . ' ' . $lname; // Name of new user inserted
+            $_SESSION['user_id'] = $ID;
+            redirection('main.php');
+        }
+    }
 }
 //If user has already logged In and coming from another page to here
 elseif (isset($_SESSION['user_id'])) {
@@ -54,40 +92,89 @@ elseif (isset($_SESSION['user_id'])) {
 }
 
 ?>
-      <div class='header-links header-links-login'>
-        <a href="signUp.php" class="header-btn mr-1">Sign Up</a>
-      </div>
-
-      <!-- div for completing header -->
-    </div>
-
-    <div class="login-container">
-      <h1 class="login-heading">Welcome</h1>
+<div class="login-container">
+     <div class='login-logo'></div>
+     <div class='login-info'>
+      <!-- <h1 class="login-heading">Welcome</h1> -->
+      <div class='login-form-container'>
       <form action="index.php" method='POST' class="login-form">
         <input type="text"  name='email' placeholder="Email" class="login-input" value= '<?php $value = isset($flag) ? $_SESSION['user_email'] : "";
-echo $value;?>' required><br>
-        <input type="password" name='password' placeholder="Password" class="login-input"  required><br>
-        <input type="submit" name='submit' class="login-submit">
+echo $value;?>' required>
+        <input type="password" name='password' placeholder="Password" class="login-input"  required>
+        <input type="submit" name='loginSubmit' class="login-submit" value='Login'>
       </form>
 
-      <?php 
-        if(isset($_SESSION['login_message'])){
-          if($_SESSION['login_message'] != ''){
-            $data = $_SESSION['login_message'];
-            $_SESSION['login_message'] = '';
-            if($data == "Wrong Password")
-              $data .= "<a href= 'javascript:showForgotPassWindow()' class='forgot-password-text'>Forgot Password</a>";
-          }else{
-            $data = '';
-          }
-          echo "<h3>{$data}</h3>";
+    <?php
+if (isset($_SESSION['login_message'])) {
+    $display = "<div class='login-error-container'>";
+    $forgotPassword = '';
+    if ($_SESSION['login_message'] != '') {
+        $message = $_SESSION['login_message'];
+        $_SESSION['login_message'] = '';
+        if ($message == "Wrong Password") {
+            $forgotPassword = "<a href= 'javascript:showForgotPassWindow()' class='forgot-password-text'>Forgotten Password?</a>";
         }
-      ?>
+
+    } else {
+        $message = '';
+    }
+
+    $display .= "<span class='login-error-msg'>{$message}</span>";
+    $display .= $forgotPassword . "</div>";
+    echo $display;
+}
+?>
+
+</div>
+
+
+<div class='sign-form-container'>
+
+    <form action="index.php" method='POST' class="sign-form">
+      <input type="text" class='sign-input' name='fname' placeholder='First Name' maxlength="20" minlength='3' required value=<?php if (isset($_SESSION['s_first_name'])) {
+    echo $_SESSION['s_first_name'];
+}?> >
+  <input type="text"  name='lname' class='sign-input' placeholder='Last Name' maxlength="20" minlength='3' required value=<?php if (isset($_SESSION['s_last_name'])) {
+    echo $_SESSION['s_last_name'];
+}?>><br>
+  <input type="email"  name='email' class='sign-input' placeholder='Email' required value=<?php if (isset($_SESSION['s_email'])) {
+    echo $_SESSION['s_email'];
+}?>><?php if (isset($_SESSION['s_email_error'])) {
+    echo "<span class='error-msg'>{$_SESSION['s_email_error']}</span>";
+}?><br>
+  <input type="password"  name='password' class='sign-input' placeholder='Password' maxlength="20" minlength='8' required ><br>
+  <input type="password" name='repeatPassword' class='sign-input' placeholder='Confirm Password' maxlength="20" minlength='8' required><?php if (isset($_SESSION['s_pass_error'])) {
+    echo $_SESSION['s_pass_error'];
+}?><br>
+  <input type="text" name='age' placeholder='Birthday' onfocus="(this.type='date')"   class='sign-input' required value=<?php if (isset($_SESSION['s_age'])) {
+    echo $_SESSION['s_age'];
+}?>><br>
+  <select name="genderBox"  required class='sign-input'>
+    <option value="Male" class='option'>Male</option>
+    <option value="Female" class='option'>Female</option>
+    <option value="Other" class='option'>Other</option>
+  </select><br>
+  <input type="text" class='sign-input' name='question' placeholder='Securtiy Question' maxlength="255" minlength='3' required value="<?php if (isset($_SESSION['s_question'])) {
+    echo $_SESSION['s_question'];
+}?>" ><br>
+  <input type="text"  name='answer' class='sign-input' placeholder='Answer' maxlength="255" minlength='3' required value="<?php if (isset($_SESSION['s_answer'])) {
+    echo $_SESSION['s_answer'];
+}?>"><br>
+
+  <input type="submit" name='signSubmit' class='sign-submit' value='Register'>
+      </form>
+
+</div>
+</div>
+
+      <?php
+
+?>
       <div class= "forgot-password-div-container">
         <div class="forgot-password-div">
             <span><h1 class = "forgot-password-div-heading">Forgot Password</h1></span>
             <span class="forgot-password-div-close" onclick="hideForgotPassWindow()">&times;</span>
-      
+
             <div class = "forgot-password-div-content">
                 <div class='forgot-password-question'></div>
                 <form action = "javascript:void(0)" method = "post" id = "forgotPassForm">
@@ -97,6 +184,6 @@ echo $value;?>' required><br>
             </div>
             <div class = "forgot-password-message"></div>
         </div>
-    </div>  
     </div>
+
     <script src="./includes/script.js" ></script>

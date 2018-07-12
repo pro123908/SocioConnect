@@ -43,6 +43,7 @@ body {
 }
 
 .main-container {
+ 
   /* background-image: linear-gradient(to right bottom, #243337, #638a8c);
   background-size: auto;
   background-repeat: no-repeat; */
@@ -248,13 +249,42 @@ body {
 /* ------------------ Login Page Styling ----------------------- */
 
 .login-container {
-  background: linear-gradient(to right bottom, #243337, #638a8c) no-repeat center center fixed;
+  /* background: linear-gradient(to right bottom, #243337, #638a8c) no-repeat center center fixed; */
+  background-image: url("../login4.jpg") ;
+  background-size: cover;
+  background-repeat: no-repeat;
+ display: flex;
+  height: 100%;
+  
+}
+
+.login-logo{
+  
+  flex: 1;
+}
+
+.login-info{
+  flex: 1;
+  height: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
-  height: 91vh;
-  overflow: scroll;
+}
+
+.login-form-container{
+  background-color: rgba(0,0,0,0.5);
+  padding: 20px;
+  margin-top: 10px;
+  margin-left: 40px;
+}
+
+.sign-form-container{
+  /* flex: 1; */
+  margin-top: 20px;
+  background-color: rgba(0,0,0,0.5);
+  width: 60%;
+  padding: 20px 30px 10px;
+  margin-left: 40px;
 }
 
 /* Login Page Heading */
@@ -266,57 +296,99 @@ body {
 /* Login Page Form */
 
 .login-form {
-  flex: 0 0 40%;
-  width: 50%;
+}
+
+.sign-form{
   text-align: center;
 }
 
 /* Login Page Inputs */
 
 .login-input {
+  padding: 5px;
   border: none;
-  padding: 10px;
-  width: 60%;
-  background-color: transparent;
+  background: transparent;
+  border-bottom: 1px solid #a0aeaf;
+  margin-right: 10px;
+ color: #ced7d7; 
+}
+
+.sign-input{
+  padding: 5px;
+  background: transparent;
+  border: none;
   border-bottom: 1px solid #a0aeaf;
   margin-bottom: 20px;
-  border-radius: 10px;
+  width: 100%;
+ color: #ced7d7;
+}
+
+.login-error-container{
+  text-align: center;
+  margin-top: 10px;
+
+}
+
+.error-msg,.login-error-msg{
   color: #ced7d7;
+  font-size: 14px;
+}
+
+.sign-input .option{
+  background: rgba(0, 0, 0, 1);
+  
 }
 
 /* Login Page inputs placeholder text */
 
-.login-input::placeholder {
+.login-input::placeholder,.sign-input::placeholder {
   color: #ced7d7;
 }
 
 /* When inputs are focused */
 
-.login-input:focus {
+.login-input:focus,.sign-input:focus {
+
   outline: 0;
-  border-width: 3px;
-  font-weight: 900;
-  letter-spacing: 2px;
+  
+}
+
+
+ @-webkit-keyframes autofill {
+  to {
+      color: #ced7d7;
+      background: transparent;
+  }
+}
+
+input:-webkit-autofill {
+  -webkit-animation-name: autofill;
+  -webkit-animation-fill-mode: both;
 }
 
 /* Login Page submit button */
 
-.login-submit {
-  width: 40%;
+.login-submit, .sign-submit {
   background-color: transparent;
   border: 1px solid #a0aeaf;
   padding: 10px;
-  border-radius: 10px;
+  /* border-radius: 10px; */
   color: #ced7d7;
   cursor: pointer;
 }
 
+.login-submit:focus{
+  outline: none;
+}
+
+
+
 /* Submit button hover */
 
 .login-submit:hover {
-  background-color: #ffffff;
+  /* background-color: #ffffff;
   color: #000000;
-  border-color: #ffffff;
+  border-color: #ffffff; */
 }
 
 /* ------------------------- Login Page Ended ------------------------------ */
@@ -327,6 +399,7 @@ body {
 
 /* Content Area */
 .content-area {
+  
   display: flex;
   /* justify-content: space-between; */
   margin: 50px 100px 10px 100px;
@@ -1631,8 +1704,10 @@ input[type="file"]:hover {
 }
 
 .forgot-password-text{
-  display: block;
   text-decoration: none;
+  color: #ced7d7;
+  font-size: 14px;
+  display: block;
 }
 
 .forgot-password-div-container{

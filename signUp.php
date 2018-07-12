@@ -15,7 +15,7 @@ if (isset($_POST['submit'])) {
     $password = hashString(mysqli_real_escape_string($connection, $_POST['password'])); // Password
     $age = mysqli_real_escape_string($connection, $_POST['age']); //Age
     $gender = mysqli_real_escape_string($connection, $_POST['genderBox']); // Gender
-    $question = mysqli_real_escape_string($connection, $_POST['question']); 
+    $question = mysqli_real_escape_string($connection, $_POST['question']);
     $answer = mysqli_real_escape_string($connection, $_POST['answer']);
     // Placing all fields value in session variables
     $_SESSION['s_first_name'] = $fname;
@@ -49,7 +49,7 @@ if (isset($_POST['submit'])) {
 } elseif (isset($_SESSION['user_id'])) {
     // If user is logged in already
     redirection('main.php');
- }
+}
 ?>
 
 <div class='header-links header-links-login'>
@@ -82,9 +82,9 @@ if (isset($_POST['submit'])) {
     echo $_SESSION['s_age'];
 }?>><br>
   <select name="genderBox"  required class='login-input'>
-    <option value="Male">Male</option>
-    <option value="Female">Female</option>
-    <option value="Other">Other</option>
+    <option value="Male" class='option'>Male</option>
+    <option value="Female" class='option'>Female</option>
+    <option value="Other" class='option'>Other</option>
   </select><br>
   <input type="text" class='login-input' name='question' placeholder='Securtiy Question' maxlength="255" minlength='3' required value="<?php if (isset($_SESSION['s_question'])) {
     echo $_SESSION['s_question'];
@@ -93,7 +93,7 @@ if (isset($_POST['submit'])) {
     echo $_SESSION['s_answer'];
 }?>"><br>
 
-  <input type="submit" name='submit' class='login-submit' value='Register'>
+  <input type="submit" name='signSubmit' class='login-submit' value='Register'>
       </form>
     </div>
 

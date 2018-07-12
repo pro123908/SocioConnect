@@ -19,19 +19,21 @@ ob_start(); // Turn on ouput buffering
 ?>')">
 
   <!-- Starting div of main content area of the website, where all the stuff lies -->
+  <?php if (isset($_SESSION['user_id'])) {
+    $user = $_SESSION['user']; // loggedIn username ?>
   <div class="main-container">
 
     <!-- Start of header section -->
+
+
     <div class="header-container">
       <div class="header">
         <div class="header-heading">
           <h1><a href="main.php" class="heading_link">Socio Connect</a></h1>
         </div>
 
-        <?php
+    <?php
 // Displaying this navbar if user is logged in
-if (isset($_SESSION['user_id'])) {
-    $user = $_SESSION['user']; // loggedIn username
 
     // Getting user pic
     $pic = getUserProfilePic($_SESSION['user_id']);
@@ -118,5 +120,6 @@ $value = CountDropdown(3);
         <!-- ********************* Header Links **********************  -->
       </div>
     <!-- ***************************** Header *************************** -->
+    </div>
   <?php }?>
-  </div>
+
