@@ -2369,6 +2369,7 @@ function getUploadedPics($userID){
     $posts = queryFunc("SELECT post_id,pic from posts where pic != '' AND user_id = '$userID' order by post_id desc limit 10");
     if(isData($posts)){
         while($post = isRecord($posts)){
+            $post['pic'] = "./assets/post_pics/" . $post['pic'];
             $content = <<<PIC
                 <a href = "./notification.php?postID={$post['post_id']}&type=''&notiID=''" class="recent-uploads">
                     <img src='{$post['pic']}' class='recent-upload-image'>
