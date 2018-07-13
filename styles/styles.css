@@ -1,34 +1,6 @@
 
 /* Edited By Bilal */
-.footer{
-  padding-bottom: 20px;
-  background-color: #000;
-}
 
-.footer-logo{
-  color: #ff763a;
-  font-size: 30px;
-  text-align: center;
-  font-family: 'Berkshire Swash',sans-serif;
-  padding-top: 30px;
-}
-
-.copyright{
-  color: #fff;
-  text-align: center;
-  font-size: 14px;
-}
-
-.owners{
-  color: #fff;
-  text-align: center;
-  margin: 10px 0px;
-  
-}
-
-.owner-names{
-  font-family: 'Merienda One',sans-serif;
-}
 
 .hidden {
   display: none;
@@ -117,7 +89,8 @@ body {
 
 .heading_link {
   text-decoration: none;
-  color: #fff;
+  color: #ff763a;
+  
 }
 
 /* Main header heaing container */
@@ -125,6 +98,8 @@ body {
 .header-heading {
   margin-left: 10px;
   margin-top: 15px;
+  
+  font-family: 'Berkshire Swash',sans-serif;
 }
 
 /* Buttons Present on header */
@@ -377,7 +352,7 @@ body {
 
 /* Login Page inputs placeholder text */
 
-.login-input::placeholder,.sign-input::placeholder {
+.login-input::placeholder,.sign-input::placeholder,.search-input::placeholder {
   color: #ced7d7;
 }
 
@@ -1871,4 +1846,35 @@ input[type="file"]:hover {
 .recent-upload-image{
   width : 48%;
   height: 120px;
+}
+
+.footer{
+  padding-bottom: 20px;
+  background-color: #000;
+}
+
+.footer-logo{
+  color: #ff763a;
+  font-family: 'Berkshire Swash',sans-serif;
+  font-size: 30px;
+  text-align: center;
+  
+  padding-top: 30px;
+}
+
+.copyright{
+  color: #fff;
+  text-align: center;
+  font-size: 14px;
+}
+
+.owners{
+  color: #fff;
+  text-align: center;
+  margin: 10px 0px;
+  
+}
+
+.owner-names{
+  font-family: 'Merienda One',sans-serif;
 }
