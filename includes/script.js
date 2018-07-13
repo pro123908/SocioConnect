@@ -512,7 +512,17 @@ function saveEditPost(postID) {
           }
         } else {
           //response was empty this means that there is no picture to show, so first check, if div for images is present then hide it
-          if (imgDiv) imgDiv.style.display = "none";
+          if (imgDiv) {
+            imgDiv.style.display = "none";
+            if (window.location.pathname == "/socioConnect/timeline.php") {
+              ajaxCalls("GET", `./includes/AjaxHandlers/AJAX2.php?refreshRecentUploads=1`).then(function (result) {
+                document.querySelector(".recenet-uploads-content").innerHTML = result;
+                var recenetUploads = document.querySelectorAll(".recent-uploads");
+                if (recenetUploads.length == 0)
+                  document.querySelector(".recent-uploads-footer").innerHTML = "No Recent Uploads";
+              });
+            }
+          }
         }
 
         //Now hide the editing div and write Edited in the header section of the post
@@ -1119,6 +1129,7 @@ function removeFriend(id) {
       for (i = 0; i < data.length; i++) {
         flag++;
         var obj = data[i];
+        obj.profile_pic = "./assets/profile_pictures/" + obj.profile_pic;
         var friend = `
           <div class="friend-container">
             <div class='friend'>
