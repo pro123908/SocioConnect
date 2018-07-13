@@ -1,0 +1,501 @@
+.hidden {
+  display: none;
+}
+
+.show {
+  display: visible;
+}
+/* 
+#header {
+  background-color: #000;
+  color: #fff;
+}
+
+#header .headerHeading {
+  display: inline-block;
+  padding-left: 20px;
+  color: #def720;
+  font-size: 40px;
+  margin-bottom: 10px;
+  margin-top: 10px;
+  text-decoration: none;
+}
+
+.header_links{
+  text-decoration: none;
+  color: #fff;
+  float: right;
+  padding: 25px;
+} */ 
+
+.firstSection {
+  text-align: center;
+}
+
+.firstSection h1 {
+  color: brown;
+  text-transform: uppercase;
+}
+
+.notificationArea {
+  text-align: center;
+  
+  padding: 10px;
+  
+}
+
+.notificationArea .notifications{
+  display: inline-block;
+  
+  padding: 20px;
+  box-shadow: 0 1px 2px black
+}
+
+#postArea {
+  text-align: center;
+}
+
+#postHeading {
+  text-transform: uppercase;
+  text-align: center;
+  letter-spacing: 5px;
+}
+
+.post {
+  box-shadow: 0 2px 3px black;
+  padding: 20px;
+  width: 500px;
+  display: inline-block;
+  text-align: left;
+  margin-bottom: 30px;
+}
+
+.post p {
+  letter-spacing: 2px;
+}
+
+.post .commentBtn, .post .likeBtn, #commentBtn {
+  text-decoration: none;
+  display: inline-block;
+  color: white;
+  width: 20%;
+  border-radius: 5px;
+  background-color: #0ed15c;
+  padding: 10px;
+  text-align: center;
+  border: none;
+}
+
+.post .deleteBtn {
+  text-decoration: none;
+  color: white;
+  background-color: #0ed15c;
+  padding: 8px;
+  border-radius: 5px;
+  float: right;
+  margin-top: 2px;
+}
+
+.post .user {
+  background-color: #78e892;
+  display: inline-block;
+  width: 100%;
+  padding: 10px;
+  font-weight: bold;
+}
+
+.post .postTime {
+  color: #888989;
+  display: inline-block;
+  font-size: 13px;
+  padding-left: 10px;
+  padding-top: 5px;
+  letter-spacing: 1px;
+}
+
+#addPost {
+  text-align: center;
+  margin-bottom: 80px;
+}
+
+#addPost h2 {
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+#addPost textarea {
+  border: none;
+  padding: 10px;
+  width: 500px;
+  box-shadow: 0 2px 5px black;
+}
+
+#addPost textarea::placeholder {
+  color: #0ed15c;
+  font-weight: bold;
+  font-size: 20px;
+}
+
+#addPost .postBtn {
+  border: none;
+  display: inline-block;
+  color: white;
+  width: 200px;
+  border-radius: 5px;
+  background-color: #0ed15c;
+  padding: 10px;
+  text-align: center;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.post .postContent {
+  margin-left: 20px;
+  font-size: 16px;
+}
+
+.post .likeCount {
+  display: inline-block;
+  width: 100%;
+  padding-left: 10px;
+  font-size: 14px;
+  color: #888989;
+  margin-bottom: 5px;
+}
+
+.post .comment {
+  background-color: #f2f7ef;
+  color: black;
+  margin-top: 20px;
+  padding: 10px;
+}
+
+.post .notiComment{
+  background-color: #ecff81;
+}
+
+.post .commentUser {
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.post .commentText {
+  font-size: 16px;
+}
+
+.post .commentDelete {
+  float: right;
+  text-decoration: none;
+  color: #0ed15c;
+  font-size: 12px;
+  padding: 3px;
+}
+
+.post .commentTime {
+  display: inline-block;
+  font-size: 13px;
+  color: #54aa38;
+  width: 100%;
+  padding-left: 5px;
+  letter-spacing: 1px;
+}
+
+.post .commentForm {
+  margin-top: 20px;
+}
+
+.post .commentForm input[type='text'] {
+  border: none;
+  box-shadow: 0 1px 1px black;
+  padding: 10px;
+  width: 70%;
+}
+
+.post .commentForm input[type='submit'] {
+  display: inline-block;
+  color: white;
+  width: 20%;
+  border-radius: 5px;
+  background-color: #0ed15c;
+  padding: 10px;
+  text-align: center;
+  border: none;
+  margin-left: 5px;
+}
+
+.personal_info {
+  border: solid 1px black;
+  display: inline-block;
+  width: 300px;
+  text-align: center;
+  margin: 50px 0 0 15px;
+}
+
+.add_post_timeline {
+  display: inline-block;
+  margin: 50 0 0 155px;
+}
+
+.dp {
+  height: 200px;
+  width: 200px;
+  margin: 10px 0 10px 0;
+}
+
+.dp:hover {
+  cursor: pointer;
+}
+
+/* For Picture Animation */
+
+/* Where does it applies bhai? */
+
+.format {
+  width: 250px;
+  height: 230px;
+}
+
+/* Modal starts */
+
+/* The Modal (background) */
+
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 500;
+  padding-top: 100px;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+/* Modal Content (image) */
+
+.modal-content {
+  margin: auto;
+  display: block;
+  height: 80%;
+}
+
+/* Add Animation - Zoom in the Modal */
+
+.modal-open {
+  animation-name: zoomIn;
+  animation-duration: 0.6s;
+}
+
+@keyframes zoomIn {
+  from {
+    transform: scale(0)
+  }
+  to {
+    transform: scale(1)
+  }
+}
+
+.modal-close {
+  animation-name: zoomOut;
+  animation-duration: 0.6s;
+}
+
+@keyframes zoomOut {
+  from {
+    transform: scale(1)
+  }
+  to {
+    transform: scale(0)
+  }
+}
+
+/* The Close Button */
+
+.close {
+  position: absolute;
+  top: 50px;
+  right: 10%;
+  color: #f1f1f1;
+  font-size: 40px;
+  font-weight: normal;
+  transition: 0.3s;
+}
+
+.close:hover, .close:focus {
+  color: #bbb;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* Animation Ended*/
+
+
+
+.formPic input[type='file'] {
+  display: block;
+}
+
+.resultDisplay {
+	padding: 5px 5px 0 5px;
+	height: 60px;
+	border-bottom: 1px solid #D3D3D3;
+}
+.resultDisplay a {
+  float: none;
+  text-decoration: none;
+}
+.resultDisplay:hover {
+	background-color: #EBEBEB;
+	text-decoration: none;
+}
+.liveSearchProfilePic img {
+	height: 50px;
+	border-radius: 25px;
+	margin: 1px 12px 0 2px;
+	float: left;
+}
+.liveSearchProfilePicForMessages img{
+  height: 38px !important; 
+}
+
+.liveSearchText {
+	background-color: transparent;
+	color: #1E96CA;
+}
+
+.liveSearchText p{
+	margin-left: 10px;
+	font-size: 12px;
+}
+
+#blue{
+  color: blue;
+  background-color: black;
+  height: 40px;
+  padding: 5px 5px;
+  /* float:left; */
+}
+#green{
+  color:green;
+  background-color: black;
+  height: 40px;
+  padding: 5px 5px;
+  /* float:right; */
+}
+#messages_area{
+  margin: 10px 10px;
+  padding: 10px;
+  font-size: 20px;
+}
+
+/* Notification Display */
+.notificationDisplay a{
+  text-decoration: none;
+  color : black;
+}
+
+.notificationDisplay small{
+  color: gray;
+}
+
+.notificationDisplay .noSeen{
+  color: #e31414;
+}
+
+.recent_chats_area{
+  width: 20%; 
+  background-color:aqua;
+  margin: 10px 10px;
+  padding: 10px 10px;
+  text-align: center;
+  height: 400px;
+  overflow: scroll;
+  display: inline-grid;
+}
+
+.recent_chats{
+  background-color: blue;
+  height: 300px;
+  overflow: scroll;
+}
+
+.recent_user{
+  border: 1px solid black;
+  padding: 10px 10px;
+  margin: 5px 5px;
+  height: 95pxpx;
+}
+
+.chat_box{
+  display: inline-grid;
+  margin: 10 100px;
+  width : 60%;
+  border: 1px solid black;
+  height: 585px;
+  overflow: scroll;
+}
+
+#convo_area{
+  margin: 5px 5px;
+}
+#convo_area h2,h3{
+  text-align: center;
+}
+
+.search_results_for_messages{
+  background-color: black;
+}
+
+.resultDisplayForMessages{
+  height: 40px;
+}
+#noti_id:hover #noti_desc {
+  display: block;
+}
+#msg_id:hover #msg_desc {
+  display: block;
+} 
+#req_id:hover #req_desc {
+  display: block;
+} 
+#newsfeed_id:hover #newsfeed_desc {
+  display: block;
+}
+#timeline_id:hover #timeline_desc {
+  display: block;
+}
+#logout_id:hover #logout_desc {
+  display: block;
+}
+#noti_desc, #logout_desc, #timeline_desc, #newsfeed_desc, #req_desc, #msg_desc{
+  display: none;
+  background-color:black;
+  color:white;
+  margin-left: 98px;
+  padding: 2px;
+  position: absolute;
+  z-index: 1000;
+  width:160px;
+  height:22px;
+  border-radius:5px;
+}
+#heading_link{
+text-decoration:none;
+color:#ced7d7
+}
+
+
+.forgot-password-div-container{
+  display: none;
+  color: purple;
+  position: fixed;
+  z-index: 500;
+  padding-top: 100px;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(236, 214, 214, 0.918);
+}
