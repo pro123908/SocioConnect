@@ -2,7 +2,7 @@
 
 require_once dirname(__FILE__,2) . '/functions.php';
 
-if(!isset($_SESSION['user_id']) && !isset($_GET['check_answer']) && !isset($_GET['validateAnswer']) && !isset($_GET['saveNewPassword'])){
+if(!isset($_SESSION['user_id']) && !isset($_GET['check_answer']) && !isset($_GET['validateAnswer']) && !isset($_GET['saveNewPassword']) && !isset($_GET['checkAttempts'])){
     redirection('../../index.php');
 }
 
@@ -150,20 +150,6 @@ else if(isset($_GET['check_answer'])){
             echo "No";
         }
     }
-else if(isset($_GET['validateAnswer'])){
-    $_GET['email'] = clearString($_GET['email']);    
-    $answer = queryFunc("SELECT answer from users where email = '{$_GET['email']}'");
-    if(isData($answer)){
-        $answer = isRecord($answer);
-        $_GET['answer'] = hashString(clearString($_GET['answer']));  
-        if($answer['answer'] == $_GET['answer'])
-            echo "Yes";
-        else
-            echo "No";    
-    }else{
-        echo "No";
-    }
-}
 else if(isset($_GET['saveNewPassword'])){    
     if(isset($_POST['password'])){
         $_POST['password'] = clearString($_POST['password']);  
@@ -173,7 +159,30 @@ else if(isset($_GET['saveNewPassword'])){
         echo "ok";
     }
 }
+else if(isset($_GET['validateAnswer'])){
+    $_GET['email'] = clearString($_GET['email']);    
+    $answer = queryFunc("SELECT answer from users where email = '{$_GET['email']}'");
+    if(isData($answer)){
+        $answer = isRecord($answer);
+        $_GET['answer'] = hashString(clearString($_GET['answer']));  
+        if($answer['answer'] == $_GET['answer'])
+            echo "Yes";
+        else{
+            echo "No";
+            updateWrongAttempts($_GET['email']); 
+        }
+   
+    }else{
+        echo "No";
+        updateWrongAttempts($_GET['email']);
+    }
+}
 else if(isset($_GET['refreshRecentUploads'])){    
         getUploadedPics($_SESSION['user_id']);
     }
+else if(isset($_GET['checkAttempts'])){    
+        checkAttempts(clearString($_GET['email']));
+    }    
+
+
 ?>
