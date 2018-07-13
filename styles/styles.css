@@ -1858,7 +1858,7 @@ input[type="file"]:hover {
   font-family: 'Berkshire Swash',sans-serif;
   font-size: 30px;
   text-align: center;
-  
+  letter-spacing: 10px;
   padding-top: 30px;
 }
 

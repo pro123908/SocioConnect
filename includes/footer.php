@@ -4,7 +4,7 @@
     </div>
     <div class='owners'>
         <span>Owned By</span>
-        <span class='owner-names'>Ahmed Abdullah & Bilal Ahmad</span>
+        <span class='owner-names'>Ahmed Abdullah, Bilal Asif & Bilal Ahmad</span>
     </div>
     <div class='copyright'>
         &copy; 2018 Copyrights. All Rights Reserved.

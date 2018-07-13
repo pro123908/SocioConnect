@@ -8,7 +8,7 @@ ob_start(); // Turn on ouput buffering
 
 <html>
   <head>
-    <link rel="stylesheet" href="./icons/css/all.css">
+    <link rel="stylesheet" href="./icons/css/all.css" >
     <link href='http://fonts.googleapis.com/css?family=Berkshire+Swash' rel='stylesheet' type='text/css'>
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700,800" rel="stylesheet">
     <link href='http://fonts.googleapis.com/css?family=Merienda+One' rel='stylesheet' type='text/css'>
