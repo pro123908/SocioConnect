@@ -24,19 +24,19 @@ $_SESSION['no_of_posts_changed'] = 0;
         <div class='recent-activities' id="recent_activities">
             <div class='recent-activities-heading'>Recent Activities</div>
             <div class='activities-content'>
-                <?php showRecentActivities(1, 10, 1); ?>
+                <?php showRecentActivities(1, 10, 1);?>
             </div>
             <div class="show-more-activities">
                 <?php
-                // Displaying relevant message according to the criteria
-                if ($_SESSION['more_activities'] == 1) {
-                    echo "<a href='allActivities.php' class='see-more'><span>See more</span></a>";
-                } else if ($_SESSION['more_activities'] == 0) {
-                    echo "<p class='see-more'>No Activities to Show</p>";
-                } else if ($_SESSION['more_activities'] == 2) {
-                    echo "<p class='see-more'>No More Activities to Show</p>";
-                }
-                ?>
+// Displaying relevant message according to the criteria
+if ($_SESSION['more_activities'] == 1) {
+    echo "<a href='allActivities.php' class='see-more'><span>See more</span></a>";
+} else if ($_SESSION['more_activities'] == 0) {
+    echo "<p class='see-more'>No Activities to Show</p>";
+} else if ($_SESSION['more_activities'] == 2) {
+    echo "<p class='see-more'>No More Activities to Show</p>";
+}
+?>
             </div>
         </div>
     </div>
@@ -45,38 +45,43 @@ $_SESSION['no_of_posts_changed'] = 0;
     <div class='post-area'>
         <div class='new-post'>
             <!-- Add post functionality -->
-            <?php addPost(); ?>
+            <?php addPost();?>
         </div>
 
         <div class='posts'>
-            <?php showPosts('a', 1, 10);  ?>
+            <?php showPosts('a', 1, 10);?>
         </div>
-        
+
         <div id='loading' class='loading-messages'></div>
     </div>
 
     <div class="friends-area">
         <div class='friend-heading'>Friends</div>
         <div class='friends-container'>
-            <?php displayFriends(10); ?>
+            <?php displayFriends(10);?>
         </div>
 
         <div class="show-more-friends">
             <?php
-                if ($_SESSION['more_friends'] == 1) {
-                    echo "<a href='requests.php' class='see-more'><span>See more</span></a>";
-                } else if ($_SESSION['more_friends'] == 0) {
-                    echo "<p class='see-more'>No Friends to Show</p>";
-                } else if ($_SESSION['more_friends'] == 2) {
-                    echo "<p class='see-more'>No More Friends to Show</p>";
-                }
-                unset($_SESSION['more_friends']);
-            ?>
+if ($_SESSION['more_friends'] == 1) {
+    echo "<a href='requests.php' class='see-more'><span>See more</span></a>";
+} else if ($_SESSION['more_friends'] == 0) {
+    echo "<p class='see-more'>No Friends to Show</p>";
+} else if ($_SESSION['more_friends'] == 2) {
+    echo "<p class='see-more'>No More Friends to Show</p>";
+}
+unset($_SESSION['more_friends']);
+?>
         </div>
     </div>
 </div>
 
 </body>
 </html>
+
+<?php
+
+require_once dirname(__FILE__) . '/includes/footer.php';
+?>
 
 <script src="./includes/script.js" ></script>
