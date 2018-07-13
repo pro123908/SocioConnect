@@ -12,6 +12,7 @@ $userID = $_SESSION['user_id'];
 // Request will be accepted or rejected based on user answer
 
 if (isset($_POST['accept'])) {
+    $_POST['id'] = clearString($_POST['id']);
     // If request is accepted
     acceptReq($_POST['id']);
 

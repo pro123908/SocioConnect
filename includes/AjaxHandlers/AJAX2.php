@@ -155,7 +155,7 @@ else if(isset($_GET['validateAnswer'])){
     $answer = queryFunc("SELECT answer from users where email = '{$_GET['email']}'");
     if(isData($answer)){
         $answer = isRecord($answer);
-        $_GET['answer'] = clearString($_GET['answer']);  
+        $_GET['answer'] = hashString(clearString($_GET['answer']));  
         if($answer['answer'] == $_GET['answer'])
             echo "Yes";
         else

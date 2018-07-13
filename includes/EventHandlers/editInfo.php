@@ -11,18 +11,17 @@ if (!isset($_POST['password'])) {
 }
 
 //Code for mysqli escape string and trimming whitespaces from beginning and end
-$pass = mysqli_real_escape_string($connection, trim($_POST['password']));
-$newPass = mysqli_real_escape_string($connection, trim($_POST['newPassword']));
-$school = mysqli_real_escape_string($connection, trim($_POST['school']));
-$college = mysqli_real_escape_string($connection, trim($_POST['college']));
-$university = mysqli_real_escape_string($connection, trim($_POST['university']));
-$work = mysqli_real_escape_string($connection, trim($_POST['work']));
-$contact = mysqli_real_escape_string($connection, trim($_POST['contact']));
-$age = mysqli_real_escape_string($connection, trim($_POST['age']));
-$gender = mysqli_real_escape_string($connection, trim($_POST['genderBox']));
-$question = mysqli_real_escape_string($connection, trim($_POST['question']));
-$answer = mysqli_real_escape_string($connection, trim($_POST['answer']));
-echo $answer;
+$pass = clearString($_POST['password']);
+$newPass = clearString($_POST['newPassword']);
+$school = clearString($_POST['school']);
+$college = clearString($_POST['college']);
+$university = clearString($_POST['university']);
+$work = clearString($_POST['work']);
+$contact = clearString($_POST['contact']);
+$age = clearString($_POST['age']);
+$gender = clearString($_POST['genderBox']);
+$question = clearString($_POST['question']);
+$answer = clearString($_POST['answer']);
 $answer = strtolower($answer);
 $pass = hashString($pass);
 if (strlen(trim($newPass)) > 7) {
