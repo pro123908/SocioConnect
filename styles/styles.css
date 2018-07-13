@@ -1,6 +1,34 @@
 
 /* Edited By Bilal */
+.footer{
+  padding-bottom: 20px;
+  background-color: #000;
+}
 
+.footer-logo{
+  color: #ff763a;
+  font-size: 30px;
+  text-align: center;
+  font-family: 'Berkshire Swash',sans-serif;
+  padding-top: 30px;
+}
+
+.copyright{
+  color: #fff;
+  text-align: center;
+  font-size: 14px;
+}
+
+.owners{
+  color: #fff;
+  text-align: center;
+  margin: 10px 0px;
+  
+}
+
+.owner-names{
+  font-family: 'Merienda One',sans-serif;
+}
 
 .hidden {
   display: none;

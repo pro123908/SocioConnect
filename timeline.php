@@ -1,4 +1,4 @@
-<?php 
+<?php
 require_once dirname(__FILE__) . '/includes/functions.php';
 require_once './includes/header.php';
 
@@ -14,10 +14,12 @@ if (isset($_GET['visitingUserID']) && isset($_SESSION['user_id'])) {
     if ($_GET['visitingUserID'] == $_SESSION['user_id']) {
         $flag = 1;
     } else {
-        if(isFriend($_GET['visitingUserID']))
+        if (isFriend($_GET['visitingUserID'])) {
             $flag = 2;
-        else
-            $flag = 0;    
+        } else {
+            $flag = 0;
+        }
+
     }
 
     if (isset($_POST['add_friend'])) {
@@ -45,10 +47,10 @@ if (isset($_GET['visitingUserID']) && isset($_SESSION['user_id'])) {
     <div class='user-attributes-area'>
         <div class="user-friend-button">
             <!-- Don't show the friend button if user visiting his own timeline  -->
-            <?php $flag ==1 ? showFriendButton(0) : showFriendButton($_GET['visitingUserID']); ?>
+            <?php $flag == 1 ? showFriendButton(0) : showFriendButton($_GET['visitingUserID']);?>
         </div>
 
-        <div class="user-message-button">    
+        <div class="user-message-button">
             <!-- if its not user's own timeline, show message button -->
             <?php if (isset($_GET['visitingUserID']) && $_GET['visitingUserID'] != $_SESSION['user_id']) {?>
                 <a class='timeline-message-button' href="messages.php?id=<?php echo $_GET['visitingUserID']; ?>">Message</a>
@@ -58,40 +60,42 @@ if (isset($_GET['visitingUserID']) && isset($_SESSION['user_id'])) {
 
     <div class='content-area'>
         <?php
-            if ($flag == 1 || $flag == 2) {?>
+if ($flag == 1 || $flag == 2) {?>
                 <div class="content-left-side">
-                    
+
                     <div class='user-info-area'>
                         <div class='user-info-heading'>User Details</div>
                         <div class='user-info-content'>
-                            <?php $flag == 1 ? showUserInfo($_SESSION['user_id']) : showUserInfo($_GET['visitingUserID']); ?>
+                            <?php $flag == 1 ? showUserInfo($_SESSION['user_id']) : showUserInfo($_GET['visitingUserID']);?>
                         </div>
                     </div>
 
                     <div class='recenet-uploads-area'>
                         <div class='recenet-uploads-heading'>Recent Uploads</div>
                         <div class='recenet-uploads-content'>
-                            <?php $flag == 1 ? getUploadedPics($_SESSION['user_id']) : getUploadedPics($_GET['visitingUserID']); ?>
+                            <?php $flag == 1 ? getUploadedPics($_SESSION['user_id']) : getUploadedPics($_GET['visitingUserID']);?>
                         </div>
                         <div class='recent-uploads-footer'></div>
                     </div>
-                </div>    
+                </div>
                 <!-- Right Side content Finished -->
 
                 <div class='post-area'>
                     <div class='new-post'>
                         <?php
-                            // Add post functionality only if the user is visiting his own timeline
-                            if ($flag == 1)
-                                addPost();
-                        ?>
+// Add post functionality only if the user is visiting his own timeline
+    if ($flag == 1) {
+        addPost();
+    }
+
+    ?>
                     </div>
 
                     <div class='posts'>
                         <?php
-                            $user = $flag == 1 ? 'b' : $_GET['visitingUserID'];
-                            showPosts($user, 1, 10);
-                        ?>
+$user = $flag == 1 ? 'b' : $_GET['visitingUserID'];
+    showPosts($user, 1, 10);
+    ?>
                     </div>
 
                     <div id='loading' class='loading-messages'></div>
@@ -102,7 +106,7 @@ if (isset($_GET['visitingUserID']) && isset($_SESSION['user_id'])) {
                     <div class='user-activities-summary-area'>
                         <div class='user-activities-summary-heading'>Activites Summary</div>
                         <div class='user-activities-summary-content'>
-                            <?php $flag ==1 ? showUserActivitiesSummary($_SESSION['user_id']) : showUserActivitiesSummary($_GET['visitingUserID'])?>
+                            <?php $flag == 1 ? showUserActivitiesSummary($_SESSION['user_id']) : showUserActivitiesSummary($_GET['visitingUserID'])?>
                         </div>
                     </div>
 
@@ -111,15 +115,19 @@ if (isset($_GET['visitingUserID']) && isset($_SESSION['user_id'])) {
                         <div class='people-you-may-know-content'>
                             <?php showPeopleYouMayKnow()?>
                         </div>
-                    </div>   
+                    </div>
                 </div>
                 <!-- Right Side content Finished -->
-        <?php 
-            } 
-        ?>    
+        <?php
+}
+?>
     </div>
     <!-- Content area ended -->
-</div>    
+</div>
 <!-- timeline Ended -->
+
+<?php
+require_once dirname(__FILE__) . '/includes/footer.php';
+?>
 
 <script src="./includes/script.js" ></script>
