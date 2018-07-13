@@ -2385,3 +2385,41 @@ function clearString($string){
     global $connection;
     return mysqli_real_escape_string($connection,(htmlentities(stripslashes(trim($string)))));
 }
+
+function checkAttempts($email){
+    $data = queryFunc("SELECT attempts,wrong_answer_time from users where email = '$email'");   
+    $data = isRecord($data);
+    if($data['attempts'] < 3)
+        echo "yes";
+    else{
+        $time = differenceInTime($data['wrong_answer_time']);
+        if($data['attempts'] == 3){
+            updateWrongAttempts($email);
+            queryFunc("update users set wrong_answer_time = now() where email = '$email'"); 
+            $time = getWrongAttemptTime($email);
+            echo $time;   
+        }
+        else if($time > 3599){
+            echo "yes";
+            updateWrongAttempts($email,0); 
+        }
+        else{
+            $time = getWrongAttemptTime($email);
+            echo $time;
+        }
+    }    
+}
+
+function updateWrongAttempts($email,$count=null){
+    if(!empty($count))
+        $attempts = 0;
+    else 
+        $attempts = "attempts + 1";
+    queryFunc("update users set attempts = $attempts where email = '$email'");
+}
+
+function getWrongAttemptTime($email){
+    $time = queryFunc("SELECT wrong_answer_time from users where email = '$email'");
+    $time = isRecord($time);
+    return (differenceInTime($time['wrong_answer_time']));
+}

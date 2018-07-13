@@ -1489,30 +1489,33 @@ function saveNewPassword(newPass) {
 }
 
 function submitForgotPassForm() {
-  console.log("function clled");
   var email = document.querySelector("input[name = 'email']").value;
   var answer = document.querySelector(".forgot-password-input").value;
-  console.log('answer : ', answer);
   if (answer.trim().length != 0) {
-    console.log('not trimmed');
-    ajaxCalls("GET", `./includes/AjaxHandlers/AJAX2.php?validateAnswer=1&answer=${answer.toLowerCase()}&email=${email}`).then(function (result) {
-      console.log("result : ");
-      console.log(result);
-      if (result == "Yes") {
-        var editDiv = document.querySelector(".forgot-password-div");
-        editDiv.innerHTML = `<span><h1 class = "forgot-password-div-heading">Set New Password</h1></span>
-                             <span class="forgot-password-div-close" onclick="hideForgotPassWindow()">&times;</span>
-                             <form action = "javascript:void(0)" method = "post" id = "changetPassForm">                          
-                             <label class = "user-info-for-edit"><input type = "password" name = "newPassword" placeholder='Password' class = "change-pass-input" autocomplete="off" maxlength= "255" required autofocus></label><br>
-                             <label class = "user-info-for-edit"><input type = "password" name = "rePass" class = "change-pass-input" placeholder='Confirm Password' autocomplete="off" maxlength= "255" required></label><br>
-                             <input type = "submit" value = "Save New Password" name="submit" class = "password-edit-save" onclick = "changePassword()">`
+    ajaxCalls("GET",`./includes/AjaxHandlers/AJAX2.php?checkAttempts=1&email=${email}`).then(function (checked){
+      if(checked == "yes"){
+        alert("yes");
+        ajaxCalls("GET", `./includes/AjaxHandlers/AJAX2.php?validateAnswer=1&answer=${answer.toLowerCase()}&email=${email}`).then(function (result) {
+          console.log("result : ");
+          console.log(result);
+          if (result == "Yes") {
+            var editDiv = document.querySelector(".forgot-password-div");
+            editDiv.innerHTML = `<span><h1 class = "forgot-password-div-heading">Set New Password</h1></span>
+                                 <span class="forgot-password-div-close" onclick="hideForgotPassWindow()">&times;</span>
+                                 <form action = "javascript:void(0)" method = "post" id = "changetPassForm">                          
+                                 <label class = "user-info-for-edit"><input type = "password" name = "newPassword" placeholder='Password' class = "change-pass-input" autocomplete="off" maxlength= "255" required autofocus></label><br>
+                                 <label class = "user-info-for-edit"><input type = "password" name = "rePass" class = "change-pass-input" placeholder='Confirm Password' autocomplete="off" maxlength= "255" required></label><br>
+                                 <input type = "submit" value = "Save New Password" name="submit" class = "password-edit-save" onclick = "changePassword()">`
+          }
+          else
+            document.querySelector(".forgot-password-message").innerHTML = "Wrong Answer!";
+        });
       }
-      else
-        document.querySelector(".forgot-password-message").innerHTML = "Wrong Answer!";
+      else{
+        alert("You've entered wrong answer 3 times, this service is not availible for the next "+(60 - parseInt(checked/60))+" minutes");
+      }
     });
   }
-
-  console.log("function exit");
 }
 
 function hideForgotPassWindow() {
