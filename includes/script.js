@@ -377,7 +377,7 @@ function hideEditDiv(postID, flag) {
 
   // Displaying 'edited' text if post has been edited
   if (flag)
-    document.querySelector(".post-edited-" + postID).innerHTML = "Edited";
+    document.querySelector(".post-edited-" + postID).innerHTML = "";
 }
 
 function postPicSelected(container) {
@@ -1492,8 +1492,8 @@ function submitForgotPassForm() {
   var email = document.querySelector("input[name = 'email']").value;
   var answer = document.querySelector(".forgot-password-input").value;
   if (answer.trim().length != 0) {
-    ajaxCalls("GET",`./includes/AjaxHandlers/AJAX2.php?checkAttempts=1&email=${email}`).then(function (checked){
-      if(checked == "yes"){
+    ajaxCalls("GET", `./includes/AjaxHandlers/AJAX2.php?checkAttempts=1&email=${email}`).then(function (checked) {
+      if (checked == "yes") {
         ajaxCalls("GET", `./includes/AjaxHandlers/AJAX2.php?validateAnswer=1&answer=${answer.toLowerCase()}&email=${email}`).then(function (result) {
           console.log("result : ");
           console.log(result);
@@ -1510,8 +1510,8 @@ function submitForgotPassForm() {
             document.querySelector(".forgot-password-message").innerHTML = "Wrong Answer!";
         });
       }
-      else{
-        alert("You've entered wrong answer 3 times, this service is not availible for the next "+(60 - parseInt(checked/60))+" minutes");
+      else {
+        alert("You've entered wrong answer 3 times, this service is not availible for the next " + (60 - parseInt(checked / 60)) + " minutes");
       }
     });
   }

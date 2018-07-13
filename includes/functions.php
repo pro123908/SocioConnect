@@ -166,9 +166,9 @@ CONTENT;
                     $postPicContent
                 </div>
                 <div class='post-stats'>
-                    <span onmouseout='javascript:hideLikers({$postID})' onmouseover='javascript:likeUsers({$postID})' class='tooltip-container like-count like-count-{$postID}'><i class='like-count-icon fas fa-thumbs-up'></i> 0</span>
+                    <span onmouseout='javascript:hideLikers({$postID})' onmouseover='javascript:likeUsers({$postID})' class='tooltip-container like-count like-count-{$postID}'><i class='like-count-icon far fa-thumbs-up'></i> 0</span>
                     <span class='tooltip tooltip-bottom count'></span>
-                    <a href="javascript:showCommentField({$postID})" class='comment-count'><i class='fas fa-comment-dots comment-count-{$postID}'></i> 0</a>
+                    <a href="javascript:showCommentField({$postID})" class='comment-count'><i class='far fa-comment-dots comment-count-{$postID}'></i> 0</a>
                 </div>
             </div>
             <div class='post-buttons'>
@@ -596,7 +596,7 @@ CONTENT;
                     <div class='post-info'>
                     <a href='timeline.php?visitingUserID={$row['user_id']}' class='user'>{$row['name']}</a>
                     <span class='post-time'>$timeToShow</span>
-                    <span class='post-edited post-edited-{$postID}'>$edited</span>
+                    <span class='post-edited post-edited-{$postID}'></span>
                     </div>
                     </div>
                     <div class='show actual-post-{$postID}'>
@@ -604,10 +604,10 @@ CONTENT;
                         $postPicContent
                     </div>
                     <div class='post-stats'>
-                    <span onmouseout='javascript:hideLikers({$postID})' onmouseover='javascript:likeUsers({$postID})' class='tooltip-container like-count like-count-{$postID}'><i class='like-count-icon fas fa-thumbs-up'></i> {$likes['count']}
+                    <span onmouseout='javascript:hideLikers({$postID})' onmouseover='javascript:likeUsers({$postID})' class='tooltip-container like-count like-count-{$postID}'><i class='like-count-icon far fa-thumbs-up'></i> {$likes['count']}
                     <span class='tooltip tooltip-bottom count'></span>
                     </span>
-                    <a href="javascript:showCommentField({$postID})" class='comment-count'><i class='fas fa-comment-dots comment-count-{$postID}'></i> {$commentsCount['count']}</a>
+                    <a href="javascript:showCommentField({$postID})" class='comment-count'><i class='far fa-comment-dots comment-count-{$postID}'></i> {$commentsCount['count']}</a>
                     </div>
                     </div>
                 <div class='post-buttons'>

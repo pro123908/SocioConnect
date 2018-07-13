@@ -468,12 +468,12 @@ input:-webkit-autofill {
 
 .tooltip {
   visibility: hidden;
-  font-size: 12px;
+  font-size: 10px;
   background-color: black;
   color: #fff;
   text-align: center;
   border-radius: 6px;
-  padding: 5px;
+  padding: 5px 0px;
 }
 
 .tooltip-bottom {
@@ -482,7 +482,7 @@ input:-webkit-autofill {
   top: 100%;
   left: 50%;
   margin-left: -40px;
-  margin-top: 15px;
+  margin-top: 10px;
   width: 110px;
 }
 
@@ -561,7 +561,7 @@ input:-webkit-autofill {
 
 .post-input {
   width: 100%;
-  height: 30%;
+  height: 25%;
   resize: none;
   padding: 20px;
   border: none;
@@ -623,8 +623,7 @@ input[type="file"]:hover {
 
 .post {
   background-color: #fff;
-  text-align: left;
-  padding: 20px;
+  padding: 10px;
   border-radius: 5px;
   border: 1px solid #e6ecf5;
 }
@@ -640,14 +639,13 @@ input[type="file"]:hover {
 }
 
 .post .post-header {
-  width: 90%;
+  
   display: flex;
   align-items: center;
 }
 
 .post .post-header .post-time,.post-edited {
   color: #90949c;
-  display: inline-block;
   font-size: 10px;
 }
 .post-edited{
@@ -656,19 +654,21 @@ input[type="file"]:hover {
 }
 
 .post p {
-  margin: 40px 10px 10px 10px;
+  margin: 20px 10px 10px 5px;
+  font-size: 14px;
 }
 
 .post-btn {
   display: inline-block;
-  width: 100px;
+  width: 25%;
   text-align: center;
-  margin-right: 10px;
+  margin-right: 5px;
   text-decoration: none;
   color: #000000;
   border: 1px solid #a0aeaf;
-  padding: 10px 20px;
+  padding: 7px 0px;
   border-radius: 10px;
+  font-size: 12px;
 }
 
 .post .post-btn:hover {
@@ -676,17 +676,17 @@ input[type="file"]:hover {
 }
 
 .post .like-count {
-  display: inline-block;
+  
   font-size: 12px;
-  margin-bottom: 10px;
+  
   cursor: pointer;
 }
 
 .post .comment-count {
-  display: inline-block;
+  
   font-size: 12px;
-  margin-bottom: 10px;
-  margin-left: 10px;
+  
+  margin-left: 5px;
   color: #000;
   text-decoration: none
 }
@@ -696,26 +696,27 @@ input[type="file"]:hover {
 }
 
 .post-avatar-30 {
-  width: 30px;
-  height: 30px;
+  width: 25px;
+  height: 25px;
 }
 
 .post-avatar-40 {
-  height: 40px;
-  width: 40px;
+  height: 35px;
+  width: 35px;
 }
 
 .post-avatar {
   border-radius: 100%;
-  margin-right: 10px;
+  margin-right: 5px;
+  border: 1px solid #43484c;
 }
 
 .post-content .post-info .user {
   font-weight: 600;
   display: block;
   text-decoration: none;
-  font-size: 17px;
-  color: #000;
+  font-size: 15px;
+  color: #365899;
 }
 
 .post .post-content .post-info {
@@ -725,7 +726,7 @@ input[type="file"]:hover {
 .post .post-delete-icon {
   float: right;
   margin-top: 5px;
-  font-size: 20px;
+  font-size: 15px;
   cursor: pointer;
   color: red;
 }
@@ -735,8 +736,9 @@ input[type="file"]:hover {
 }
 
 .post .post-stats {
-  margin-left: 15px;
-  margin-bottom: 10px;
+  margin-left: 10px;
+  margin-bottom: 8px;
+
 }
 
 .edit-post{
@@ -780,13 +782,13 @@ input[type="file"]:hover {
 /* Comment section */
 
 .comment {
-  padding: 10px;
-  margin-top: 20px;
+  padding: 0px 14px;
+  margin-top: 14px;
   display: flex;
 }
 
 .user-image {
-  margin-top: 5px;
+  margin-top: -1px;
 }
 
 .comment .comment-info {
@@ -794,18 +796,18 @@ input[type="file"]:hover {
 }
 
 .comment .comment-body {
-  width: 95%;
+  width: 90%;
 }
 
 .comment-user {
   font-weight: bold;
-  font-size: 18px;
+  font-size: 13px;
   text-decoration: none;
-  color: #000;
+  color: #365899;
 }
 
 .comment-text {
-  font-size: 16px;
+  font-size: 13px;
 }
 
 .comment-delete,.comment-edit {
@@ -819,7 +821,7 @@ input[type="file"]:hover {
 }
 
 .comment-time,.comment-edit-text {
-  font-size: 10px;
+  font-size: 8px;
   color: #90949c;
   display: inline-block;
   width: 100%;
@@ -832,7 +834,7 @@ input[type="file"]:hover {
 }
 
 .comment-form {
-  margin-top: 20px;
+  margin-top: 13px;
   display: flex;
 }
 .comment-form form{
@@ -845,8 +847,8 @@ input[type="file"]:hover {
 
 .comment-form input[type='text'] {
   border: 1px solid #a3afb9;
-  padding: 10px;
-  width: 90%;
+  padding: 5px;
+  width: 100%;
   border-radius: 10px;
 }
 
