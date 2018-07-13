@@ -1494,7 +1494,6 @@ function submitForgotPassForm() {
   if (answer.trim().length != 0) {
     ajaxCalls("GET",`./includes/AjaxHandlers/AJAX2.php?checkAttempts=1&email=${email}`).then(function (checked){
       if(checked == "yes"){
-        alert("yes");
         ajaxCalls("GET", `./includes/AjaxHandlers/AJAX2.php?validateAnswer=1&answer=${answer.toLowerCase()}&email=${email}`).then(function (result) {
           console.log("result : ");
           console.log(result);
