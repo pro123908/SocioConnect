@@ -502,13 +502,13 @@ function saveEditPost(postID) {
           // div for image is already present then only updating its src, making display block bcozit might be made none due to line 443 (See if condition in the else block)
           if (imgDiv) {
             imgDiv.style.display = "block";
-            imgDiv.src = result;
+            imgDiv.src = "./assets/post_pics/"+result;
           }
 
           //if div isn't present then creating it from scratch
           else {
             var imgParentDiv = document.querySelector(".actual-post-" + postID);
-            imgParentDiv.innerHTML += `<div class='post-image-container'><img src='${result}' class='post-image' /></div>`;
+            imgParentDiv.innerHTML += `<div class='post-image-container'><img src='./assets/post_pics/${result}' class='post-image' /></div>`;
           }
         } else {
           //response was empty this means that there is no picture to show, so first check, if div for images is present then hide it

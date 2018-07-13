@@ -107,7 +107,6 @@ function getTime($time)
 
 function newPost($postContent, $pic = null)
 {
-    echo $pic;
     // ---------------------- REFRACTORED ------------------------
 
     // Function for adding a post
@@ -128,8 +127,8 @@ function newPost($postContent, $pic = null)
         $postID = $queryResult['post_id'];
         $userID = $_SESSION['user_id'];
         $user = $_SESSION['user'];
-        $postPic = $queryResult['pic'];
-        $profilePic = "assets/profile_pictures/".$queryResult['profile_pic'];
+        $postPic = "./assets/post_pics/".$queryResult['pic'];
+        $profilePic = "./assets/profile_pictures/".$queryResult['profile_pic'];
         $timeToShow = getTime($queryResult['createdAt']);
 
         $PostDeleteButton = <<<PosDel
@@ -141,7 +140,7 @@ PosDel;
 
         /* Post Pic */
         $postPicContent = '';
-        if (!($postPic == null)) {
+        if (!($postPic == './assets/post_pics/')) {
             $postPicContent = <<<CONTENT
             <div class='post-image-container'>
             <img src='{$postPic}' class='post-image' />
@@ -154,7 +153,7 @@ CONTENT;
             <div class='post-content post-content-{$postID}'>
                 {$PostDeleteButton}
                 <div class='post-header'>
-                    <a href='timeline.php?visitingUserID={$userID}'><img src='{$queryResult['profile_pic']}' class='post-avatar post-avatar-40'/></a>
+                    <a href='timeline.php?visitingUserID={$userID}'><img src='{$profilePic}' class='post-avatar post-avatar-40'/></a>
 
                     <div class='post-info'>
                         <a href='timeline.php?visitingUserID={$userID}' class='user'>{$queryResult['name']}</a>
@@ -468,7 +467,7 @@ POST;
     while ($comments = isRecord($commentResult)) {
         $timeToShow = getTime($comments['createdAt']);
         $commentID = $comments['comment_id'];
-        $DP = $comments['profile_pic'];
+        $DP = "./assets/profile_pictures/" .$comments['profile_pic'];
 
         // Enabling delete option for comment if it is user's post or his comment else disabling
         if ($comments['user_id'] == $_SESSION['user_id'] || $_SESSION['user_id'] == $fUser) {
@@ -500,7 +499,7 @@ ComEdit;
                     <div class='comment comment-{$commentID}'>
 
                         <div class='user-image'>
-                            <a href='timeline.php?visitingUserID={$comments['user_id']}'><img src='{$comments['profile_pic']}' class='post-avatar post-avatar-30' /></a>
+                            <a href='timeline.php?visitingUserID={$comments['user_id']}'><img src='{$DP}' class='post-avatar post-avatar-30' /></a>
                         </div>
 
                         <div class='comment-info'>
@@ -529,7 +528,7 @@ function renderPost($row)
 
     $postID = $row['post_id'];
     $timeToShow = getTime($row['createdAt']);
-    $postPic = $row['pic'];
+    $postPic = "./assets/post_pics/" . $row['pic'];
     $userLoggedIn = $_SESSION['user_id'];
     $row['profile_pic'] = "./assets/profile_pictures/" . $row['profile_pic'];
 
@@ -571,7 +570,7 @@ PosDel;
 
     /* Post Pic */
     $postPicContent = '';
-    if ($postPic != null) {
+    if ($postPic != "./assets/post_pics/") {
         // if there is a post pic
         $postPicContent = <<<CONTENT
          <div class='post-image-container'>

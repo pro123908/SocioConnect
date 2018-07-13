@@ -109,9 +109,9 @@ if (isset($_GET['notiPage'])) {
             // Checking the format of the image uploaded
             if (($extension == "jpg" || $extension == "jpeg" || $extension == "png") && ($type == "image/png" || $type == "image/jpeg")) {
                 // Location where to save the image
-                $location = 'assets/postPics/';
+                $location = '../../assets/post_pics/';
                 if (move_uploaded_file($tmp_name, $location . $uniqueID . '.' . $extension)) {
-                    $path = $location . $uniqueID . '.' . $extension;
+                    $path = $uniqueID . '.' . $extension;
                 }
             }
         }
@@ -156,9 +156,9 @@ if (isset($_GET['notiPage'])) {
                     // Checking the format of the image uploaded
                     if (($extension == "jpg" || $extension == "jpeg" || $extension == "png") && ($type == "image/png" || $type == "image/jpeg")) {
                         // Location where to save the image
-                        $location = 'assets/postPics/';
-                        if (move_uploaded_file($tmp_name, "../../".$location . $uniqueID . '.' . $extension)) {
-                            $path = $location . $uniqueID . '.' . $extension; //Complete path of image
+                        $location = '../../assets/post_pics/';
+                        if (move_uploaded_file($tmp_name, $location . $uniqueID . '.' . $extension)) {
+                            $path = $uniqueID . '.' . $extension; //Complete path of image
                             newPost($_POST['post'], $path);
                         }
                     }
