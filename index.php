@@ -150,7 +150,7 @@ if (isset($_SESSION['login_message'])) {
 }?><br>
   <input type="password"  name='password' class='sign-input' placeholder='Password' maxlength="20" minlength='8' required ><br>
   <input type="password" name='repeatPassword' class='sign-input' placeholder='Confirm Password' maxlength="20" minlength='8' required><?php if (isset($_SESSION['s_pass_error'])) {
-    echo $_SESSION['s_pass_error'];
+    echo "<span class='error-msg'>{$_SESSION['s_pass_error']}</span>";
 }?><br>
   <input type="text" name='age' placeholder='Birthday' onfocus="(this.type='date')"   class='sign-input' required value=<?php if (isset($_SESSION['s_age'])) {
     echo $_SESSION['s_age'];

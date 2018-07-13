@@ -259,7 +259,12 @@ body {
 }
 
 .login-logo{
+  background-image: url("../logo.png");
+  background-repeat: no-repeat;
   
+  
+  background-size: 30vh;
+
   flex: 1;
 }
 
@@ -269,6 +274,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
 }
 
 .login-form-container{
@@ -1642,6 +1648,7 @@ input[type="file"]:hover {
   background-color: rgba(0, 0, 0, 1);
   color: rgb(255, 255, 255);
   text-align: center;
+  width: 30%;
 }
 
 /* Modal Content (image) */
@@ -1689,7 +1696,7 @@ input[type="file"]:hover {
 .forgot-password-div-heading{
   font-size: 20px;
   text-align: center;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
 }
 
 .user-info-edit-container{
@@ -1716,8 +1723,9 @@ input[type="file"]:hover {
   background: transparent;
   border: none;
   border-bottom: 1px solid #a0aeaf;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
   color: #ced7d7;
+  width: 70%;
 
 }
 .forgot-password-input:focus,.change-pass-input:focus{
@@ -1726,7 +1734,7 @@ input[type="file"]:hover {
 
 .forgot-password-question{
   text-align: center;
-  padding: 10px;
+  margin-bottom: 10px;
 }
 
 .forgot-password-div-container{

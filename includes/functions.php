@@ -2172,7 +2172,7 @@ INFO;
 
                     <input placeholder='Age' type = "date" name = "age" class ="user-edit-field user-edit-age"  autocomplete="off" value = "<?php $val = isset($_SESSION['edit_info_user_age']) ? $_SESSION['edit_info_user_age'] : '';
             echo $val;?>">
-                    <select placeholder='Gender' name="genderBox"  required class='user-edit-field user-edit-gender'>
+                    <select placeholder='Gender' value='Male' name="genderBox"  required class='user-edit-field user-edit-gender'>
                         <option value="Male">Male</option>
                         <option value="Female">Female</option>
                         <option value="Other">Other</option>
