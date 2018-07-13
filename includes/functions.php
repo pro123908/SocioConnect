@@ -110,7 +110,6 @@ function newPost($postContent, $pic = null)
     // ---------------------- REFRACTORED ------------------------
 
     // Function for adding a post
-    global $connection;
     $post = clearString($postContent);
     // $post = mysqli_real_escape_string($connection, $postContent);
     $userID = $_SESSION['user_id'];
@@ -2230,6 +2229,7 @@ function saveEditedInfo($school, $college, $university, $work, $contact, $newPas
         $conflict1 = ", password = '$newPass' ";
     }
     if(!empty($answer)){
+        $answer = hashString($answer);
         $conflict2 = ", answer = '$answer' ";
     }
     

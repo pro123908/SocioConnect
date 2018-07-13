@@ -75,7 +75,7 @@ if (isset($_POST['loginSubmit'])) { // If form is submitted
         } else {
             $profile_pic = "male.jpg";
         }
-        $answer = strtolower($answer);
+        $answer = hashString(strtolower($answer));
         $queryResult = queryFunc("INSERT INTO users(first_name,last_name,email,password,age,gender,profile_pic,question,answer) VALUES('$fname','$lname','$email','$password','$age','$gender','$profile_pic','$question','$answer')");
 
         //Selecting ID of new inserted user
