@@ -1596,6 +1596,7 @@ DELIMETER;
             } else {
                 // When search is done from messages
                 while ($row = isRecord($users)) {
+                    $row['profile_pic'] = "./assets/profile_pictures/" . $row['profile_pic'];
                     $user = <<<DELIMETER
             <div class='search-person'>
             <div class='search-person-image'>

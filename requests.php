@@ -31,10 +31,10 @@ $friend_req = "";
 if (isData($reqArray)) {
     $friend_req = "<div class='friend-request-area'>";
     while ($row = isRecord($reqArray)) {
-
         // Getting the person who sent you the request
         $from_user = queryFunc("Select first_name, last_name,profile_pic from users where user_id = " . $row['from_id']);
         $from_user = isRecord($from_user);
+        $from_user['profile_pic'] = "./assets/profile_pictures/" . $from_user['profile_pic'];
         $friend_req .= <<<DELIMETER
              <div class='friend-request'>
                 <div class='friend-request-image'>
