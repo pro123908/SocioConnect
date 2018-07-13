@@ -1387,7 +1387,7 @@ function editCoverPicture() {
 
 
   ajaxCalls('POST', './includes/AjaxHandlers/AJAX3.php?pic=1', formData, 'pic').then(function (result) {
-    console.log(result);
+    result = "./assets/cover_pictures/" + result;
     document.querySelector('.user-cover').style.backgroundImage = `url(${result})`;
 
   });
@@ -1410,7 +1410,7 @@ function editProfilePicture() {
 
   ajaxCalls('POST', './includes/AjaxHandlers/AJAX3.php?pic=1', formData, 'pic').then(function (result) {
     // console.log(result);
-    document.querySelector('#profile_picture').src = result;
+    document.querySelector('#profile_picture').src = "./assets/profile_pictures/" + result;
 
   });
 }

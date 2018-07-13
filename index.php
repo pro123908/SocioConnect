@@ -71,9 +71,9 @@ if (isset($_POST['loginSubmit'])) { // If form is submitted
     } else {
         // If fields are validated then adding the user to database
         if ($gender == "female") {
-            $profile_pic = "assets/profile_pictures/female.jpg";
+            $profile_pic = "female.jpg";
         } else {
-            $profile_pic = "assets/profile_pictures/male.jpg";
+            $profile_pic = "male.jpg";
         }
         $answer = strtolower($answer);
         $queryResult = queryFunc("INSERT INTO users(first_name,last_name,email,password,age,gender,profile_pic,question,answer) VALUES('$fname','$lname','$email','$password','$age','$gender','$profile_pic','$question','$answer')");
@@ -163,7 +163,7 @@ if (isset($_SESSION['login_message'])) {
   <input type="text" class='sign-input' name='question' placeholder='Securtiy Question' maxlength="255" minlength='3' required value="<?php if (isset($_SESSION['s_question'])) {
     echo $_SESSION['s_question'];
 }?>" ><br>
-  <input type="text"  name='answer' class='sign-input' placeholder='Answer' maxlength="255" minlength='3' required value="<?php if (isset($_SESSION['s_answer'])) {
+  <input type="text"  name='answer' class='sign-input' placeholder='Answer' maxlength="255" minlength='3' autocomplete="off" required value="<?php if (isset($_SESSION['s_answer'])) {
     echo $_SESSION['s_answer'];
 }?>"><br>
 

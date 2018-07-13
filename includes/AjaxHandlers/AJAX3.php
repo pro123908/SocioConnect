@@ -224,9 +224,8 @@ if (isset($_GET['notiPage'])) {
                 // Checking the format of the image uploaded
                 if (($extension == "jpg" || $extension == "jpeg" || $extension == "png") && ($type == "image/png" || $type == "image/jpeg")) {
                     // Location where to save the image
-                    $location = 'assets/profile_pictures/';
-                    if (move_uploaded_file($tmp_name, "../../" .$location . $uniqueID . '.' . $extension)) {
-                        $path = $location . $uniqueID . '.' . $extension;
+                    if (move_uploaded_file($tmp_name, "../../assets/profile_pictures/" . $uniqueID . '.' . $extension)) {
+                        $path = $uniqueID . '.' . $extension;
                         profilePicChange($path);
                         echo $path;
                     }
@@ -248,9 +247,9 @@ if (isset($_GET['notiPage'])) {
                 // Checking the format of the image uploaded
                 if (($extension == "jpg" || $extension == "jpeg" || $extension == "png") && ($type == "image/png" || $type == "image/jpeg")) {
                     // Location where to save the image
-                    $location = 'assets/cover_pictures/';
-                    if (move_uploaded_file($tmp_name, "../../" . $location . $uniqueID . '.' . $extension)) {
-                        $path = $location . $uniqueID . '.' . $extension;
+                    $location = '../../assets/cover_pictures/';
+                    if (move_uploaded_file($tmp_name, $location . $uniqueID . '.' . $extension)) {
+                        $path = $uniqueID . '.' . $extension;
                         coverPicChange($path);
                         echo $path;
                     }

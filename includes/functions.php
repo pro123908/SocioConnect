@@ -129,7 +129,7 @@ function newPost($postContent, $pic = null)
         $userID = $_SESSION['user_id'];
         $user = $_SESSION['user'];
         $postPic = $queryResult['pic'];
-        $profilePic = $queryResult['profile_pic'];
+        $profilePic = "assets/profile_pictures/".$queryResult['profile_pic'];
         $timeToShow = getTime($queryResult['createdAt']);
 
         $PostDeleteButton = <<<PosDel
@@ -531,6 +531,7 @@ function renderPost($row)
     $timeToShow = getTime($row['createdAt']);
     $postPic = $row['pic'];
     $userLoggedIn = $_SESSION['user_id'];
+    $row['profile_pic'] = "./assets/profile_pictures/" . $row['profile_pic'];
 
     // Getting likes count for the current post
     $NoOflikes = queryFunc("SELECT count(*) as count from likes where post_id='$postID'");
@@ -941,7 +942,7 @@ function showNotifications($place, $page, $limit, $ajax = false)
             if ($type != 'request') {
                 $notiLink = "notification.php?postID=$postID&type=$type&notiID=$notiID";
             }
-
+            $sPerson['profile_pic'] = "./assets/profile_pictures/" . $sPerson['profile_pic'];
             $noti = <<<NOTI
                 <a href={$notiLink} class='notification  {$colorNoti}'>
                 <span class='notification-image'>
@@ -1183,7 +1184,7 @@ function printFriendsList($friends, $id)
             $time = 'Now';
             $stateClass = 'state-on';
         }
-
+        $friend['profile_pic'] = "./assets/profile_pictures/".$friend['profile_pic'];
         $content = <<<FRIEND
             <div class="friend-container">
             <div class='friend'>
@@ -1273,7 +1274,7 @@ function getUserProfilePic($userID)
 
     $profilePicQuery = queryFunc("SELECT profile_pic from users where user_id=$userID");
     $profilePicQueryResult = isRecord($profilePicQuery);
-    return $profilePicQueryResult['profile_pic'];
+    return "./assets/profile_pictures/" .$profilePicQueryResult['profile_pic'];
 }
 
 function showMessages($partnerId, $page, $limitMsg)
@@ -1568,6 +1569,7 @@ function getSearchedUsers($value, $flag)
         if (isData($users)) {
             if ($flag == 1 || $flag == 2) {
                 while ($row = isRecord($users)) {
+                    $row['profile_pic'] = "./assets/profile_pictures/" . $row['profile_pic'];
                     $user = <<<DELIMETER
                 <div class='search-person'>
                 <div class='search-person-image'>
@@ -1653,7 +1655,7 @@ function coverArea($id)
     $queryResult = queryFunc("SELECT * FROM users WHERE user_id='$id'");
     $queryUser = isRecord($queryResult);
     $name = $queryUser['first_name'] . ' ' . $queryUser['last_name'];
-    $coverPic = $queryUser['cover_pic'];
+    $coverPic = "./assets/cover_pictures/" .$queryUser['cover_pic'];
 
     // Checking if user has set up a cover image?
     if ($coverPic != null) {
@@ -1693,7 +1695,7 @@ PROFILE;
         $editCover = '';
         $editProfilePic = '';
     }
-
+    $queryUser['profile_pic'] = "./assets/profile_pictures/" . $queryUser['profile_pic'];
     $content = <<<PROFILE
     <div class='user-cover' onmouseover ="showEditImageButton('edit-cover-pic')" onmouseout ="hideEditImageButton('edit-cover-pic')" style='$coverStyle' >
         $editCover
@@ -2283,7 +2285,7 @@ function showPeopleYouMayKnow()
             array_push($renderedIDs, $idToCheck);
             $person = isRecord($person);
             $time = activeAgo($idToCheck);
-
+            $person['profile_pic'] = "./assets/profile_pictures/" . $person['profile_pic'];
             $stateClass = 'state-off';
             if ($time == 'Just Now') {
                 $time = 'Now';
@@ -2369,7 +2371,7 @@ function getUploadedPics($userID){
     if(isData($posts)){
         while($post = isRecord($posts)){
             $content = <<<PIC
-                <a href = "./notification.php?postID='{$post['post_id']}'&type=&notiID=" class="recent-uploads">
+                <a href = "./notification.php?postID={$post['post_id']}&type=''&notiID=''" class="recent-uploads">
                     <img src='{$post['pic']}' class='recent-upload-image'>
                 </a>    
 PIC;
