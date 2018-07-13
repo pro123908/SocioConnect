@@ -161,8 +161,7 @@ if (isset($_GET['notiPage'])) {
                             $path = $uniqueID . '.' . $extension; //Complete path of image
                             newPost($_POST['post'], $path);
                         }
-                    }
-                    else{
+                    } else {
                         echo "error";
                     }
                 }

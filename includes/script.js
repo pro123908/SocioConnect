@@ -35,9 +35,11 @@ function setUserId(userLoggedInId) {
         }
         document.getElementById("loading").innerHTML = loading;
 
-        var recenetUploads = document.querySelectorAll(".recent-uploads");
-        if (recenetUploads.length == 0)
-          document.querySelector(".recent-uploads-footer").innerHTML = "No Recent Uploads";
+        if (path == '/socioConnect/timeline.php') {
+          var recenetUploads = document.querySelectorAll(".recent-uploads");
+          if (recenetUploads.length == 0)
+            document.querySelector(".recent-uploads-footer").innerHTML = "No Recent Uploads";
+        }
       }
     }
   } else if (path == "/socioConnect/messages.php") {
@@ -151,25 +153,28 @@ function like(postID) {
 function addRecentActivity(activity) {
   //Adding recent activity to the activity area
   // Getting the area
-  var activitiesDiv = document.querySelector(".activities-content");
+  if (window.location.pathname == '/main.php') {
+    var activitiesDiv = document.querySelector(".activities-content");
 
-  // Inserting the new activity at the top
-  activitiesDiv.innerHTML = activity + activitiesDiv.innerHTML;
+    // Inserting the new activity at the top
+    activitiesDiv.innerHTML = activity + activitiesDiv.innerHTML;
 
-  // If activities have become more than 10 , then just remove the bottom one from view
-  if (findChildNodes(activitiesDiv) == 11) {
 
-    document.querySelector(".show-more-activities").innerHTML =
-      "<a href='allActivities.php' class='see-more'><span>See more</span></a>";
+    // If activities have become more than 10 , then just remove the bottom one from view
+    if (findChildNodes(activitiesDiv) == 11) {
 
-    //Removing bottom activity from the list
-    var lastChild = activitiesDiv.getElementsByTagName("a")[10]; // 0 -> 9 are 10
-    var removed = activitiesDiv.removeChild(lastChild); // returned the removed element
+      document.querySelector(".show-more-activities").innerHTML =
+        "<a href='allActivities.php' class='see-more'><span>See more</span></a>";
 
-  } else if (findChildNodes(activitiesDiv) > 0) {
-    // If activities were not more than 10
-    document.querySelector(".show-more-activities").innerHTML =
-      "<p class='see-more'>No More Activities to Show</p>";
+      //Removing bottom activity from the list
+      var lastChild = activitiesDiv.getElementsByTagName("a")[10]; // 0 -> 9 are 10
+      var removed = activitiesDiv.removeChild(lastChild); // returned the removed element
+
+    } else if (findChildNodes(activitiesDiv) > 0) {
+      // If activities were not more than 10
+      document.querySelector(".show-more-activities").innerHTML =
+        "<p class='see-more'>No More Activities to Show</p>";
+    }
   }
 }
 
@@ -502,7 +507,7 @@ function saveEditPost(postID) {
           // div for image is already present then only updating its src, making display block bcozit might be made none due to line 443 (See if condition in the else block)
           if (imgDiv) {
             imgDiv.style.display = "block";
-            imgDiv.src = "./assets/post_pics/"+result;
+            imgDiv.src = "./assets/post_pics/" + result;
           }
 
           //if div isn't present then creating it from scratch
