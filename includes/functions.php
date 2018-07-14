@@ -107,7 +107,7 @@ function getTime($time)
     return timeString(differenceInTime($time));
 }
 
-function newPost($postContent, $pic = null)
+function newPost($postContent, $pic = null,$isVideo=0,$extension=null)
 {
     // ---------------------- REFRACTORED ------------------------
     global $connection;
@@ -116,6 +116,7 @@ function newPost($postContent, $pic = null)
     // $post = mysqli_real_escape_string($connection, $postContent);
     $userID = $_SESSION['user_id'];
 
+    
     // Inserting post data
     $queryResult = queryFunc("INSERT INTO posts(post,user_id,pic) VALUES('$post','$userID','$pic')");
     // ID of top inserted post
@@ -128,7 +129,11 @@ function newPost($postContent, $pic = null)
         $postID = $queryResult['post_id'];
         $userID = $_SESSION['user_id'];
         $user = $_SESSION['user'];
+        if($isVideo == 1){
+        $postPic = "./assets/post_videos/".$queryResult['pic'];
+        }else{
         $postPic = "./assets/post_pics/".$queryResult['pic'];
+        }
         $profilePic = "./assets/profile_pictures/".$queryResult['profile_pic'];
         $timeToShow = getTime($queryResult['createdAt']);
 
@@ -141,7 +146,16 @@ PosDel;
 
         /* Post Pic */
         $postPicContent = '';
-        if (!($postPic == './assets/post_pics/')) {
+        if($isVideo == 1){
+            $postPicContent = <<<CONTENT
+            <div class='post-image-container'>
+                <video class='post-video' controls>
+                    <source src="{$postPic}" type="video/{$extension}" >
+                </video>
+            </div>
+CONTENT;
+        }
+        elseif($pic != null) {
             $postPicContent = <<<CONTENT
             <div class='post-image-container'>
             <img src='{$postPic}' class='post-image' />
@@ -527,9 +541,25 @@ function renderPost($row)
 
     // row - All content about post
 
+    $picOrVideo = explode(".",$row['pic']);
+    $mediaFlag = 0;
+    if(isset($picOrVideo[1])){
+        $picOrVideo = $picOrVideo[1];
+        if($picOrVideo == "mp4" || $picOrVideo == "flv" || $picOrVideo == "avi"){
+            $postPic = "./assets/post_videos/" . $row['pic'];
+            $mediaFlag = 1;
+        }else{
+            $postPic = "./assets/post_pics/" . $row['pic'];
+            $mediaFlag = 2;
+        }  
+    }else{
+        $postPic = "./assets/post_pics/" . $row['pic'];
+    }
+    
+
     $postID = $row['post_id'];
     $timeToShow = getTime($row['createdAt']);
-    $postPic = "./assets/post_pics/" . $row['pic'];
+    
     $userLoggedIn = $_SESSION['user_id'];
     $row['profile_pic'] = "./assets/profile_pictures/" . $row['profile_pic'];
 
@@ -571,11 +601,21 @@ PosDel;
 
     /* Post Pic */
     $postPicContent = '';
-    if ($postPic != "./assets/post_pics/") {
+
+    if($mediaFlag == 1){
+        $postPicContent = <<<CONTENT
+        <div class='post-image-container'>
+            <video class='post-video' controls>
+                <source src="{$postPic}" >
+            </video>
+        </div>
+CONTENT;
+    }
+    elseif ($mediaFlag == 2) {
         // if there is a post pic
         $postPicContent = <<<CONTENT
          <div class='post-image-container'>
-         <img src='{$postPic}' class='post-image' width='400' />
+         <img src='{$postPic}' class='post-image'  />
          </div>
 CONTENT;
     }

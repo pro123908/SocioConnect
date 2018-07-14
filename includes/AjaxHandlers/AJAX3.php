@@ -161,9 +161,18 @@ if (isset($_GET['notiPage'])) {
                             $path = $uniqueID . '.' . $extension; //Complete path of image
                             newPost($_POST['post'], $path);
                         }
+                    } elseif (($extension == "mp4" || $extension == "flv" || $extension == "avi") && ($type == "video/mp4" || $type == "video/flv" || $type == "video/avi")) {
+
+                        $location = '../../assets/post_videos/';
+
+                        if (move_uploaded_file($tmp_name, $location . $uniqueID . '.' . $extension)) {
+                            $path = $uniqueID . '.' . $extension; //Complete path of image
+                            newPost($_POST['post'], $path, 1, $extension);
+                        }
                     } else {
                         echo "error";
                     }
+
                 }
             }
         } else {

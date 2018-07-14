@@ -315,6 +315,8 @@ function addPost(user_id) {
   var postPicData = document.querySelector("input[name='post-pic']"); // Post Pic
   var postPic = postPicData.files[0];
 
+  console.log(postPic);
+
   var postContent = post.value; // Post text
 
   //Validating post content before uploading
@@ -1666,9 +1668,9 @@ function dropdownCountAjax(place, dropdown) {
   });
 }
 
-function deleteUser(){
+function deleteUser() {
   var id = document.querySelector(".remove-user-input").value;
-  ajaxCalls("POST",`./includes/AjaxHandlers/AJAX2.php?deleteAccount=${id}`).then(function (result){
+  ajaxCalls("POST", `./includes/AjaxHandlers/AJAX2.php?deleteAccount=${id}`).then(function (result) {
     alert(result);
   });
 }
