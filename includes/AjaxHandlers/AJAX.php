@@ -133,7 +133,6 @@ if (isset($_GET['noti'])) {
     }
 
 } elseif (isset($_GET['message'])) {
-
     // Storing message to the database
     if (isset($_POST['partner'])) {
         $_POST['partner'] = clearString($_POST['partner']);

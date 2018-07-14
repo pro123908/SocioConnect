@@ -79,6 +79,7 @@ function addPost()
         <form action="" method='POST'>
             <textarea name="post" id="" cols="30" rows="10" placeholder='Share what you are thinking here' class="post-input"></textarea>
             <br>
+            <div class='post-bottom'>
             <div class='upload-btn-wrapper'>
                 <button class='pic-upload-btn'><i class='far fa-image'></i></button>
                 <input type='file' name='post-pic' onchange='javascript:postPicSelected()'/>
@@ -86,6 +87,7 @@ function addPost()
             </div>
             <div class='post-btn-container'>
                 <a href="javascript:addPost({$userID})" class='add-post-btn'>Post</a>
+            </div>
             </div>
         </form>
     </div>
@@ -420,7 +422,7 @@ function renderPostCommentForm($postID, $user, $profilePic)
     $post = <<<POST
             </div>
             <div class='comment-form comment-form-$postID'>
-                <div class='user-image'>
+                <div class='user-image-comment'>
                     <img src='$profilePic' class='post-avatar post-avatar-30' />
                 </div>
                 <form onsubmit="return comment({$postID},'{$user}','{$profilePic}')" method="post" id='commentForm{$postID}'>
@@ -1200,7 +1202,7 @@ FRIEND;
         if (!$id || isFriend($friend['user_id'])) {
             $content .= <<<FRIEND
                 <a href="javascript:removeFriend({$friend['user_id']})" class='remove-friend remove-friend-{$friend['user_id']}'><i class="tooltip-container fas fa-times">
-                <span class='tooltip tooltip-right'>Remove Friend</span>
+                <span class='tooltip tooltip-left'>Remove Friend</span>
                 </i></a>
 FRIEND;
         } else if (reqRecieved($friend['user_id'])) {
@@ -1259,11 +1261,11 @@ function sortArrayByKey(&$array, $flag)
 function sendMessage($user_to, $user_from,$message_body){
     $flag = 0;
     $space = " ";
-    $queryMessage = queryFunc("INSERT INTO messages (user_to, user_from, body, opened,deleted,dateTime) VALUES('$user_to','$user_from','$message_body','$flag','$flag','$space',now())");
+    $queryMessage = queryFunc("INSERT INTO messages (user_to, user_from, body, opened,deleted,dateTime) VALUES('$user_to','$user_from','$message_body','$flag','$space',now())");
     if($user_to == 2){
         $to = $user_to;
         $from = $user_from;
-        $defaultMessage = "Hi, this is a default account. It's only purpose is to make your initial experience better on our platform. Feel free to remove this account from your friend list. In case of any issues or bugs related to the website OR if someone is making you uncomfortable on the platform, feel free to report it to any of the admins, so that we can take appropriate actions. Happy Socializing :)";
+        $defaultMessage = "Hi, this is a default account. It's only purpose is to make your initial experience better on our platform. In case of any issues or bugs related to the website OR if someone is making you uncomfortable on the platform, feel free to report it to any of the admins, so that we can take appropriate actions. Happy Socializing :)";
         sendMessage($from,$to, clearString($defaultMessage));
     }
 }
@@ -2448,5 +2450,38 @@ function deleteUser($id){
     else{
         echo "User Doesn't Exist";
     }    
+
+}
+
+function sideBar(){
+
+    $iconArray = array("newspaper","user","bell","comments","user-friends","chart-line");
+
+    $entity = array("Newsfeed" => "main.php",
+                    "Timeline" => "timeline.php",
+                    "Notifications" => "allNotification.php",
+                    "Messages" => "messages.php",
+                    "Friends" => "requests.php",
+                    "Activites" => "allActivities.php"    
+                );
+
+    $counter = 0;
+    $sidebar = "";
+
+    foreach ($entity as $name => $location) {
+        $currentIcon = $iconArray[$counter++];
+    
+        $sidebar .=<<<CONTENT
+            <div class='navigation'>
+                <a href='{$location}'>
+                    <i class='tooltip-container fas fa-{$currentIcon}'>
+                        <span class='tooltip tooltip-right'>{$name}</span>
+                    </i>
+                </a>
+            </div>
+CONTENT;
+    }
+
+    echo $sidebar;
 
 }

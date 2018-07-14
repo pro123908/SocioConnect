@@ -410,19 +410,17 @@ input:-webkit-autofill {
 
 /* Content Area */
 .content-area {
-  
   display: flex;
-  /* justify-content: space-between; */
-  margin: 50px 100px 10px 100px;
-  padding: 20px;
+  margin: 100px 100px 10px 100px;
+  padding: 10px;
+  overflow: hidden;
 }
 
 
 
 .post-area {
   flex: 2;
-  margin: 0px 40px;
-  /* background-color: #edf2f6; */
+  margin: 0px 30px;
 }
 
 .friends-area {
@@ -474,6 +472,7 @@ input:-webkit-autofill {
   text-align: center;
   border-radius: 6px;
   padding: 5px 0px;
+  font-family: 'Open Sans', 'sans-serif';
 }
 
 .tooltip-bottom {
@@ -539,34 +538,40 @@ input:-webkit-autofill {
 }
 
 .new-post .post-btn-container {
-  text-align: right;
+    
+    margin-top: 2px;
+    float: right;
+}
+
+.post-bottom{
+  padding: 10px 0px;
 }
 
 .new-post .post-btn-container .add-post-btn {
-  display: inline-block;
-  width: 100px;
-  text-align: center;
-  margin: 10px 20px 10px 10px;
-  text-decoration: none;
-  color: #fff;
-  padding: 10px 20px;
-  border-radius: 5px;
-  background-color: #ff763a;
+   display: inline-block;
+    text-align: center;
+    margin: 0px 10px 5px 5px;
+    text-decoration: none;
+    color: #fff;
+    padding: 5px 15px;
+    border-radius: 5px;
+    background-color: #ff763a;
+    font-size: 15px;
+
 }
 
 .new-post .post-options {
-  height: 60px;
-  background-color: #fafbfd;
+  height: 5%;
+  background-color: #f6f7f9;
 }
 
 .post-input {
   width: 100%;
   height: 25%;
   resize: none;
-  padding: 20px;
+  padding: 10px 20px;
   border: none;
   border-bottom: 1px solid #e6ecf5;
-  font-family: 'Open Sans';
 }
 
 .post-input:focus {
@@ -577,6 +582,7 @@ input:-webkit-autofill {
 .post-input::placeholder {
   font-family: 'Open Sans';
   color: darkgray;
+  
 }
 
 /* Post Pic Button */
@@ -590,13 +596,9 @@ input:-webkit-autofill {
 
 .pic-upload-btn {
   border: none;
-  /* border: 2px solid gray; */
-  /* color: gray; */
   background-color: white;
-  padding: 8px 20px;
-  /* border-radius: 8px; */
-  font-size: 30px;
-  /* font-weight: bold; */
+  padding: 5px 10px;
+  font-size: 25px;
 }
 
 .pic-upload-btn:hover {
@@ -660,14 +662,14 @@ input[type="file"]:hover {
 
 .post-btn {
   display: inline-block;
-  width: 25%;
+  width: 48%;
   text-align: center;
-  margin-right: 5px;
+  /* margin-right: 5px; */
   text-decoration: none;
   color: #000000;
-  border: 1px solid #a0aeaf;
+  /* border: 1px solid #a0aeaf; */
   padding: 7px 0px;
-  border-radius: 10px;
+  /* border-radius: 10px; */
   font-size: 12px;
 }
 
@@ -732,7 +734,8 @@ input[type="file"]:hover {
 }
 
 .post .post-buttons {
-  text-align: center;
+  /* text-align: center; */
+  border-top: 1px solid #edf2f6;
 }
 
 .post .post-stats {
@@ -789,6 +792,9 @@ input[type="file"]:hover {
 
 .user-image {
   margin-top: -1px;
+}
+.user-image-comment{
+  margin-top: 2px;
 }
 
 .comment .comment-info {
@@ -847,9 +853,10 @@ input[type="file"]:hover {
 
 .comment-form input[type='text'], .remove-user-input {
   border: 1px solid #a3afb9;
-  padding: 5px;
+  padding: 8px;
   width: 100%;
   border-radius: 10px;
+  font-size: 13px;
 }
 
 .comment-form input[type='text']:focus ,.remove-user-input:focus {
@@ -1853,6 +1860,7 @@ input[type="file"]:hover {
 .footer{
   padding-bottom: 20px;
   background-color: #000;
+  /* z-index: 3; */
 }
 
 .footer-logo{
@@ -1880,3 +1888,34 @@ input[type="file"]:hover {
 .owner-names{
   font-family: 'Merienda One',sans-serif;
 }
+
+
+.side-bar-container{
+  position: relative;
+}
+
+.side-bar{
+  position: fixed;
+  top: 14%;
+  left: 0;
+  background: #fff;
+  width: 7%;
+  margin-top: 10px;
+  z-index: 2;
+}
+
+.navigation{
+  text-align: center;
+  padding: 10px;
+  font-size: 35px;
+  margin-bottom: 20px;
+}
+
+.navigation a{
+  color: #000;
+}
+
+.fas,.far{
+  cursor: pointer;
+}
+

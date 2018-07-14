@@ -15,6 +15,14 @@ $_SESSION['no_of_posts_changed'] = 0;
 // $_SESSION['last_message_retrieved_for_recent_convos'] = 0;
 
 ?>
+<div class='side-bar-container'>
+<div class='side-bar'>
+    <?php sideBar();?>
+</div>
+
+
+</div>
+
 
   <!-- Content Area - Where all the content of the page lies -->
 <div class="content-area">
