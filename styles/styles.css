@@ -852,7 +852,7 @@ input[type="file"]:hover {
   border-radius: 10px;
 }
 
-.comment-form input[type='text']:focus,..remove-user-input:focus {
+.comment-form input[type='text']:focus,.remove-user-input:focus {
   outline: none;
   border-color: #ff763a;
 }
