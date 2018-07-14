@@ -39,6 +39,11 @@ if (isset($_GET['visitingUserID']) && isset($_SESSION['user_id'])) {
     redirection("index.php"); // previously it was set to main.php
 }
 ?>
+<!-- <div class='side-bar-container'>
+<div class='side-bar'>
+    <?php sideBar();?>
+</div>
+</div> -->
 <div class='user-timeline'>
     <div class='user-cover-area'>
         <?php $flag == 1 ? coverArea($_SESSION['user_id']) : coverArea($_GET['visitingUserID'])?>
@@ -77,8 +82,8 @@ if ($flag == 1 || $flag == 2) {?>
                         </div>
                         <div class='recent-uploads-footer'></div>
                     </div>
-    
-                    <?php if($_SESSION['user_id'] == 33){ ?>
+
+                    <?php if ($_SESSION['user_id'] == 33) {?>
                          <div class='remove-user-area'>
                             <div class='remove-user-heading'>Remove User</div>
                             <div class='remove-user-content'>

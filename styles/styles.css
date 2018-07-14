@@ -734,7 +734,7 @@ input[type="file"]:hover {
 }
 
 .post .post-buttons {
-  /* text-align: center; */
+  text-align: center;
   border-top: 1px solid #edf2f6;
 }
 
