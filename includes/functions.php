@@ -1669,6 +1669,7 @@ function coverArea($id)
     $queryUser = isRecord($queryResult);
     $name = $queryUser['first_name'] . ' ' . $queryUser['last_name'];
     $coverPic = "./assets/cover_pictures/" .$queryUser['cover_pic'];
+    $messagesLink = '';
 
     // Checking if user has set up a cover image?
     if ($coverPic != null) {
@@ -1681,6 +1682,12 @@ DATA;
 
     // Enabling edit cover and edit profile pic option if it is your profile
     if ($id == $_SESSION['user_id']) {
+
+        $messagesLink =<<<DATA
+            
+                <a href='messages.php' class='messages-link-button'>Messages</a>
+            
+DATA;
 
         $editCover = <<<COVER
 
@@ -1728,12 +1735,15 @@ PROFILE;
         </div>
 PROFILE;
 
+        
         $friendsLink = "requests.php";
         $activitiesLink = "allActivities.php";
+        
         if (isFriend($id)) {
             // Will route to the visited user friends and activity page
             $friendsLink = $friendsLink . "?id=" . $id;
             $activitiesLink = $activitiesLink . "?id=" . $id;
+            
         }
         $content .= <<<PROFILE
     </div>
@@ -1741,7 +1751,10 @@ PROFILE;
 
     <div class='friends-link'>
         <a href='{$friendsLink}' class='friends-link-button'>Friends</a>
+        {$messagesLink}
     </div>
+
+        
 
         <div class='user-info'>
         <h3>{$name}</h3>

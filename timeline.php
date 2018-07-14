@@ -45,7 +45,10 @@ if (isset($_GET['visitingUserID']) && isset($_SESSION['user_id'])) {
         <?php $flag == 1 ? coverArea($_SESSION['user_id']) : coverArea($_GET['visitingUserID'])?>
     </div>
 
-    <div class='user-attributes-area'>
+<?php
+if (isset($_GET['visitingUserID']) && $_GET['visitingUserID'] != $_SESSION['user_id']) {?>
+
+<div class='user-attributes-area'>
         <div class="user-friend-button">
             <!-- Don't show the friend button if user visiting his own timeline  -->
             <?php $flag == 1 ? showFriendButton(0) : showFriendButton($_GET['visitingUserID']);?>
@@ -58,6 +61,10 @@ if (isset($_GET['visitingUserID']) && isset($_SESSION['user_id'])) {
             <?php }?>
         </div>
     </div>
+
+  <?php }
+?>
+
 
 
     <div class='content-area'>
@@ -79,8 +86,8 @@ if ($flag == 1 || $flag == 2) {?>
                         </div>
                         <div class='recent-uploads-footer'></div>
                     </div>
-    
-                    <?php if($_SESSION['user_id'] == 1){ ?>
+
+                    <?php if ($_SESSION['user_id'] == 1) {?>
                          <div class='remove-user-area'>
                             <div class='remove-user-heading'>Remove User</div>
                             <div class='remove-user-content'>
