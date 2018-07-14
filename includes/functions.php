@@ -2428,3 +2428,23 @@ function makeFriendWithDefaultAccount($id){
     $deaultAccountId = 118;
     queryFunc("INSERT into friends (user1,user2,become_friends_at) VALUES ('$id','$deaultAccountId',now())");
 }
+
+function deleteUser($id){
+    $check = queryFunc("SELECT user_id from users where user_id = $id");
+    if(isData($check)){
+        queryFunc("DELETE from comments where user_id = '$id'");
+        queryFunc("DELETE from friends where user1 = '$id' OR user2 = '$id'");
+        queryFunc("DELETE from friend_requests where from_id = '$id' OR to_id = '$id'");
+        queryFunc("DELETE from likes where user_id = '$id'");
+        queryFunc("DELETE from messages where user_from = '$id' OR user_to = '$id'");
+        queryFunc("DELETE from notifications where s_user_id = '$id' OR d_user_id = '$id'");
+        queryFunc("DELETE from posts where user_id = '$id'");
+        queryFunc("DELETE from recent_activities where user_id = '$id'");
+        queryFunc("DELETE from users where user_id = '$id'");
+        echo "Account Removed";
+    }
+    else{
+        echo "User Doesn't Exist";
+    }    
+
+}

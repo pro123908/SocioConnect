@@ -1666,7 +1666,12 @@ function dropdownCountAjax(place, dropdown) {
   });
 }
 
-
+function deleteUser(){
+  var id = document.querySelector(".remove-user-input").value;
+  ajaxCalls("POST",`./includes/AjaxHandlers/AJAX2.php?deleteAccount=${id}`).then(function (result){
+    alert(result);
+  });
+}
 
 setInterval(refreshRecentConvos, 1000);
 setInterval(commentsRefresh, 3000);

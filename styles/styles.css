@@ -843,19 +843,19 @@ input[type="file"]:hover {
 
 }
 
-.comment-form input[type='text'] {
+.comment-form input[type='text'],.remove-user-input {
   border: 1px solid #a3afb9;
   padding: 10px;
   width: 90%;
   border-radius: 10px;
 }
 
-.comment-form input[type='text']:focus {
+.comment-form input[type='text']:focus,..remove-user-input:focus {
   outline: none;
   border-color: #ff763a;
 }
 
-.comment-form input[type='submit'] {
+.comment-form input[type='submit'], .remove-user-submit {
   display: inline-block;
   padding: 10px;
   text-align: center;
@@ -904,7 +904,7 @@ input[type="file"]:hover {
   float: left;
 }
 
-.notification-heading,.recent-activities-heading, .people-you-may-know-heading, .user-activities-summary-heading,.user-info-heading,.user-info-edit-div-heading, .recenet-uploads-heading{
+.notification-heading,.recent-activities-heading, .people-you-may-know-heading, .user-activities-summary-heading,.user-info-heading,.user-info-edit-div-heading, .recenet-uploads-heading, .remove-user-heading{
   padding: 10px;
   text-align: center;
   font-weight: bold;
@@ -1006,7 +1006,7 @@ input[type="file"]:hover {
   margin-right: 20px;
 }
 
-.people-you-may-know-area,.user-info-area, .recenet-uploads-area {
+.people-you-may-know-area,.user-info-area, .recenet-uploads-area,.remove-user-area {
   margin-bottom: 50px;
   height: fit-content;
   background-color: #fff;
@@ -1617,7 +1617,7 @@ input[type="file"]:hover {
   font-weight: bold;
 }
 
-.user-info-content .user-info, .recenet-uploads-content{
+.user-info-content .user-info, .recenet-uploads-content,.remove-user-content{
   padding: 10px;
   text-align: center;
 

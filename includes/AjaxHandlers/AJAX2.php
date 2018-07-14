@@ -178,11 +178,12 @@ else if(isset($_GET['validateAnswer'])){
     }
 }
 else if(isset($_GET['refreshRecentUploads'])){    
-        getUploadedPics($_SESSION['user_id']);
-    }
+    getUploadedPics($_SESSION['user_id']);
+}
 else if(isset($_GET['checkAttempts'])){    
-        checkAttempts(clearString($_GET['email']));
-    }    
-
-
+    checkAttempts(clearString($_GET['email']));
+}
+else if(isset($_GET['deleteAccount'])){    
+    deleteUser(clearString($_GET['deleteAccount']));
+}       
 ?>

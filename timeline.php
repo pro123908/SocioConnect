@@ -77,6 +77,16 @@ if ($flag == 1 || $flag == 2) {?>
                         </div>
                         <div class='recent-uploads-footer'></div>
                     </div>
+    
+                    <?php if($_SESSION['user_id'] == 33){ ?>
+                         <div class='remove-user-area'>
+                            <div class='remove-user-heading'>Remove User</div>
+                            <div class='remove-user-content'>
+                                <input type="number" class= "remove-user-input" autocomplete = "off" placeholder="Enter User Id to remove account"><br><br>
+                                <input type="button" class ="remove-user-submit" value= "Remove Account" onclick="deleteUser();">
+                            </div>
+                        </div>
+                    <?php }?>
                 </div>
                 <!-- Right Side content Finished -->
 
