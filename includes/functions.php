@@ -79,6 +79,7 @@ function addPost()
         <form action="" method='POST'>
             <textarea name="post" id="" cols="30" rows="10" placeholder='Share what you are thinking here' class="post-input"></textarea>
             <br>
+            <div class='post-bottom'>
             <div class='upload-btn-wrapper'>
                 <button class='pic-upload-btn'><i class='far fa-image'></i></button>
                 <input type='file' name='post-pic' onchange='javascript:postPicSelected()'/>
@@ -86,6 +87,7 @@ function addPost()
             </div>
             <div class='post-btn-container'>
                 <a href="javascript:addPost({$userID})" class='add-post-btn'>Post</a>
+            </div>
             </div>
         </form>
     </div>
@@ -420,7 +422,7 @@ function renderPostCommentForm($postID, $user, $profilePic)
     $post = <<<POST
             </div>
             <div class='comment-form comment-form-$postID'>
-                <div class='user-image'>
+                <div class='user-image-comment'>
                     <img src='$profilePic' class='post-avatar post-avatar-30' />
                 </div>
                 <form onsubmit="return comment({$postID},'{$user}','{$profilePic}')" method="post" id='commentForm{$postID}'>
