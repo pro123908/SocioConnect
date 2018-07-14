@@ -5,7 +5,7 @@ function setUserId(userLoggedInId) {
   //to get id from url, slicing the url after "=" sign  
   var id = args.slice(args.search("=") + 1);
 
-  if (path == "/socioConnect/main.php" || path == "/socioConnect/timeline.php") {
+  if (path == "/socioConnect/main.php" || path == "/socioConnect/timeline.php" || path == "/main.php" || path == "/timeline.php") {
     var post = document.querySelectorAll(".post"); // Selecting all posts on page
 
     //If there are no posts
@@ -23,7 +23,7 @@ function setUserId(userLoggedInId) {
         document.getElementById("loading").innerHTML = "No More Posts To Show";
       //if there are more posts present
       else {
-        if (!id && path == "/socioConnect/timeline.php") {
+        if (!id && (path == "/socioConnect/timeline.php") || path == "/timeline.php") {
           // If it is your timeline
           var loading = `<a href="javascript:showNextPage('b')">Show More Posts</a>`;
         } else if (id) {
@@ -35,14 +35,14 @@ function setUserId(userLoggedInId) {
         }
         document.getElementById("loading").innerHTML = loading;
 
-        if (path == '/socioConnect/timeline.php') {
+        if (path == '/socioConnect/timeline.php' || path == '/timeline.php') {
           var recenetUploads = document.querySelectorAll(".recent-uploads");
           if (recenetUploads.length == 0)
             document.querySelector(".recent-uploads-footer").innerHTML = "No Recent Uploads";
         }
       }
     }
-  } else if (path == "/socioConnect/messages.php") {
+  } else if (path == "/socioConnect/messages.php" || path == "/messages.php") {
     // Selecting all messages on the page
     var msgs = document.querySelectorAll(".chat-message");
 
@@ -65,7 +65,7 @@ function setUserId(userLoggedInId) {
         }
       }
     }
-  } else if (path == "/socioConnect/allNotification.php") {
+  } else if (path == "/socioConnect/allNotification.php" || path == "/allNotification.php") {
 
     // Selecting all notifications on page
     var notis = document.querySelectorAll(".notification");
@@ -86,7 +86,7 @@ function setUserId(userLoggedInId) {
         document.getElementById("loading-notis").innerHTML = `<a href="javascript:showNextPageNotis()">Show More Notifications</a>`;
       }
     }
-  } else if (path == "/socioConnect/allActivities.php") {
+  } else if (path == "/socioConnect/allActivities.php" || path == "/allActivities.php") {
     // Selecting all recent activities on page
     var notis = document.querySelectorAll(".recent_activity ");
     if (notis.length == 0) // If no recent activity
@@ -153,7 +153,7 @@ function like(postID) {
 function addRecentActivity(activity) {
   //Adding recent activity to the activity area
   // Getting the area
-  if (window.location.pathname == '/main.php') {
+  if (window.location.pathname == '/socioConnect/main.php' || window.location.pathname == '/main.php') {
     var activitiesDiv = document.querySelector(".activities-content");
 
     // Inserting the new activity at the top
@@ -294,7 +294,7 @@ function deletePost(postID) {
   ajaxCalls("GET", `./includes/AjaxHandlers/AJAX3.php?deletePost=1&id=${postID}`).then(function (result) {
     // Removing post from the view
     document.querySelector(`.post-${postID}`).style.display = "none";
-    if (window.location.pathname == "/socioConnect/timeline.php") {
+    if (window.location.pathname == "/socioConnect/timeline.php" || window.location.pathname == "/timeline.php") {
       ajaxCalls("GET", `./includes/AjaxHandlers/AJAX2.php?refreshRecentUploads=1`).then(function (result) {
         document.querySelector(".recenet-uploads-content").innerHTML = result;
         var recenetUploads = document.querySelectorAll(".recent-uploads");
@@ -344,7 +344,7 @@ function addPost(user_id) {
         var activity_type = 2;
         param = `activity_type=${activity_type}`;
         ajaxCalls("POST", `./includes/AjaxHandlers/AJAX2.php?recentActivity=1`, param).then(function (result) {
-          if (window.location.pathname == "/socioConnect/timeline.php") {
+          if (window.location.pathname == "/socioConnect/timeline.php" || window.location.pathname == "/timeline.php") {
             if (postPic !== undefined) {
               ajaxCalls("GET", `./includes/AjaxHandlers/AJAX2.php?refreshRecentUploads=1`).then(function (result) {
                 document.querySelector(".recenet-uploads-content").innerHTML = result;
@@ -519,7 +519,7 @@ function saveEditPost(postID) {
           //response was empty this means that there is no picture to show, so first check, if div for images is present then hide it
           if (imgDiv) {
             imgDiv.style.display = "none";
-            if (window.location.pathname == "/socioConnect/timeline.php") {
+            if (window.location.pathname == "/socioConnect/timeline.php" || window.location.pathname == "/timeline.php") {
               ajaxCalls("GET", `./includes/AjaxHandlers/AJAX2.php?refreshRecentUploads=1`).then(function (result) {
                 document.querySelector(".recenet-uploads-content").innerHTML = result;
                 var recenetUploads = document.querySelectorAll(".recent-uploads");
@@ -727,8 +727,8 @@ function getUsers(value, flag) {
 
 
 function commentsRefresh() {
-
-  if (window.location.pathname == '/socioConnect/main.php') {
+  //LOCATION MASLA
+  if (window.location.pathname == '/socioConnect/main.php' || window.location.pathname == '/main.php') {
     ajaxCalls("GET", "./includes/AjaxHandlers/AJAX.php?comment=1").then(function (result) {
 
 
@@ -772,7 +772,7 @@ function commentsRefresh() {
 
 function notificationRefresh() {
 
-  if (window.location.pathname != '/socioConnect/index.php') {
+  if (window.location.pathname != '/socioConnect/index.php' && window.location.pathname != '/index.php') {
     ajaxCalls("GET", "./includes/AjaxHandlers/AJAX.php?noti=1").then(function (result) {
       // Displaying search results
 
@@ -850,7 +850,8 @@ function notificationRefresh() {
 
 
 function likesRefresh() {
-  if (window.location.pathname == '/socioConnect/main.php') {
+  //LOCATION MASLA
+  if (window.location.pathname == '/socioConnect/main.php' || window.location.pathname == '/main.php') {
     ajaxCalls("GET", "./includes/AjaxHandlers/AJAX.php?like=1").then(function (result) {
 
       // console.log('Result :  ');
@@ -948,7 +949,7 @@ function messageRefresh() {
 
 
 
-  if (window.location.pathname == '/socioConnect/messages.php') {
+  if (window.location.pathname == '/socioConnect/messages.php' || window.location.pathname == '/messages.php') {
     // AJAX call for message Refreshing
     ajaxCalls("GET", `./includes/AjaxHandlers/AJAX.php?message=1&id=${id}`).then(function (response) {
       let messageResponse = JSON.parse(response);
@@ -975,7 +976,7 @@ function messageRefresh() {
 
 
 function refreshRecentConvos() {
-  if (window.location.pathname != '/socioConnect/index.php') {
+  if (window.location.pathname != '/socioConnect/index.php' && window.location.pathname != '/index.php') {
     ajaxCalls("GET", "./includes/AjaxHandlers/AJAX.php?recentConvo=1").then(function (result) {
       var data = JSON.parse(result);
 
@@ -1112,7 +1113,7 @@ function removeFriend(id) {
   var args = window.location.search;
   var flag = "";
 
-  if (path != "/socioConnect/requests.php") {
+  if (path != "/socioConnect/requests.php" && path != "/requests.php") {
     flag = " limit 10";
   }
 
@@ -1160,10 +1161,10 @@ function removeFriend(id) {
             </div>  
           `;
         document.querySelector(".friends-container").innerHTML += friend;
-        if (flag == 10 && path != "/socioConnect/requests.php")
+        if (flag == 10 && path != "/socioConnect/requests.php" && path != "/requests.php")
           break;
       }
-      if (path != "/socioConnect/requests.php") {
+      if (path != "/socioConnect/requests.php" && path != "/requests.php") {
         if (flag == 0) {
           document.querySelector(".show-more-friends").innerHTML =
             "<p class='see-more'>No Friends To Show</p>";
@@ -1359,7 +1360,7 @@ function toggleDropdown(type) {
 
 /*  --------------- Closing Dropdowns when other areas are clicked ------------------ */
 window.onclick = function (e) {
-  if (window.location.pathname != '/socioConnect/index.php') {
+  if (window.location.pathname != '/socioConnect/index.php' && window.location.pathname != '/index.php') {
     if (e.srcElement.className != "search-input") {
       document.querySelector(".search-result").style.display = "none";
     }
