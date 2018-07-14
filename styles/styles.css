@@ -281,9 +281,8 @@ body {
 .login-logo{
   background-image: url("../assets/logo.png");
   background-repeat: no-repeat;
-  
-  
-  background-size: 30vh;
+
+  background-size: 40vh;
 
   flex: 1;
 }
