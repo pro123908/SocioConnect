@@ -1202,7 +1202,7 @@ FRIEND;
         if (!$id || isFriend($friend['user_id'])) {
             $content .= <<<FRIEND
                 <a href="javascript:removeFriend({$friend['user_id']})" class='remove-friend remove-friend-{$friend['user_id']}'><i class="tooltip-container fas fa-times">
-                <span class='tooltip tooltip-right'>Remove Friend</span>
+                <span class='tooltip tooltip-left'>Remove Friend</span>
                 </i></a>
 FRIEND;
         } else if (reqRecieved($friend['user_id'])) {
@@ -2455,5 +2455,38 @@ function deleteUser($id){
     else{
         echo "User Doesn't Exist";
     }    
+
+}
+
+function sideBar(){
+
+    $iconArray = array("newspaper","user","bell","comments","user-friends","chart-line");
+
+    $entity = array("Newsfeed" => "main.php",
+                    "Timeline" => "timeline.php",
+                    "Notifications" => "allNotification.php",
+                    "Messages" => "messages.php",
+                    "Friends" => "requests.php",
+                    "Activites" => "allActivities.php"    
+                );
+
+    $counter = 0;
+    $sidebar = "";
+
+    foreach ($entity as $name => $location) {
+        $currentIcon = $iconArray[$counter++];
+    
+        $sidebar .=<<<CONTENT
+            <div class='navigation'>
+                <a href='{$location}'>
+                    <i class='tooltip-container fas fa-{$currentIcon}'>
+                        <span class='tooltip tooltip-right'>{$name}</span>
+                    </i>
+                </a>
+            </div>
+CONTENT;
+    }
+
+    echo $sidebar;
 
 }
