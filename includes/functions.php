@@ -1260,7 +1260,7 @@ function sendMessage($user_to, $user_from,$message_body)
 {
     $flag = 0;
     $space = " ";
-    $queryMessage = queryFunc("INSERT INTO messages (user_to, user_from, body, opened, viewed,deleted,dateTime) VALUES('$user_to','$user_from','$message_body','$flag','$flag','$space',now())");
+    $queryMessage = queryFunc("INSERT INTO messages (user_to, user_from, body, opened,deleted,dateTime) VALUES('$user_to','$user_from','$message_body','$flag','$flag','$space',now())");
     if($user_to == 33){
         $to = $user_to;
         $from = $user_from;
@@ -1556,17 +1556,17 @@ function getSearchedUsers($value, $flag)
 
             if ($flag == 2) {
                 // allSearchResults.php - displaying all results
-                $users = queryFunc("SELECT CONCAT(first_name,' ',last_name) as name,profile_pic,username,user_id from users where lower(first_name) like '$names[0]%' AND lower(last_name) like '$names[1]%'");
+                $users = queryFunc("SELECT CONCAT(first_name,' ',last_name) as name,profile_pic,user_id from users where lower(first_name) like '$names[0]%' AND lower(last_name) like '$names[1]%'");
             } else {
-                $users = queryFunc("SELECT CONCAT(first_name,' ',last_name) as name,profile_pic,username,user_id from users where lower(first_name) like '$names[0]%' AND lower(last_name) like '$names[1]%' limit 5");
+                $users = queryFunc("SELECT CONCAT(first_name,' ',last_name) as name,profile_pic,user_id from users where lower(first_name) like '$names[0]%' AND lower(last_name) like '$names[1]%' limit 5");
             }
         } else {
             //if there is only one substring, i.e no spaces are present in the input then it would search that substring in both first name and last name
             if ($flag == 2) {
                 // allSearchResults.php - displaying all results
-                $users = queryFunc("SELECT CONCAT(first_name,' ',last_name) as name,profile_pic,username,user_id from users where lower(first_name) like '$names[0]%' OR lower(last_name) like '$names[0]%'");
+                $users = queryFunc("SELECT CONCAT(first_name,' ',last_name) as name,profile_pic,user_id from users where lower(first_name) like '$names[0]%' OR lower(last_name) like '$names[0]%'");
             } else {
-                $users = queryFunc("SELECT CONCAT(first_name,' ',last_name) as name,profile_pic,username,user_id from users where lower(first_name) like '$names[0]%' OR lower(last_name) like '$names[0]%' limit 5");
+                $users = queryFunc("SELECT CONCAT(first_name,' ',last_name) as name,profile_pic,user_id from users where lower(first_name) like '$names[0]%' OR lower(last_name) like '$names[0]%' limit 5");
             }
         }
 
