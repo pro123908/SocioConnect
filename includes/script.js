@@ -927,7 +927,6 @@ function message() {
     ajaxCalls("POST", "./includes/AjaxHandlers/AJAX.php?message=1", param).then(function (response) {
 
       // var msgs = document.querySelectorAll(".chat-message");
-
       if (document.getElementById("loading-messages").innerHTML == "No Messages To Show")
         document.getElementById("loading-messages").innerHTML = "No More Messages To Show";
     });
