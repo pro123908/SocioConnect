@@ -1489,7 +1489,7 @@ function saveNewPassword(newPass) {
 }
 
 function submitForgotPassForm() {
-  var email = document.querySelector("input[name = 'email']").value;
+  var email = document.querySelector("input[name = 'email-for-forgot-pass']").value;
   var answer = document.querySelector(".forgot-password-input").value;
   if (answer.trim().length != 0) {
     ajaxCalls("GET", `./includes/AjaxHandlers/AJAX2.php?checkAttempts=1&email=${email}`).then(function (checked) {
