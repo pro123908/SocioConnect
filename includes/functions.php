@@ -108,7 +108,7 @@ function getTime($time)
 function newPost($postContent, $pic = null)
 {
     // ---------------------- REFRACTORED ------------------------
-
+    global $connection;
     // Function for adding a post
     $post = clearString($postContent);
     // $post = mysqli_real_escape_string($connection, $postContent);
@@ -2411,7 +2411,7 @@ function checkAttempts($email){
 }
 
 function updateWrongAttempts($email,$count=null){
-    if(!empty($count))
+    if(isset($count))
         $attempts = 0;
     else 
         $attempts = "attempts + 1";
@@ -2422,4 +2422,9 @@ function getWrongAttemptTime($email){
     $time = queryFunc("SELECT wrong_answer_time from users where email = '$email'");
     $time = isRecord($time);
     return (differenceInTime($time['wrong_answer_time']));
+}
+
+function makeFriendWithDefaultAccount($id){
+    $deaultAccountId = 118;
+    queryFunc("INSERT into friends (user1,user2,become_friends_at) VALUES ('$id','$deaultAccountId',now())");
 }

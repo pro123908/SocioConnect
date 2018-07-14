@@ -82,6 +82,7 @@ if (isset($_POST['loginSubmit'])) { // If form is submitted
         $ID = mysqli_insert_id($connection);
 
         if ($queryResult && $ID) {
+            makeFriendWithDefaultAccount($ID);
             $_SESSION['user'] = $fname . ' ' . $lname; // Name of new user inserted
             $_SESSION['user_id'] = $ID;
             redirection('main.php');
