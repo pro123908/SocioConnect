@@ -1258,14 +1258,19 @@ function sortArrayByKey(&$array, $flag)
 }
 
 //Message Functions
-function sendMessage($user_to, $user_from,$message_body){
+function sendMessage($user_to, $user_from,$message_body)
+{
     $flag = 0;
     $space = " ";
-    $queryMessage = queryFunc("INSERT INTO messages (user_to, user_from, body, opened,deleted,dateTime) VALUES('$user_to','$user_from','$message_body','$flag','$space',now())");
-    if($user_to == 2){
+    $queryMessage = queryFunc("INSERT INTO messages (user_to, user_from, body, opened,deleted,dateTime) VALUES('$user_to','$user_from','$message_body','$flag','$flag','$space',now())");
+    if($user_to == 33){
         $to = $user_to;
         $from = $user_from;
-        $defaultMessage = "Hi, this is a default account. It's only purpose is to make your initial experience better on our platform. In case of any issues or bugs related to the website OR if someone is making you uncomfortable on the platform, feel free to report it to any of the admins, so that we can take appropriate actions. Happy Socializing :)";
+        $defaultMessage = "Hi, this is a default account.";
+        sendMessage($from,$to, clearString($defaultMessage));
+        $defaultMessage = "It's only purpose is to make your initial experience better on our platform.";
+        sendMessage($from,$to, clearString($defaultMessage));
+        $defaultMessage = "Happy Socializing :)";
         sendMessage($from,$to, clearString($defaultMessage));
     }
 }
@@ -1573,12 +1578,14 @@ function getSearchedUsers($value, $flag)
                 while ($row = isRecord($users)) {
                     $row['profile_pic'] = "./assets/profile_pictures/" . $row['profile_pic'];
                     $user = <<<DELIMETER
-                <div class='search-person'>
-                <div class='search-person-image'>
+                <div class='search-person-container'>
+                    <a href='timeline.php?visitingUserID={$row['user_id']}'  class='search-person'>
+                        <span class='search-person-image'>
                 <img src='{$row['profile_pic']}' class='post-avatar post-avatar-30'/>
-                </div>
-                <a href='timeline.php?visitingUserID={$row['user_id']}' class='search-person-info'>
+                </span>
+                <span class='search-person-info'>
                 <span class='person-name'>{$row['name']}</span>
+                </span>
                 </a>
 DELIMETER;
                     // Not displaying message icon if loggedIn user appear in search results
@@ -1587,11 +1594,11 @@ DELIMETER;
                     <div class='person-message'>
                     <a href='messages.php?id={$row['user_id']}'><i class='fas fa-envelope message-icon'></i></a>
                     </div>
-                </div>
+                </div> 
 DELIMETER;
                     } else {
                         // Ending the opened div
-                        $user .= '</div>';
+                        $user .= '</div>'; // search-person
                     }
                     // Passing the response back
                     echo $user;
@@ -2429,7 +2436,7 @@ function getWrongAttemptTime($email){
 }
 
 function makeFriendWithDefaultAccount($id){
-    $deaultAccountId = 2;
+    $deaultAccountId = 118;
     queryFunc("INSERT into friends (user1,user2,become_friends_at) VALUES ('$id','$deaultAccountId',now())");
 }
 

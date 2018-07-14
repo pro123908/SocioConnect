@@ -144,22 +144,37 @@ body {
 }
 
 /* search result person */
+
+.search-person-container{
+  display: flex;
+    align-items: center;
+}
+.person-message{
+  flex: 0.5;
+}
+
+.all-search{
+     background-color: #fff;
+    padding: 20px;
+}
+
 .search-person {
+  flex: 8;
   display: flex;
   align-items: center;
   padding: 5px 10px;
   margin-bottom: 5px;
   cursor: pointer;
+  text-decoration: none;
 }
 
-.search-person:hover {
+.search-person-container:hover {
   background-color: #f6f6f6;
 }
 
 
 .search-person-info {
-  flex: 1;
-  text-decoration: none;
+  
 }
 
 .message-icon {
