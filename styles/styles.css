@@ -564,12 +564,14 @@ input:-webkit-autofill {
 
 .new-post .post-btn-container {
     
-    margin-top: 2px;
-    float: right;
+  margin-top: 2px;
+  float: right;
+  flex: 1;
 }
 
 .post-bottom{
-  padding: 10px 0px;
+  padding: 10px 5px;
+  display: flex;
 }
 
 .new-post .post-btn-container .add-post-btn {
@@ -617,6 +619,7 @@ input:-webkit-autofill {
   overflow: hidden;
   display: inline-block;
   text-align: left;
+  flex: 6;
 }
 
 .pic-upload-btn {
