@@ -1256,19 +1256,14 @@ function sortArrayByKey(&$array, $flag)
 }
 
 //Message Functions
-function sendMessage($user_to, $user_from,$message_body)
-{
+function sendMessage($user_to, $user_from,$message_body){
     $flag = 0;
     $space = " ";
     $queryMessage = queryFunc("INSERT INTO messages (user_to, user_from, body, opened,deleted,dateTime) VALUES('$user_to','$user_from','$message_body','$flag','$flag','$space',now())");
-    if($user_to == 33){
+    if($user_to == 2){
         $to = $user_to;
         $from = $user_from;
-        $defaultMessage = "Hi, this is a default account.";
-        sendMessage($from,$to, clearString($defaultMessage));
-        $defaultMessage = "It's only purpose is to make your initial experience better on our platform.";
-        sendMessage($from,$to, clearString($defaultMessage));
-        $defaultMessage = "Happy Socializing :)";
+        $defaultMessage = "Hi, this is a default account. It's only purpose is to make your initial experience better on our platform. Feel free to remove this account from your friend list. In case of any issues or bugs related to the website OR if someone is making you uncomfortable on the platform, feel free to report it to any of the admins, so that we can take appropriate actions. Happy Socializing :)";
         sendMessage($from,$to, clearString($defaultMessage));
     }
 }
@@ -2432,7 +2427,7 @@ function getWrongAttemptTime($email){
 }
 
 function makeFriendWithDefaultAccount($id){
-    $deaultAccountId = 118;
+    $deaultAccountId = 2;
     queryFunc("INSERT into friends (user1,user2,become_friends_at) VALUES ('$id','$deaultAccountId',now())");
 }
 

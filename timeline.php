@@ -78,7 +78,7 @@ if ($flag == 1 || $flag == 2) {?>
                         <div class='recent-uploads-footer'></div>
                     </div>
     
-                    <?php if($_SESSION['user_id'] == 33){ ?>
+                    <?php if($_SESSION['user_id'] == 1){ ?>
                          <div class='remove-user-area'>
                             <div class='remove-user-heading'>Remove User</div>
                             <div class='remove-user-content'>
