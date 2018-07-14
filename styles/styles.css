@@ -1096,7 +1096,7 @@ input[type="file"]:hover {
 }
 
 .user-cover-area .user-info {
-  /* flex: 2; */
+  flex: 1;
   text-align: center;
   margin-top: 40px;
 }
