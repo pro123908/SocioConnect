@@ -1187,15 +1187,17 @@ function printFriendsList($friends, $id)
         $friend['profile_pic'] = "./assets/profile_pictures/".$friend['profile_pic'];
         $content = <<<FRIEND
             <div class="friend-container">
-            <div class='friend'>
-            <div class='friend-image'>
+            <div class='friend-fix'>
+            <a href="timeline.php?visitingUserID={$friend['user_id']}"  class='friend'>
+            <span class='friend-image'>
             <img class='post-avatar post-avatar-30' src='{$friend['profile_pic']}'  >
-            </div>
+            </span>
 
-            <div class='friend-info'>
-                <a href="timeline.php?visitingUserID={$friend['user_id']}" class='friend-text'>{$friend['name']}</a>
+            <span class='friend-info'>
+                <span class='friend-text'>{$friend['name']}</span>
                 <span class='{$stateClass}'>{$time}</span>
-            </div>
+            </span>
+            </a>
             <div class='friend-action'>
             <div>
 FRIEND;
@@ -1231,6 +1233,7 @@ FRIEND;
         </div>
         </div>
         </div>
+        
 FRIEND;
         echo $content;
     }

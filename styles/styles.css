@@ -446,6 +446,14 @@ input:-webkit-autofill {
   height: max-content;
 }
 
+.friend-fix{
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+
+
 .friend-heading {
   padding: 10px;
   text-align: center;
@@ -462,16 +470,19 @@ input:-webkit-autofill {
   cursor: pointer;
 }
 
-.friend:hover {
+.friend-container:hover {
   background-color: #f6f6f6;
 }
+
+
+
 
 .friend-image, .people-you-may-know-image {
   float: left;
 }
 
 .remove-friend {
-  float: right;
+  /* float: right; */
 }
 
 .tooltip-container {
@@ -1044,11 +1055,22 @@ input[type="file"]:hover {
 
 .friends-list .friend-container{
   display: inline-block;
-  width: 28%;
-  margin-right: 5%;
+  width: 33%;
 }
 
+.friend-container{
+  display: flex;
+  align-items: center;
+}
 
+.friend{
+  flex: 8;
+  text-decoration: none;
+}
+
+.friend-action{
+  flex: 1;
+}
 
 .friends-list h1 {
   margin: 10px 0px 10px 10px;
