@@ -138,7 +138,7 @@ if (isset($_GET['noti'])) {
     if (isset($_POST['partner'])) {
         $_POST['partner'] = clearString($_POST['partner']);
         $_POST['messageBody'] = clearString($_POST['messageBody']);
-        sendMessage($_POST['partner'], $_POST['messageBody']);
+        sendMessage($_POST['partner'],$_SESSION['user_id'], $_POST['messageBody']);
         echo $_POST['partner'];
     }
 
