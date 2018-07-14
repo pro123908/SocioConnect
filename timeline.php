@@ -39,11 +39,7 @@ if (isset($_GET['visitingUserID']) && isset($_SESSION['user_id'])) {
     redirection("index.php"); // previously it was set to main.php
 }
 ?>
-<!-- <div class='side-bar-container'>
-<div class='side-bar'>
-    <?php sideBar();?>
-</div>
-</div> -->
+
 <div class='user-timeline'>
     <div class='user-cover-area'>
         <?php $flag == 1 ? coverArea($_SESSION['user_id']) : coverArea($_GET['visitingUserID'])?>
@@ -62,6 +58,7 @@ if (isset($_GET['visitingUserID']) && isset($_SESSION['user_id'])) {
             <?php }?>
         </div>
     </div>
+
 
     <div class='content-area'>
         <?php

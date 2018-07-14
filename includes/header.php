@@ -13,6 +13,7 @@ ob_start(); // Turn on ouput buffering
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700,800" rel="stylesheet">
     <link href='http://fonts.googleapis.com/css?family=Merienda+One' rel='stylesheet' type='text/css'>
 
+
     <link rel="stylesheet" href="./styles/styles.css">
   </head>
   <body onload="setUserId('<?php if (isset($_SESSION['user_id'])) {
