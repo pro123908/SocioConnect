@@ -1706,6 +1706,7 @@ function coverArea($id)
     $name = $queryUser['first_name'] . ' ' . $queryUser['last_name'];
     $coverPic = "./assets/cover_pictures/" .$queryUser['cover_pic'];
     $messagesLink = '';
+    $notificationsLink = '';
 
     // Checking if user has set up a cover image?
     if ($coverPic != null) {
@@ -1719,10 +1720,16 @@ DATA;
     // Enabling edit cover and edit profile pic option if it is your profile
     if ($id == $_SESSION['user_id']) {
 
+         
+
         $messagesLink =<<<DATA
             
                 <a href='messages.php' class='messages-link-button'>Messages</a>
             
+DATA;
+
+         $notificationsLink =<<<DATA
+         <a href='allNotification.php' class='notifications-link-button'>Notifications</a>
 DATA;
 
         $editCover = <<<COVER
@@ -1798,7 +1805,9 @@ PROFILE;
         </div>
 
         <div class='newsfeed-link'>
+        $notificationsLink
         <a href='{$activitiesLink}' class='recent-activities-link-button'>Recent Activities</a>
+        
     </div>
     </div>
 

@@ -260,7 +260,8 @@ body {
   align-items: center;
   color: #fff;
   text-decoration: none;
-  padding: 10px 30px;
+  padding: 0px 30px;
+  height: 100%;
 }
 
 .logged-user:hover {
@@ -1172,17 +1173,17 @@ input[type="file"]:hover {
   text-align: center;
 }
 
-.friends-link-button, .recent-activities-link-button,.messages-link-button{
+.friends-link-button, .recent-activities-link-button,.messages-link-button,.notifications-link-button{
   text-decoration: none;
   color: #000;
   padding: 20px;
 }
 
-.friends-link-button{
+.friends-link-button,.notifications-link-button{
   margin-right: 100px;
 }
 
-.friends-link-button:hover,.recent-activities-link-button:hover,.messages-link-button:hover {
+.friends-link-button:hover,.recent-activities-link-button:hover,.messages-link-button:hover,.notifications-link-button:hover {
  background-color:#edf2f6;
 }
 
@@ -1937,7 +1938,7 @@ input[type="file"]:hover {
 .owners{
   color: #fff;
   text-align: center;
-  margin: 10px 0px;
+  margin: 14px 0px;
   
 }
 
@@ -1979,4 +1980,8 @@ input[type="file"]:hover {
     color: #fff;
     font-size: 120px;
     font-family: 'Berkshire Swash',sans-serif;
+}
+
+.contact-info{
+  display: block;
 }
