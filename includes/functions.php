@@ -2435,12 +2435,46 @@ STATS;
 
 function getUploadedPics($userID){
     $posts = queryFunc("SELECT post_id,pic from posts where pic != '' AND user_id = '$userID' order by post_id desc limit 10");
+    $mediaFlag = 0;
+    
+
     if(isData($posts)){
         while($post = isRecord($posts)){
-            $post['pic'] = "./assets/post_pics/" . $post['pic'];
+
+
+            $picOrVideo = explode(".",$post['pic']);
+            $mediaFlag = 0;
+            $postMedia = '';
+
+            if(isset($picOrVideo[1])){
+                $picOrVideo = $picOrVideo[1];
+                if($picOrVideo == "mp4" || $picOrVideo == "flv" || $picOrVideo == "avi"){
+                    $postPic = "./assets/post_videos/" . $post['pic'];
+                    $mediaFlag = 1;
+                }else{
+                    $postPic = "./assets/post_pics/" . $post['pic'];
+                    $mediaFlag = 2;
+                }  
+            }else{
+                $postPic = "./assets/post_pics/" . $post['pic'];
+            }
+
+
+            if($mediaFlag == 1){
+                $postMedia = <<<DATA
+                <video class='recent-upload-video'>
+                    <source src="{$postPic}" >
+                </video>
+DATA;
+            }elseif($mediaFlag == 2){
+                $postMedia = <<<DATA
+                <img src='{$postPic}' class='recent-upload-image'>
+DATA;
+            }
+            
             $content = <<<PIC
                 <a href = "./notification.php?postID={$post['post_id']}&type=''&notiID=''" class="recent-uploads">
-                    <img src='{$post['pic']}' class='recent-upload-image'>
+                    $postMedia
                 </a>    
 PIC;
         echo $content;                

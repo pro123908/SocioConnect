@@ -670,7 +670,7 @@ input[type="file"]:hover {
 
 .post-video{
   width: 500px;
-  height: 400px;
+  
 }
 
 .post .post-header {
@@ -1899,7 +1899,7 @@ input[type="file"]:hover {
   font-size: 14px;
 }
 
-.recent-upload-image{
+.recent-upload-image,.recent-upload-video{
   width : 48%;
   height: 120px;
 }
