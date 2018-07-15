@@ -111,14 +111,16 @@ $value = CountDropdown(3);
           </div>
           <!-- ********************************************************** -->
 
-          <!-- log out button -->
-          <a href="./includes/EventHandlers/logout.php" class="header-btn mr-1"><i class="fas fa-sign-out-alt fa-lg"></i></a>
 
           <!--  Login User Name -->
           <a class='logged-user' href='timeline.php'>
             <?php echo $image ?>
             <span><?php echo $user ?></span>
           </a>
+
+
+          <!-- log out button -->
+          <a href="./includes/EventHandlers/logout.php" class="header-btn mr-1"><i class="fas fa-sign-out-alt fa-lg"></i></a>
         </div>
         <!-- ********************* Header Links **********************  -->
       </div>

@@ -93,13 +93,19 @@ body {
   
 }
 
+
+
 /* Main header heaing container */
 
 .header-heading {
-  margin-left: 10px;
-  margin-top: 15px;
-  
+  display: flex;
+  align-items: center;
+  padding: 0px 10px 0px 10px;
   font-family: 'Berkshire Swash',sans-serif;
+}
+
+.header-heading:hover{
+  background-color: #353535;
 }
 
 /* Buttons Present on header */
@@ -108,12 +114,12 @@ body {
   flex: 0 0 5%;
   text-decoration: none;
   color: #fff;
-  /* border: 2px solid #a0aeaf; */
   padding: 10px;
   margin-top: 5px;
   text-align: center;
-  /* border-radius: 5px; */
+  
 }
+
 
 /* header buttons on login Page and Sign up page */
 
@@ -139,7 +145,7 @@ body {
   background-color: #fff;
   width: 100%;
   box-shadow: 0 4px 6px 2px rgba(0, 0, 0, .10);
-  top: 60px;
+  top: 75%;
   z-index: 1;
 }
 
@@ -249,14 +255,12 @@ body {
 
 /* Displaying Current User */
 .logged-user {
-  /* flex: 0 0 50%; */
-  margin-left: 50px;
+  margin: 0px 50px;
   display: flex;
   align-items: center;
-  height: 100%;
   color: #fff;
   text-decoration: none;
-  padding: 0px 30px;
+  padding: 10px 30px;
 }
 
 .logged-user:hover {
