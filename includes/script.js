@@ -1017,8 +1017,14 @@ function refreshRecentConvos() {
             <span class='recent-message-time'>
               <span>${obj.at}</span>
             </span>
-          </a>
 
+            <span>
+            <span class='chat-del-button' >
+              <i class='tooltip-container fas fa-times chat-delete' onclick='javascript:deleteConvo(${obj.fromID})'><span class='tooltip tooltip-left'>Delete</span></i>
+            </span>
+            </span>
+          </a>
+          
          
         </div>
         `;

@@ -1518,8 +1518,8 @@ DATA;
             if ($place != 1) {
                 // Not dropdown
                 $chatDeleteButton = <<<DATA
-                <span class='chat-del-button'  style="float: right">
-                <i class='tooltip-container far fa-trash-alt  comment-delete' onclick='javascript:deleteConvo({$recentUserIds[$counter]})'><span class='tooltip tooltip-left'>Delete</span></i>
+                <span class='chat-del-button'  >
+                <i class='tooltip-container fas fa-times chat-delete' onclick='javascript:deleteConvo({$recentUserIds[$counter]})'><span class='tooltip tooltip-left'>Delete</span></i>
                  </span>
 DATA;
             }
@@ -1540,6 +1540,9 @@ DATA;
                 </span>
                 <span class='recent-message-time'>
                     <span>{$at}</span>
+                </span>
+                <span>
+                    $chatDeleteButton
                 </span>
             </a>
             
@@ -1568,7 +1571,7 @@ function searchUsersFortChats()
     <div class="search-message">
     <form action="" method="get" name="message_search_form">
 
-    <input type="text"  onkeyup="getUsers(this.value,0)" name="q" placeholder="Search..." autocomplete = "off" id="message_search_text_input" class='search-message-input'>
+    <input type="text"  onkeyup="getUsers(this.value,0)" name="q" placeholder="Search" autocomplete = "off" id="message_search_text_input" class='search-message-input'>
 
 
     </form>
