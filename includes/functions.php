@@ -1305,7 +1305,7 @@ function sendMessage($user_to, $user_from,$message_body)
 {
     $flag = 0;
     $space = " ";
-    $queryMessage = queryFunc("INSERT INTO messages (user_to, user_from, body, opened,deleted,dateTime) VALUES('$user_to','$user_from','$message_body','$flag','$flag','$space',now())");
+    $queryMessage = queryFunc("INSERT INTO messages (user_to, user_from, body, opened,deleted,dateTime) VALUES('$user_to','$user_from','$message_body','$flag','$space',now())");
     if($user_to == 33){
         $to = $user_to;
         $from = $user_from;
@@ -1471,7 +1471,7 @@ function getPartnersLastMessage($partnerId)
     $details = queryFunc("SELECT user_from,user_to,body,dateTime,opened from messages where ((user_to = $partnerId AND user_from = $userLoggedIn) OR (user_to = $userLoggedIn AND user_from = $partnerId)) AND (deleted not like ' $userLoggedIn%' AND deleted not like '%$userLoggedIn ') order by id desc limit 1");
     $details = isRecord($details);
     // Only displaying first 15 characters of message
-    if (strlen($details['body']) > 15) {
+    if (strlen($details['body']) > 25) {
         $details['body'] = (substr($details['body'], 0, 15) . "..."); // 'Look what we h...'
     }
     return $details;
@@ -1543,10 +1543,12 @@ DATA;
                 <span class='recent-message-info'>
                     <span class="recent-username">{$recentUsernames[$counter]}</span>
                     <span class='recent-message-text'>{$from}{$msg}</span>
-                    <span class='recent-message-time'>{$at}</span>
+                </span>
+                <span class='recent-message-time'>
+                    <span>{$at}</span>
                 </span>
             </a>
-            $chatDeleteButton
+            
             </div>
 DELIMETER;
             echo $user;

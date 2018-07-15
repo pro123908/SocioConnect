@@ -978,13 +978,16 @@ function messageRefresh() {
 
 function refreshRecentConvos() {
   if (window.location.pathname != '/socioConnect/index.php' && window.location.pathname != '/index.php') {
+
+    console.log("INSDIE");
     ajaxCalls("GET", "./includes/AjaxHandlers/AJAX.php?recentConvo=1").then(function (result) {
       var data = JSON.parse(result);
+      console.log(data);
 
       if (!(data.notEmpty == "Bilal")) {
         console.log(data);
 
-        // document.querySelector(".recent-chats-dropdown").innerHTML = "";
+        document.querySelector(".recent-chats-dropdown").innerHTML = "";
 
         // recentMessage = "";
 
@@ -1010,13 +1013,13 @@ function refreshRecentConvos() {
             <span class='recent-message-info'>
               <span class="recent-username">${obj.partner}</span>
               <span class='recent-message-text'>${obj.from} ${obj.msg}</span>
-              <span class='recent-message-time'>${obj.at}</span>
+            </span>
+            <span class='recent-message-time'>
+              <span>${obj.at}</span>
             </span>
           </a>
 
-          <span class='chat-del-button'  style="float: right">
-            <i class='tooltip-container far fa-trash-alt  comment-delete' onclick='javascript:deleteConvo(${obj.fromID})'><span class='tooltip tooltip-left'>Delete</span></i>
-          </span>
+         
         </div>
         `;
           if (document.querySelector(".recent-chats")) {
