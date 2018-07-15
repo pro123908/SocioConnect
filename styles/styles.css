@@ -1306,7 +1306,7 @@ input[type="file"]:hover {
 .recent-chats {
   margin: 10px;
   background-color: #fff;
-  height: 90%;
+  height: 88%;
   overflow-y: scroll;
 }
 
@@ -1423,7 +1423,7 @@ input[type="file"]:hover {
 
 .convo-area {
   margin: 10px;
-  height: 77%;
+  height: 76%;
   overflow-y: scroll;
 }
 
