@@ -1267,6 +1267,8 @@ input[type="file"]:hover {
 
 .message-area {
   display: flex;
+  height: 88%;
+  overflow: hidden;
 }
 
 .no-message {
@@ -1298,12 +1300,13 @@ input[type="file"]:hover {
 .recent-chat-area {
   flex: 1;
   background-color: #fff;
+  
 }
 
 .recent-chats {
   margin: 10px;
   background-color: #fff;
-  height: 80%;
+  height: 90%;
   overflow-y: scroll;
 }
 
@@ -1420,7 +1423,7 @@ input[type="file"]:hover {
 
 .convo-area {
   margin: 10px;
-  height: 70%;
+  height: 77%;
   overflow-y: scroll;
 }
 
