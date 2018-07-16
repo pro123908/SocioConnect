@@ -1077,14 +1077,14 @@ function showPageMessages(id, page) {
   ajaxCalls('GET', `./includes/AjaxHandlers/AJAX3.php?messagePage=1&id=${id}&page=${page}`).then(function (result) {
 
     document.querySelector(".chat-messages").innerHTML =
-      result + "<hr>" + document.querySelector(".chat-messages").innerHTML;
+      result + "<br>" + document.querySelector(".chat-messages").innerHTML;
     document.getElementById("loading-messages").style.display = "block";
 
     if (document.getElementById("noMoreMessages").value == "true")
       document.getElementById("loading-messages").innerHTML =
         "No More Messages To Show";
     // document.getElementById("noMoreMessages").scrollIntoView();
-    document.getElementsByTagName("hr")[0].scrollIntoView();
+    document.getElementsByTagName("br")[0].scrollIntoView();
   }).catch(function (reject) {
 
   });
