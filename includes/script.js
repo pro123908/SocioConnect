@@ -1084,7 +1084,7 @@ function showPageMessages(id, page) {
       document.getElementById("loading-messages").innerHTML =
         "No More Messages To Show";
     // document.getElementById("noMoreMessages").scrollIntoView();
-    document.getElementsByTagName("hr")[0].scrollIntoView({ behavior: "smooth", block: "center" });
+    document.getElementsByTagName("hr")[0].scrollIntoView();
   }).catch(function (reject) {
     // just like that
   });
