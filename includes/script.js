@@ -604,12 +604,12 @@ function editComment(commentID, postID, profilePic, time) {
 
     commentSection.innerHTML += `
     <div class='comment-form comment-form-${postID} edit-comment-form-${postID}'>
-    <div class='user-image'>
+    <div class='user-image-comment'>
               <img src='${profilePic}' class='post-avatar post-avatar-30' />
     </div>
       <form onsubmit ="return saveEditComment(${postID},${commentID},'${user}','${profilePic}','${time}')"  method="post" id='commentFormEdit_${commentID}'>
       <i class='tooltip-container fas fa-times comment-delete' onclick="javascript:showComment('${user}',${commentID},'${postID}','${profilePic}','${time}','${commentValue}',false)"><span class='tooltip tooltip-right'>Cancel</span></i>
-          <input name = "comment_edit_${commentID}" type='text' autocomplete = "off" value = "${commentValue}" >
+          <input name = "comment_edit_${commentID}" type='text' id='input-edit' autocomplete = "off" value = "${commentValue}" >
           
           <input style='display:none;' type="submit" id="${postID}" value="Comment" > 
       </form>
@@ -1017,8 +1017,14 @@ function refreshRecentConvos() {
             <span class='recent-message-time'>
               <span>${obj.at}</span>
             </span>
-          </a>
 
+            <span>
+            <span class='chat-del-button' >
+              <i class='tooltip-container fas fa-times chat-delete' onclick='javascript:deleteConvo(${obj.fromID})'><span class='tooltip tooltip-left'>Delete</span></i>
+            </span>
+            </span>
+          </a>
+          
          
         </div>
         `;
