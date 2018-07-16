@@ -1086,21 +1086,9 @@ function showPageMessages(id, page) {
     // document.getElementById("noMoreMessages").scrollIntoView();
     document.getElementsByTagName("hr")[0].scrollIntoView();
   }).catch(function (reject) {
-    // just like that
+
   });
-  // var xhr = new XMLHttpRequest();
-  // xhr.open("GET", "loadMessagesAjax.php?id=" + id + "&page=" + page, true);
-  // xhr.onload = function () {
-  //   if ((this.status = 200)) {
-  //     document.querySelector(".chat-messages").innerHTML =
-  //       this.responseText + document.querySelector(".chat-messages").innerHTML;
-  //     document.getElementById("loading-messages").style.display = "block";
-  //   }
-  //   if (document.getElementById("noMoreMessages").value == "true")
-  //     document.getElementById("loading-messages").innerHTML =
-  //       "No More Messages To Show";
-  // };
-  // xhr.send();
+
 }
 
 function showNextPageMessages(id) {
