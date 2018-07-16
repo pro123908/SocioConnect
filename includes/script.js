@@ -315,7 +315,7 @@ function addPost(user_id) {
   var postPicData = document.querySelector("input[name='post-pic']"); // Post Pic
   var postPic = postPicData.files[0];
 
-  console.log(postPic);
+  // console.log(postPic);
 
   var postContent = post.value; // Post text
 
@@ -795,7 +795,7 @@ function notificationRefresh() {
       for (i = 0; i < data.length; i++) {
         var obj = data[i];
 
-        console.log('INSIDE NOTI LOOP');
+        // console.log('INSIDE NOTI LOOP');
 
 
         if (obj.type == 'commented') {
@@ -981,13 +981,13 @@ function messageRefresh() {
 function refreshRecentConvos() {
   if (window.location.pathname != '/socioConnect/index.php' && window.location.pathname != '/index.php') {
 
-    console.log("INSDIE");
+    // console.log("INSDIE");
     ajaxCalls("GET", "./includes/AjaxHandlers/AJAX.php?recentConvo=1").then(function (result) {
       var data = JSON.parse(result);
-      console.log(data);
+      // console.log(data);
 
       if (!(data.notEmpty == "Bilal")) {
-        console.log(data);
+        // console.log(data);
 
         document.querySelector(".recent-chats-dropdown").innerHTML = "";
 
@@ -1037,7 +1037,7 @@ function refreshRecentConvos() {
 
 
           if (document.querySelector(".recent-chats-dropdown")) {
-            console.log(recentMessage);
+            // console.log(recentMessage);
             document.querySelector(".recent-chats-dropdown").innerHTML =
               recentMessage + document.querySelector(".recent-chats-dropdown").innerHTML;
           }
@@ -1074,23 +1074,20 @@ function deleteConvo(id) {
 
 function showPageMessages(id, page) {
   document.getElementById("loading-messages").style.display = "none";
-
   ajaxCalls('GET', `./includes/AjaxHandlers/AJAX3.php?messagePage=1&id=${id}&page=${page}`).then(function (result) {
 
     document.querySelector(".chat-messages").innerHTML =
-      result + document.querySelector(".chat-messages").innerHTML;
+      result + "<hr>"+document.querySelector(".chat-messages").innerHTML;
     document.getElementById("loading-messages").style.display = "block";
-
 
     if (document.getElementById("noMoreMessages").value == "true")
       document.getElementById("loading-messages").innerHTML =
         "No More Messages To Show";
-
-
+    // document.getElementById("noMoreMessages").scrollIntoView();
+    document.getElementsByTagName("hr")[0].scrollIntoView();
   }).catch(function (reject) {
     // just like that
   });
-
   // var xhr = new XMLHttpRequest();
   // xhr.open("GET", "loadMessagesAjax.php?id=" + id + "&page=" + page, true);
   // xhr.onload = function () {
@@ -1508,8 +1505,8 @@ function submitForgotPassForm() {
     ajaxCalls("GET", `./includes/AjaxHandlers/AJAX2.php?checkAttempts=1&email=${email}`).then(function (checked) {
       if (checked == "yes") {
         ajaxCalls("GET", `./includes/AjaxHandlers/AJAX2.php?validateAnswer=1&answer=${answer.toLowerCase()}&email=${email}`).then(function (result) {
-          console.log("result : ");
-          console.log(result);
+          // console.log("result : ");
+          // console.log(result);
           if (result == "Yes") {
             var editDiv = document.querySelector(".forgot-password-div");
             editDiv.innerHTML = `<span><h1 class = "forgot-password-div-heading">Set New Password</h1></span>
@@ -1656,7 +1653,7 @@ function submitEditInfoForm() {
 }
 
 function dropdownCountAjax(place, dropdown) {
-  console.log("IN DPCOUNT AJAX");
+  // console.log("IN DPCOUNT AJAX");
 
 
   ajaxCalls('GET', `./includes/AjaxHandlers/AJAX3.php?dpCount=${place}&class=${dropdown}`).then(function (result) {
@@ -1669,7 +1666,7 @@ function dropdownCountAjax(place, dropdown) {
 
     color = result.substring(locStart, locEnd);
 
-    console.log(toString(color));
+    // console.log(toString(color));
     if (color === "'red'") {
       document.querySelector(`.${dropdown}-count`).style.backgroundColor = 'red';
     } else {
