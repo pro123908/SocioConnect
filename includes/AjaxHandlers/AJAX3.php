@@ -188,7 +188,7 @@ if (isset($_GET['notiPage'])) {
         $postID = clearString($_GET['postID']); // ID of the post
 
         // Getting all likes of that particular post
-        $queryResult = queryFunc("SELECT user_id FROM likes WHERE post_id='$postID'");
+        $queryResult = queryFunc("SELECT user_id FROM likes WHERE post_id='$postID' order by like_id desc");
         $counter = 0;
         if (isData($queryResult)) {
             while ($row = isRecord($queryResult)) {
