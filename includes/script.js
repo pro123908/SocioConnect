@@ -121,7 +121,7 @@ function like(postID) {
     let value = result.trim(); // because there is a space in response (don't know why))
 
     // Displaying like count on post
-    document.querySelector(`.like-count-${postID}`).innerHTML = `<i class='like-count-icon fas fa-thumbs-up'></i> ${value}<span class='tooltip tooltip-bottom count'></span>`;
+    document.querySelector(`.like-count-${postID}`).innerHTML = `<i class='like-count-icon far fa-thumbs-up'></i> ${value}<span class='tooltip tooltip-bottom count'></span>`;
 
     // Changing state of like icon
     let icon = document.querySelector(`.post-${postID} .like-btn i`);
@@ -869,7 +869,7 @@ function likesRefresh() {
 
         if (document.querySelector(`.like-count-${obj.postID}`)) {
           document.querySelector(`.like-count-${obj.postID}`).innerHTML = `
-        <i class='like-count-icon fas fa-thumbs-up'></i> ${obj.likes}
+        <i class='like-count-icon far fa-thumbs-up'></i> ${obj.likes}
                    <span class='tooltip tooltip-bottom count'></span>
         `;
         }
