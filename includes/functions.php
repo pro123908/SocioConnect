@@ -140,7 +140,7 @@ function newPost($postContent, $pic = null,$isVideo=0,$extension=null)
         $PostDeleteButton = <<<PosDel
         <div class='post-delete-icon'>
         <i class="tooltip-container fas fa-edit" onclick="javascript:editPost({$postID})"><span class='tooltip tooltip-right'>Edit</span></i>
-        <i onclick="javascript:deletePost({$postID})" class="tooltip-container far fa-trash-alt"><span class='tooltip tooltip-right'>Remove</span></i>
+        <i onclick="javascript:deletePost({$postID})" class="tooltip-container fas fa-times"><span class='tooltip tooltip-right'>Remove</span></i>
         </div>
 PosDel;
 
@@ -487,7 +487,7 @@ POST;
         // Enabling delete option for comment if it is user's post or his comment else disabling
         if ($comments['user_id'] == $_SESSION['user_id'] || $_SESSION['user_id'] == $fUser) {
             $commentDeleteButton = <<<ComDel
-        <i class='tooltip-container far fa-trash-alt comment-delete' onclick='javascript:deleteComment({$commentID})'><span class='tooltip tooltip-right'>Remove</span></i>
+        <i class='tooltip-container fas fa-times comment-delete' onclick='javascript:deleteComment({$commentID})'><span class='tooltip tooltip-right'>Remove</span></i>
 ComDel;
         } else {
             $commentDeleteButton = '';
@@ -592,7 +592,7 @@ function renderPost($row)
         $PostDeleteButton = <<<PosDel
             <div class='post-delete-icon'>
                 <i class="tooltip-container fas fa-edit" onclick="javascript:editPost({$postID})"><span class='tooltip tooltip-right'>Edit</span></i>
-                <i onclick="javascript:deletePost({$postID})" class="tooltip-container far fa-trash-alt"><span class='tooltip tooltip-right'>Remove</span></i>
+                <i onclick="javascript:deletePost({$postID})" class="tooltip-container fas fa-times"><span class='tooltip tooltip-right'>Remove</span></i>
             </div>
 PosDel;
     } else {

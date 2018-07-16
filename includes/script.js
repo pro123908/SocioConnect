@@ -260,7 +260,7 @@ function comment(postID, user, profilePic) {
   </div>
   
   <div class='comment-info'>
-  <i class='tooltip-container far fa-trash-alt comment-delete' onclick='javascript:deleteComment(${commentID})'><span class='tooltip tooltip-right'>Remove</span></i>
+  <i class='tooltip-container fas fa-times comment-delete' onclick='javascript:deleteComment(${commentID})'><span class='tooltip tooltip-right'>Remove</span></i>
   <i class="tooltip-container fas fa-edit comment-edit" onclick="javascript:editComment(${commentID},${postID},'${profilePic}','${timeToShow}')"><span class='tooltip tooltip-right'>Edit</span></i>
   <div class='comment-body'>
   <span class='comment-user'>${user} : </span>
@@ -640,7 +640,7 @@ function showComment(user, commentID, postID, profilePic, time, comment, flag) {
     </div>
   
     <div class='comment-info'>
-      <i class='tooltip-container far fa-trash-alt comment-delete' onclick='javascript:deleteComment(${commentID})'><span class='tooltip tooltip-right'>Remove</span></i>
+      <i class='tooltip-container fas fa-times comment-delete' onclick='javascript:deleteComment(${commentID})'><span class='tooltip tooltip-right'>Remove</span></i>
       <i class="tooltip-container fas fa-edit comment-edit" onclick="javascript:editComment(${commentID},${postID},'${profilePic}','${time}')"><span class='tooltip tooltip-right'>Edit</span></i>
       <div class='comment-body'>
         <span class='comment-user'>${user} : </span>

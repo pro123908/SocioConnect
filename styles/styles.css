@@ -767,7 +767,7 @@ input[type="file"]:hover {
   margin-top: 5px;
   font-size: 15px;
   cursor: pointer;
-  color: red;
+  color: #898383;
 }
 
 .post .post-buttons {
@@ -856,7 +856,7 @@ input[type="file"]:hover {
 .comment-delete,.comment-edit {
   float: right;
   text-decoration: none;
-  color: red;
+  color: #898383;
   font-size: 12px;
   padding: 3px;
   margin-top: 5px;
