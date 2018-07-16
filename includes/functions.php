@@ -1541,10 +1541,11 @@ DATA;
                 <span class='recent-message-time'>
                     <span>{$at}</span>
                 </span>
-                <span>
-                    $chatDeleteButton
-                </span>
+               
             </a>
+            <span>
+            $chatDeleteButton
+        </span>
             
             </div>
 DELIMETER;
