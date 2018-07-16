@@ -614,6 +614,8 @@ function editComment(commentID, postID, profilePic, time) {
           <input style='display:none;' type="submit" id="${postID}" value="Comment" > 
       </form>
     </div>`;
+
+    document.querySelector(`[name='comment_edit_${commentID}']`).scrollIntoView({ behavior: "smooth", block: "center" });
   }
 }
 
@@ -937,7 +939,7 @@ function message() {
 
     // Scrolling to the most recent message
     var last = document.querySelector(".my-message:last-child");
-    last.scrollIntoView();
+    last.scrollIntoView({ behavior: "smooth", block: "center" });
 
 
   }
@@ -969,7 +971,7 @@ function messageRefresh() {
 
         // Scrolling to the most recent message
         var last = document.querySelector(".their-message:last-child");
-        last.scrollIntoView();
+        last.scrollIntoView({ behavior: "smooth", block: "center" });
       }
     });
   }
