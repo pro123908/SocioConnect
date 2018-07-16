@@ -201,7 +201,12 @@ if (isset($_GET['notiPage'])) {
                 $name = $nameResult['name']; // name of that user
 
                 // Inserting user name in array
-                $data[$counter] = array('name' => $name);
+                if($counter < 20)
+                    $data[$counter] = array('name' => $name);
+                else{
+                    $data[$counter] = array('name' => ".......");
+                    break;
+                }    
 
                 // Moving to the next user by incrementing
                 $counter += 1;
