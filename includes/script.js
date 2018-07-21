@@ -427,16 +427,33 @@ function editPost(postID) {
 
     var div = document.createElement("div");
     div.setAttribute("class", "show edit-post edit-post-" + postID);
+
+    var videoDiv = post.querySelector(".post-video");
+    var imgDiv = post.querySelector(".post-image");
+    var conflict = '<label><input type="radio" name="edit-post-pic" value="keep" onclick="hideFileUpload(${postID})"> No Photo/Video</label><br>';
+    var flag = false;
+    if (imgDiv) {
+      if(imgDiv.style.display != "none")
+        flag = true;
+    }
+    if(videoDiv){
+      if(videoDiv.style.display != "none")
+        flag = true;
+    }
+    if(flag){
+      conflict = `<label><input type="radio" name="edit-post-pic" value="keep" onclick="hideFileUpload(${postID})"> Keep Current Photo/Video</label><br>
+      <label><input type="radio" name="edit-post-pic" value="remove" onclick="hideFileUpload(${postID})"> Remove Current Photo/Video</label><br>
+    `;
+    }
+  
     div.innerHTML = `<form action="" method='POST'>
           <textarea name="post" id="" cols="30" rows="10" class="post-input post-edit-${postID}">${
       postContent.innerHTML
       }</textarea>
           <br>
           <div class ="radio-buttons-edit">
-            <label><input type="radio" name="edit-post-pic" value="editText" onclick="hideFileUpload(${postID})"> Edit text </label><br>
-            <label><input type="radio" name="edit-post-pic" value="remove" onclick="hideFileUpload(${postID})"> Remove Current Photo</label><br>
-            <label><input type="radio" name="edit-post-pic" value="keep" onclick="hideFileUpload(${postID})"> Keep Current Pic</label><br>
-            <label><input type="radio" name="edit-post-pic" value="new" onclick="showFileUpload(${postID})"> Upload New Photo</label><br>
+            ${conflict}
+            <label><input type="radio" name="edit-post-pic" value="new" onclick="showFileUpload(${postID})"> Upload New Photo/Video</label><br>
           </div> 
           <div class='upload-btn-wrapper' style="display:none;">
             <button class='pic-upload-btn'><i class='far fa-image'></i></button>
@@ -472,7 +489,7 @@ function saveEditPost(postID) {
   //Getting picutre file
   var postPicData = editForm.querySelector("input[name='post-pic']");
   var postPic = postPicData.files[0];
-
+  
   //If neither text nor pic was inserted
   if (!(postContent.value.trim() == "") || postPic !== undefined) {
     if (editForm.querySelector('input[name="edit-post-pic"]:checked')) {
@@ -485,7 +502,7 @@ function saveEditPost(postID) {
         action == "new" &&
         editForm.querySelector(".pic-name").innerHTML == ""
       ) {
-        alert("Select Image to change image");
+        alert("Select File to update media");
         return 0;
       }
 
@@ -504,23 +521,50 @@ function saveEditPost(postID) {
 
         //result CONTAINS THE PATH OF IMAGE
         //checking if the response path is empty, i.e no image is to be shown
+        var videoDiv = post.querySelector(".post-video");
         var imgDiv = post.querySelector(".post-image");
-        if (result.trim() != "") {
-          // div for image is already present then only updating its src, making display block bcozit might be made none due to line 443 (See if condition in the else block)
-          if (imgDiv) {
-            imgDiv.style.display = "block";
-            imgDiv.src = "./assets/post_pics/" + result;
-          }
 
-          //if div isn't present then creating it from scratch
-          else {
-            var imgParentDiv = document.querySelector(".actual-post-" + postID);
-            imgParentDiv.innerHTML += `<div class='post-image-container'><img src='./assets/post_pics/${result}' class='post-image' /></div>`;
+        var path = postPicData.value;
+        if (result.trim() != "") {
+          if(path == '')
+             path = result;
+          var extension = path.slice(path.indexOf(".")+1);
+          if(extension == "mp4" || extension == "mp4" || extension == "mp4"){
+            if(imgDiv)
+              imgDiv.style.display = "none";
+            if (videoDiv) {
+              videoDiv.style.display = "block";
+              videoDiv.src = "./assets/post_videos/" + result;
+            }
+
+            //if div isn't present then creating it from scratch
+            else {
+              var videoParentDiv = document.querySelector(".actual-post-" + postID);
+              videoParentDiv.innerHTML += `<div class='post-image-container'><video class='post-video' controls><source src="./assets/post_videos/${result}"></video></div>`;
+            }
           }
+          else{
+            if(videoDiv)  
+              videoDiv.style.display = "none";
+            if (imgDiv) {
+              imgDiv.style.display = "block";
+              imgDiv.src = "./assets/post_pics/" + result;
+            }
+
+            //if div isn't present then creating it from scratch
+            else {
+              var imgParentDiv = document.querySelector(".actual-post-" + postID);
+              imgParentDiv.innerHTML += `<div class='post-image-container'><img src='./assets/post_pics/${result}' class='post-image' /></div>`;
+            }
+          }
+          // div for image is already present then only updating its src, making display block bcozit might be made none due to line 443 (See if condition in the else block)
         } else {
           //response was empty this means that there is no picture to show, so first check, if div for images is present then hide it
-          if (imgDiv) {
-            imgDiv.style.display = "none";
+          if (imgDiv || videoDiv) {
+            if(imgDiv)
+              imgDiv.style.display = "none";
+            if(videoDiv)  
+              videoDiv.style.display = "none";
             if (window.location.pathname == "/socioConnect/timeline.php" || window.location.pathname == "/timeline.php") {
               ajaxCalls("GET", `./includes/AjaxHandlers/AJAX2.php?refreshRecentUploads=1`).then(function (result) {
                 document.querySelector(".recenet-uploads-content").innerHTML = result;

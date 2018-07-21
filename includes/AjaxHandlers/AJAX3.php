@@ -114,17 +114,22 @@ if (isset($_GET['notiPage'])) {
                     $path = $uniqueID . '.' . $extension;
                 }
             }
+            elseif(($extension == "mp4" || $extension == "flv" || $extension == "avi") && ($type == "video/mp4" || $type == "video/flv" || $type == "video/avi")) {    
+                
+                $location = '../../assets/post_videos/';
+                if (move_uploaded_file($tmp_name, $location . $uniqueID . '.' . $extension)) {
+                    $path = $uniqueID . '.' . $extension; //Complete path of image
+                }
+            }
+            
         }
-        if ($action == "keep") {
+        if ($action == "keep" || $action == 'editText') {
             // Keeping the current post pic
             queryFunc("UPDATE posts set post = '{$post_body}', edited = 1 where post_id ={$post_id}");
             $picPathQuery = queryFunc("SELECT pic from posts where post_id = {$post_id}");
             $picPath = isRecord($picPathQuery);
             // If path is null then store ""
             $path = ($picPath['pic'] != "") ? $picPath['pic'] : "";
-        } else if ($action == 'editText') {
-            // If only text is edited
-            $path = "";
         } else {
             if ($action == "remove") // if pic is removed
             {

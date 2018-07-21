@@ -638,7 +638,7 @@ CONTENT;
                     <div class='post-info'>
                     <a href='timeline.php?visitingUserID={$row['user_id']}' class='user'>{$row['name']}</a>
                     <span class='post-time'>$timeToShow</span>
-                    <span class='post-edited post-edited-{$postID}'></span>
+                    <span class='post-edited post-edited-{$postID}'>$edited</span>
                     </div>
                     </div>
                     <div class='show actual-post-{$postID}'>
