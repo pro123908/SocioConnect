@@ -100,7 +100,7 @@ body {
 .header-heading {
   display: flex;
   align-items: center;
-  padding: 0px 10px 0px 10px;
+  padding: 0px 14px 0px 10px;
   font-family: 'Berkshire Swash',sans-serif;
 }
 
@@ -455,6 +455,10 @@ input:-webkit-autofill {
   width: 100%;
 }
 
+.friend-fix .friend-action{
+  margin-right: 10px;
+}
+
 
 
 .friend-heading {
@@ -539,7 +543,9 @@ input:-webkit-autofill {
 
 .remove-friend i {
   color: #f97e4d;
+  float: right;
 }
+
 .add-friend i {
   color: green;
   float: right;
@@ -1911,7 +1917,7 @@ input[type="file"]:hover {
 }
 
 .footer{
-  padding-bottom: 20px;
+  padding-bottom: 13px;
   background-color: #000;
   /* z-index: 3; */
 }
@@ -1922,7 +1928,7 @@ input[type="file"]:hover {
   font-size: 30px;
   text-align: center;
   letter-spacing: 10px;
-  padding-top: 30px;
+  padding-top: 10px;
 }
 
 .copyright{

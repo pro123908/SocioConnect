@@ -2489,6 +2489,9 @@ PIC;
         echo $content;                
         }
     }
+    else{
+        $_SESSION['recent_uploads'] = 0;
+    }
 }
 
 function clearString($string){
@@ -2534,9 +2537,10 @@ function getWrongAttemptTime($email){
     return (differenceInTime($time['wrong_answer_time']));
 }
 
-function makeFriendWithDefaultAccount($id){
-    $deaultAccountId = 118;
-    queryFunc("INSERT into friends (user1,user2,become_friends_at) VALUES ('$id','$deaultAccountId',now())");
+function sendReqFromDefaultAccount($id){
+    $defaultAccountId = 2;
+    $friend = queryFunc("INSERT INTO friend_requests (to_id, from_id) values({$id},{$defaultAccountId})");
+    notification($defaultAccountId, $id, 0, 'request');
 }
 
 function deleteUser($id){

@@ -84,7 +84,7 @@ if ($flag == 1 || $flag == 2) {?>
                         <div class='recenet-uploads-content'>
                             <?php $flag == 1 ? getUploadedPics($_SESSION['user_id']) : getUploadedPics($_GET['visitingUserID']);?>
                         </div>
-                        <div class='recent-uploads-footer'></div>
+                        <div class='recent-uploads-footer'><?php if(isset($_SESSION['recent_uploads'])) echo "<p class='see-more'>No Recent Uploads</p>"; unset($_SESSION['recent_uploads'])?></div>
                     </div>
 
                     <?php if ($_SESSION['user_id'] == 1) {?>
