@@ -945,7 +945,7 @@ input[type="file"]:hover {
 .recent-activity {
   display: flex;
   align-items: center;
-  margin-bottom: 15px;
+  margin-bottom: 5px;
   padding: 10px;
   cursor: pointer;
   text-decoration: none;
