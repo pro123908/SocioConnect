@@ -1835,6 +1835,7 @@ function turnOnline($id)
 {
     queryFunc("UPDATE users set online = 1 where user_id =$id");
     queryFunc("UPDATE users set active_ago=0 WHERE user_id={$id}");
+    $_SESSION['last_msg_id'] = 0;
 }
 
 function turnOffline($id)
