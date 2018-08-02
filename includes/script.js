@@ -1133,7 +1133,7 @@ function refreshRecentConvos() {
 
             var obj = data[i];
 
-            var noSeenClass = 'no Seen';
+            var noSeenClass = 'noSeen';
 
             var currentIDURL = window.location.search;
             var ID = currentIDURL.slice(currentIDURL.search('=') + 1);
