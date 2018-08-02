@@ -578,6 +578,9 @@ function saveEditPost(postID) {
 
         //Now hide the editing div and write Edited in the header section of the post
         hideEditDiv(postID, true);
+
+        //Write Edited on the post 
+        document.querySelector(`.post-edited-${postID}`).innerHTML = "Edited";
       });
 
 
