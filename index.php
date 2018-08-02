@@ -85,7 +85,9 @@ if (isset($_POST['loginSubmit'])) { // If form is submitted
             sendReqFromDefaultAccount($ID);
             $_SESSION['user'] = $fname . ' ' . $lname; // Name of new user inserted
             $_SESSION['user_id'] = $ID;
+            turnOnline($_SESSION['user_id']);
             redirection('main.php');
+
         }
     }
 }
