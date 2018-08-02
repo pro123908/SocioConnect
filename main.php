@@ -58,7 +58,7 @@ if ($_SESSION['more_activities'] == 1) {
             <?php showPosts('a', 1, 10);?>
         </div>
 
-        <div id='loading' class='loading-messages'></div>
+        <div id='loading' class='loading-posts loading-messages'></div>
     </div>
 
     <div class="friends-area">

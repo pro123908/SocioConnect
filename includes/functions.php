@@ -1335,7 +1335,6 @@ function showMessages($partnerId, $page, $limitMsg)
     $check = $userLoggedIn . " ";
     $getConvo = queryFunc("SELECT * from messages where ((user_to = '$partnerId' AND user_from = '$userLoggedIn') OR (user_to = '$userLoggedIn' AND user_from = '$partnerId')) AND deleted not like ' $userLoggedIn%' AND deleted not like '%$userLoggedIn ' order by id desc");
 
-    // echo '<script type="text/javascript"> scrollToLastMessage(); </script>';
 
     $numberOfIteration = 0; //Number of results checked
     $count = 1;
@@ -1486,8 +1485,7 @@ function showRecentChats($place = 0)
         $messageSeeMore = '';
 
         if ($place == 1) {
-            // $messageText = '<h3>Messages</h3>';
-            // echo $messageText;
+          
             $messageSeeMore = <<<DATA
             <a href="messages.php" class='see-more'>
               <span>See more</span>

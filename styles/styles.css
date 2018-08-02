@@ -1,6 +1,4 @@
-
 /* Edited By Bilal */
-
 
 .hidden {
   display: none;
@@ -41,15 +39,14 @@ html {
 
 body {
   box-sizing: border-box;
-  font-family: 'Open Sans', 'sans-serif';
+  font-family: "Open Sans", "sans-serif";
 }
 
 .main-container {
- 
   /* background-image: linear-gradient(to right bottom, #243337, #638a8c);
   background-size: auto;
   background-repeat: no-repeat; */
-  margin-top : 81px;
+  margin-top: 81px;
 }
 
 /* ------------------------- Header Section of website ------------------------ */
@@ -63,12 +60,12 @@ body {
   color: #fff;
 }
 
-.header-container{
+.header-container {
   position: fixed;
-  top:0;
-  left:0;
+  top: 0;
+  left: 0;
   z-index: 1;
-  width:100%;
+  width: 100%;
 }
 
 /* Header links or buttons on header */
@@ -90,10 +87,7 @@ body {
 .heading_link {
   text-decoration: none;
   color: #ff763a;
-  
 }
-
-
 
 /* Main header heaing container */
 
@@ -101,10 +95,10 @@ body {
   display: flex;
   align-items: center;
   padding: 0px 14px 0px 10px;
-  font-family: 'Berkshire Swash',sans-serif;
+  font-family: "Berkshire Swash", sans-serif;
 }
 
-.header-heading:hover{
+.header-heading:hover {
   background-color: #353535;
 }
 
@@ -117,17 +111,13 @@ body {
   padding: 10px;
   margin-top: 5px;
   text-align: center;
-  
 }
-
 
 /* header buttons on login Page and Sign up page */
 
 .header-links-login .header-btn {
   flex: 0 0 10%;
 }
-
-
 
 /* Header Search Bar */
 
@@ -139,29 +129,31 @@ body {
 }
 
 /* Search Result Dropdown */
+
 .search-result {
   position: absolute;
   display: none;
   background-color: #fff;
   width: 100%;
-  box-shadow: 0 4px 6px 2px rgba(0, 0, 0, .10);
+  box-shadow: 0 4px 6px 2px rgba(0, 0, 0, 0.1);
   top: 75%;
   z-index: 1;
 }
 
 /* search result person */
 
-.search-person-container{
+.search-person-container {
   display: flex;
-    align-items: center;
+  align-items: center;
 }
-.person-message{
+
+.person-message {
   flex: 0.5;
 }
 
-.all-search{
-     background-color: #fff;
-    padding: 20px;
+.all-search {
+  background-color: #fff;
+  padding: 20px;
 }
 
 .search-person {
@@ -177,7 +169,6 @@ body {
 .search-person-container:hover {
   background-color: #f6f6f6;
 }
-
 
 .search-person-info {
   text-decoration: none;
@@ -205,20 +196,25 @@ body {
   outline: 0;
 }
 
-
-
-
 /* ------- Header Dropdowns ----------- */
 
 /* Notification Dropdown */
+
 /* Message Dropdown */
+
 /* Request Dropdown */
-.notification-dropdown, .message-dropdown, .request-dropdown {
+
+.notification-dropdown,
+.message-dropdown,
+.request-dropdown {
   position: relative;
 }
 
 /* Number of notification circle positioning */
-.noti-count, .msg-count, .req-count {
+
+.noti-count,
+.msg-count,
+.req-count {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -232,7 +228,10 @@ body {
 }
 
 /* Dropdown Content  Styling for Dropdowns */
-.noti-dropdown, .msg-dropdown, .req-dropdown {
+
+.noti-dropdown,
+.msg-dropdown,
+.req-dropdown {
   background-color: #fff;
   position: absolute;
   color: #000;
@@ -241,19 +240,22 @@ body {
   width: 350px;
   /* height: 200px;  */
   right: -140px;
-  border: 1px solid rgba(0, 0, 0, .15);
-  box-shadow: 0 4px 6px 2px rgba(0, 0, 0, .10);
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 6px 2px rgba(0, 0, 0, 0.1);
   z-index: 1;
   height: 375px;
   overflow-y: scroll;
 }
 
-.noti-dropdown h3, .msg-dropdown h3, .req-dropdown h3 {
+.noti-dropdown h3,
+.msg-dropdown h3,
+.req-dropdown h3 {
   padding: 10px;
   text-align: center;
 }
 
 /* Displaying Current User */
+
 .logged-user {
   margin: 0px 50px;
   display: flex;
@@ -274,24 +276,21 @@ body {
 
 .login-container {
   /* background: linear-gradient(to right bottom, #243337, #638a8c) no-repeat center center fixed; */
-  background-image: url("../assets/login.jpg") ;
+  background-image: url("../assets/login.jpg");
   background-size: cover;
   background-repeat: no-repeat;
   display: flex;
   height: 100%;
-  
 }
 
-.login-logo{
+.login-logo {
   background-image: url("../assets/logo2.png");
   background-repeat: no-repeat;
-
   background-size: 40vh;
-
   flex: 1;
 }
 
-.login-info{
+.login-info {
   flex: 1;
   height: 100%;
   display: flex;
@@ -300,17 +299,17 @@ body {
   justify-content: center;
 }
 
-.login-form-container{
-  background-color: rgba(0,0,0,0.5);
+.login-form-container {
+  background-color: rgba(0, 0, 0, 0.5);
   padding: 20px;
   margin-top: 10px;
   margin-left: 40px;
 }
 
-.sign-form-container{
+.sign-form-container {
   /* flex: 1; */
   margin-top: 20px;
-  background-color: rgba(0,0,0,0.5);
+  background-color: rgba(0, 0, 0, 0.5);
   width: 60%;
   padding: 20px 30px 10px;
   margin-left: 40px;
@@ -324,10 +323,9 @@ body {
 
 /* Login Page Form */
 
-.login-form {
-}
+.login-form {}
 
-.sign-form{
+.sign-form {
   text-align: center;
 }
 
@@ -339,54 +337,53 @@ body {
   background: transparent;
   border-bottom: 1px solid #a0aeaf;
   margin-right: 10px;
- color: #ced7d7; 
+  color: #ced7d7;
 }
 
-.sign-input{
+.sign-input {
   padding: 5px;
   background: transparent;
   border: none;
   border-bottom: 1px solid #a0aeaf;
   margin-bottom: 20px;
   width: 100%;
- color: #ced7d7;
+  color: #ced7d7;
 }
 
-.login-error-container{
+.login-error-container {
   text-align: center;
   margin-top: 10px;
-
 }
 
-.error-msg,.login-error-msg{
+.error-msg,
+.login-error-msg {
   color: #ced7d7;
   font-size: 14px;
 }
 
-.sign-input .option{
+.sign-input .option {
   background: rgba(0, 0, 0, 1);
-  
 }
 
 /* Login Page inputs placeholder text */
 
-.login-input::placeholder,.sign-input::placeholder,.search-input::placeholder {
+.login-input::placeholder,
+.sign-input::placeholder,
+.search-input::placeholder {
   color: #ced7d7;
 }
 
 /* When inputs are focused */
 
-.login-input:focus,.sign-input:focus {
-
+.login-input:focus,
+.sign-input:focus {
   outline: 0;
-  
 }
 
-
- @-webkit-keyframes autofill {
+@-webkit-keyframes autofill {
   to {
-      color: #ced7d7;
-      background: transparent;
+    color: #ced7d7;
+    background: transparent;
   }
 }
 
@@ -397,7 +394,8 @@ input:-webkit-autofill {
 
 /* Login Page submit button */
 
-.login-submit, .sign-submit {
+.login-submit,
+.sign-submit {
   background-color: transparent;
   border: 1px solid #a0aeaf;
   padding: 10px;
@@ -406,11 +404,9 @@ input:-webkit-autofill {
   cursor: pointer;
 }
 
-.login-submit:focus{
+.login-submit:focus {
   outline: none;
 }
-
-
 
 /* Submit button hover */
 
@@ -422,19 +418,14 @@ input:-webkit-autofill {
 
 /* ------------------------- Login Page Ended ------------------------------ */
 
-
-
-
-
 /* Content Area */
+
 .content-area {
   display: flex;
   margin: 100px 100px 10px 100px;
   padding: 10px;
   overflow: hidden;
 }
-
-
 
 .post-area {
   flex: 2;
@@ -449,17 +440,15 @@ input:-webkit-autofill {
   height: max-content;
 }
 
-.friend-fix{
+.friend-fix {
   display: flex;
   align-items: center;
   width: 100%;
 }
 
-.friend-fix .friend-action{
+.friend-fix .friend-action {
   margin-right: 10px;
 }
-
-
 
 .friend-heading {
   padding: 10px;
@@ -469,7 +458,9 @@ input:-webkit-autofill {
   color: #fff;
 }
 
-.friend, .people-you-may-know,.friend-request{
+.friend,
+.people-you-may-know,
+.friend-request {
   display: flex;
   align-items: center;
   padding: 5px 10px;
@@ -481,10 +472,8 @@ input:-webkit-autofill {
   background-color: #f6f6f6;
 }
 
-
-
-
-.friend-image, .people-you-may-know-image {
+.friend-image,
+.people-you-may-know-image {
   float: left;
 }
 
@@ -505,7 +494,7 @@ input:-webkit-autofill {
   text-align: center;
   border-radius: 6px;
   padding: 5px 0px;
-  font-family: 'Open Sans', 'sans-serif';
+  font-family: "Open Sans", "sans-serif";
 }
 
 .tooltip-bottom {
@@ -551,15 +540,20 @@ input:-webkit-autofill {
   float: right;
 }
 
-.friend-action, .people-you-may-know-action,.friend-request-action {
+.friend-action,
+.people-you-may-know-action,
+.friend-request-action {
   flex: 2;
 }
 
-.friend-info, .people-you-may-know-info,.friend-request-info {
+.friend-info,
+.people-you-may-know-info,
+.friend-request-info {
   flex: 6;
 }
 
-.friend-text, .people-you-may-know-text {
+.friend-text,
+.people-you-may-know-text {
   font-size: 12px;
   color: black;
   display: block;
@@ -573,28 +567,26 @@ input:-webkit-autofill {
 }
 
 .new-post .post-btn-container {
-    
   margin-top: 2px;
   float: right;
   flex: 1;
 }
 
-.post-bottom{
+.post-bottom {
   padding: 10px 5px;
   display: flex;
 }
 
 .new-post .post-btn-container .add-post-btn {
-   display: inline-block;
-    text-align: center;
-    margin: 0px 10px 5px 5px;
-    text-decoration: none;
-    color: #fff;
-    padding: 5px 15px;
-    border-radius: 5px;
-    background-color: #ff763a;
-    font-size: 15px;
-
+  display: inline-block;
+  text-align: center;
+  margin: 0px 10px 5px 5px;
+  text-decoration: none;
+  color: #fff;
+  padding: 5px 15px;
+  border-radius: 5px;
+  background-color: #ff763a;
+  font-size: 15px;
 }
 
 .new-post .post-options {
@@ -617,9 +609,8 @@ input:-webkit-autofill {
 }
 
 .post-input::placeholder {
-  font-family: 'Open Sans';
+  font-family: "Open Sans";
   color: darkgray;
-  
 }
 
 /* Post Pic Button */
@@ -647,7 +638,7 @@ input[type="file"]:hover {
   cursor: pointer !important;
 }
 
-.upload-btn-wrapper input[type=file] {
+.upload-btn-wrapper input[type="file"] {
   font-size: 40px;
   position: absolute;
   left: 0;
@@ -678,23 +669,23 @@ input[type="file"]:hover {
   width: 100%;
 }
 
-.post-video{
+.post-video {
   width: 500px;
-  
 }
 
 .post .post-header {
-  
   display: flex;
   align-items: center;
 }
 
-.post .post-header .post-time,.post-edited {
+.post .post-header .post-time,
+.post-edited {
   color: #90949c;
   font-size: 10px;
 }
-.post-edited{
-  color: #360505;
+
+.post-edited {
+  color: #898383;
   font-weight: bold;
 }
 
@@ -721,19 +712,15 @@ input[type="file"]:hover {
 }
 
 .post .like-count {
-  
   font-size: 12px;
-  
   cursor: pointer;
 }
 
 .post .comment-count {
-  
   font-size: 12px;
-  
   margin-left: 5px;
   color: #000;
-  text-decoration: none
+  text-decoration: none;
 }
 
 .post .post-content {
@@ -784,42 +771,42 @@ input[type="file"]:hover {
 .post .post-stats {
   margin-left: 10px;
   margin-bottom: 8px;
-
 }
 
-.edit-post{
-    background-color: #f7f7f7;
-    padding: 20px;
-    margin: 10px;
+.edit-post {
+  background-color: #f7f7f7;
+  padding: 20px;
+  margin: 10px;
 }
 
-.edit-post-button-container{
+.edit-post-button-container {
   margin: 10px;
   text-align: center;
 }
 
-.edit-post-save-btn,.edit-post-cancel-btn{
-    display: inline-block;
-    width: 30%;
-    text-align: center;
-    text-decoration: none;
-    color: #000;
-    padding: 10px 20px;
-    border: 1px solid #d6cece;
-    border-radius: 10px;
-    background-color: #ffffff;
-    margin-right: 10px;
+.edit-post-save-btn,
+.edit-post-cancel-btn {
+  display: inline-block;
+  width: 30%;
+  text-align: center;
+  text-decoration: none;
+  color: #000;
+  padding: 10px 20px;
+  border: 1px solid #d6cece;
+  border-radius: 10px;
+  background-color: #ffffff;
+  margin-right: 10px;
 }
 
-.edit-post-save-btn:hover,.edit-post-cancel-btn:hover{
+.edit-post-save-btn:hover,
+.edit-post-cancel-btn:hover {
   background-color: #edf2f6;
 }
-.edit-post-cancel-btn{
-  
-}
 
-.radio-buttons-edit{
-  margin-top:10px;
+.edit-post-cancel-btn {}
+
+.radio-buttons-edit {
+  margin-top: 10px;
   margin-left: 5px;
 }
 
@@ -836,7 +823,8 @@ input[type="file"]:hover {
 .user-image {
   margin-top: -1px;
 }
-.user-image-comment{
+
+.user-image-comment {
   margin-top: 2px;
 }
 
@@ -859,7 +847,8 @@ input[type="file"]:hover {
   font-size: 13px;
 }
 
-.comment-delete,.comment-edit {
+.comment-delete,
+.comment-edit {
   float: right;
   text-decoration: none;
   color: #898383;
@@ -869,15 +858,16 @@ input[type="file"]:hover {
   cursor: pointer;
 }
 
-.comment-time,.comment-edit-text {
+.comment-time,
+.comment-edit-text {
   font-size: 8px;
   color: #90949c;
   display: inline-block;
   width: 100%;
 }
 
-.comment-edit-text{
-  width : 50%;
+.comment-edit-text {
+  width: 50%;
   color: #360505;
   font-weight: bold;
 }
@@ -886,15 +876,15 @@ input[type="file"]:hover {
   margin-top: 13px;
   display: flex;
 }
-.comment-form form{
+
+.comment-form form {
   flex: 1;
 }
 
-.edit-comment-form{
+.edit-comment-form {}
 
-}
-
-.comment-form input[type='text'], .remove-user-input {
+.comment-form input[type="text"],
+.remove-user-input {
   border: 1px solid #a3afb9;
   padding: 8px;
   width: 100%;
@@ -902,12 +892,14 @@ input[type="file"]:hover {
   font-size: 13px;
 }
 
-.comment-form input[type='text']:focus ,.remove-user-input:focus {
+.comment-form input[type="text"]:focus,
+.remove-user-input:focus {
   outline: none;
   border-color: #ff763a;
 }
 
-.comment-form input[type='submit'] ,.remove-user-submit {
+.comment-form input[type="submit"],
+.remove-user-submit {
   display: inline-block;
   padding: 10px;
   text-align: center;
@@ -924,8 +916,8 @@ input[type="file"]:hover {
 
 /* --------------------- Notification and Recent Activity Styling ------------------- */
 
-
-.notification-area,.recent-activities-area {
+.notification-area,
+.recent-activities-area {
   flex: 1;
   border-radius: 5px;
   border: 1px solid #e6ecf5;
@@ -933,16 +925,19 @@ input[type="file"]:hover {
   height: max-content;
 }
 
-.notification-display,.recent-activities-display {
+.notification-display,
+.recent-activities-display {
   padding: 50px;
   background-color: #fff;
 }
 
-.notification-display h1,.recent-activities-display h1{
+.notification-display h1,
+.recent-activities-display h1 {
   margin-bottom: 30px;
 }
 
-.notification,.recent-activity{
+.notification,
+.recent-activity {
   display: flex;
   align-items: center;
   margin-bottom: 15px;
@@ -952,11 +947,19 @@ input[type="file"]:hover {
   display: block;
 }
 
-.notification-image , .recent-activity-image{
+.notification-image,
+.recent-activity-image {
   float: left;
 }
 
-.notification-heading,.recent-activities-heading, .people-you-may-know-heading, .user-activities-summary-heading,.user-info-heading,.user-info-edit-div-heading, .recenet-uploads-heading, .remove-user-heading{
+.notification-heading,
+.recent-activities-heading,
+.people-you-may-know-heading,
+.user-activities-summary-heading,
+.user-info-heading,
+.user-info-edit-div-heading,
+.recenet-uploads-heading,
+.remove-user-heading {
   padding: 10px;
   text-align: center;
   font-weight: bold;
@@ -964,23 +967,29 @@ input[type="file"]:hover {
   color: #fff;
 }
 
-.notification:hover,.recent-activity:hover, .people-you-may-know:hover {
+.notification:hover,
+.recent-activity:hover,
+.people-you-may-know:hover {
   background-color: #f6f6f6;
 }
 
-.notification-info,.recent-activity-info{
+.notification-info,
+.recent-activity-info {
   display: inline-block;
 }
 
-.notification-info .deleted-noti,.recent-activity-info .deleted-activity {
+.notification-info .deleted-noti,
+.recent-activity-info .deleted-activity {
   color: red;
 }
 
-.deleted-noti,.deleted-activity{
+.deleted-noti,
+.deleted-activity {
   cursor: not-allowed;
 }
 
-.deleted-noti:hover ,.deleted-activity:hover{
+.deleted-noti:hover,
+.deleted-activity:hover {
   background-color: #fff;
 }
 
@@ -988,27 +997,31 @@ input[type="file"]:hover {
   background-color: #f7f380;
 }
 
-.notification-text,.recent-activity-text {
+.notification-text,
+.recent-activity-text {
   font-size: 11px;
   text-decoration: none;
   color: black;
   display: block;
 }
 
-.noti-icon,.recent-activity-icon  {
+.noti-icon,
+.recent-activity-icon {
   font-size: 10px;
   color: #000;
   display: inline-block;
   margin-right: 5px;
 }
 
-.noti-time,.recent-activity-time {
+.noti-time,
+.recent-activity-time {
   font-size: 10px;
   color: #90949c;
   display: inline-block;
 }
 
-.notification-info,.recent-activity-info {
+.notification-info,
+.recent-activity-info {
   max-width: 80%;
 }
 
@@ -1028,7 +1041,7 @@ input[type="file"]:hover {
   padding: 15px 20px 5px;
 }
 
-.friend-request-btn{
+.friend-request-btn {
   padding: 10px 20px;
   background: transparent;
   border: 1px solid #a0aeaf;
@@ -1037,55 +1050,56 @@ input[type="file"]:hover {
   border-radius: 5px;
 }
 
-.friend-request:hover{
+.friend-request:hover {
   background-color: #f6f6f6;
 }
 
-.friend-request-btn:hover{
+.friend-request-btn:hover {
   background-color: #edf2f6;
   cursor: pointer;
 }
 
-.friends-page{
+.friends-page {
   display: flex;
   padding: 30px;
   overflow: hidden;
 }
 
-.friends-content{
+.friends-content {
   flex: 3;
   background-color: #fff;
   margin-right: 20px;
 }
 
-.people-you-may-know-area,.user-info-area, .recenet-uploads-area,.remove-user-area {
+.people-you-may-know-area,
+.user-info-area,
+.recenet-uploads-area,
+.remove-user-area {
   margin-bottom: 50px;
   height: fit-content;
   background-color: #fff;
 }
 
-.people-you-may-know-area{
+.people-you-may-know-area {
   flex: 1;
 }
 
-
-
-.friends-list .friend-container{
+.friends-list .friend-container {
   display: inline-block;
   width: 33%;
 }
 
-.friend-container{
+.friend-container {
   display: flex;
   align-items: center;
 }
 
-.friend{
+.friend {
   flex: 8;
   text-decoration: none;
 }
 
-.friend-action{
+.friend-action {
   flex: 1;
 }
 
@@ -1150,47 +1164,54 @@ input[type="file"]:hover {
   height: 150px;
 }
 
-.edit-profile-pic{
+.edit-profile-pic {
   position: absolute;
   top: 56%;
   left: 45%;
 }
 
-.edit-profile-pic .pic-upload-btn{
+.edit-profile-pic .pic-upload-btn {
   font-size: 20px;
   padding: 5px;
   background: #ff763a;
 }
 
-.edit-cover-pic .pic-upload-btn{
+.edit-cover-pic .pic-upload-btn {
   font-size: 20px;
   padding: 5px;
   background: #ff763a;
 }
 
-
-.user-timeline-tabs{
+.user-timeline-tabs {
   display: flex;
   align-items: center;
 }
 
-.friends-link,.newsfeed-link{
+.friends-link,
+.newsfeed-link {
   flex: 1;
   text-align: center;
 }
 
-.friends-link-button, .recent-activities-link-button,.messages-link-button,.notifications-link-button{
+.friends-link-button,
+.recent-activities-link-button,
+.messages-link-button,
+.notifications-link-button {
   text-decoration: none;
   color: #000;
   padding: 20px;
 }
 
-.friends-link-button,.notifications-link-button{
+.friends-link-button,
+.notifications-link-button {
   margin-right: 100px;
 }
 
-.friends-link-button:hover,.recent-activities-link-button:hover,.messages-link-button:hover,.notifications-link-button:hover {
- background-color:#edf2f6;
+.friends-link-button:hover,
+.recent-activities-link-button:hover,
+.messages-link-button:hover,
+.notifications-link-button:hover {
+  background-color: #edf2f6;
 }
 
 .friend-button {
@@ -1241,7 +1262,7 @@ input[type="file"]:hover {
 .user-attributes-area {
   display: flex;
   justify-content: space-evenly;
-  align-items: center
+  align-items: center;
 }
 
 .see-more {
@@ -1267,7 +1288,7 @@ input[type="file"]:hover {
 
 .state-off {
   font-size: 10px;
-  color: red;
+  color: #898383;
 }
 
 /* Message Area */
@@ -1301,13 +1322,12 @@ input[type="file"]:hover {
 }
 
 .no-message-text h2 {
-  color: #8e8d8d
+  color: #8e8d8d;
 }
 
 .recent-chat-area {
   flex: 1;
   background-color: #fff;
-  
 }
 
 .recent-chats {
@@ -1331,7 +1351,6 @@ input[type="file"]:hover {
   border-bottom: 1px solid #edf2f6;
   padding: 10px 0px 10px 5px;
   align-items: center;
- 
 }
 
 .recent-user-div:hover {
@@ -1355,14 +1374,13 @@ input[type="file"]:hover {
   flex: 2;
 }
 
-.recent-user-image{
+.recent-user-image {
   flex: 0;
   margin-top: 5px;
 }
 
 .recent-message-time {
   color: #90949c;
-  
   font-size: 10px;
 }
 
@@ -1382,9 +1400,7 @@ input[type="file"]:hover {
   width: 100%;
 }
 
-.search-message-input::placeholder {
-  
-}
+.search-message-input::placeholder {}
 
 .search-message-input:focus {
   outline: none;
@@ -1395,10 +1411,9 @@ input[type="file"]:hover {
   display: none;
   background-color: #fff;
   width: 100%;
-  box-shadow: 0 4px 6px 2px rgba(0, 0, 0, .10);
+  box-shadow: 0 4px 6px 2px rgba(0, 0, 0, 0.1);
   top: 30px;
   z-index: 1;
-  
 }
 
 .search-user-for-chats {
@@ -1412,7 +1427,8 @@ input[type="file"]:hover {
   background-color: #fff;
 }
 
-.loading-messages, .loading-messages * {
+.loading-messages,
+.loading-messages * {
   text-align: center;
   font-size: 12px;
   color: black;
@@ -1422,6 +1438,10 @@ input[type="file"]:hover {
 
 .loading-messages a:hover {
   background-color: #f6f6f6;
+}
+
+.loading-posts {
+  min-height: 400px;
 }
 
 .convo-area {
@@ -1527,7 +1547,7 @@ input[type="file"]:hover {
 }
 
 .message-input::placeholder {
-  font-family: 'Open Sans';
+  font-family: "Open Sans";
 }
 
 /* profile picture */
@@ -1541,7 +1561,7 @@ input[type="file"]:hover {
 
 /* The Modal (background) */
 
-.modal{
+.modal {
   display: none;
   position: fixed;
   z-index: 100;
@@ -1572,10 +1592,10 @@ input[type="file"]:hover {
 
 @keyframes zoomIn {
   from {
-    transform: scale(0)
+    transform: scale(0);
   }
   to {
-    transform: scale(1)
+    transform: scale(1);
   }
 }
 
@@ -1586,10 +1606,10 @@ input[type="file"]:hover {
 
 @keyframes zoomOut {
   from {
-    transform: scale(1)
+    transform: scale(1);
   }
   to {
-    transform: scale(0)
+    transform: scale(0);
   }
 }
 
@@ -1605,7 +1625,8 @@ input[type="file"]:hover {
   transition: 0.3s;
 }
 
-.close:hover, .close:focus {
+.close:hover,
+.close:focus {
   color: #bbb;
   text-decoration: none;
   cursor: pointer;
@@ -1642,81 +1663,76 @@ input[type="file"]:hover {
   /* background: #555;  */
 }
 
-
-
-
 /* ----------------------- User activities summary --------------------------*/
 
-.stat-heading{
+.stat-heading {
   text-align: center;
-    margin: 20px;
-    margin-top: 0;
+  margin: 20px;
+  margin-top: 0;
 }
 
-.stat-value{
+.stat-value {
   text-align: center;
   font-size: 40px;
-
 }
 
 /* --------------------------- Content area left & right side --------------------- */
-.content-right-side,.content-left-side {
+
+.content-right-side,
+.content-left-side {
   flex: 1;
 }
 
 /*--------------------- User details --------------------- */
 
-
-.user-information{
-  margin : 10px;
+.user-information {
+  margin: 10px;
 }
 
-.user-info-value{
-  
-  
-}
+.user-info-value {}
 
-.user-info .fa-edit{
+.user-info .fa-edit {
   font-size: 10px;
 }
 
-.user-info-key{
+.user-info-key {
   text-transform: capitalize;
   font-weight: bold;
 }
 
-.user-info-content .user-info, .recenet-uploads-content,.remove-user-content{
+.user-info-content .user-info,
+.recenet-uploads-content,
+.remove-user-content {
   padding: 10px;
   text-align: center;
-
 }
 
 /* User info edititng */
 
-.user-info-edit{
+.user-info-edit {
   text-align: center;
 }
 
 .user-info-edit-div {
-    position: fixed;
-    z-index: 100;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%,-50%);
-    width: 50%;
-    height: 70%;
-    overflow: auto;
-    background-color: #fff;
+  position: fixed;
+  z-index: 100;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 50%;
+  height: 70%;
+  overflow: auto;
+  background-color: #fff;
 }
 
-.forgot-password-div{
-  position:fixed;
+.forgot-password-div {
+  position: fixed;
   padding: 20px;
   z-index: 100;
   /* padding-top: 75px; */
   left: 50%;
   top: 50%;
-  transform: translate(-50%,-50%);
+  transform: translate(-50%, -50%);
   overflow: auto;
   background-color: rgba(0, 0, 0, 1);
   color: rgb(255, 255, 255);
@@ -1731,7 +1747,7 @@ input[type="file"]:hover {
   display: block;
   width: 90%;
   max-width: 700px;
-  margin-top:50px;
+  margin-top: 50px;
 }
 
 /* The Close Button */
@@ -1746,7 +1762,7 @@ input[type="file"]:hover {
   transition: 0.3s;
 }
 
-.forgot-password-div-close{
+.forgot-password-div-close {
   position: absolute;
   top: -7px;
   right: 3%;
@@ -1755,43 +1771,47 @@ input[type="file"]:hover {
   font-weight: normal;
   transition: 0.3s;
 }
- 
-.user-info-edit-div-close:hover, .user-info-edit-div-close:focus, .forgot-password-div-close:focus, .forgot-password-div-close:hover{
+
+.user-info-edit-div-close:hover,
+.user-info-edit-div-close:focus,
+.forgot-password-div-close:focus,
+.forgot-password-div-close:hover {
   color: #bbb;
   text-decoration: none;
   cursor: pointer;
 }
 
-.user-info-edit-div-heading{
-  font-size: 30px; 
+.user-info-edit-div-heading {
+  font-size: 30px;
 }
 
-.forgot-password-div-heading{
+.forgot-password-div-heading {
   font-size: 20px;
   text-align: center;
   margin-bottom: 20px;
 }
 
-.user-info-edit-container{
+.user-info-edit-container {
   text-align: center;
   margin-top: 10px;
 }
 
-.user-info-edit-button{
+.user-info-edit-button {
   margin-bottom: 10px;
   background: #edf2f6;
   border: none;
   padding: 10px 60px;
 }
 
-.forgot-password-text{
+.forgot-password-text {
   text-decoration: none;
   color: #ced7d7;
   font-size: 14px;
   display: block;
 }
 
-.forgot-password-input,.change-pass-input{
+.forgot-password-input,
+.change-pass-input {
   padding: 5px;
   background: transparent;
   border: none;
@@ -1799,18 +1819,19 @@ input[type="file"]:hover {
   margin-bottom: 20px;
   color: #ced7d7;
   width: 70%;
-
 }
-.forgot-password-input:focus,.change-pass-input:focus{
+
+.forgot-password-input:focus,
+.change-pass-input:focus {
   outline: 0;
 }
 
-.forgot-password-question{
+.forgot-password-question {
   text-align: center;
   margin-bottom: 10px;
 }
 
-.forgot-password-div-container{
+.forgot-password-div-container {
   display: none;
   position: fixed;
   z-index: 500;
@@ -1822,7 +1843,7 @@ input[type="file"]:hover {
   background-color: rgba(36, 37, 52, 0.95);
 }
 
-.user-info-edit-div-container{
+.user-info-edit-div-container {
   position: fixed;
   z-index: 500;
   padding-top: 100px;
@@ -1834,15 +1855,15 @@ input[type="file"]:hover {
   background-color: rgba(14, 10, 10, 0.45);
 }
 
-.user-info-display{
+.user-info-display {
   margin: 20px 10px;
 }
 
-.user-info-display-heading{
+.user-info-display-heading {
   text-align: center;
 }
 
-.user-edit-field{
+.user-edit-field {
   width: 100%;
   margin-top: 10px;
   padding: 10px;
@@ -1850,19 +1871,17 @@ input[type="file"]:hover {
   border: 1px solid black;
 }
 
-.user-edit-field::placeholder{
+.user-edit-field::placeholder {
   /* color: #98a2a2; */
-  font-family: 'Open Sans';
+  font-family: "Open Sans";
   color: darkgray;
-  
 }
 
-.user-edit-save-container{
+.user-edit-save-container {
   text-align: center;
 }
 
-
-.user-edit-save{
+.user-edit-save {
   cursor: pointer;
   border: none;
   margin-bottom: 10px;
@@ -1873,37 +1892,33 @@ input[type="file"]:hover {
   background-color: #ff763a;
 }
 
-.password-edit-save{
+.password-edit-save {
   cursor: pointer;
   border: none;
   margin-bottom: 10px;
-  
   color: #fff;
   padding: 10px 20px;
   border-radius: 5px;
   background-color: #ff763a;
 }
 
-
 /* ----------------------- User activities summary --------------------------*/
 
-.user-info-edit-button:hover{
+.user-info-edit-button:hover {
   background-color: #ececec;
   cursor: pointer;
 }
 
-
-.stat-value{
+.stat-value {
   text-align: center;
   font-size: 40px;
 }
 
-.first-stat{
+.first-stat {
   margin-top: 10px;
 }
 
-
-.recent-uploads-footer{
+.recent-uploads-footer {
   padding: 0px 5px 10px 5px;
   text-align: center;
   display: block;
@@ -1911,49 +1926,48 @@ input[type="file"]:hover {
   font-size: 14px;
 }
 
-.recent-upload-image,.recent-upload-video{
-  width : 48%;
+.recent-upload-image,
+.recent-upload-video {
+  width: 48%;
   height: 120px;
 }
 
-.footer{
+.footer {
   padding-bottom: 13px;
   background-color: #000;
   /* z-index: 3; */
 }
 
-.footer-logo{
+.footer-logo {
   color: #ff763a;
-  font-family: 'Berkshire Swash',sans-serif;
+  font-family: "Berkshire Swash", sans-serif;
   font-size: 30px;
   text-align: center;
   letter-spacing: 10px;
   padding-top: 10px;
 }
 
-.copyright{
+.copyright {
   color: #fff;
   text-align: center;
   font-size: 14px;
 }
 
-.owners{
+.owners {
   color: #fff;
   text-align: center;
   margin: 14px 0px;
-  
 }
 
-.owner-names{
-  font-family: 'Merienda One',sans-serif;
+.owner-names {
+  font-family: "Merienda One", sans-serif;
 }
 
-
-.side-bar-container{
+.side-bar-container {
   position: relative;
 }
 
-.side-bar{
+.side-bar {
   position: fixed;
   top: 14%;
   left: 0;
@@ -1963,40 +1977,40 @@ input[type="file"]:hover {
   z-index: 2;
 }
 
-.navigation{
+.navigation {
   text-align: center;
   padding: 10px;
   font-size: 30px;
   margin-bottom: 20px;
 }
 
-.navigation a{
+.navigation a {
   color: #000;
 }
 
-.logo-design{
+.logo-design {
   background: #000;
-    height: 500px;
-    text-align: center;
-    padding: 50px;
-    color: #fff;
-    font-size: 120px;
-    font-family: 'Berkshire Swash',sans-serif;
+  height: 500px;
+  text-align: center;
+  padding: 50px;
+  color: #fff;
+  font-size: 120px;
+  font-family: "Berkshire Swash", sans-serif;
 }
 
-.contact-info{
+.contact-info {
   display: block;
 }
 
-#input-edit{
+#input-edit {
   width: 95%;
 }
 
-.chat-del-button{
+.chat-del-button {
   position: relative;
 }
 
-.chat-delete{
+.chat-delete {
   display: none;
   position: absolute;
   top: -25px;
@@ -2007,6 +2021,6 @@ input[type="file"]:hover {
   cursor: pointer;
 }
 
-.recent-user-div:hover .chat-delete{
+.recent-user-div:hover .chat-delete {
   display: block;
 }

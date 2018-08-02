@@ -16,6 +16,9 @@ if (isset($_GET['id'])) {
     $_SESSION['partner'] = $partnerID;
     $partner = queryFunc("SELECT CONCAT(first_name,' ',last_name) as name from users where user_id ={$partnerID}");
     $partner = isRecord($partner);
+      //Update opened to seen
+      $userLoggedIn = $_SESSION['user_id'];
+      $seen = queryFunc("UPDATE messages set opened = '1' where user_to = '$userLoggedIn' AND user_from = '$partnerID'");
 } else {
     // If user comes to messages page just by clicking on messages
     getRecentConvo();
