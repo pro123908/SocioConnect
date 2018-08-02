@@ -552,6 +552,11 @@ input:-webkit-autofill {
   flex: 6;
 }
 
+.friend-request-info a {
+  color: #000;
+  text-decoration: none;
+}
+
 .friend-text,
 .people-you-may-know-text {
   font-size: 12px;

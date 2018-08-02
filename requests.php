@@ -41,7 +41,7 @@ if (isData($reqArray)) {
                     <img src={$from_user['profile_pic']} class='post-avatar post-avatar-40'/>
                 </div>
                 <div class='friend-request-info'>
-                    <p>{$from_user['first_name']}  {$from_user['last_name']}</p>
+                    <a href="timeline.php?visitingUserID={$row['from_id']}">{$from_user['first_name']}  {$from_user['last_name']}</a>
                 </div>
                 <div class='friend-request-action'>
                     <form action ="./includes/EventHandlers/acceptRequest.php" method="post">
