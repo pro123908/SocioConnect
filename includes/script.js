@@ -584,9 +584,9 @@ function saveEditPost(postID) {
       });
 
 
-    } else alert("Select Action to do on the image");
+    } else alert("Select action to do with the media");
   } else {
-    alert("Enter either a text or an image");
+    alert("Enter either a text or a media file");
   }
 }
 
