@@ -672,6 +672,7 @@ input[type="file"]:hover {
 
 .post-image-container .post-image {
   width: 100%;
+  max-height: 350px;
 }
 
 .post-video {
