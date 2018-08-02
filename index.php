@@ -70,7 +70,7 @@ if (isset($_POST['loginSubmit'])) { // If form is submitted
         redirection('index.php');
     } else {
         // If fields are validated then adding the user to database
-        if ($gender == "female") {
+        if ($gender == "Female") {
             $profile_pic = "female.jpg";
         } else {
             $profile_pic = "male.jpg";
