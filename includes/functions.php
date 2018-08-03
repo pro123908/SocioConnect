@@ -2630,7 +2630,7 @@ function checkUserMessages(){
 }
 
 function checkUserRequests(){
-    $noOfReqs = queryFunc("SELECT count(*) as count from friend_requests where from_id = {$_SESSION['user_id']}");
+    $noOfReqs = queryFunc("SELECT count(*) as count from friend_requests where from_id = {$_SESSION['user_id']} AND status = 0");
     $noOfReqs = isRecord($noOfReqs);
     $noOfReqs = $noOfReqs['count'];
     if($noOfReqs < 10)
