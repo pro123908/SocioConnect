@@ -1109,11 +1109,17 @@ function addFriend($id)
 {
     // When add friend button is clicked
     // $id -> the person you are sending request too xD
-    $friend = queryFunc("INSERT INTO friend_requests (to_id, from_id) values({$id},{$_SESSION['user_id']})");
+    if(checkUserRequests()){
+        $friend = queryFunc("INSERT INTO friend_requests (to_id, from_id) values({$id},{$_SESSION['user_id']})");
+        
+        notification($_SESSION['user_id'], $id, 0, 'request');
+        
+        redirection("timeline.php?visitingUserID=" . $id);
+    }
+    else{
+        echo "<script>alert('You have reached your limit of number of friend requests allowed for a single account')</script>";
+    }
 
-    notification($_SESSION['user_id'], $id, 0, 'request');
-
-    redirection("timeline.php?visitingUserID=" . $id);
 }
 
 function cancelReq($id)
@@ -2592,5 +2598,43 @@ CONTENT;
     }
 
     echo $sidebar;
+}
 
+function checkUserPosts($id){
+    $posts = queryFunc("SELECT count(*) as count from posts where user_id = $id");
+    $posts = isRecord($posts);
+    if($posts['count'] < 15)
+        echo true;
+    else
+        echo false;    
+}
+
+function checkUserComments(){
+    $id = $_SESSION['user_id'];
+    $comments = queryFunc("SELECT count(*) as count from comments where user_id = $id");
+    $comments = isRecord($comments);
+    if($comments['count'] < 30)
+        echo true;
+    else
+        echo false;
+}
+
+function checkUserMessages(){
+    $id = $_SESSION['user_id'];
+    $messages = queryFunc("SELECT count(*) as count from messages where user_from = $id");
+    $messages = isRecord($messages);
+    if($messages['count'] < 50)
+        echo true;
+    else
+        echo false;
+}
+
+function checkUserRequests(){
+    $noOfReqs = queryFunc("SELECT count(*) as count from friend_requests where from_id = {$_SESSION['user_id']}");
+    $noOfReqs = isRecord($noOfReqs);
+    $noOfReqs = $noOfReqs['count'];
+    if($noOfReqs < 2)
+        return true;
+    else
+        return false;    
 }

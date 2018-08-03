@@ -185,5 +185,17 @@ else if(isset($_GET['checkAttempts'])){
 }
 else if(isset($_GET['deleteAccount'])){    
     deleteUser(clearString($_GET['deleteAccount']));
+}      
+else if(isset($_GET['canPost'])){    
+    checkUserPosts(clearString($_GET['canPost']));
+}      
+else if(isset($_GET['canComment'])){    
+    checkUserComments();
 }       
+else if(isset($_GET['canMessage'])){    
+    checkUserMessages();
+}
+else if(isset($_GET['canAdd'])){    
+    echo checkUserRequests();
+}            
 ?>

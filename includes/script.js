@@ -269,69 +269,76 @@ function ajaxCalls(method, pathString, postParam = "", pic = "") {
 }
 
 function comment(postID, user, profilePic) {
-  // Adding comment to post
+  ajaxCalls("GET",`./includes/AjaxHandlers/AJAX2.php?canComment=1`).then(function(result){
+    if(result){
+      // Adding comment to post
+      
+      // Getting targeted comemnt field
+      var comment = document.querySelector(`input[name='comment_${postID}']`);
 
-  // Getting targeted comemnt field
-  var comment = document.querySelector(`input[name='comment_${postID}']`);
+      // Extracting Value
+      var commentValue = comment.value;
 
-  // Extracting Value
-  var commentValue = comment.value;
+      var timeToShow = "Just Now";
 
-  var timeToShow = "Just Now";
+      // Validating input to not to be empty
+      if (!(commentValue.trim() == "")) {
+        // trim() - removes white spaces leading and trailing (for empty comment)
 
-  // Validating input to not to be empty
-  if (!(commentValue.trim() == "")) {
-    // trim() - removes white spaces leading and trailing (for empty comment)
+        // Setting up parameters for POST request to the file
+        var param = `comment=${comment.value}&post_id=${postID}`;
 
-    // Setting up parameters for POST request to the file
-    var param = `comment=${comment.value}&post_id=${postID}`;
+        ajaxCalls(
+          "POST",
+          "./includes/AjaxHandlers/AJAX3.php?comment=1",
+          param
+        ).then(function (result) {
+          // Added Comment ID is returned in response
+          commentID = result.trim();
 
-    ajaxCalls(
-      "POST",
-      "./includes/AjaxHandlers/AJAX3.php?comment=1",
-      param
-    ).then(function (result) {
-      // Added Comment ID is returned in response
-      commentID = result.trim();
+          document.querySelector(`.comment-area-${postID}`).innerHTML += `
+      <div class='comment comment-${commentID}'>
+                    
+      <div class='user-image'>
+          <img src='${profilePic}' class='post-avatar post-avatar-30' />
+      </div>
+      
+      <div class='comment-info'>
+      <i class='tooltip-container fas fa-times comment-delete' onclick='javascript:deleteComment(${commentID})'><span class='tooltip tooltip-right'>Remove</span></i>
+      <i class="tooltip-container fas fa-edit comment-edit" onclick="javascript:editComment(${commentID},${postID},'${profilePic}','${timeToShow}')"><span class='tooltip tooltip-right'>Edit</span></i>
+      <div class='comment-body'>
+      <span class='comment-user'>${user} : </span>
+      <span class='comment-text'>${comment.value}</span>
+      <span class='comment-time'>${timeToShow}</span>
+      </div>
+      
+      </div>
+    </div>
+      `;
 
-      document.querySelector(`.comment-area-${postID}`).innerHTML += `
-  <div class='comment comment-${commentID}'>
-                
-  <div class='user-image'>
-      <img src='${profilePic}' class='post-avatar post-avatar-30' />
-  </div>
-  
-  <div class='comment-info'>
-  <i class='tooltip-container fas fa-times comment-delete' onclick='javascript:deleteComment(${commentID})'><span class='tooltip tooltip-right'>Remove</span></i>
-  <i class="tooltip-container fas fa-edit comment-edit" onclick="javascript:editComment(${commentID},${postID},'${profilePic}','${timeToShow}')"><span class='tooltip tooltip-right'>Edit</span></i>
-  <div class='comment-body'>
-  <span class='comment-user'>${user} : </span>
-  <span class='comment-text'>${comment.value}</span>
-  <span class='comment-time'>${timeToShow}</span>
-  </div>
-  
-  </div>
-</div>
-  `;
+          comment.value = "";
 
-      comment.value = "";
-
-      //Adding in recent activities
-      var activity_type = 1;
-      // targeted Content
-      var commentDetails = postID + " " + commentID;
-      param = `target_id=${commentDetails}&activity_type=${activity_type}`;
-      ajaxCalls(
-        "POST",
-        `./includes/AjaxHandlers/AJAX2.php?recentActivity=1`,
-        param
-      ).then(function (result) {
-        addRecentActivity(result);
-      });
-    });
-  }
+          //Adding in recent activities
+          var activity_type = 1;
+          // targeted Content
+          var commentDetails = postID + " " + commentID;
+          param = `target_id=${commentDetails}&activity_type=${activity_type}`;
+          ajaxCalls(
+            "POST",
+            `./includes/AjaxHandlers/AJAX2.php?recentActivity=1`,
+            param
+          ).then(function (result) {
+            addRecentActivity(result);
+          });
+        });
+      }
+    }
+    else{
+      alert("You've reached your limit of number of comments allowed for a single account");
+    }  
+  });
   // Pain in the ass xD
-  return false;
+  return false;    
 }
 
 function deletePost(postID) {
@@ -362,76 +369,83 @@ function deletePost(postID) {
 }
 
 function addPost(user_id) {
-  // Again the name suggests xD
+  ajaxCalls("GET",`./includes/AjaxHandlers/AJAX2.php?canPost=${user_id}`).then(function (result){
+    if(result){
+      // Again the name suggests xD
 
-  // Getting post content
-  var post = document.querySelector("textarea[name='post']"); // Post
-  var postPicData = document.querySelector("input[name='post-pic']"); // Post Pic
-  var postPic = postPicData.files[0];
+      // Getting post content
+      var post = document.querySelector("textarea[name='post']"); // Post
+      var postPicData = document.querySelector("input[name='post-pic']"); // Post Pic
+      var postPic = postPicData.files[0];
 
-  // console.log(postPic);
+      // console.log(postPic);
 
-  var postContent = post.value; // Post text
+      var postContent = post.value; // Post text
 
-  //Validating post content before uploading
-  if (!(postContent.trim() == "") || postPic !== undefined) {
-    // Making up data for sending along request
-    var formData = new FormData();
-    formData.append("file", postPic); // Picture
-    formData.append("post", post.value);
+      //Validating post content before uploading
+      if (!(postContent.trim() == "") || postPic !== undefined) {
+        // Making up data for sending along request
+        var formData = new FormData();
+        formData.append("file", postPic); // Picture
+        formData.append("post", post.value);
 
-    ajaxCalls(
-      "POST",
-      "./includes/AjaxHandlers/AJAX3.php?post=1",
-      formData,
-      "pic"
-    ).then(function (result) {
-      // Adding new post to post Area
-      // Adding post to the top not bottom. Clue xD
-      if (result == "error") {
-        alert("File Format Not supported");
-        postPicData = "";
-        postPicData.files[0] = "";
-      } else {
-        document.querySelector(".posts").innerHTML =
-          result + document.querySelector(".posts").innerHTML;
-
-        // Clearing the post text from new post area when it is posted
-        document.querySelector("textarea[name='post']").value = " ";
-
-        //Adding in recent activities
-        var activity_type = 2;
-        param = `activity_type=${activity_type}`;
         ajaxCalls(
           "POST",
-          `./includes/AjaxHandlers/AJAX2.php?recentActivity=1`,
-          param
+          "./includes/AjaxHandlers/AJAX3.php?post=1",
+          formData,
+          "pic"
         ).then(function (result) {
-          if (
-            window.location.pathname == "/socioConnect/timeline.php" ||
-            window.location.pathname == "/timeline.php"
-          ) {
-            if (postPic !== undefined) {
-              ajaxCalls(
-                "GET",
-                `./includes/AjaxHandlers/AJAX2.php?refreshRecentUploads=1`
-              ).then(function (result) {
-                document.querySelector(
-                  ".recenet-uploads-content"
-                ).innerHTML = result;
-              });
+          // Adding new post to post Area
+          // Adding post to the top not bottom. Clue xD
+          if (result == "error") {
+            alert("File Format Not supported");
+            postPicData = "";
+            postPicData.files[0] = "";
+          } else {
+            document.querySelector(".posts").innerHTML =
+              result + document.querySelector(".posts").innerHTML;
 
-              //Unsetting the no recent uploads message
-              document.querySelector(".recent-uploads-footer").innerHTML = "";
-            }
-          } else addRecentActivity(result);
+            // Clearing the post text from new post area when it is posted
+            document.querySelector("textarea[name='post']").value = " ";
+
+            //Adding in recent activities
+            var activity_type = 2;
+            param = `activity_type=${activity_type}`;
+            ajaxCalls(
+              "POST",
+              `./includes/AjaxHandlers/AJAX2.php?recentActivity=1`,
+              param
+            ).then(function (result) {
+              if (
+                window.location.pathname == "/socioConnect/timeline.php" ||
+                window.location.pathname == "/timeline.php"
+              ) {
+                if (postPic !== undefined) {
+                  ajaxCalls(
+                    "GET",
+                    `./includes/AjaxHandlers/AJAX2.php?refreshRecentUploads=1`
+                  ).then(function (result) {
+                    document.querySelector(
+                      ".recenet-uploads-content"
+                    ).innerHTML = result;
+                  });
+
+                  //Unsetting the no recent uploads message
+                  document.querySelector(".recent-uploads-footer").innerHTML = "";
+                }
+              } else addRecentActivity(result);
+            });
+          }
         });
       }
-    });
-  }
 
-  // Clearing the name of pic
-  document.querySelector(".pic-name").innerHTML = "";
+      // Clearing the name of pic
+      document.querySelector(".pic-name").innerHTML = "";
+    }
+    else{
+      alert("You've reached your limit of number of posts allowed for a single account");
+    }
+  });  
 }
 
 function hideEditDiv(postID, flag) {
@@ -1039,43 +1053,50 @@ function hideLikers(postID) {
 }
 
 function message() {
-  let messageBody = document.messageForm.message_body; // Message text
-  let partner = document.messageForm.partner; // Parnter ID
-  let pic = document.messageForm.pic; // User Pic
+  ajaxCalls("GET", "./includes/AjaxHandlers/AJAX2.php?canMessage=1").then(function (result){
+    if(result){
+      let messageBody = document.messageForm.message_body; // Message text
+      let partner = document.messageForm.partner; // Parnter ID
+      let pic = document.messageForm.pic; // User Pic
 
-  if (messageBody.value.length > 0) {
-    // Making AJAX request with partner ID and message text
-    let param = `partner=${partner.value}&messageBody=${messageBody.value}`;
+      if (messageBody.value.length > 0) {
+        // Making AJAX request with partner ID and message text
+        let param = `partner=${partner.value}&messageBody=${messageBody.value}`;
 
-    document.querySelector(".chat-messages").innerHTML += `
-      <div class="chat-message my-message">
-        <img src='${pic.value}' class='post-avatar post-avatar-30' />
-        <span class='message'>${messageBody.value}</span>
-        <span class='message-time'>Just now</span>
-      </div>
-      `;
+        document.querySelector(".chat-messages").innerHTML += `
+          <div class="chat-message my-message">
+            <img src='${pic.value}' class='post-avatar post-avatar-30' />
+            <span class='message'>${messageBody.value}</span>
+            <span class='message-time'>Just now</span>
+          </div>
+          `;
 
-    ajaxCalls("POST", "./includes/AjaxHandlers/AJAX.php?message=1", param).then(
-      function (response) {
-        // var msgs = document.querySelectorAll(".chat-message");
-        if (
-          document.getElementById("loading-messages").innerHTML ==
-          "No Messages To Show"
-        )
-          document.getElementById("loading-messages").innerHTML =
-          "No More Messages To Show";
+        ajaxCalls("POST", "./includes/AjaxHandlers/AJAX.php?message=1", param).then(
+          function (response) {
+            // var msgs = document.querySelectorAll(".chat-message");
+            if (
+              document.getElementById("loading-messages").innerHTML ==
+              "No Messages To Show"
+            )
+              document.getElementById("loading-messages").innerHTML =
+              "No More Messages To Show";
+          }
+        );
+
+        messageBody.value = "";
+
+        // Scrolling to the most recent message
+        var last = document.querySelector(".my-message:last-child");
+        last.scrollIntoView({
+          behavior: "smooth",
+          block: "center"
+        });
       }
-    );
-
-    messageBody.value = "";
-
-    // Scrolling to the most recent message
-    var last = document.querySelector(".my-message:last-child");
-    last.scrollIntoView({
-      behavior: "smooth",
-      block: "center"
-    });
-  }
+    }
+    else{
+      alert("You've reached your limit of number of messages allowed for a single account");
+    }  
+  });
 }
 
 function messageRefresh() {
@@ -1361,24 +1382,31 @@ function removeFriend(id) {
 }
 
 function addFriend(id) {
-  var personLink = document.querySelectorAll(`.add-friend-${id}`);
-  var fontAwesomeIcon;
-  for (var i = 0; i < personLink.length; i++) {
-    fontAwesomeIcon = personLink[i].querySelector(".tooltip-container");
-    fontAwesomeIcon.classList.remove("fa-plus");
-    fontAwesomeIcon.classList.add("fa-check");
-  }
+  ajaxCalls("GET",`./includes/AjaxHandlers/AJAX2.php?canAdd=${id}`).then(function (result){
+    if(result){
+      var personLink = document.querySelectorAll(`.add-friend-${id}`);
+      var fontAwesomeIcon;
+      for (var i = 0; i < personLink.length; i++) {
+        fontAwesomeIcon = personLink[i].querySelector(".tooltip-container");
+        fontAwesomeIcon.classList.remove("fa-plus");
+        fontAwesomeIcon.classList.add("fa-check");
+      }
 
-  let param = `id=${id}`;
-  ajaxCalls(
-    "POST",
-    "./includes/AjaxHandlers/AJAX2.php?addFriend=1",
-    param
-  ).then(function (result) {
-    for (var i = 0; i < personLink.length; i++) {
-      personLink[i].setAttribute("href", `javascript:cancelReq(${id})`);
-      personLink[i].querySelector(".tooltip").innerHTML = "Friend Request Sent";
+      let param = `id=${id}`;
+      ajaxCalls(
+        "POST",
+        "./includes/AjaxHandlers/AJAX2.php?addFriend=1",
+        param
+      ).then(function (result) {
+        for (var i = 0; i < personLink.length; i++) {
+          personLink[i].setAttribute("href", `javascript:cancelReq(${id})`);
+          personLink[i].querySelector(".tooltip").innerHTML = "Friend Request Sent";
+        }
+      });
     }
+    else{
+      alert("You have reached your limit of number of friend requests allowed for a single account");
+    }  
   });
 }
 
@@ -1869,7 +1897,6 @@ function dropdownCountAjax(place, dropdown) {
     }
   });
 }
-
 function deleteUser() {
   var id = document.querySelector(".remove-user-input").value;
   ajaxCalls(
@@ -1878,6 +1905,10 @@ function deleteUser() {
   ).then(function (result) {
     alert(result);
   });
+}
+
+function canPost(id){
+    
 }
 
 setInterval(refreshRecentConvos, 1000);
