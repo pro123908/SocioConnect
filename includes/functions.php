@@ -2633,7 +2633,7 @@ function checkUserRequests(){
     $noOfReqs = queryFunc("SELECT count(*) as count from friend_requests where from_id = {$_SESSION['user_id']}");
     $noOfReqs = isRecord($noOfReqs);
     $noOfReqs = $noOfReqs['count'];
-    if($noOfReqs < 2)
+    if($noOfReqs < 10)
         return true;
     else
         return false;    
