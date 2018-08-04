@@ -269,10 +269,10 @@ function ajaxCalls(method, pathString, postParam = "", pic = "") {
 }
 
 function comment(postID, user, profilePic) {
-  ajaxCalls("GET",`./includes/AjaxHandlers/AJAX2.php?canComment=1`).then(function(result){
-    if(result){
+  ajaxCalls("GET", `./includes/AjaxHandlers/AJAX2.php?canComment=1`).then(function (result) {
+    if (result) {
       // Adding comment to post
-      
+
       // Getting targeted comemnt field
       var comment = document.querySelector(`input[name='comment_${postID}']`);
 
@@ -332,13 +332,12 @@ function comment(postID, user, profilePic) {
           });
         });
       }
-    }
-    else{
+    } else {
       alert("You've reached your limit of number of comments allowed for a single account");
-    }  
+    }
   });
   // Pain in the ass xD
-  return false;    
+  return false;
 }
 
 function deletePost(postID) {
@@ -369,8 +368,8 @@ function deletePost(postID) {
 }
 
 function addPost(user_id) {
-  ajaxCalls("GET",`./includes/AjaxHandlers/AJAX2.php?canPost=${user_id}`).then(function (result){
-    if(result){
+  ajaxCalls("GET", `./includes/AjaxHandlers/AJAX2.php?canPost=${user_id}`).then(function (result) {
+    if (result) {
       // Again the name suggests xD
 
       // Getting post content
@@ -378,7 +377,7 @@ function addPost(user_id) {
       var postPicData = document.querySelector("input[name='post-pic']"); // Post Pic
       var postPic = postPicData.files[0];
 
-      // console.log(postPic);
+      console.log(postPic.size * 0.000001);
 
       var postContent = post.value; // Post text
 
@@ -389,6 +388,7 @@ function addPost(user_id) {
         formData.append("file", postPic); // Picture
         formData.append("post", post.value);
 
+
         ajaxCalls(
           "POST",
           "./includes/AjaxHandlers/AJAX3.php?post=1",
@@ -397,8 +397,16 @@ function addPost(user_id) {
         ).then(function (result) {
           // Adding new post to post Area
           // Adding post to the top not bottom. Clue xD
-          if (result == "error") {
-            alert("File Format Not supported");
+          console.log(result);
+          if (result == 1 || result == 2) {
+            if (result == 1) {
+              document.querySelector('.pic-name').innerHTML = "File Too Large";
+              // alert("File Too Large");
+            } else if (result == 2) {
+              document.querySelector('.pic-name').innerHTML = "Incomaptible File";
+              // alert("Incomaptible File");
+            }
+
             postPicData = "";
             postPicData.files[0] = "";
           } else {
@@ -441,11 +449,10 @@ function addPost(user_id) {
 
       // Clearing the name of pic
       document.querySelector(".pic-name").innerHTML = "";
-    }
-    else{
+    } else {
       alert("You've reached your limit of number of posts allowed for a single account");
     }
-  });  
+  });
 }
 
 function hideEditDiv(postID, flag) {
@@ -1053,8 +1060,8 @@ function hideLikers(postID) {
 }
 
 function message() {
-  ajaxCalls("GET", "./includes/AjaxHandlers/AJAX2.php?canMessage=1").then(function (result){
-    if(result){
+  ajaxCalls("GET", "./includes/AjaxHandlers/AJAX2.php?canMessage=1").then(function (result) {
+    if (result) {
       let messageBody = document.messageForm.message_body; // Message text
       let partner = document.messageForm.partner; // Parnter ID
       let pic = document.messageForm.pic; // User Pic
@@ -1092,10 +1099,9 @@ function message() {
           block: "center"
         });
       }
-    }
-    else{
+    } else {
       alert("You've reached your limit of number of messages allowed for a single account");
-    }  
+    }
   });
 }
 
@@ -1382,8 +1388,8 @@ function removeFriend(id) {
 }
 
 function addFriend(id) {
-  ajaxCalls("GET",`./includes/AjaxHandlers/AJAX2.php?canAdd=${id}`).then(function (result){
-    if(result){
+  ajaxCalls("GET", `./includes/AjaxHandlers/AJAX2.php?canAdd=${id}`).then(function (result) {
+    if (result) {
       var personLink = document.querySelectorAll(`.add-friend-${id}`);
       var fontAwesomeIcon;
       for (var i = 0; i < personLink.length; i++) {
@@ -1403,10 +1409,9 @@ function addFriend(id) {
           personLink[i].querySelector(".tooltip").innerHTML = "Friend Request Sent";
         }
       });
-    }
-    else{
+    } else {
       alert("You have reached your limit of number of friend requests allowed for a single account");
-    }  
+    }
   });
 }
 
@@ -1897,6 +1902,7 @@ function dropdownCountAjax(place, dropdown) {
     }
   });
 }
+
 function deleteUser() {
   var id = document.querySelector(".remove-user-input").value;
   ajaxCalls(
@@ -1907,8 +1913,8 @@ function deleteUser() {
   });
 }
 
-function canPost(id){
-    
+function canPost(id) {
+
 }
 
 setInterval(refreshRecentConvos, 1000);

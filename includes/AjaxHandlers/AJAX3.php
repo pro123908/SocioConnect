@@ -151,6 +151,7 @@ if (isset($_GET['notiPage'])) {
             $name = $_FILES['file']['name']; // name of pic
             $tmp_name = $_FILES['file']['tmp_name'];
             $type = $_FILES['file']['type'];
+            $size = ($_FILES['file']['size']) * 0.000001;
             $extension = strtolower(pathinfo($name, PATHINFO_EXTENSION)); // Getting extension of file
 
             // Unique ID for image for storing
@@ -166,7 +167,7 @@ if (isset($_GET['notiPage'])) {
                             $path = $uniqueID . '.' . $extension; //Complete path of image
                             newPost($_POST['post'], $path);
                         }
-                    } elseif (($extension == "mp4" || $extension == "flv" || $extension == "avi") && ($type == "video/mp4" || $type == "video/flv" || $type == "video/avi")) {
+                    } elseif (($extension == "mp4" || $extension == "flv" || $extension == "avi") && ($type == "video/mp4" || $type == "video/flv" || $type == "video/avi") && $size < 5) {
 
                         $location = '../../assets/post_videos/';
 
@@ -175,7 +176,13 @@ if (isset($_GET['notiPage'])) {
                             newPost($_POST['post'], $path, 1, $extension);
                         }
                     } else {
-                        echo "error";
+                        if($size > 5){
+                            $error = 1;
+                        }else{
+                            $error = 2;
+                        }
+                        
+                        echo $error;
                     }
 
                 }
