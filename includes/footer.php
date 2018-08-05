@@ -10,6 +10,7 @@
         <span class='contact-info owner-names'>bilal069@icloud.com</span>
     </div>
     <div class='copyright'>
+        <!-- Sponsored by <a href="https://www.facebook.com/abmotorskarachi/?ref=br_rs" target="_blank" class="owner-names sponsor-link">A.B Motors</a><br> -->
         &copy; 2018 Copyrights. All Rights Reserved.
     </div>
 </div>

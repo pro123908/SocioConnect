@@ -95,6 +95,13 @@ if ($flag == 1 || $flag == 2) {?>
                                 <input type="button" class ="remove-user-submit" value= "Remove Account" onclick="deleteUser();">
                             </div>
                         </div>
+
+                        <div class='latest-users-area'>
+                            <div class='latest-users-heading'>Latest Registered Users</div>
+                            <div class='latest-users-content'>
+                                <?php showLatestRegisteredUsers()?>
+                            </div>
+                        </div>
                     <?php }?>
                 </div>
                 <!-- Right Side content Finished -->
@@ -102,19 +109,19 @@ if ($flag == 1 || $flag == 2) {?>
                 <div class='post-area'>
                     <div class='new-post'>
                         <?php
-// Add post functionality only if the user is visiting his own timeline
-    if ($flag == 1) {
-        addPost();
-    }
+                            // Add post functionality only if the user is visiting his own timeline
+                            if ($flag == 1) {
+                                addPost();
+                            }
 
-    ?>
+                            ?>
                     </div>
 
                     <div class='posts'>
                         <?php
-$user = $flag == 1 ? 'b' : $_GET['visitingUserID'];
-    showPosts($user, 1, 10);
-    ?>
+                            $user = $flag == 1 ? 'b' : $_GET['visitingUserID'];
+                            showPosts($user, 1, 10);
+                        ?>
                     </div>
 
                     <div id='loading' class='loading-messages'></div>
@@ -135,6 +142,22 @@ $user = $flag == 1 ? 'b' : $_GET['visitingUserID'];
                             <?php showPeopleYouMayKnow()?>
                         </div>
                     </div>
+
+                    <?php if ($_SESSION['user_id'] == 1) {?>
+                        <div class='user-activities-summary-area-for-admin'>
+                            <div class='user-activities-summary-heading-for-admin'>Detailed Activites Summary Of Users</div>
+                            <div class='user-activities-summary-input-area-for-admin'>
+                                <input type="number" class= "search-user-details-input" autocomplete = "off" placeholder="Enter User Id..."><br><br>
+                                <input type="button" class ="search-user-details-submit" value= "Get Details" onclick="getUserDetails();">
+                            </div>
+                            <div class='user-activities-summary-content-for-admin'>
+
+                            </div>
+                        </div>     
+                    <?php }?>
+
+                    
+                    
                 </div>
                 <!-- Right Side content Finished -->
         <?php

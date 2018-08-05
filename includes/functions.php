@@ -2600,13 +2600,105 @@ CONTENT;
     echo $sidebar;
 }
 
+function showUserActivitiesSummaryForAdmin($id)
+{
+    $user = queryFunc("SELECT first_name as username from users where user_id = '$id'");
+    if(isData($user)){
+        $user = isRecord($user);
+        $user = $user['username'];
+
+        $noOfPosts = queryFunc("SELECT count(*) as 'posts' from posts where user_id = '$id'");
+        $noOfPosts = isRecord($noOfPosts);
+        $noOfPosts = $noOfPosts['posts'];
+
+        $noOfLikes = queryFunc("SELECT count(*) as 'likes' from likes where user_id = '$id'");
+        $noOfLikes = isRecord($noOfLikes);
+        $noOfLikes = $noOfLikes['likes'];
+
+        $noOfComments = queryFunc("SELECT count(*) as 'comments' from comments where user_id = '$id'");
+        $noOfComments = isRecord($noOfComments);
+        $noOfComments = $noOfComments['comments'];
+
+        $noOfFriends = queryFunc("SELECT count(*) as 'friends' from friends where user1 = '$id' OR user2 = '$id' ");
+        $noOfFriends = isRecord($noOfFriends);
+        $noOfFriends = $noOfFriends['friends'];
+
+        $noOfReqRecieved = queryFunc("SELECT count(*) as 'reqRec' from friend_requests where to_id = '$id' and status = 0 ");
+        $noOfReqRecieved = isRecord($noOfReqRecieved);
+        $noOfReqRecieved = $noOfReqRecieved['reqRec'];
+
+        $noOfReqSent = queryFunc("SELECT count(*) as 'reqSent' from friend_requests where from_id = '$id' and status = 0 ");
+        $noOfReqSent = isRecord($noOfReqSent);
+        $noOfReqSent = $noOfReqSent['reqSent'];
+
+        $noOfReqCanceled = queryFunc("SELECT count(*) as 'reqCanceled' from friend_requests where from_id = '$id' and status = 2 ");
+        $noOfReqCanceled = isRecord($noOfReqCanceled);
+        $noOfReqCanceled = $noOfReqCanceled['reqCanceled'];
+
+        $noOfMsgRecieved = queryFunc("SELECT count(*) as 'msgRec' from messages where user_to = '$id'");
+        $noOfMsgRecieved = isRecord($noOfMsgRecieved);
+        $noOfMsgRecieved = $noOfMsgRecieved['msgRec'];
+
+        $noOfMsgsSent = queryFunc("SELECT count(*) as 'msgSent' from messages where user_from = '$id'");
+        $noOfMsgsSent = isRecord($noOfMsgsSent);
+        $noOfMsgsSent = $noOfMsgsSent['msgSent'];
+
+        $noOfMsgsDeleted = queryFunc("SELECT count(*) as 'msgDeleted' from messages where (user_from = '$id' OR user_to = '$id') and (deleted like ' $id%' OR deleted like '%$id ')");
+        $noOfMsgsDeleted = isRecord($noOfMsgsDeleted);
+        $noOfMsgsDeleted = $noOfMsgsDeleted['msgDeleted'];
+
+        $stats = array('User Name' => $user, 'Posts' => $noOfPosts, 'Likes' => $noOfLikes, 'Comments' => $noOfComments, 'Friends' => $noOfFriends, 'Requests Sent' => $noOfReqSent , 'Requests Canceled' => $noOfReqCanceled , 'Requests Recieved' =>$noOfReqRecieved , 'Messages Sent' => $noOfMsgsSent , 'Messages Recieved' => $noOfMsgRecieved, 'Messages Deleted' => $noOfMsgsDeleted);
+
+        $content = '';
+
+        foreach ($stats as $stat => $value) {
+            $conflict = $stat == "Posts" ? "first-stat" : "";
+            $content .= <<<STATS
+            <div class='stat {$conflict}'>
+                <div class='stat-value'>{$value}</div>
+                <div class='stat-heading'>{$stat}</div>
+            </div>
+STATS;
+        }
+        echo $content;
+    }
+    else{
+        echo false;
+    }    
+}
+
+function showLatestRegisteredUsers(){
+    $users = queryFunc("SELECT CONCAT(first_name, ' ', last_name) as name, user_id, profile_pic from users order by user_id DESC limit 10");
+    while ($row = isRecord($users)) {
+        $time = activeAgo($row['user_id']);
+        $row['profile_pic'] = "./assets/profile_pictures/" . $row['profile_pic'];
+        $stateClass = 'state-off';
+        if ($time == 'Just Now') {
+            $time = 'Now';
+            $stateClass = 'state-on';
+        }
+        $content = <<<USER
+            <div class='latest-user'>
+                <div class='latest-user-image'>
+                    <img class='post-avatar post-avatar-30' src='{$row['profile_pic']}'>
+                </div>
+                <div class='latest-user-info'>
+                    <a href="timeline.php?visitingUserID={$row['user_id']}" class='latest-user-text'>{$row['name']}</a>
+                    <span class='{$stateClass}'>{$time}</span>
+                </div>
+            </div>
+USER;
+        echo $content;
+    }
+}
+
 function checkUserPosts($id){
     $posts = queryFunc("SELECT count(*) as count from posts where user_id = $id");
     $posts = isRecord($posts);
     if($posts['count'] < 15)
         echo true;
     else
-        echo true;    
+        echo false;    
 }
 
 function checkUserComments(){
@@ -2616,7 +2708,7 @@ function checkUserComments(){
     if($comments['count'] < 30)
         echo true;
     else
-        echo true;
+        echo false;
 }
 
 function checkUserMessages(){
@@ -2626,7 +2718,7 @@ function checkUserMessages(){
     if($messages['count'] < 50)
         echo true;
     else
-        echo true;
+        echo false;
 }
 
 function checkUserRequests(){
@@ -2636,5 +2728,5 @@ function checkUserRequests(){
     if($noOfReqs < 10)
         return true;
     else
-        return true;    
+        return false;    
 }

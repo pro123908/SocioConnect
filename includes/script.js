@@ -1913,8 +1913,17 @@ function deleteUser() {
   });
 }
 
-function canPost(id) {
-
+function getUserDetails(){
+  var id = document.querySelector(".search-user-details-input").value;
+  ajaxCalls("GET",`./includes/AjaxHandlers/AJAX2.php?searchDetailsByAdmin=1&id=${id}`).then(function (result){
+    if(!result){
+      document.querySelector(".user-activities-summary-content-for-admin").innerHTML = "";
+      alert("User not found");
+    }
+    else{
+      document.querySelector(".user-activities-summary-content-for-admin").innerHTML = result;
+    }
+  });
 }
 
 setInterval(refreshRecentConvos, 1000);
