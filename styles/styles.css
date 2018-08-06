@@ -422,7 +422,7 @@ input:-webkit-autofill {
 
 .content-area {
   display: flex;
-  margin: 50px 100px 10px 100px;
+  margin: 100px 100px 10px 100px;
   padding: 10px;
   overflow: hidden;
 }
