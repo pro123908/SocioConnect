@@ -56,6 +56,7 @@ function hashString($string)
 
     // Creating hash of the passed string
     $string = crypt($string, $hashed);
+    
 
     // Returning hashed string
     return $string;

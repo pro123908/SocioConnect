@@ -377,7 +377,7 @@ function addPost(user_id) {
       var postPicData = document.querySelector("input[name='post-pic']"); // Post Pic
       var postPic = postPicData.files[0];
 
-      console.log(postPic.size * 0.000001);
+
 
       var postContent = post.value; // Post text
 
@@ -397,7 +397,7 @@ function addPost(user_id) {
         ).then(function (result) {
           // Adding new post to post Area
           // Adding post to the top not bottom. Clue xD
-          console.log(result);
+
           if (result == 1 || result == 2) {
             if (result == 1) {
               document.querySelector('.pic-name').innerHTML = "File Too Large";
