@@ -107,15 +107,16 @@ if ($flag == 1 || $flag == 2) {?>
                 <!-- Right Side content Finished -->
 
                 <div class='post-area'>
-                    <div class='new-post'>
-                        <?php
-                            // Add post functionality only if the user is visiting his own timeline
-                            if ($flag == 1) {
-                                addPost();
-                            }
-
+                    <?php
+                        // Add post functionality only if the user is visiting his own timeline
+                        if ($flag == 1) {
                             ?>
-                    </div>
+                            <div class='new-post'>
+                                <?php addPost(); ?>
+                            </div>
+                        <?php
+                        }
+                    ?>
 
                     <div class='posts'>
                         <?php
@@ -129,6 +130,15 @@ if ($flag == 1 || $flag == 2) {?>
                 <!-- Posts Div ended -->
 
                 <div class='content-right-side'>
+                    <?php if ($flag == 2) {?>
+                        <div class='mutual-friends-area'>
+                            <div class='mutual-friends-heading'>Mutual Friends</div>
+                            <div class='mutual-friends-content'>
+                                <?php showMutualFriends($_GET['visitingUserID'])?>
+                            </div>
+                        </div>     
+                    <?php }?>
+
                     <div class='user-activities-summary-area'>
                         <div class='user-activities-summary-heading'>Activites Summary</div>
                         <div class='user-activities-summary-content'>

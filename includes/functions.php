@@ -1049,6 +1049,48 @@ function isFriend($id)
     }
 }
 
+function showMutualFriends($visitingId){
+    $counter = 0;
+    $friends = queryFunc("SELECT * from friends where user1 = $visitingId OR user2 = $visitingId");
+    if(isData($friends)){
+        while($row = isRecord($friends)){
+            $idToCheck = $visitingId == $row['user1'] ? $row['user2'] : $row['user1']; 
+            if(isFriend($idToCheck)){
+                $user = queryFunc("SELECT CONCAT(first_name, ' ', last_name) as name, user_id, profile_pic from users where user_id = $idToCheck");
+                $user = isRecord($user);
+                $time = activeAgo($user['user_id']);
+                $user['profile_pic'] = "./assets/profile_pictures/" . $user['profile_pic'];
+                $stateClass = 'state-off';
+                if ($time == 'Just Now') {
+                    $time = 'Now';
+                    $stateClass = 'state-on';
+                }
+                $content = <<<USER
+                <div class='mutual-friend'>
+                    <div class='mutual-friend-image'>
+                        <img class='post-avatar post-avatar-30' src='{$user['profile_pic']}' >
+                    </div>
+                    <div class='mutual-friend-info'>
+                        <a href="timeline.php?visitingUserID={$user['user_id']}" class='mutual-friend-text'>{$user['name']}</a>
+                        <span class='{$stateClass}'>{$time}</span>
+                    </div>
+                </div>
+USER;
+                echo $content;   
+                $counter++;
+                if($counter >= 10)
+                    break;     
+            }
+        }
+        if($counter == 0)
+            echo "<p class ='see-more'>No mutual Friends</p>";
+    }
+    else{
+        echo "<p class ='see-more'>No mutual Friends</p>";
+    }
+}
+
+
 function reqSent($id)
 {
 
@@ -2548,26 +2590,6 @@ function sendReqFromDefaultAccount($id){
     notification($defaultAccountId, $id, 0, 'request');
 }
 
-function deleteUser($id){
-    $check = queryFunc("SELECT user_id from users where user_id = $id");
-    if(isData($check)){
-        queryFunc("DELETE from comments where user_id = '$id'");
-        queryFunc("DELETE from friends where user1 = '$id' OR user2 = '$id'");
-        queryFunc("DELETE from friend_requests where from_id = '$id' OR to_id = '$id'");
-        queryFunc("DELETE from likes where user_id = '$id'");
-        queryFunc("DELETE from messages where user_from = '$id' OR user_to = '$id'");
-        queryFunc("DELETE from notifications where s_user_id = '$id' OR d_user_id = '$id'");
-        queryFunc("DELETE from posts where user_id = '$id'");
-        queryFunc("DELETE from recent_activities where user_id = '$id'");
-        queryFunc("DELETE from users where user_id = '$id'");
-        echo "Account Removed";
-    }
-    else{
-        echo "User Doesn't Exist";
-    }    
-
-}
-
 function sideBar(){
 
     $iconArray = array("newspaper","user","bell","comments","user-friends","chart-line");
@@ -2600,8 +2622,28 @@ CONTENT;
     echo $sidebar;
 }
 
-function showUserActivitiesSummaryForAdmin($id)
-{
+//ADMIN FUNCTIONS
+function deleteUser($id){
+    $check = queryFunc("SELECT user_id from users where user_id = $id");
+    if(isData($check)){
+        queryFunc("DELETE from comments where user_id = '$id'");
+        queryFunc("DELETE from friends where user1 = '$id' OR user2 = '$id'");
+        queryFunc("DELETE from friend_requests where from_id = '$id' OR to_id = '$id'");
+        queryFunc("DELETE from likes where user_id = '$id'");
+        queryFunc("DELETE from messages where user_from = '$id' OR user_to = '$id'");
+        queryFunc("DELETE from notifications where s_user_id = '$id' OR d_user_id = '$id'");
+        queryFunc("DELETE from posts where user_id = '$id'");
+        queryFunc("DELETE from recent_activities where user_id = '$id'");
+        queryFunc("DELETE from users where user_id = '$id'");
+        echo "Account Removed";
+    }
+    else{
+        echo "User Doesn't Exist";
+    }    
+
+}
+
+function showUserActivitiesSummaryForAdmin($id){
     $user = queryFunc("SELECT first_name as username from users where user_id = '$id'");
     if(isData($user)){
         $user = isRecord($user);
@@ -2680,7 +2722,7 @@ function showLatestRegisteredUsers(){
         $content = <<<USER
             <div class='latest-user'>
                 <div class='latest-user-image'>
-                    <img class='post-avatar post-avatar-30' src='{$row['profile_pic']}'>
+                    <img class='post-avatar post-avatar-30' src='{$row['profile_pic']}' >
                 </div>
                 <div class='latest-user-info'>
                     <a href="timeline.php?visitingUserID={$row['user_id']}" class='latest-user-text'>{$row['name']}</a>
@@ -2691,6 +2733,8 @@ USER;
         echo $content;
     }
 }
+
+// ADMIN FUNCTIONS ENDED
 
 function checkUserPosts($id){
     $posts = queryFunc("SELECT count(*) as count from posts where user_id = $id");
