@@ -198,4 +198,7 @@ else if(isset($_GET['canMessage'])){
 else if(isset($_GET['canAdd'])){    
     echo checkUserRequests();
 }            
+else if(isset($_GET['searchDetailsByAdmin'])){    
+    showUserActivitiesSummaryForAdmin(clearString($_GET['id']));
+}            
 ?>

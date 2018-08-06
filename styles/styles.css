@@ -422,7 +422,7 @@ input:-webkit-autofill {
 
 .content-area {
   display: flex;
-  margin: 50px 100px 10px 100px;
+  margin: 100px 100px 10px 100px;
   padding: 10px;
   overflow: hidden;
 }
@@ -460,7 +460,9 @@ input:-webkit-autofill {
 
 .friend,
 .people-you-may-know,
-.friend-request {
+.latest-user,
+.friend-request,
+.mutual-friend {
   display: flex;
   align-items: center;
   padding: 5px 10px;
@@ -473,7 +475,9 @@ input:-webkit-autofill {
 }
 
 .friend-image,
-.people-you-may-know-image {
+.people-you-may-know-image,
+.latest-user-image,
+.mutual-friend-image {
   float: left;
 }
 
@@ -548,7 +552,9 @@ input:-webkit-autofill {
 
 .friend-info,
 .people-you-may-know-info,
-.friend-request-info {
+.latest-user-info,
+.friend-request-info,
+.mutual-friend-info {
   flex: 6;
 }
 
@@ -558,7 +564,9 @@ input:-webkit-autofill {
 }
 
 .friend-text,
-.people-you-may-know-text {
+.people-you-may-know-text,
+.latest-user-text,
+.mutual-friend-text {
   font-size: 12px;
   color: black;
   display: block;
@@ -569,6 +577,7 @@ input:-webkit-autofill {
   background-color: #fff;
   border-radius: 5px;
   border: 1px solid #e6ecf5;
+  margin-bottom: 40px;
 }
 
 .new-post .post-btn-container {
@@ -653,9 +662,9 @@ input[type="file"]:hover {
 
 /* Posts */
 
-.posts {
+/* .posts {
   margin-top: 40px;
-}
+} */
 
 .post {
   background-color: #fff;
@@ -890,6 +899,7 @@ input[type="file"]:hover {
 .edit-comment-form {}
 
 .comment-form input[type="text"],
+.search-user-details-input,
 .remove-user-input {
   border: 1px solid #a3afb9;
   padding: 8px;
@@ -899,12 +909,14 @@ input[type="file"]:hover {
 }
 
 .comment-form input[type="text"]:focus,
+.search-user-details-input:focus,
 .remove-user-input:focus {
   outline: none;
   border-color: #ff763a;
 }
 
 .comment-form input[type="submit"],
+.search-user-details-submit,
 .remove-user-submit {
   display: inline-block;
   padding: 10px;
@@ -962,10 +974,13 @@ input[type="file"]:hover {
 .recent-activities-heading,
 .people-you-may-know-heading,
 .user-activities-summary-heading,
+.user-activities-summary-heading-for-admin,
 .user-info-heading,
 .user-info-edit-div-heading,
 .recenet-uploads-heading,
-.remove-user-heading {
+.remove-user-heading,
+.latest-users-heading,
+.mutual-friends-heading{
   padding: 10px;
   text-align: center;
   font-weight: bold;
@@ -975,7 +990,9 @@ input[type="file"]:hover {
 
 .notification:hover,
 .recent-activity:hover,
-.people-you-may-know:hover {
+.people-you-may-know:hover,
+.latest-user:hover,
+.mutual-friend:hover {
   background-color: #f6f6f6;
 }
 
@@ -1080,13 +1097,16 @@ input[type="file"]:hover {
 .people-you-may-know-area,
 .user-info-area,
 .recenet-uploads-area,
-.remove-user-area {
+.remove-user-area,
+.latest-users-area,
+.mutual-friends-area
+{
   margin-bottom: 50px;
   height: fit-content;
   background-color: #fff;
 }
 
-.people-you-may-know-area {
+.people-you-may-know-area,.latest-users-area, .mutual-friends-area {
   flex: 1;
 }
 
@@ -1248,7 +1268,7 @@ input[type="file"]:hover {
   background-color: #fff;
 }
 
-.user-activities-summary-area {
+.user-activities-summary-area, .user-activities-summary-area-for-admin {
   flex: 1;
   margin-bottom: 50px;
   background-color: #fff;
@@ -1708,7 +1728,8 @@ input[type="file"]:hover {
 
 .user-info-content .user-info,
 .recenet-uploads-content,
-.remove-user-content {
+.remove-user-content,
+.user-activities-summary-input-area-for-admin{
   padding: 10px;
   text-align: center;
 }
@@ -2029,4 +2050,9 @@ input[type="file"]:hover {
 
 .recent-user-div:hover .chat-delete {
   display: block;
+}
+
+.sponsor-link{
+  text-decoration : none;
+  color : white;
 }

@@ -768,7 +768,7 @@ function timeString($time)
     }
 }
 
-function formValidation($email, $pass, $re_pass)
+function formValidation($email, $pass, $re_pass,$age)
 {
     /* --------------------- REFACTORED ----------------------- */
 
@@ -783,7 +783,15 @@ function formValidation($email, $pass, $re_pass)
     => If password doesn't contain any of 0-9 digits
     => If password doesn't containe any of A-Z or a-z alphabets
      */
-    if ($pass != $re_pass || $row['user_id'] > 0 || preg_match("/[0-9]+/", $pass) == 0 || preg_match("/[A-Za-z]+/", $pass) == 0) {
+
+    $thenDate = $age;
+    $currentDate = date('d-m-Y');
+
+    $diff = abs(strtotime($currentDate) - strtotime($thenDate));
+
+    $years = floor($diff / (365*60*60*24));
+
+        if ($pass != $re_pass || $row['user_id'] > 0 || preg_match("/[0-9]+/", $pass) == 0 || preg_match("/[A-Za-z]+/", $pass) == 0 || $years < 13) {
         if ($row['user_id'] > 0) {
             $_SESSION['s_email_error'] = "Email Already in Use";
         } else {
@@ -796,6 +804,12 @@ function formValidation($email, $pass, $re_pass)
         } else {
             $_SESSION['s_pass_error'] = "";
         }
+
+        if($years < 13){
+            $_SESSION['s_age_error'] = 'Not old enough!';
+        }
+
+        
         // If validation is unsuccessful
         return false;
     } else {
@@ -1049,6 +1063,48 @@ function isFriend($id)
         return false;
     }
 }
+
+function showMutualFriends($visitingId){
+    $counter = 0;
+    $friends = queryFunc("SELECT * from friends where user1 = $visitingId OR user2 = $visitingId");
+    if(isData($friends)){
+        while($row = isRecord($friends)){
+            $idToCheck = $visitingId == $row['user1'] ? $row['user2'] : $row['user1']; 
+            if(isFriend($idToCheck)){
+                $user = queryFunc("SELECT CONCAT(first_name, ' ', last_name) as name, user_id, profile_pic from users where user_id = $idToCheck");
+                $user = isRecord($user);
+                $time = activeAgo($user['user_id']);
+                $user['profile_pic'] = "./assets/profile_pictures/" . $user['profile_pic'];
+                $stateClass = 'state-off';
+                if ($time == 'Just Now') {
+                    $time = 'Now';
+                    $stateClass = 'state-on';
+                }
+                $content = <<<USER
+                <div class='mutual-friend'>
+                    <div class='mutual-friend-image'>
+                        <img class='post-avatar post-avatar-30' src='{$user['profile_pic']}' >
+                    </div>
+                    <div class='mutual-friend-info'>
+                        <a href="timeline.php?visitingUserID={$user['user_id']}" class='mutual-friend-text'>{$user['name']}</a>
+                        <span class='{$stateClass}'>{$time}</span>
+                    </div>
+                </div>
+USER;
+                echo $content;   
+                $counter++;
+                if($counter >= 10)
+                    break;     
+            }
+        }
+        if($counter == 0)
+            echo "<p class ='see-more'>No mutual Friends</p>";
+    }
+    else{
+        echo "<p class ='see-more'>No mutual Friends</p>";
+    }
+}
+
 
 function reqSent($id)
 {
@@ -2549,26 +2605,6 @@ function sendReqFromDefaultAccount($id){
     notification($defaultAccountId, $id, 0, 'request');
 }
 
-function deleteUser($id){
-    $check = queryFunc("SELECT user_id from users where user_id = $id");
-    if(isData($check)){
-        queryFunc("DELETE from comments where user_id = '$id'");
-        queryFunc("DELETE from friends where user1 = '$id' OR user2 = '$id'");
-        queryFunc("DELETE from friend_requests where from_id = '$id' OR to_id = '$id'");
-        queryFunc("DELETE from likes where user_id = '$id'");
-        queryFunc("DELETE from messages where user_from = '$id' OR user_to = '$id'");
-        queryFunc("DELETE from notifications where s_user_id = '$id' OR d_user_id = '$id'");
-        queryFunc("DELETE from posts where user_id = '$id'");
-        queryFunc("DELETE from recent_activities where user_id = '$id'");
-        queryFunc("DELETE from users where user_id = '$id'");
-        echo "Account Removed";
-    }
-    else{
-        echo "User Doesn't Exist";
-    }    
-
-}
-
 function sideBar(){
 
     $iconArray = array("newspaper","user","bell","comments","user-friends","chart-line");
@@ -2601,13 +2637,127 @@ CONTENT;
     echo $sidebar;
 }
 
+//ADMIN FUNCTIONS
+function deleteUser($id){
+    $check = queryFunc("SELECT user_id from users where user_id = $id");
+    if(isData($check)){
+        queryFunc("DELETE from comments where user_id = '$id'");
+        queryFunc("DELETE from friends where user1 = '$id' OR user2 = '$id'");
+        queryFunc("DELETE from friend_requests where from_id = '$id' OR to_id = '$id'");
+        queryFunc("DELETE from likes where user_id = '$id'");
+        queryFunc("DELETE from messages where user_from = '$id' OR user_to = '$id'");
+        queryFunc("DELETE from notifications where s_user_id = '$id' OR d_user_id = '$id'");
+        queryFunc("DELETE from posts where user_id = '$id'");
+        queryFunc("DELETE from recent_activities where user_id = '$id'");
+        queryFunc("DELETE from users where user_id = '$id'");
+        echo "Account Removed";
+    }
+    else{
+        echo "User Doesn't Exist";
+    }    
+
+}
+
+function showUserActivitiesSummaryForAdmin($id){
+    $user = queryFunc("SELECT first_name as username from users where user_id = '$id'");
+    if(isData($user)){
+        $user = isRecord($user);
+        $user = $user['username'];
+
+        $noOfPosts = queryFunc("SELECT count(*) as 'posts' from posts where user_id = '$id'");
+        $noOfPosts = isRecord($noOfPosts);
+        $noOfPosts = $noOfPosts['posts'];
+
+        $noOfLikes = queryFunc("SELECT count(*) as 'likes' from likes where user_id = '$id'");
+        $noOfLikes = isRecord($noOfLikes);
+        $noOfLikes = $noOfLikes['likes'];
+
+        $noOfComments = queryFunc("SELECT count(*) as 'comments' from comments where user_id = '$id'");
+        $noOfComments = isRecord($noOfComments);
+        $noOfComments = $noOfComments['comments'];
+
+        $noOfFriends = queryFunc("SELECT count(*) as 'friends' from friends where user1 = '$id' OR user2 = '$id' ");
+        $noOfFriends = isRecord($noOfFriends);
+        $noOfFriends = $noOfFriends['friends'];
+
+        $noOfReqRecieved = queryFunc("SELECT count(*) as 'reqRec' from friend_requests where to_id = '$id' and status = 0 ");
+        $noOfReqRecieved = isRecord($noOfReqRecieved);
+        $noOfReqRecieved = $noOfReqRecieved['reqRec'];
+
+        $noOfReqSent = queryFunc("SELECT count(*) as 'reqSent' from friend_requests where from_id = '$id' and status = 0 ");
+        $noOfReqSent = isRecord($noOfReqSent);
+        $noOfReqSent = $noOfReqSent['reqSent'];
+
+        $noOfReqCanceled = queryFunc("SELECT count(*) as 'reqCanceled' from friend_requests where from_id = '$id' and status = 2 ");
+        $noOfReqCanceled = isRecord($noOfReqCanceled);
+        $noOfReqCanceled = $noOfReqCanceled['reqCanceled'];
+
+        $noOfMsgRecieved = queryFunc("SELECT count(*) as 'msgRec' from messages where user_to = '$id'");
+        $noOfMsgRecieved = isRecord($noOfMsgRecieved);
+        $noOfMsgRecieved = $noOfMsgRecieved['msgRec'];
+
+        $noOfMsgsSent = queryFunc("SELECT count(*) as 'msgSent' from messages where user_from = '$id'");
+        $noOfMsgsSent = isRecord($noOfMsgsSent);
+        $noOfMsgsSent = $noOfMsgsSent['msgSent'];
+
+        $noOfMsgsDeleted = queryFunc("SELECT count(*) as 'msgDeleted' from messages where (user_from = '$id' OR user_to = '$id') and (deleted like ' $id%' OR deleted like '%$id ')");
+        $noOfMsgsDeleted = isRecord($noOfMsgsDeleted);
+        $noOfMsgsDeleted = $noOfMsgsDeleted['msgDeleted'];
+
+        $stats = array('User Name' => $user, 'Posts' => $noOfPosts, 'Likes' => $noOfLikes, 'Comments' => $noOfComments, 'Friends' => $noOfFriends, 'Requests Sent' => $noOfReqSent , 'Requests Canceled' => $noOfReqCanceled , 'Requests Recieved' =>$noOfReqRecieved , 'Messages Sent' => $noOfMsgsSent , 'Messages Recieved' => $noOfMsgRecieved, 'Messages Deleted' => $noOfMsgsDeleted);
+
+        $content = '';
+
+        foreach ($stats as $stat => $value) {
+            $conflict = $stat == "Posts" ? "first-stat" : "";
+            $content .= <<<STATS
+            <div class='stat {$conflict}'>
+                <div class='stat-value'>{$value}</div>
+                <div class='stat-heading'>{$stat}</div>
+            </div>
+STATS;
+        }
+        echo $content;
+    }
+    else{
+        echo false;
+    }    
+}
+
+function showLatestRegisteredUsers(){
+    $users = queryFunc("SELECT CONCAT(first_name, ' ', last_name) as name, user_id, profile_pic from users order by user_id DESC limit 10");
+    while ($row = isRecord($users)) {
+        $time = activeAgo($row['user_id']);
+        $row['profile_pic'] = "./assets/profile_pictures/" . $row['profile_pic'];
+        $stateClass = 'state-off';
+        if ($time == 'Just Now') {
+            $time = 'Now';
+            $stateClass = 'state-on';
+        }
+        $content = <<<USER
+            <div class='latest-user'>
+                <div class='latest-user-image'>
+                    <img class='post-avatar post-avatar-30' src='{$row['profile_pic']}' >
+                </div>
+                <div class='latest-user-info'>
+                    <a href="timeline.php?visitingUserID={$row['user_id']}" class='latest-user-text'>{$row['name']}</a>
+                    <span class='{$stateClass}'>{$time}</span>
+                </div>
+            </div>
+USER;
+        echo $content;
+    }
+}
+
+// ADMIN FUNCTIONS ENDED
+
 function checkUserPosts($id){
     $posts = queryFunc("SELECT count(*) as count from posts where user_id = $id");
     $posts = isRecord($posts);
     if($posts['count'] < 15)
         echo true;
     else
-        echo true;    
+        echo false;    
 }
 
 function checkUserComments(){
@@ -2617,7 +2767,7 @@ function checkUserComments(){
     if($comments['count'] < 30)
         echo true;
     else
-        echo true;
+        echo false;
 }
 
 function checkUserMessages(){
@@ -2627,7 +2777,7 @@ function checkUserMessages(){
     if($messages['count'] < 50)
         echo true;
     else
-        echo true;
+        echo false;
 }
 
 function checkUserRequests(){
@@ -2637,5 +2787,5 @@ function checkUserRequests(){
     if($noOfReqs < 10)
         return true;
     else
-        return true;    
+        return false;    
 }
