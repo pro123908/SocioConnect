@@ -1842,6 +1842,8 @@ function submitEditInfoForm() {
   param = `password=${oldPass}&newPassword=${newPass}&school=${school}&college=${college}&university=${university}&work=${work}&age=${age}&contact=${contact}&genderBox=${gender}&question=${question}&answer=${answer}
   `;
 
+
+
   //Password Validation
   flag = true;
   if (newPass) {
@@ -1855,29 +1857,35 @@ function submitEditInfoForm() {
   if (flag) {
     ajaxCalls("POST", "./includes/EventHandlers/editInfo.php", param).then(
       function (result) {
-        infos = {
-          school: school,
-          college: college,
-          university: university,
-          work: work,
-          contact: contact,
-          age: result,
-          question: question,
-          gender: gender
-        };
 
-        for (info in infos) {
-          document.querySelector(`.user-${info}`).innerHTML = infos[info];
+        if (result > 13) {
+          document.querySelector('.edit-error-msg').innerHTML = '';
+
+          infos = {
+            school: school,
+            college: college,
+            university: university,
+            work: work,
+            contact: contact,
+            age: result,
+            question: question,
+            gender: gender
+          };
+
+          for (info in infos) {
+            document.querySelector(`.user-${info}`).innerHTML = infos[info];
+          }
+          hideEditInfoDiv();
+          document.querySelector(".user-edit-old-password").value = "";
+        } else {
+          document.querySelector('.edit-error-msg').innerHTML = 'Not Old Enough!';
         }
-        hideEditInfoDiv();
-        document.querySelector(".user-edit-old-password").value = "";
       }
     );
   }
 }
 
 function dropdownCountAjax(place, dropdown) {
-  // console.log("IN DPCOUNT AJAX");
 
   ajaxCalls(
     "GET",
@@ -1913,18 +1921,19 @@ function deleteUser() {
   });
 }
 
-function getUserDetails(){
+function getUserDetails() {
   var id = document.querySelector(".search-user-details-input").value;
-  ajaxCalls("GET",`./includes/AjaxHandlers/AJAX2.php?searchDetailsByAdmin=1&id=${id}`).then(function (result){
-    if(!result){
+  ajaxCalls("GET", `./includes/AjaxHandlers/AJAX2.php?searchDetailsByAdmin=1&id=${id}`).then(function (result) {
+    if (!result) {
       document.querySelector(".user-activities-summary-content-for-admin").innerHTML = "";
       alert("User not found");
-    }
-    else{
+    } else {
       document.querySelector(".user-activities-summary-content-for-admin").innerHTML = result;
     }
   });
 }
+
+
 
 setInterval(refreshRecentConvos, 1000);
 setInterval(commentsRefresh, 3000);

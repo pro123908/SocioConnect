@@ -28,15 +28,35 @@ if (strlen(trim($newPass)) > 7) {
     $newPass = hashString($newPass);
 }
 // Checking the validity of current password for saving changes
-$flag = validatePassword($pass);
+
+    $thenDate = $age;
+    $currentDate = date('d-m-Y');
+
+    $diff = abs(strtotime($currentDate) - strtotime($thenDate));
+
+    $years = floor($diff / (365*60*60*24));
+
+    $flag = false;
+    if($years < 13){
+        $_SESSION['edit_age_error'] = 'Not Old Enough!';
+        $flag = false;
+    }
+    else{
+        $flag = validatePassword($pass);
+    }
+    
 
 //If current password was correct
 if ($flag) {
     saveEditedInfo($school, $college, $university, $work, $contact, $newPass, $age, $gender, $question, $answer);
-    echo timeString(differenceInTime($age));
+    unset($_SESSION['edit_age_error']);
+    echo $years;
 
-} else {
+} elseif($years < 13) {
     // If current password was incorrect
+    echo $years;
+}else{
+    echo $years;
     $_SESSION['edit_info_pass_error'] = true;
     $_SESSION['edit_info_user_age'] = $age;
     $_SESSION['edit_info_user_gender'] = $gender;
