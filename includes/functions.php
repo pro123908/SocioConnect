@@ -56,6 +56,7 @@ function hashString($string)
 
     // Creating hash of the passed string
     $string = crypt($string, $hashed);
+    
 
     // Returning hashed string
     return $string;
@@ -767,7 +768,7 @@ function timeString($time)
     }
 }
 
-function formValidation($email, $pass, $re_pass)
+function formValidation($email, $pass, $re_pass,$age)
 {
     /* --------------------- REFACTORED ----------------------- */
 
@@ -782,7 +783,15 @@ function formValidation($email, $pass, $re_pass)
     => If password doesn't contain any of 0-9 digits
     => If password doesn't containe any of A-Z or a-z alphabets
      */
-    if ($pass != $re_pass || $row['user_id'] > 0 || preg_match("/[0-9]+/", $pass) == 0 || preg_match("/[A-Za-z]+/", $pass) == 0) {
+
+    $thenDate = $age;
+    $currentDate = date('d-m-Y');
+
+    $diff = abs(strtotime($currentDate) - strtotime($thenDate));
+
+    $years = floor($diff / (365*60*60*24));
+
+        if ($pass != $re_pass || $row['user_id'] > 0 || preg_match("/[0-9]+/", $pass) == 0 || preg_match("/[A-Za-z]+/", $pass) == 0 || $years < 13) {
         if ($row['user_id'] > 0) {
             $_SESSION['s_email_error'] = "Email Already in Use";
         } else {
@@ -795,6 +804,12 @@ function formValidation($email, $pass, $re_pass)
         } else {
             $_SESSION['s_pass_error'] = "";
         }
+
+        if($years < 13){
+            $_SESSION['s_age_error'] = 'Not old enough!';
+        }
+
+        
         // If validation is unsuccessful
         return false;
     } else {
@@ -2296,6 +2311,8 @@ INFO;
 
                     <input placeholder='Age' type = "date" name = "age" class ="user-edit-field user-edit-age"  autocomplete="off" value = "<?php $val = isset($_SESSION['edit_info_user_age']) ? $_SESSION['edit_info_user_age'] : '';
             echo $val;?>">
+            <span class='edit-error-msg'></span>
+
                     <select placeholder='Gender' value='Male' name="genderBox"  required class='user-edit-field user-edit-gender'>
                         <option value="Male">Male</option>
                         <option value="Female">Female</option>

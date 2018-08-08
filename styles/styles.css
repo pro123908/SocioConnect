@@ -361,6 +361,11 @@ body {
   font-size: 14px;
 }
 
+.edit-error-msg {
+  color: red;
+  font-size: 14px;
+}
+
 .sign-input .option {
   background: rgba(0, 0, 0, 1);
 }
@@ -644,7 +649,14 @@ input:-webkit-autofill {
   font-size: 25px;
 }
 
-.pic-upload-btn:hover {
+.msg-pic-upload-btn {
+  border: none;
+  background-color: white;
+  font-size: 25px;
+}
+
+.pic-upload-btn:hover,
+.msg-pic-upload-btn:hover {
   cursor: pointer;
 }
 
@@ -980,7 +992,7 @@ input[type="file"]:hover {
 .recenet-uploads-heading,
 .remove-user-heading,
 .latest-users-heading,
-.mutual-friends-heading{
+.mutual-friends-heading {
   padding: 10px;
   text-align: center;
   font-weight: bold;
@@ -1099,14 +1111,15 @@ input[type="file"]:hover {
 .recenet-uploads-area,
 .remove-user-area,
 .latest-users-area,
-.mutual-friends-area
-{
+.mutual-friends-area {
   margin-bottom: 50px;
   height: fit-content;
   background-color: #fff;
 }
 
-.people-you-may-know-area,.latest-users-area, .mutual-friends-area {
+.people-you-may-know-area,
+.latest-users-area,
+.mutual-friends-area {
   flex: 1;
 }
 
@@ -1268,7 +1281,8 @@ input[type="file"]:hover {
   background-color: #fff;
 }
 
-.user-activities-summary-area, .user-activities-summary-area-for-admin {
+.user-activities-summary-area,
+.user-activities-summary-area-for-admin {
   flex: 1;
   margin-bottom: 50px;
   background-color: #fff;
@@ -1734,7 +1748,7 @@ input[type="file"]:hover {
 .user-info-content .user-info,
 .recenet-uploads-content,
 .remove-user-content,
-.user-activities-summary-input-area-for-admin{
+.user-activities-summary-input-area-for-admin {
   padding: 10px;
   text-align: center;
 }

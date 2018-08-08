@@ -105,6 +105,11 @@ if (isset($_GET['id'])) {
                         <div class='message-input-form'>
                         <form method="post" name='messageForm' action="javascript:message()">
                         <input autocomplete='off' name="message_body" placeholder="Type your message here"  class='message-input'/>
+                        <div class='upload-btn-wrapper'>
+                <button class='msg-pic-upload-btn'><i class='far fa-image'></i></button>
+                <input type='file' name='post-pic' onchange='javascript:postPicSelected()'/>
+                <span class='pic-name'></span>
+            </div>
                         <input type='hidden' name='partner' value='$partnerID'>
                         <input type='hidden' name='pic' value='$profilePicMe'>
                         <input type="submit" name="send_message" id="message_submit" value="send" style='display:none;' >

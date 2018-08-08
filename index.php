@@ -66,7 +66,7 @@ if (isset($_POST['loginSubmit'])) { // If form is submitted
     $_SESSION['s_question'] = $question;
     $_SESSION['s_answer'] = $answer;
     // Validating the value of input fields and checking if user exists already?
-    if (!(formValidation($email, $_POST['password'], $_POST['repeatPassword']))) {
+    if (!(formValidation($email, $_POST['password'], $_POST['repeatPassword'],$age))) {
         redirection('index.php');
     } else {
         // If fields are validated then adding the user to database
@@ -159,7 +159,9 @@ if (isset($_SESSION['login_message'])) {
 }?><br>
   <input type="text" name='age' placeholder='Birthday' onfocus="(this.type='date')"   class='sign-input' required value=<?php if (isset($_SESSION['s_age'])) {
     echo $_SESSION['s_age'];
-}?>><br>
+}?>><?php if (isset($_SESSION['s_age_error'])) {
+    echo "<span class='error-msg'>{$_SESSION['s_age_error']}</span>";
+}?><br>
   <select name="genderBox"  required class='sign-input'>
     <option value="Male" class='option'>Male</option>
     <option value="Female" class='option'>Female</option>
