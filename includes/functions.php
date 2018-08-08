@@ -2759,7 +2759,7 @@ function checkUserPosts($id){
     if($posts['count'] < 15)
         echo true;
     else
-        echo false;    
+        echo true;    
 }
 
 function checkUserComments(){
@@ -2769,7 +2769,7 @@ function checkUserComments(){
     if($comments['count'] < 30)
         echo true;
     else
-        echo false;
+        echo true;
 }
 
 function checkUserMessages(){
@@ -2779,7 +2779,7 @@ function checkUserMessages(){
     if($messages['count'] < 50)
         echo true;
     else
-        echo false;
+        echo true;
 }
 
 function checkUserRequests(){
@@ -2789,5 +2789,5 @@ function checkUserRequests(){
     if($noOfReqs < 10)
         return true;
     else
-        return false;    
+        return true;    
 }
