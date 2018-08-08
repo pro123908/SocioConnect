@@ -649,7 +649,14 @@ input:-webkit-autofill {
   font-size: 25px;
 }
 
-.pic-upload-btn:hover {
+.msg-pic-upload-btn {
+  border: none;
+  background-color: white;
+  font-size: 25px;
+}
+
+.pic-upload-btn:hover,
+.msg-pic-upload-btn:hover {
   cursor: pointer;
 }
 

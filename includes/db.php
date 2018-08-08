@@ -17,5 +17,5 @@
   if(!$connection){
     die('Connection Failed to database'.mysqli_error($connection));
   }
-
+  
 ?>
