@@ -2706,7 +2706,9 @@ function showUserActivitiesSummaryForAdmin($id){
         $noOfMsgsDeleted = isRecord($noOfMsgsDeleted);
         $noOfMsgsDeleted = $noOfMsgsDeleted['msgDeleted'];
 
-        $stats = array('User Name' => $user, 'Posts' => $noOfPosts, 'Likes' => $noOfLikes, 'Comments' => $noOfComments, 'Friends' => $noOfFriends, 'Requests Sent' => $noOfReqSent , 'Requests Canceled' => $noOfReqCanceled , 'Requests Recieved' =>$noOfReqRecieved , 'Messages Sent' => $noOfMsgsSent , 'Messages Recieved' => $noOfMsgRecieved, 'Messages Deleted' => $noOfMsgsDeleted);
+        $activeAgo = activeAgo($id);
+
+        $stats = array('User Name' => $user, 'Last Online' => $activeAgo ,'Posts' => $noOfPosts, 'Likes' => $noOfLikes, 'Comments' => $noOfComments, 'Friends' => $noOfFriends, 'Requests Sent' => $noOfReqSent , 'Requests Canceled' => $noOfReqCanceled , 'Requests Recieved' =>$noOfReqRecieved , 'Messages Sent' => $noOfMsgsSent , 'Messages Recieved' => $noOfMsgRecieved, 'Messages Deleted' => $noOfMsgsDeleted);
 
         $content = '';
 

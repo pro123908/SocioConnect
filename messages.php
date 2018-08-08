@@ -48,7 +48,7 @@ if (isset($_GET['id'])) {
     }
     $content = <<<CONTENT
                     <span class='chat-user-image'><img src='{$pic}' class='post-avatar post-avatar-40'/></span>
-                    <span class='chat-username'>{$partner['name']}</span>
+                    <span><a class='chat-username' href="timeline.php?visitingUserID={$_GET['id']}">{$partner['name']}</a></span>
                     <div class='time-display {$state}'>{$time}</div>
 CONTENT;
     echo $content;
