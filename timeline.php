@@ -165,12 +165,18 @@ if ($flag == 1 || $flag == 2) {?>
                             </div>
                         </div>     
                     <?php }?>
-
-                    
-                    
+                        
                 </div>
                 <!-- Right Side content Finished -->
         <?php
+}else{?>
+        <div class='user-isnt-friend'>
+            <div class='mutual-friends-heading'>Mutual Friends</div>
+            <div class='mutual-friends-content'>
+                <?php showMutualFriends($_GET['visitingUserID'])?>
+            </div>
+        </div>         
+    <?php       
 }
 ?>
     </div>

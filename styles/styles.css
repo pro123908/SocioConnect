@@ -1484,6 +1484,11 @@ input[type="file"]:hover {
   margin: 10px;
 }
 
+.chat-username{
+  text-decoration: none;
+  color : black;
+}
+
 .chat-messages {
   display: flex;
   flex-direction: column;
@@ -2055,4 +2060,11 @@ input[type="file"]:hover {
 .sponsor-link{
   text-decoration : none;
   color : white;
+}
+
+.user-isnt-friend{
+  margin-bottom: 50px;
+  height: fit-content;
+  background-color: #fff;
+  width: 300px;
 }
