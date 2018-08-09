@@ -298,4 +298,12 @@ if (isset($_GET['notiPage'])) {
     $value = CountDropdown($place);
     countDropdownDisplay($value, $class);
     // echo $value . ' ' . $class;
+}elseif(isset($_GET['updateDropdown'])){
+    updateDropdowns();
+    $value = CountDropdown(2);
+    countDropdownDisplay($value, 'msg');
+}
+elseif(isset($_GET['updateDropdownCount'])){
+    $value = CountDropdown(2);
+    countDropdownDisplay($value, 'msg');
 }

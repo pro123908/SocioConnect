@@ -1891,7 +1891,7 @@ function dropdownCountAjax(place, dropdown) {
     "GET",
     `./includes/AjaxHandlers/AJAX3.php?dpCount=${place}&class=${dropdown}`
   ).then(function (result) {
-    // console.log(result);
+
 
     // console.log("Insiadadsdsda");
     document.querySelector(`.${dropdown}-count`).innerHTML = result;
@@ -1934,9 +1934,44 @@ function getUserDetails() {
 }
 
 
+function updateDropdownMsg() {
+
+  ajaxCalls("GET", `./includes/AjaxHandlers/AJAX3.php?updateDropdown=1`).then(function (result) {
+
+    document.querySelector(".recent-chats-dropdown").innerHTML = result;
+
+  });
+}
+
+function updateDropdownMsgCount() {
+  console.log("UPDATING");
+  ajaxCalls("GET", `./includes/AjaxHandlers/AJAX3.php?updateDropdownCount=1`).then(function (result) {
+
+
+    document.querySelector(".msg-count").innerHTML = result;
+    console.log(result);
+
+    locStart = result.lastIndexOf("=") + 1;
+    locEnd = result.lastIndexOf(";");
+
+    color = result.substring(locStart, locEnd);
+
+    // console.log(toString(color));
+    if (color === "'red'") {
+      document.querySelector(`.msg-count`).style.backgroundColor =
+        "red";
+    } else {
+      document.querySelector(`.msg-count`).style.backgroundColor =
+        "transparent";
+    }
+  });
+}
+
 
 setInterval(refreshRecentConvos, 1000);
 setInterval(commentsRefresh, 3000);
 setInterval(notificationRefresh, 3000);
 setInterval(likesRefresh, 3000);
 setInterval(messageRefresh, 1000);
+setInterval(updateDropdownMsg, 1000);
+setInterval(updateDropdownMsgCount, 1000);

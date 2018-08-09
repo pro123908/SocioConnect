@@ -2793,3 +2793,15 @@ function checkUserRequests(){
     else
         return true;    
 }
+
+
+function updateDropdowns(){
+    /*
+        $place 
+        1 => Notifications
+        2 => Messages
+        3 => Friend Requests
+    */
+
+   showRecentChats(1);
+}

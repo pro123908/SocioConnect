@@ -1,6 +1,6 @@
 <?php
 
-require_once dirname(__FILE__) . '/includes/header.php';
+require_once dirname(__FILE__) . '/includes/functions.php';
 
 if (!isset($_SESSION['user_id'])) {
     redirection('index.php');
@@ -14,6 +14,8 @@ if (isset($_GET['postID'])) {
     $notiID = clearString($_GET['notiID']); // Notification ID
     // Now notification has been seen, so set flag to 1
     $queryResult = queryFunc("UPDATE notifications SET seen=1  WHERE noti_id='$notiID'");
+
+    require_once dirname(__FILE__) . '/includes/header.php';
 ?>
     <div class='content-area'>
         <div class='notification-area' style='border:none'></div>

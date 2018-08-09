@@ -164,6 +164,8 @@ if (isset($_GET['noti'])) {
                 $data[$counter] = array('message' => $messageBody, 'partnerID' => $partnerID, 'pic' => $profilePicYou);
                 $counter += 1;
                 $_SESSION['last_msg_id'] = $row['id'];
+                $messageOpenedQuery = queryFunc("UPDATE messages set opened=1 where id={$row['id']}");
+
             }
 
             echo json_encode($data);

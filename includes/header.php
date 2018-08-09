@@ -87,7 +87,7 @@ ob_start(); // Turn on ouput buffering
 
             <div class='msg-count'>
               <?php $value = CountDropdown(2);
-    countDropdownDisplay($value, 'msg');
+        countDropdownDisplay($value, 'msg');
     ?>
             </div>
           </div>
