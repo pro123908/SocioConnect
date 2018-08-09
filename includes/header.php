@@ -8,7 +8,9 @@ ob_start(); // Turn on ouput buffering
 
 <html>
   <head>
+    <title class='pageTitle'></title>
     <link rel="stylesheet" href="./icons/css/all.css" >
+    <link rel="shortcut icon" href="favicon.ico" />
     <!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">  -->
     <link href='http://fonts.googleapis.com/css?family=Berkshire+Swash' rel='stylesheet' type='text/css'>
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700,800" rel="stylesheet">
@@ -20,7 +22,7 @@ ob_start(); // Turn on ouput buffering
   <body onload="setUserId('<?php if (isset($_SESSION['user_id'])) {
     echo $_SESSION['user_id'];
 }
-?>')">
+?>');">
 
   <!-- Starting div of main content area of the website, where all the stuff lies -->
   <?php if (isset($_SESSION['user_id'])) {
@@ -129,3 +131,31 @@ $value = CountDropdown(3);
     </div>
   <?php }?>
 
+
+<script>
+
+  var title = document.querySelector('.pageTitle');
+  var page = window.location.pathname;
+
+  if (page == '/socioConnect/main.php' || page == '/main.php') {
+    title.innerHTML = 'NewsFeed';
+  } else if (page == '/socioConnect/timeline.php' || page == '/timeline.php') {
+    title.innerHTML = 'Profile';
+  } else if (page == '/socioConnect/messages.php' || page == '/messages.php') {
+    title.innerHTML = 'Messages';
+  } else if (page == '/socioConnect/requests.php' || page == '/requests.php') {
+    title.innerHTML = 'Friends';
+  } else if (page == '/socioConnect/notification.php' || page == '/notification.php') {
+    title.innerHTML = 'Notification';
+  } else if (page == '/socioConnect/allNotification.php' || page == '/allNotification.php') {
+    title.innerHTML = 'Notifications';
+  } else if (page == '/socioConnect/allSearchResults.php' || page == '/allSearchResults.php') {
+    title.innerHTML = 'Search';
+  } else if (page == '/socioConnect/index.php' || page == '/index.php') {
+    title.innerHTML = 'Socio Connect';
+  } else if (page == '/socioConnect/allActivities.php' || page == '/allActivities.php') {
+    title.innerHTML = 'Activities';
+  }
+
+
+</script>

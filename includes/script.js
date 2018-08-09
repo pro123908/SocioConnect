@@ -1944,12 +1944,12 @@ function updateDropdownMsg() {
 }
 
 function updateDropdownMsgCount() {
-  console.log("UPDATING");
+
   ajaxCalls("GET", `./includes/AjaxHandlers/AJAX3.php?updateDropdownCount=1`).then(function (result) {
 
 
     document.querySelector(".msg-count").innerHTML = result;
-    console.log(result);
+
 
     locStart = result.lastIndexOf("=") + 1;
     locEnd = result.lastIndexOf(";");
@@ -1966,6 +1966,7 @@ function updateDropdownMsgCount() {
     }
   });
 }
+
 
 
 setInterval(refreshRecentConvos, 1000);
