@@ -173,7 +173,7 @@ if ($flag == 1 || $flag == 2) {?>
         <div class='user-isnt-friend'>
             <div class='mutual-friends-heading'>Mutual Friends</div>
             <div class='mutual-friends-content'>
-                <?php showMutualFriends($_GET['visitingUserID'])?>
+                <?php showMutualFriends(clearString($_GET['visitingUserID']))?>
             </div>
         </div>         
     <?php       

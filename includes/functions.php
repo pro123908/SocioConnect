@@ -1066,7 +1066,7 @@ function isFriend($id)
 
 function showMutualFriends($visitingId){
     $counter = 0;
-    $friends = queryFunc("SELECT * from friends where user1 = $visitingId OR user2 = $visitingId");
+    $friends = queryFunc("SELECT * from friends where user1 = $visitingId OR user2 = $visitingId order by friend_id DESC");
     if(isData($friends)){
         while($row = isRecord($friends)){
             $idToCheck = $visitingId == $row['user1'] ? $row['user2'] : $row['user1']; 
