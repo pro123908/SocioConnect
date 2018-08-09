@@ -2482,15 +2482,34 @@ function showUserActivitiesSummary($id)
     $noOfFriends = isRecord($noOfFriends);
     $noOfFriends = $noOfFriends['friends'];
 
-    // $noOfReqRecieved = queryFunc("SELECT count(*) as 'reqRec' from friend_requests where to_id = '$id' and status = 0 ");
-    // $noOfReqRecieved = isRecord($noOfReqRecieved);
-    // $noOfReqRecieved = $noOfReqRecieved['reqRec'];
 
-    // $noOfReqSent = queryFunc("SELECT count(*) as 'reqSent' from friend_requests where from_id = '$id' and status = 0 ");
-    // $noOfReqSent = isRecord($noOfReqSent);
-    // $noOfReqSent = $noOfReqSent['reqSent'];
 
-    $stats = array('Posts' => $noOfPosts, 'Likes' => $noOfLikes, 'Comments' => $noOfComments, 'Friends' => $noOfFriends);
+    // $stats = array('Posts' => $noOfPosts, 'Likes' => $noOfLikes, 'Comments' => $noOfComments, 'Friends' => $noOfFriends);
+    $stats  = array();
+    if($noOfPosts > 1){
+        $stats['Posts'] = $noOfPosts;
+    }else{
+        $stats['Post'] = $noOfPosts;
+    }
+
+    if($noOfLikes > 1){
+        $stats['Likes'] = $noOfLikes;
+    }else{
+        $stats['Like'] = $noOfLikes;
+    }
+
+    if($noOfComments > 1){
+        $stats['Comments'] = $noOfComments;
+    }else{
+        $stats['Comment'] = $noOfComments;
+    }
+
+    if($noOfFriends > 1){
+        $stats['Friends'] = $noOfFriends;
+    }else{
+        $stats['Friend'] = $noOfFriends;
+    }
+
 
     $content = '';
 
