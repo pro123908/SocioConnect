@@ -1166,17 +1166,18 @@ function addFriend($id)
 {
     // When add friend button is clicked
     // $id -> the person you are sending request too xD
-    if(checkUserRequests()){
-        $friend = queryFunc("INSERT INTO friend_requests (to_id, from_id) values({$id},{$_SESSION['user_id']})");
-        
-        notification($_SESSION['user_id'], $id, 0, 'request');
-        
-        redirection("timeline.php?visitingUserID=" . $id);
+    if(!reqSent($id)){
+        if(checkUserRequests()){
+            $friend = queryFunc("INSERT INTO friend_requests (to_id, from_id) values({$id},{$_SESSION['user_id']})");
+            
+            notification($_SESSION['user_id'], $id, 0, 'request');
+            
+            redirection("timeline.php?visitingUserID=" . $id);
+        }
+        else{
+            echo "<script>alert('You have reached your limit of number of friend requests allowed for a single account')</script>";
+        }
     }
-    else{
-        echo "<script>alert('You have reached your limit of number of friend requests allowed for a single account')</script>";
-    }
-
 }
 
 function cancelReq($id)
@@ -1206,11 +1207,13 @@ function acceptReq($id)
     // When you have accepted the friend request
     // $id of the user of whom you are accepting the request
     // Updating both users records
-    $userLoggedIn = $_SESSION['user_id'];
-    $friend = queryFunc("INSERT into friends (user1,user2,become_friends_at) VALUES ('$id','$userLoggedIn',now())");
-
-    // Deleting request from the person record  who sent you the request,bcoz it is accepted
-    queryFunc("UPDATE friend_requests SET status=1 WHERE to_id={$userLoggedIn} AND from_id={$id}");
+    if(!isFriend($id)){
+        $userLoggedIn = $_SESSION['user_id'];
+        $friend = queryFunc("INSERT into friends (user1,user2,become_friends_at) VALUES ('$id','$userLoggedIn',now())");
+    
+        // Deleting request from the person record  who sent you the request,bcoz it is accepted
+        queryFunc("UPDATE friend_requests SET status=1 WHERE to_id={$userLoggedIn} AND from_id={$id}");
+    }
 }
 
 function ignoreReq($id)
