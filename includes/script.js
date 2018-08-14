@@ -336,7 +336,7 @@ function comment(postID, user, profilePic) {
       alert("You've reached your limit of number of comments allowed for a single account");
     }
   });
-  // Pain in the ass xD
+  // something wrong
   return false;
 }
 
@@ -869,7 +869,7 @@ function getUsers(value, flag) {
       }
     }
   );
-  // Pain in the ass
+  // something wrong
   return false;
 }
 
