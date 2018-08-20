@@ -17,16 +17,20 @@ if (isset($_GET['postID'])) {
 
     require_once dirname(__FILE__) . '/includes/header.php';
 ?>
-    <div class='content-area'>
-        <div class='notification-area' style='border:none'></div>
-        <div class='post-area'>
+    <div class='content-area row'>
+        <!-- <div class='notification-area' style='border:none'></div> -->
+        <div class='post-area col-12 col-sm-12 col-md-12 col-lg-6 offset-lg-3 col-xl-6 offset-xl-3'>
             <!-- Displaying that post only -->
             <?php showPosts('c', 1, 1); ?>
         </div>
-        <div class='friends-area' style='border:none'></div>
+        <!-- <div class='friends-area' style='border:none'></div> -->
     </div>
 <?php
 }
+
+require_once dirname(__FILE__) . '/includes/footer.php';
 ?>
+
+
 
 <script src="./includes/script.js" ></script>

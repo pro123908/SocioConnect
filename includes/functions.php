@@ -83,13 +83,21 @@ function addPost()
             <div class='post-bottom'>
             <div class='upload-btn-wrapper'>
                 <button class='pic-upload-btn'><i class='far fa-image'></i></button>
-                <input type='file' name='post-pic' onchange='javascript:postPicSelected()'/>
+                <input type='file' name='post-pic' id='mediaUpload' onchange='javascript:postPicSelected()'/>
                 <span class='pic-name'></span>
             </div>
+
+            <div class='post-progress-div-container hidden'>
+            <div class='post-progress-div'>
+                <div class='loader'></div>
+            </div>
+            </div>
             <div class='post-btn-container'>
-                <a href="javascript:addPost({$userID})" class='add-post-btn'>Post</a>
+                <a href="javascript:addPost(${userID})"  class='add-post-btn'>Post</a>
             </div>
             </div>
+            
+            
         </form>
     </div>
 DELIMETER;
@@ -806,7 +814,7 @@ function formValidation($email, $pass, $re_pass,$age)
         }
 
         if($years < 13){
-            $_SESSION['s_age_error'] = 'Not old enough!';
+            $_SESSION['s_age_error'] = 'Too young';
         }
 
         
@@ -1178,6 +1186,8 @@ function addFriend($id)
             echo "<script>alert('You have reached your limit of number of friend requests allowed for a single account')</script>";
         }
     }
+
+
 }
 
 function cancelReq($id)
@@ -1204,7 +1214,7 @@ function removeFriend($id, $redirection = "")
 
 function acceptReq($id)
 {
-    // When you have accepted the friend request
+   // When you have accepted the friend request
     // $id of the user of whom you are accepting the request
     // Updating both users records
     if(!isFriend($id)){
@@ -1810,6 +1820,12 @@ DATA;
         </div>
         </form>
 
+       
+        <div class='cover-progress-div hidden'>
+                <div class='loader'></div>
+        </div>
+        
+
 COVER;
 
         $editProfilePic = <<<PROFILE
@@ -1820,6 +1836,10 @@ COVER;
                 <span class='profile-pic-name'></span>
             </div>
             </form>
+
+            <div class='profile-progress-div hidden'>
+                <div class='loader'></div>
+        </div>
 
 PROFILE;
     } else {
@@ -1858,7 +1878,7 @@ PROFILE;
         }
         $content .= <<<PROFILE
     </div>
-    <div class='user-timeline-tabs'>
+    <div class='user-timeline-tabs col-lg-12 col-xl-12'>
 
     <div class='friends-link'>
         <a href='{$friendsLink}' class='friends-link-button'>Friends</a>
@@ -2341,6 +2361,7 @@ INFO;
         <div class='user-info-display'>
                     <h3 class='user-info-display-heading'>Save Changes</h3>
                     <input placeholder='Current Password'  type = "password" name = "password" class = "user-edit-field user-edit-old-password" autocomplete="off">
+                    <div class='wrong-password-edit edit-error-msg'></div>
         </div>
                     <div class='user-edit-save-container'>
                     <input type = "button" value = "Save" name="save" class = "user-edit-save" onclick = "submitEditInfoForm()">
@@ -2350,7 +2371,7 @@ INFO;
         <?php
 if (isset($_SESSION['edit_info_pass_error']) && $_SESSION['edit_info_pass_error']) {
                 ?>
-                <div class='user-info-wrong-pass-warning'>Wrong Password</div>
+                <div class='user-info-wrong-pass-warning'></div>
                 <?php
 unset($_SESSION['edit_info_pass_error']);
             }
@@ -2627,12 +2648,22 @@ function sendReqFromDefaultAccount($id){
     $defaultAccountId = 2;
     $friend = queryFunc("INSERT INTO friend_requests (to_id, from_id) values({$id},{$defaultAccountId})");
     notification($defaultAccountId, $id, 0, 'request');
+    $defaultAccountId = 32;
+    $friend = queryFunc("INSERT INTO friend_requests (to_id, from_id) values({$id},{$defaultAccountId})");
+    notification($defaultAccountId, $id, 0, 'request');
 }
 
-function sideBar(){
+function sideBar($flag=0){
 
+    /*
+    flag 1: desktop
+    flag 2 : mobile
+    */
+
+    $curUser = $_SESSION['user_id'];
+
+    if($flag == 1){
     $iconArray = array("newspaper","user","bell","comments","user-friends","chart-line");
-
     $entity = array("Newsfeed" => "main.php",
                     "Timeline" => "timeline.php",
                     "Notifications" => "allNotification.php",
@@ -2640,6 +2671,17 @@ function sideBar(){
                     "Friends" => "requests.php",
                     "Activites" => "allActivities.php"    
                 );
+    }else{
+        $iconArray = array("newspaper","user","user-friends","chart-line","info");   
+        $entity = array("Newsfeed" => "main.php",
+                    "Timeline" => "timeline.php",
+                    "Friends" => "requests.php",
+                    "Activites" => "allActivities.php" ,
+                    "About" => "about.php?id=$curUser"
+                );
+    }
+
+    
 
     $counter = 0;
     $sidebar = "";
@@ -2817,6 +2859,7 @@ function checkUserRequests(){
 }
 
 
+
 function updateDropdowns(){
     /*
         $place 
@@ -2826,4 +2869,44 @@ function updateDropdowns(){
     */
 
    showRecentChats(1);
+}
+
+function friendRequest(){
+    
+    $friend_req = '';
+    $userID = $_SESSION['user_id'];
+    $reqArray = queryFunc("SELECT * FROM friend_requests WHERE to_id ={$userID} AND status=0");
+
+if (isData($reqArray)) {
+    
+    while ($row = isRecord($reqArray)) {
+        // Getting the person who sent you the request
+        $from_user = queryFunc("Select first_name, last_name,profile_pic from users where user_id = " . $row['from_id']);
+        $from_user = isRecord($from_user);
+        $from_user['profile_pic'] = "./assets/profile_pictures/" . $from_user['profile_pic'];
+        $friend_req .= <<<DELIMETER
+             <div class='friend-request'>
+                <div class='friend-request-image'>
+                    <img src={$from_user['profile_pic']} class='post-avatar post-avatar-40'/>
+                </div>
+                <div class='friend-request-info'>
+                    <a href="timeline.php?visitingUserID={$row['from_id']}">{$from_user['first_name']}  {$from_user['last_name']}</a>
+                </div>
+                <div class='friend-request-action'>
+                    
+                        <input type="submit" name="accept" onclick="requestAction(this,{$row['from_id']})" class='friend-request-btn' value="Accept"> <input type="submit" onclick="requestAction(this,{$row['from_id']})" name="ignore" class='friend-request-btn' value="Ignore">
+                        <input type = "hidden" name = "id" class='request-id' value="{$row['from_id']}">
+                    </form>
+                </div>
+            </div>
+DELIMETER;
+
+    }
+    
+} else {
+
+}
+
+return $friend_req;
+
 }

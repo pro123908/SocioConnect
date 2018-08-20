@@ -167,7 +167,7 @@ if (isset($_GET['notiPage'])) {
                             $path = $uniqueID . '.' . $extension; //Complete path of image
                             newPost($_POST['post'], $path);
                         }
-                    } elseif (($extension == "mp4" || $extension == "flv" || $extension == "avi") && ($type == "video/mp4" || $type == "video/flv" || $type == "video/avi") && $size < 5) {
+                    } elseif (($extension == "mp4" || $extension == "flv" || $extension == "avi") && ($type == "video/mp4" || $type == "video/flv" || $type == "video/avi") && $size < 20) {
 
                         $location = '../../assets/post_videos/';
 
@@ -176,7 +176,7 @@ if (isset($_GET['notiPage'])) {
                             newPost($_POST['post'], $path, 1, $extension);
                         }
                     } else {
-                        if($size > 5){
+                        if($size > 20){
                             $error = 1;
                         }else{
                             $error = 2;
@@ -300,10 +300,13 @@ if (isset($_GET['notiPage'])) {
     // echo $value . ' ' . $class;
 }elseif(isset($_GET['updateDropdown'])){
     updateDropdowns();
-    $value = CountDropdown(2);
-    countDropdownDisplay($value, 'msg');
+    // $value = CountDropdown(2);
+    // countDropdownDisplay($value, 'msg');
 }
 elseif(isset($_GET['updateDropdownCount'])){
     $value = CountDropdown(2);
     countDropdownDisplay($value, 'msg');
+}elseif(isset($_GET['friendsList'])){
+    $content = displayFriends(null,null);
+    echo $content;
 }

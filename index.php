@@ -99,25 +99,31 @@ elseif (isset($_SESSION['user_id'])) {
 }
 
 ?>
+
 <div class="login-container">
-     <div class='login-logo'></div>
-     <div class='login-info'>
+    <div class='login-row row'>
+     <div class= 'col-12 col-sm-12  col-md-12 col-lg-6 col-xl-6  login-logo'></div>
+     <div class='col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6  login-info'>
       <!-- <h1 class="login-heading">Welcome</h1> -->
-      <div class='login-form-container'>
+      <div class='row'>
+      <div class='login-form-container col-10 offset-1 col-sm-8 offset-sm-2 col-md-6 offset-md-3 col-lg-8 offset-lg-2 col-xl-9'>
+        <div class='row'>
+
+        
       <form action="index.php" method='POST' class="login-form">
-        <input type="text"  name='email' placeholder="Email" class="login-input" value= '<?php $value = isset($flag) ? $_SESSION['user_email'] : "";
+        <input type="text"  name='email' placeholder="Email" class="col-xs-12 col-sm-12 col-md-12 col-lg-5 col-xl-5 login-input" value= '<?php $value = isset($flag) ? $_SESSION['user_email'] : "";
 echo $value;?>' required>
-        <input type="password" name='password' placeholder="Password" class="login-input"  required>
-        <input type="hidden" name="email-for-forgot-pass" value= "<?php if (isset($_SESSION['user_email'])) {
+        <input type="password" name='password' placeholder="Password" class="col-xs-12 col-sm-12 col-md-12 col-lg-4 col-xl-4 login-input"  required>
+        <input  type="hidden" name="email-for-forgot-pass" value= "<?php if (isset($_SESSION['user_email'])) {
     echo $_SESSION['user_email'];
 }
 ?>">
-        <input type="submit" name='loginSubmit' class="login-submit" value='Login'>
+        <input type="submit" name='loginSubmit' class="col-xs-12 col-sm-12 col-md-12  col-lg-2 col-xl-2 login-submit" value='Login'>
       </form>
 
     <?php
 if (isset($_SESSION['login_message'])) {
-    $display = "<div class='login-error-container'>";
+    $display = "<div class='login-error-container col-lg-12 col-xl-12'>";
     $forgotPassword = '';
     if ($_SESSION['login_message'] != '') {
         $message = $_SESSION['login_message'];
@@ -130,55 +136,60 @@ if (isset($_SESSION['login_message'])) {
         $message = '';
     }
 
-    $display .= "<span class='login-error-msg'>{$message}</span>";
+    $display .= "<span class='login-error-msg'></span>";
     $display .= $forgotPassword . "</div>";
     echo $display;
 }
 ?>
 
 </div>
+</div>
 
 
-<div class='sign-form-container'>
-
-    <form action="index.php" method='POST' class="sign-form">
-      <input type="text" class='sign-input' name='fname' placeholder='First Name' maxlength="20" minlength='3' required value=<?php if (isset($_SESSION['s_first_name'])) {
+<div class='sign-form-container col-10 offset-1 col-sm-8 offset-sm-2 col-md-6 offset-md-3 col-lg-8 offset-lg-2 col-xl-9'>
+    <div class='row'>
+    <form action="index.php" method='POST' class="sign-form col-lg-12 col-xl-12">
+      <input type="text" class='col-xs-12 col-sm-12 col-md-12   sign-input' name='fname' placeholder='First Name' maxlength="20" minlength='3' required value=<?php if (isset($_SESSION['s_first_name'])) {
     echo $_SESSION['s_first_name'];
 }?> >
-  <input type="text"  name='lname' class='sign-input' placeholder='Last Name' maxlength="20" minlength='3' required value=<?php if (isset($_SESSION['s_last_name'])) {
+  <input type="text"  name='lname' class='col-xs-12 col-sm-12 col-md-12   sign-input' placeholder='Last Name' maxlength="20" minlength='3' required value=<?php if (isset($_SESSION['s_last_name'])) {
     echo $_SESSION['s_last_name'];
 }?>><br>
-  <input type="email"  name='email' class='sign-input' placeholder='Email' required value=<?php if (isset($_SESSION['s_email'])) {
+  <input type="email"  name='email' class='col-xs-12 col-sm-12 col-md-12  sign-input' placeholder='Email' required value=<?php if (isset($_SESSION['s_email'])) {
     echo $_SESSION['s_email'];
 }?>><?php if (isset($_SESSION['s_email_error'])) {
     echo "<span class='error-msg'>{$_SESSION['s_email_error']}</span>";
 }?><br>
-  <input type="password"  name='password' class='sign-input' placeholder='Password' maxlength="20" minlength='8' required ><br>
-  <input type="password" name='repeatPassword' class='sign-input' placeholder='Confirm Password' maxlength="20" minlength='8' required><?php if (isset($_SESSION['s_pass_error'])) {
+  <input type="password"  name='password' class='col-xs-12 col-sm-12 col-md-12 sign-input' placeholder='Password' maxlength="20" minlength='8' required ><br>
+  <input type="password" name='repeatPassword' class='col-xs-12 col-sm-12 col-md-12 sign-input' placeholder='Confirm Password' maxlength="20" minlength='8' required><?php if (isset($_SESSION['s_pass_error'])) {
     echo "<span class='error-msg'>{$_SESSION['s_pass_error']}</span>";
 }?><br>
-  <input type="text" name='age' placeholder='Birthday' onfocus="(this.type='date')"   class='sign-input' required value=<?php if (isset($_SESSION['s_age'])) {
+  <input type="text" name='age' placeholder='Birthday' onfocus="(this.type='date')"   class='col-xs-12 col-sm-12 col-md-12 sign-input' required value=<?php if (isset($_SESSION['s_age'])) {
     echo $_SESSION['s_age'];
 }?>><?php if (isset($_SESSION['s_age_error'])) {
     echo "<span class='error-msg'>{$_SESSION['s_age_error']}</span>";
 }?><br>
-  <select name="genderBox"  required class='sign-input'>
+  <select name="genderBox"  required class='col-xs-12 col-sm-12 col-md-12   sign-input'>
     <option value="Male" class='option'>Male</option>
     <option value="Female" class='option'>Female</option>
     <option value="Other" class='option'>Other</option>
   </select><br>
-  <input type="text" class='sign-input' name='question' placeholder='Securtiy Question' maxlength="255" minlength='3' required value="<?php if (isset($_SESSION['s_question'])) {
+  <input type="text" class='col-xs-12 col-sm-12 col-md-12 sign-input' name='question' placeholder='Securtiy Question' maxlength="255" minlength='3' required value="<?php if (isset($_SESSION['s_question'])) {
     echo $_SESSION['s_question'];
 }?>" ><br>
-  <input type="text"  name='answer' class='sign-input' placeholder='Answer' maxlength="255" minlength='3' autocomplete="off" required value="<?php if (isset($_SESSION['s_answer'])) {
+  <input type="text"  name='answer' class='col-xs-12 col-sm-12 col-md-12 sign-input' placeholder='Answer' maxlength="255" minlength='3' autocomplete="off" required value="<?php if (isset($_SESSION['s_answer'])) {
     echo $_SESSION['s_answer'];
 }?>"><br>
 
-  <input type="submit" name='signSubmit' class='sign-submit' value='Register'>
+  <input type="submit" name='signSubmit' class='col-xs-12 col-sm-12 col-md-12 sign-submit' value='Register'>
       </form>
 
 </div>
 </div>
+</div>
+</div>
+</div>
+
 
       <?php
 

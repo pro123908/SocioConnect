@@ -36,28 +36,30 @@ if (strlen(trim($newPass)) > 7) {
 
     $years = floor($diff / (365*60*60*24));
 
-    $flag = false;
+    $flag = 1;
     if($years < 13){
         $_SESSION['edit_age_error'] = 'Not Old Enough!';
-        $flag = false;
+        $flag = 2;
     }
     else{
-        $flag = validatePassword($pass);
+        if(!validatePassword($pass)){
+            $flag = 3;
+        }
     }
     
 
 //If current password was correct
-if ($flag) {
+if ($flag == 1) {
     saveEditedInfo($school, $college, $university, $work, $contact, $newPass, $age, $gender, $question, $answer);
     unset($_SESSION['edit_age_error']);
-    echo $years;
+    echo $flag;
 
-} elseif($years < 13) {
+} elseif(false) {
     // If current password was incorrect
     echo $years;
 }else{
-    echo $years;
-    $_SESSION['edit_info_pass_error'] = true;
+    echo $flag;
+    // $_SESSION['edit_info_pass_error'] = true;
     $_SESSION['edit_info_user_age'] = $age;
     $_SESSION['edit_info_user_gender'] = $gender;
     $_SESSION['edit_info_user_school'] = $school;

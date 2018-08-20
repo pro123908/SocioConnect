@@ -19,44 +19,17 @@ if (isset($_POST['add_friend'])) {
 require_once dirname(__FILE__) . '/includes/header.php';
 
 ?>
-<div class='friends-page'>
-<div class='friends-content'>
+<div class='friends-page row no-gutters'>
+<div class='friends-content col-12 col-sm-12 col-md-12 col-lg-9 col-xl-9'>
     <?php
 // Getting all your requests from database which you have received
 $userID = $_SESSION['user_id'];
+$friend_req = '';
+$friend_req = "<div class='friend-request-area'>";
 
-$reqArray = queryFunc("SELECT * FROM friend_requests WHERE to_id ={$userID} AND status=0");
-$friend_req = "";
+$friend_req .= friendRequest();
 
-if (isData($reqArray)) {
-    $friend_req = "<div class='friend-request-area'>";
-    while ($row = isRecord($reqArray)) {
-        // Getting the person who sent you the request
-        $from_user = queryFunc("Select first_name, last_name,profile_pic from users where user_id = " . $row['from_id']);
-        $from_user = isRecord($from_user);
-        $from_user['profile_pic'] = "./assets/profile_pictures/" . $from_user['profile_pic'];
-        $friend_req .= <<<DELIMETER
-             <div class='friend-request'>
-                <div class='friend-request-image'>
-                    <img src={$from_user['profile_pic']} class='post-avatar post-avatar-40'/>
-                </div>
-                <div class='friend-request-info'>
-                    <a href="timeline.php?visitingUserID={$row['from_id']}">{$from_user['first_name']}  {$from_user['last_name']}</a>
-                </div>
-                <div class='friend-request-action'>
-                    <form action ="./includes/EventHandlers/acceptRequest.php" method="post">
-                        <input type="submit" name="accept"  class='friend-request-btn' value="Accept"> <input type="submit" name="ignore" class='friend-request-btn' value="Ignore">
-                        <input type = "hidden" name = "id" value="{$row['from_id']}">
-                    </form>
-                </div>
-            </div>
-DELIMETER;
-
-    }
-    $friend_req .= "</div>";
-} else {
-
-}
+$friend_req .= "</div>";
 // Displaying friends
 $friend_req .= '<div class="friends-list"><h1>Friends</h1><div class="friends-list-elements"><div class="friends-container">';
 echo $friend_req;
@@ -69,7 +42,7 @@ displayFriends(null, $id);
 echo "</div></div></div></div>";
 
 ?>
-    <div class='people-you-may-know-area'>
+    <div class='people-you-may-know-area col-lg-3 col-xl-3'>
         <div class='people-you-may-know-heading'> People you may know</div>
         <div class='people-you-may-know-content'>
             <?php showPeopleYouMayKnow()?>

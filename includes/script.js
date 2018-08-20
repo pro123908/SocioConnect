@@ -336,7 +336,7 @@ function comment(postID, user, profilePic) {
       alert("You've reached your limit of number of comments allowed for a single account");
     }
   });
-  // something wrong
+  // Pain in the ass xD
   return false;
 }
 
@@ -368,6 +368,9 @@ function deletePost(postID) {
 }
 
 function addPost(user_id) {
+
+
+
   ajaxCalls("GET", `./includes/AjaxHandlers/AJAX2.php?canPost=${user_id}`).then(function (result) {
     if (result) {
       // Again the name suggests xD
@@ -383,6 +386,10 @@ function addPost(user_id) {
 
       //Validating post content before uploading
       if (!(postContent.trim() == "") || postPic !== undefined) {
+
+        document.querySelector(".add-post-btn").removeAttribute("href");
+        showDiv(document.querySelector(".post-progress-div-container"));
+
         // Making up data for sending along request
         var formData = new FormData();
         formData.append("file", postPic); // Picture
@@ -401,9 +408,13 @@ function addPost(user_id) {
           if (result == 1 || result == 2) {
             if (result == 1) {
               document.querySelector('.pic-name').innerHTML = "File Too Large";
+              hideDiv(document.querySelector(".post-progress-div-container"));
+              document.querySelector(".add-post-btn").setAttribute("href", `javascript:addPost(${user_id})`);
               // alert("File Too Large");
             } else if (result == 2) {
               document.querySelector('.pic-name').innerHTML = "Incomaptible File";
+              hideDiv(document.querySelector(".post-progress-div-container"));
+              document.querySelector(".add-post-btn").setAttribute("href", `javascript:addPost(${user_id})`);
               // alert("Incomaptible File");
             }
 
@@ -415,6 +426,11 @@ function addPost(user_id) {
 
             // Clearing the post text from new post area when it is posted
             document.querySelector("textarea[name='post']").value = " ";
+
+            hideDiv(document.querySelector(".post-progress-div-container"));
+            document.querySelector(".add-post-btn").setAttribute("href", `javascript:addPost(${user_id})`);
+
+            clearFileInput('mediaUpload');
 
             //Adding in recent activities
             var activity_type = 2;
@@ -869,7 +885,7 @@ function getUsers(value, flag) {
       }
     }
   );
-  // something wrong
+  // Pain in the ass
   return false;
 }
 
@@ -1609,6 +1625,16 @@ function editCoverPicture() {
   var coverPicData = document.querySelector("input[name='cover-pic']");
 
   var coverPic = coverPicData.files[0];
+  showDiv(document.querySelector(".cover-progress-div"));
+
+  // console.log(coverPicData.files);
+
+  // img = new Image();
+
+  // img.onload = function () {
+  //   alert(this.width + " " + this.height);
+  // };
+  // console.log(img);
 
   // console.log(coverPic);
 
@@ -1621,11 +1647,21 @@ function editCoverPicture() {
     formData,
     "pic"
   ).then(function (result) {
+    // img.src = `./assets/cover_pictures/${result}`;
     result = "./assets/cover_pictures/" + result;
     document.querySelector(
       ".user-cover"
     ).style.backgroundImage = `url(${result})`;
+
+    document.querySelector(
+      ".user-cover"
+    ).style.backgroundPosition = 'center';
   });
+
+  setTimeout(function () {
+    hideDiv(document.querySelector(".cover-progress-div"));
+  }, 2000)
+
 }
 
 function editProfilePicture() {
@@ -1634,6 +1670,7 @@ function editProfilePicture() {
   var ProfilePicData = document.querySelector("input[name='profile-pic']");
 
   var ProfilePic = ProfilePicData.files[0];
+  showDiv(document.querySelector(".profile-progress-div"));
 
   // console.log(ProfilePic);
 
@@ -1649,6 +1686,11 @@ function editProfilePicture() {
     // console.log(result);
     document.querySelector("#profile_picture").src =
       "./assets/profile_pictures/" + result;
+
+    setTimeout(() => {
+      hideDiv(document.querySelector(".profile-progress-div"));
+    }, 2000);
+
   });
 }
 
@@ -1843,6 +1885,8 @@ function submitEditInfoForm() {
   `;
 
 
+  var date = new Date();
+
 
   //Password Validation
   flag = true;
@@ -1858,7 +1902,7 @@ function submitEditInfoForm() {
     ajaxCalls("POST", "./includes/EventHandlers/editInfo.php", param).then(
       function (result) {
 
-        if (result > 13) {
+        if (result == 1) {
           document.querySelector('.edit-error-msg').innerHTML = '';
 
           infos = {
@@ -1867,7 +1911,7 @@ function submitEditInfoForm() {
             university: university,
             work: work,
             contact: contact,
-            age: result,
+            age: date.getFullYear() - age.substring(0, 4) + " Years",
             question: question,
             gender: gender
           };
@@ -1877,8 +1921,10 @@ function submitEditInfoForm() {
           }
           hideEditInfoDiv();
           document.querySelector(".user-edit-old-password").value = "";
-        } else {
+        } else if (result == 2) {
           document.querySelector('.edit-error-msg').innerHTML = 'Not Old Enough!';
+        } else if (result == 3) {
+          document.querySelector(".wrong-password-edit").innerHTML = 'Wrong Password';
         }
       }
     );
@@ -1966,6 +2012,44 @@ function updateDropdownMsgCount() {
     }
   });
 }
+
+function requestAction(ele, id) {
+  console.log(ele.name);
+  var value = ele.name;
+  ele.disabled = true;
+
+
+  ajaxCalls('GET', `./includes/EventHandlers/acceptRequest.php?action=${value}&id=${id}`).then(function (result) {
+    console.log(result);
+    document.querySelector(".friend-request-area").innerHTML = result;
+
+    ajaxCalls('GET', `./includes/AjaxHandlers/AJAX3.php?friendsList=1`).then(function (result) {
+      console.log(result);
+      document.querySelector(".friends-container").innerHTML = result;
+    });
+
+
+
+  });
+}
+
+function clearFileInput(id) {
+  var oldInput = document.getElementById(id);
+
+  var newInput = document.createElement("input");
+
+  newInput.type = "file";
+  newInput.id = oldInput.id;
+  newInput.name = oldInput.name;
+  // newInput.className = oldInput.className;
+  // newInput.style.cssText = oldInput.style.cssText;
+  newInput.setAttribute('onchange', 'javascript:postPicSelected()');
+
+
+  oldInput.parentNode.replaceChild(newInput, oldInput);
+  console.log(newInput);
+}
+
 
 
 

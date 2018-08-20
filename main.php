@@ -17,16 +17,16 @@ $_SESSION['no_of_posts_changed'] = 0;
 ?>
 <div class='side-bar-container'>
 <div class='side-bar'>
-    <?php sideBar();?>
+    <?php sideBar(1);?>
 </div>
 </div>
 
 
   <!-- Content Area - Where all the content of the page lies -->
-<div class="content-area">
+<div class="content-area row">
 
     <!-- ******************** Recent activities ***************** -->
-    <div class="recent-activities-area">
+    <div class="recent-activities-area col-lg-3 col-xl-3">
         <div class='recent-activities' id="recent_activities">
             <div class='recent-activities-heading'>Recent Activities</div>
             <div class='activities-content'>
@@ -48,7 +48,7 @@ if ($_SESSION['more_activities'] == 1) {
     </div>
   <!-- *********************** Recent Activities Ended ****************** -->
 
-    <div class='post-area'>
+    <div class='post-area col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6'>
         <div class='new-post'>
             <!-- Add post functionality -->
             <?php addPost();?>
@@ -61,7 +61,7 @@ if ($_SESSION['more_activities'] == 1) {
         <div id='loading' class='loading-posts loading-messages'></div>
     </div>
 
-    <div class="friends-area">
+    <div class="friends-area col-lg-3 col-xl-3">
         <div class='friend-heading'>Friends</div>
         <div class='friends-container'>
             <?php displayFriends(10);?>

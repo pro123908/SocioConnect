@@ -24,8 +24,8 @@ if (isset($_GET['id'])) {
     getRecentConvo();
 }
 ?>
-<div class='message-area'>
-    <div class="recent-chat-area">
+<div class='message-area row no-gutters'>
+    <div class="recent-chat-area col-md-4 col-lg-4 col-xl-4">
         <div class="search-user-for-chats">
             <?php searchUsersFortChats();?>
         </div>
@@ -35,7 +35,7 @@ if (isset($_GET['id'])) {
         </div>
     </div>
 
-    <div class="chat-box">
+    <div class="chat-box col-md-8 col-lg-8 col-xl-8">
         <div class='chat-user'>
             <?php if (isset($_GET['id'])) {
     $pic = getUserProfilePic(clearString($_GET['id']));
