@@ -336,7 +336,7 @@ function comment(postID, user, profilePic) {
       alert("You've reached your limit of number of comments allowed for a single account");
     }
   });
-  // Pain in the ass xD
+  // Something wrong
   return false;
 }
 
